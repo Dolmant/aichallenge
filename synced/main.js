@@ -34,7 +34,7 @@ module.exports.loop = function () {
         mule: 0,
     };
     // something went wrong here, all creeps died - probably an invasion
-    var totalEnergy = Math.floor((Game.spawns['Spawn1'].room.energyCapacityAvailable) / 50);
+    var totalEnergy = Math.floor((Game.spawns['Spawn1'].room.energyCapacityAvailable - 100) / 50);
     //var totalEnergy = Math.floor((200) / 50);
     var referenceEnergy = totalEnergy * 50
     var workarray = [];
