@@ -107,13 +107,10 @@ module.exports.loop = function () {
     		}
 		}
 	}
-	else
+	if(MyCreeps.harvester < 1)//just in case, if there are no harvesters spawn a harvester
 	{
-	    if(MyCreeps.harvester < 1)//just in case, if there are no harvesters spawn a harvester
-	    {
-	        Game.spawns['Spawn1'].createCreep( [WORK, CARRY,MOVE,MOVE], undefined,{role:'harvester'} );
-	    }
-    }
+		Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Harvester', {memory:{role:'harvester'}});
+	}
 
     roomControl.run('E43N52');
 }
