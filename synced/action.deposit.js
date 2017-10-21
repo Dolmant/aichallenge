@@ -36,7 +36,7 @@ var actDeposit = {
                 }
                 else
                 {
-                    if(Game.spawns['Spawn1'].energyCapacityAvailable > Game.spawns['Spawn1'].energyAvailable && creep.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    if(Game.spawns['Spawn1'].room.energyCapacityAvailable > Game.spawns['Spawn1'].room.energyAvailable && creep.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(Game.spawns['Spawn1']);
                     }
                     else
