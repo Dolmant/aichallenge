@@ -33,7 +33,9 @@ module.exports.loop = function () {
         builder: 0,
         mule: 0,
     };
-    var totalEnergy = Math.floor((Game.spawns['Spawn1'].room.energyCapacityAvailable) / 50);
+    // something went wrong here, all creeps died
+    var totalEnergy = Math.floor((Game.spawns['Spawn1'].room.energyCapacityAvailable / 2) / 50);
+    //var totalEnergy = Math.floor((200) / 50);
     var referenceEnergy = totalEnergy * 50
     var workarray = [];
     while (totalEnergy >= 4) {
@@ -43,6 +45,7 @@ module.exports.loop = function () {
         workarray.push(CARRY)
     }
     referenceEnergy -= totalEnergy * 50
+    //console.log(referenceEnergy)
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
 		switch(creep.memory.role){
