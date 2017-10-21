@@ -6,7 +6,7 @@ var roomControl = require('room.alpha');
 
 
 module.exports.loop = function () {
-    var MaxHarvester = 12;
+    var MaxHarvester = 6;
     var MaxBuilder = 2;
     var MaxMule = 1;
     var MaxUpgrader = 20;
