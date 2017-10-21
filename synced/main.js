@@ -115,20 +115,6 @@ module.exports.loop = function () {
     roomControl.run('E43N52');
 }
 
-/*
-ok seriously what does a room need to have
-first it needs what room we are actually talking about, that could be a little important
-next it really needs to know what creeps it should have, I should just have generics and job specific creeps
-it should also be able to find what creeps it does have
-it should know where to spawn things, though that may be a global thing the spawn manager
-but we'll make it a function so that can all be changed later.
-and lastly it should run every creep, currently I run creeps based on wierd criteria, this should be centralized instead of individual agents
-that should be condensed down... 
-ARRRGGGHHH Everytime I start working on something I realize the thousand and one other things I should be working on
-todo: change EVERY SPAWN CODE TO HAVE A BASE ROOM
-todo: completely rewrite all screeps code, look at harvester and forager code for examples.
-*/
-
 function runTower(towerID)
 {
 	var tower = Game.getObjectById(towerID);
@@ -154,7 +140,6 @@ function runTower(towerID)
 			{
 				tower.heal(creepToRepair);
 			}
-			
 		}
 	}
 }
