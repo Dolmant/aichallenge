@@ -10,7 +10,7 @@ var roleUpgrader = {
         }
         myUpgrade = Game.getObjectById(creep.memory.MyController);
         if(!creep.memory.myTask == 'upgrading' && creep.carry.energy == creep.carryCapacity) {
-            creep.memory.upgrading = true;
+            creep.memory.myTask = 'upgrading';
         }
         if(creep.carry.energy == 0)
         {

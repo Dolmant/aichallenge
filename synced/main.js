@@ -12,7 +12,7 @@ module.exports.loop = function () {
 	for (roomName in Game.rooms) {
 		var Room = Game.rooms[roomName]
 		roomControl.run(Room)
-		if (Room.find(Game.FIND_HOSTILE_CREEPS).length > 0) {
+		if (Room.find(FIND_HOSTILE_CREEPS).length > 0 && !Room.controller.safeMode && !Room.controller.safeModeCooldown && Room.controller.safeModeAvailable) {
 			Room.controller.activateSafeMode();
 		}
 	}
