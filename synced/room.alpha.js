@@ -65,7 +65,7 @@ var runRoom = {
                     roleClaimer.run(creep);
                     myCreepCount.claim += 1;
                     break;
-                case 'theif':
+                case 'thief':
                     roleThief.run(creep);
                     myCreepCount.thief += 1;
                     break;

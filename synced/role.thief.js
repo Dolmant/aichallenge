@@ -1,7 +1,7 @@
 var actSteal = require('action.steal');
 var actDeposit = require('action.deposit');
 
-var roleHarvester = {
+var roleThief = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
@@ -9,7 +9,7 @@ var roleHarvester = {
 			return;
         }
 
-        if (!creep.memory.myTask) {
+        if (!creep.memory.home) {
             creep.memory.home = {
                 room: creep.room.name,
                 x: creep.pos.x,
@@ -54,7 +54,7 @@ var roleHarvester = {
                 } else if (creep.pos.y == 49) {
                     creep.move(TOP);
                 } else {
-                    creep.moveTo(Game.map.findExit(creep.memory.target))
+                    creep.moveTo(Game.map.findExit(creep.memory.home.room, creep.memory.target))
                 }
                 break;
 			case 'steal':
@@ -74,4 +74,4 @@ var roleHarvester = {
 	}
 };
 
-module.exports = roleHarvester;
+module.exports = roleThief;
