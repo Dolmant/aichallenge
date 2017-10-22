@@ -16,12 +16,14 @@ var roleThief = {
                 x: creep.pos.x,
                 y: creep.pos.y,
             };
-
+        }
+        if (!creep.memory.target) {
             // TODO fix this to find an optimal one
-            var possibleTargets = [];
-            for (name in Game.map.describeExits(creep.room.name)) {
-                if (Game.map.isRoomAvailable(name)) {
-                    possibleTargets.push(name)
+            const possibleTargets = [];
+            const exits = Game.map.describeExits(creep.room.name)
+            for (name in exits) {
+                if (Game.map.isRoomAvailable(exits[name])) {
+                    possibleTargets.push(exits[name])
                 }
             }
             if (possibleTargets.length > creep.room.memory.stealFlag) {
