@@ -3,10 +3,10 @@ var spawner = {
     
     run: function(myRoom, mySpawns, myCreepCount, totalCreeps) {
 
-        var MaxHarvester = 5;
+        var MaxHarvester = 4;
         var MaxBuilder = 2;
         var MaxMule = 0;
-        var MaxUpgrader = 4;
+        var MaxUpgrader = 5;
         var MaxThief = 15;
 
         var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
@@ -123,6 +123,7 @@ var spawner = {
                     Spawn.spawnCreep(partArrayThief, newName, {
                         memory: {
                             role: 'thief',
+                            secondaryRole: totalCreeps > 15 ? 'upgrader' : 'harvester',
                         },
                     });
                     console.log('Spawning: '+ newName);

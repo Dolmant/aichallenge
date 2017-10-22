@@ -2,6 +2,7 @@ var actDeposit = {
     
         /** @param {Creep} creep **/
         run: function(creep) {
+            // TODO allow a priority to be passed OR deposit some into the container?
             //if I'm carrying something that is not energy
             if (_.sum(creep.carry) != creep.carry.energy)
             {
@@ -20,10 +21,12 @@ var actDeposit = {
             }
             else
             {
+                // TODO remove hardcoding of spawn
                 if (Game.spawns['Spawn1'].energyCapacity > Game.spawns['Spawn1'].energy && creep.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(Game.spawns['Spawn1']);
                 }
                 else {
+                    // TODO prioritize this
                     //I'm only carrrying energy, lets find a place to deposit it
                     //find the closest extension or tower
                     var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {

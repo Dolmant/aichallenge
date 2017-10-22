@@ -26,7 +26,7 @@ var roleThief = {
                     possibleTargets.push(exits[name])
                 }
             }
-            if (possibleTargets.length < creep.room.memory.stealFlag) {
+            if (possibleTargets.length <= creep.room.memory.stealFlag) {
                 creep.room.memory.stealFlag = 1;
             } else {
                 creep.room.memory.stealFlag += 1;
@@ -49,7 +49,11 @@ var roleThief = {
         }
 
         if (creep.room.name == creep.memory.home.room && creep.carry.energy > 0) {
-			creep.memory.myTask = 'deposit';
+            if (creep.memory.secondaryRole == 'upgrader') {
+                creep.memory.myTask = 'upgrading';
+            } else {
+                creep.memory.myTask = 'deposit';
+            }
         }
 		
 		switch(creep.memory.myTask){
@@ -72,6 +76,9 @@ var roleThief = {
             case 'goHome':
                 var homepath = new RoomPosition(creep.memory.home.x, creep.memory.home.y, creep.memory.home.room);
                 creep.moveTo(homepath);
+				break;
+			case 'upgrading':
+                actUpgrade.run(creep);
 				break;
 			case 'deposit':
                 actDeposit.run(creep);
