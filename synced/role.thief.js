@@ -26,7 +26,7 @@ var roleThief = {
                     possibleTargets.push(exits[name])
                 }
             }
-            if (possibleTargets.length > creep.room.memory.stealFlag) {
+            if (possibleTargets.length < creep.room.memory.stealFlag) {
                 creep.room.memory.stealFlag = 1;
             } else {
                 creep.room.memory.stealFlag += 1;
