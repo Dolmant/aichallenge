@@ -25,14 +25,14 @@ var roleBuilder = {
 		}
 		//AI state
 		
-		if((creep.memory.MyTask != 'harvest') && creep.carry.energy == 0){
-    		creep.memory.MyTask = 'harvest';
+		if((creep.memory.myTask != 'harvest') && creep.carry.energy == 0){
+    		creep.memory.myTask = 'harvest';
 		}
-		if(creep.memory.MyTask == 'harvest' && creep.carry.energy == creep.carryCapacity)
+		if(creep.memory.myTask == 'harvest' && creep.carry.energy == creep.carryCapacity)
 		{
-			creep.memory.MyTask = 'build';
+			creep.memory.myTask = 'build';
 		}
-		switch(creep.memory.MyTask){
+		switch(creep.memory.myTask){
 		case 'harvest':
 			//hungry, go eat
             getEnergy(creep);
@@ -50,7 +50,7 @@ var roleBuilder = {
 					findRepairTarget(creep);
                 }
 				if (!creep.memory.myRepairTarget) {
-					creep.memory.MyTask = 'upgrade';
+					creep.memory.myTask = 'upgrade';
 				}
 			}
 			else
@@ -73,7 +73,7 @@ var roleBuilder = {
 			break;
 		default:
 			console.log('agent: ' + creep.name + " the builder did not have an action.");
-			creep.memory.MyTask = 'harvest';
+			creep.memory.myTask = 'harvest';
 			break;
 		}
     }

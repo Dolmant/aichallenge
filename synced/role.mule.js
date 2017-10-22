@@ -7,19 +7,19 @@ var roleMule = {
             if(creep.fatigue!=0){
                 return;
             }
-            if(creep.memory.MyTask != 0 && creep.carry.energy == 0)
+            if(creep.memory.myTask != 0 && creep.carry.energy == 0)
             {
-                creep.memory.MyTask = 0;
+                creep.memory.myTask = 0;
                 //creep.say('ðŸ”„ FETCH');
             }
-            if(creep.memory.MyTask !=1 && creep.carry.energy == creep.carryCapacity)
+            if(creep.memory.myTask !=1 && creep.carry.energy == creep.carryCapacity)
             {
-                creep.memory.MyTask = 1;
+                creep.memory.myTask = 1;
                 //creep.say('âš¡ DEAL');
             }
     
             
-            switch(creep.memory.MyTask){
+            switch(creep.memory.myTask){
                 case 0://get more energy
                     getEnergy(creep);
                     break;
@@ -50,7 +50,7 @@ var roleMule = {
                     }
                     break;
                 default://uhoh
-                creep.memory.MyTask = 1;
+                creep.memory.myTask = 1;
                 break;
             }
         }
@@ -59,7 +59,7 @@ var roleMule = {
     {
         if(_.sum(creep.carry) != creep.carry.energy)
         {
-            creep.memory.MyTask = 2;
+            creep.memory.myTask = 2;
         }
         target = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
         if(!target)
@@ -88,7 +88,7 @@ var roleMule = {
                 }
                 else
                 {
-                    //creep.memory.MyTask=1;
+                    //creep.memory.myTask=1;
                 }
             }
         }

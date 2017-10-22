@@ -1,4 +1,5 @@
 var actHarvest = require('action.harvest');
+var actDeposit = require('action.deposit');
 
 var roleHarvester = {
 
@@ -7,13 +8,31 @@ var roleHarvester = {
         if(creep.fatigue!=0){
 		return;
 		}
+
+		if (creep.energy == 0) {
+			creep.memory.myTask = 'harvest';
+		}
+
+		if (creep.energyCapacity == creep.energy) {
+			creep.memory.myTask = 'deposit';
+		}
 		
-		switch(creep.memory.MyTask){
+		switch(creep.memory.myTask){
 			case 'harvest'://get more energy
 				actHarvest.run(creep);
 			break;
+			case 'deposit':
+				if (Game.spawns['Spawn1'].energy < Game.spawns['Spawn1'].energyCapacity) {
+					if(creep.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+						creep.moveTo(Game.spawns['Spawn1']);
+					}
+				}
+				else {
+					actDeposit.run(creep);
+				}
+				break;
 			default:
-				creep.memory.MyTask = 'harvest';
+				creep.memory.myTask = 'harvest';
 			break;
 		}
 	}

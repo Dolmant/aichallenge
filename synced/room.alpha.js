@@ -118,7 +118,7 @@ function prioritizeJobs(jobs, busyCreeps)
 function runTowers(myTowers)
 {
     myTowers.forEach(tower => {
-        var minRepair = 860000;
+        var minRepair = 100000;
         var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if(closestHostile) {
             tower.attack(closestHostile);

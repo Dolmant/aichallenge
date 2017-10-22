@@ -1,35 +1,23 @@
-var actDeposit = require('action.deposit');
 var actHarvest = {
     
         /** @param {Creep} creep **/
         
         /** @param {Creep} creep **/
         run: function(creep) {
-            if(creep.carry.energy < creep.carryCapacity) {
-                var sources = creep.room.find(FIND_SOURCES);
-                if (!creep.memory.source_select) {
-                    if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                        if (creep.moveTo(sources[0]) == ERR_NO_PATH) {
-                            creep.memory.source_select = 1;
-                        }
+            var sources = creep.room.find(FIND_SOURCES);
+            if (!creep.memory.sourceSelect) {
+                if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
+                    if (creep.moveTo(sources[0]) == ERR_NO_PATH) {
+                        creep.memory.sourceSelect = 1;
                     }
-                }
-                else {
-                    if(creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
-                        if (creep.moveTo(sources[1]) == ERR_NO_PATH) {
-                            creep.memory.source_select = 0;
-                        }
-                    }
-                }
-            }
-            else if(Game.spawns['Spawn1'].energy < Game.spawns['Spawn1'].energyCapacity) {
-                console.log('creeps1')
-                if(creep.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(Game.spawns['Spawn1']);
                 }
             }
             else {
-                actDeposit(creep);
+                if(creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
+                    if (creep.moveTo(sources[1]) == ERR_NO_PATH) {
+                        creep.memory.sourceSelect = 0;
+                    }
+                }
             }
         }
         // run: function(creep) {
