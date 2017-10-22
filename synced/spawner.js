@@ -1,7 +1,7 @@
 
 var spawner = {
     
-    run: function(Room, mySpawns, myCreepCount, totalCreeps) {
+    run: function(myRoom, mySpawns, myCreepCount, totalCreeps) {
 
         var MaxHarvester = 6;
         var MaxBuilder = 2;
@@ -9,51 +9,64 @@ var spawner = {
         var MaxUpgrader = 20;
 
         var totalEnergy = Math.floor((Room.energyCapacityAvailable - 100) / 50);
+        var totalHarvesterEnergy = totalEnergy;
         var referenceEnergy = totalEnergy * 50
-        var workarray = [];
+        var referenceHarvesterEnergy = totalEnergy * 50
+        var partArray = [];
+        var harvesterPartArray = [];
+
         while (totalEnergy >= 4) {
             totalEnergy -= 4
-            workarray.push(WORK)
-            workarray.push(MOVE)
-            workarray.push(CARRY)
+            partArray.push(WORK)
+            partArray.push(MOVE)
+            partArray.push(CARRY)
         }
-        referenceEnergy -= totalEnergy * 50
+
+        referenceEnergy -= totalEnergy * 50;
+
+        if (myRoom.memory.roadsPresent) {
+            totalHarvesterEnergy -= 1;
+            harvesterPartArray.push(MOVE);
+            while (totalHarvesterEnergy >= 3) {
+                totalHarvesterEnergy -= 3;
+                harvesterPartArray.push(WORK);
+                harvesterPartArray.push(CARRY);
+            }
+            referenceHarvesterEnergy -= totalHarvesterEnergy * 50;
+        } else {
+            harvesterPartArray = partArray;
+            referenceHarvesterEnergy = referenceEnergy;
+        }
 
         mySpawns.forEach(Spawn => {
             if (!Spawn.spawning)
             {
-                if(myCreepCount.harvester < MaxHarvester  && Room.energyAvailable >= referenceEnergy)
+                if(myCreepCount.harvester < MaxHarvester  && myRoom.energyAvailable >= referenceHarvesterEnergy)
                 {
                     var newName = 'Harvester' + Game.time;
-                    Spawn.spawnCreep(workarray, newName, {memory:{role:'harvester'}});
+                    Spawn.spawnCreep(harvesterPartArray, newName, {memory:{role:'harvester'}});
                     console.log('Spawning: low '+ newName);
+                    continue;
                 }
-                else
+                if(myCreepCount.builder < MaxBuilder && myRoom.energyAvailable >= referenceEnergy)
                 {
-                    if(myCreepCount.builder < MaxBuilder && Room.energyAvailable >= referenceEnergy)
-                    {
-                        var newName = 'Builder' + Game.time;
-                        Spawn.spawnCreep(workarray, newName, {memory:{role:'builder'}});
-                        console.log('Spawning: low '+ newName);
-                    }
-                    else
-                    {
-                        if(myCreepCount.mule < MaxMule && Room.energyAvailable >= referenceEnergy)
-                        {
-                            var newName = 'Mule' + Game.time;
-                            Spawn.spawnCreep(workarray, newName, {memory: {role:'mule'}});
-                            console.log('Spawning: low '+ newName);
-                        }
-                        else
-                        {
-                            if(myCreepCount.upgrader < MaxUpgrader && Room.energyAvailable >= referenceEnergy)
-                            {
-                                var newName = 'Upgrader' + Game.time;
-                                Spawn.spawnCreep(workarray, newName, {memory: {role:'upgrader'}});
-                                console.log('Spawning: low '+ newName);
-                            }
-                        }
-                    }
+                    var newName = 'Builder' + Game.time;
+                    Spawn.spawnCreep(partArray, newName, {memory:{role:'builder'}});
+                    console.log('Spawning: low '+ newName);
+                    continue
+                }
+                if(myCreepCount.mule < MaxMule && myRoom.energyAvailable >= referenceEnergy)
+                {
+                    var newName = 'Mule' + Game.time;
+                    Spawn.spawnCreep(partArray, newName, {memory: {role:'mule'}});
+                    console.log('Spawning: low '+ newName);
+                    continue;
+                }
+                if(myCreepCount.upgrader < MaxUpgrader && myRoom.energyAvailable >= referenceEnergy)
+                {
+                    var newName = 'Upgrader' + Game.time;
+                    Spawn.spawnCreep(partArray, newName, {memory: {role:'upgrader'}});
+                    console.log('Spawning: low '+ newName);
                 }
             }
             if(myCreepCount.harvester < 2)//just in case, if there are no harvesters spawn a harvester
