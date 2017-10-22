@@ -115,39 +115,7 @@ function prioritizeJobs(jobs, busyCreeps)
     }
 }
 
-function findBuildTarget(myRoom)
-{
-	var targets = myRoom.find(FIND_CONSTRUCTION_SITES);//TODO: FIX THIS
-    if(targets == undefined)
-    {
-		return 0;
-    }
-    if(Array.isArray(targets)){
-        return targets;
-    }
-    else{
-    return [targets];
-    }
-}
-
-function findRepairTarget(myRoom)
-{
-    //TODO: fix this as well, need a way to select walls and ramparts.
-    var targets = myRoom.find(FIND_STRUCTURES, {    
-        filter: (s) => 	(s.structureType != STRUCTURE_WALL && s.structureType != STRUCTURE_RAMPART)&& s.hits < s.hitsMax});
-    if(targets == undefined)
-    {
-		return 0;
-    }
-    if(Array.isArray(targets)){
-        return targets;
-    }
-    else{
-    return [targets];
-    }
-}
-
-function runTower(myTowers)
+function runTowers(myTowers)
 {
     myTowers.forEach(tower => {
         var minRepair = 860000;
