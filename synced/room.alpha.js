@@ -12,12 +12,15 @@ var runRoom = {
 
         var myCreeps = myRoom.find(FIND_MY_CREEPS);
         var mySpawns = myRoom.find(FIND_MY_SPAWNS);
+        var myTowers = myRoom.find(FIND_MY_STRUCTURES).filter(structure => structure.structureType == STRUCTURE_TOWER);
+
+        updateRoomConsts(myRoom);
         // this doesnt work
         // var tower_test = Room.find(STRUCTURE_TOWER);
         // console.log(tower_test);
         //TODO: make the towers dynamic
         //myTowers = myRoom.find(STRUCTURE_TOWER);
-        runTower('59b47e88e1065233e38d42ee');
+        runTowers(myTowers);
 
         var myCreepCount = {
             harvester: 0,
@@ -25,8 +28,10 @@ var runRoom = {
             builder: 0,
             mule: 0,
         };
+        var totalCreeps = 0;
 
         myCreeps.forEach(creep => {
+            totalCreeps += 1;
             switch(creep.memory.role){
                 case 'harvester':
                     roleHarvester.run(creep);
@@ -48,7 +53,7 @@ var runRoom = {
                 break;
             }
         })
-        spawner.run(myRoom, mySpawns, myCreepCount)
+        spawner.run(myRoom, mySpawns, myCreepCount, totalCreeps)
 
         if(myRoom.memory.timer == undefined)
         {
@@ -142,63 +147,52 @@ function findRepairTarget(myRoom)
     }
 }
 
-//TODO: make this more dynamic
-function spawnGeneral(spawnPoint, typeOfSpawn, roomName, max = 13)
+function runTower(myTowers)
 {
-    var top = Game.spawns[spawnPoint].room.energyCapacityAvailable;
-    
-    var loop = Math.floor(top/200);
-    var i=0;
-    var body = [];
-	if(max<loop)
-	{
-		loop=max;
-	}
-	if(Game.spawns[spawnPoint].room.energyAvailable < loop*200)
-	{
-	    //console.log('Failed to spawn: '+typeOfSpawn + 'in '+roomName+ ' room has: ' +Game.spawns[spawnPoint].room.energyAvailable + ' / ' +Game.spawns[spawnPoint].room.energyCapacityAvailable + ' seeking: ' + loop*250);
-	    return;
-	}
-    while(i<loop)
-    {
-        body.push(WORK);
-        body.push(CARRY);
-        body.push(MOVE);
-        i++;
-        //console.log('looped once: ' + i);
-    }
-	var name = Game.spawns[spawnPoint].createCreep( body, undefined,{role:typeOfSpawn, myRoom: myRoom.name} );
-	console.log('Spawning: '+typeOfSpawn+ ', ' + name + ' size: ' + loop);
+    myTowers.forEach(tower => {
+        var minRepair = 860000;
+        var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+        if(closestHostile) {
+            tower.attack(closestHostile);
+        }
+        else
+        {
+            var rampRepair = tower.room.find(FIND_STRUCTURES, {filter: s=> s.structureType == STRUCTURE_RAMPART || s.structureType == STRUCTURE_WALL});
+            for (let ramps of rampRepair)
+            {
+                if(ramps.hits < minRepair)//this could be a problem during an assault where towers start repairing instead of attacking.
+                {
+                    tower.repair(ramps);
+                }
+            }
+            var creepToRepair = tower.pos.findClosestByRange(FIND_MY_CREEPS, {filter: c=> c.hits < c.hitsMax});
+            if (creepToRepair != undefined)
+            {
+                tower.heal(creepToRepair);
+            }
+            
+        }
+    });
 }
 
-function runTower(towerID)
-{
-	var tower = Game.getObjectById(towerID);
-	var minRepair = 860000;
-	if(tower) {
-		var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-		if(closestHostile) {
-			tower.attack(closestHostile);
-		}
-		else
-		{
-			
-			var rampRepair = tower.room.find(FIND_STRUCTURES, {filter: s=> s.structureType == STRUCTURE_RAMPART || s.structureType == STRUCTURE_WALL});
-			for (let ramps of rampRepair)
-			{
-				if(ramps.hits < minRepair)//this could be a problem during an assault where towers start repairing instead of attacking.
-				{
-					tower.repair(ramps);
-				}
-			}
-			var creepToRepair = tower.pos.findClosestByRange(FIND_MY_CREEPS, {filter: c=> c.hits < c.hitsMax});
-			if (creepToRepair != undefined)
-			{
-				tower.heal(creepToRepair);
-			}
-			
-		}
-	}
+function updateRoomConsts(myRoom, mySpawns) {
+    // This function will update stuff like functional roads, etc. Runs every 1K ticks, will have to break this up or store the paths
+    if (myRoom.memory.timer % 0 == 0) {
+        myRoom.find(FIND_SOURCES).forEach(Source => {
+            mySpawns.forEach(Spawn => {
+                findPath(Source.pos, Spawn.pos, {ignoreCreeps: true,}).forEach(pathStep => {
+                    lookForAt(LOOK_STRUCTURES, pathStep.x, pathStep.y).forEach(structure => {
+                        if (structure.structureType != STRUCTURE_ROAD) {
+                            myRoom.memory.roadsPresent = false;
+                            return false;
+                        }
+                    });
+                });
+            });
+        });
+        myRoom.memory.roadsPresent = true;
+        return true;
+    }
 }
 
 /*

@@ -1,7 +1,7 @@
 
 var spawner = {
     
-    run: function(Room, mySpawns, myCreepCount) {
+    run: function(Room, mySpawns, myCreepCount, totalCreeps) {
 
         var MaxHarvester = 6;
         var MaxBuilder = 2;

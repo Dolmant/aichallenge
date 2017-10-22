@@ -25,53 +25,55 @@ var roleBuilder = {
 		}
 		//AI state
 		
-		if(creep.memory.MyTask == 1 && creep.carry.energy == 0){
-    		creep.memory.MyTask = 0;
-    		creep.say('harvest ');
+		if((creep.memory.MyTask != 'harvest') && creep.carry.energy == 0){
+    		creep.memory.MyTask = 'harvest';
 		}
-		if(creep.memory.MyTask == 0 && creep.carry.energy == creep.carryCapacity)
+		if(creep.memory.MyTask == 'harvest' && creep.carry.energy == creep.carryCapacity)
 		{
-			creep.memory.MyTask = 1;
+			creep.memory.MyTask = 'build';
 		}
 		switch(creep.memory.MyTask){
-		case 0:
+		case 'harvest':
 			//hungry, go eat
             getEnergy(creep);
 			break;
-		case 1:
+		case 'upgrade':
+			roleUpgrader.run(creep);
+		case 'repair':
+		case 'build':
 			//do I already have something to build? If not find something to fix and say fixit
-			if(creep.memory.MyTarget == undefined)
+			if(!creep.memory.myBuildTarget && !creep.memory.myRepairTarget)
 			{
-                findTarget(creep);
-                if(creep.memory.MyTarget != undefined)
+                findBuildTarget(creep);
+                if(!creep.memory.myBuildTarget)
                 {
-                    var target = Game.getObjectById(creep.memory.MyTarget);
-    				creep.say('build');
+					findRepairTarget(creep);
                 }
-                else
-                {
-                    roleUpgrader.run(creep);
-                }
+				if (!creep.memory.myRepairTarget) {
+					creep.memory.MyTask = 'upgrade';
+				}
 			}
 			else
 			{
-				
-			    var target = Game.getObjectById(creep.memory.MyTarget);
-				if(creep.build(target) == ERR_NOT_IN_RANGE) {
-				    creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
-				}
-				//if theres nothing to build
-				if(target==undefined){
-				    creep.memory.MyTarget = undefined;
-					//creep.say('bored');
-					roleUpgrader.run(creep);
+				if (creep.memory.myBuildTarget) {
+					var target = Game.getObjectById(creep.memory.myBuildTarget);
+					if(creep.build(target) == ERR_NOT_IN_RANGE) {
+						creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
+					}
+				} else if (creep.memory.myRepairTarget) {
+					var target = Game.getObjectById(creep.memory.myRepairTarget);
+					if(creep.repair(target) == ERR_NOT_IN_RANGE) {
+						creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
+					}
+					if (target.hits == target.hitsMax) {
+						findRepairTarget(creep);
+					}
 				}
 			}
-			//go build something
 			break;
 		default:
 			console.log('agent: ' + creep.name + " the builder did not have an action.");
-			creep.memory.MyTask = 0;
+			creep.memory.MyTask = 'harvest';
 			break;
 		}
     }
@@ -98,15 +100,27 @@ function getEnergy(creep)
         }
     }
 }
-function findTarget(creep)
+
+function findBuildTarget(creep)
 {
-	
 	var targets = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
     if(targets != undefined)
     {
-		creep.memory.MyTarget = targets.id;
+		creep.memory.myBuildTarget = targets.id;
     }
+}
 
+function findRepairTarget(creep)
+{
+	var targets = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+		filter: (s) =>
+			(s.structureType != STRUCTURE_WALL && s.structureType != STRUCTURE_RAMPART) && s.hits < s.hitsMax
+	});
+
+    if(targets != undefined)
+    {
+		creep.memory.myRepairTarget = targets.id;
+    }
 }
 
 
