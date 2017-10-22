@@ -33,10 +33,7 @@ var roleThief = {
         }
 
         // TODO: fix this to be less order dependant
-        if (creep.room.name == creep.memory.home.room) {
-			creep.memory.myTask = 'deposit';
-        }
-        
+      
         if (creep.carry.energy == 0) {
 			creep.memory.myTask = 'goToTarget';
         }
@@ -47,6 +44,10 @@ var roleThief = {
         
         if (creep.carryCapacity == creep.carry.energy) {
 			creep.memory.myTask = 'goHome';
+        }
+
+        if (creep.room.name == creep.memory.home.room && creep.carry.energy > 0) {
+			creep.memory.myTask = 'deposit';
         }
 		
 		switch(creep.memory.myTask){
