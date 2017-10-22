@@ -9,27 +9,16 @@ var roleHarvester = {
         if(creep.fatigue!=0){
 		return;
 		}
-		if(creep.memory.MyTask != 0 && creep.carry.energy == 0)
-		{
-			creep.memory.MyTask = 0;
-			creep.say('harvest');
-		}
-		if(creep.memory.MyTask !=1 && creep.carry.energy == creep.carryCapacity)
-		{
-			creep.memory.MyTask = 1;
-			creep.say('Resupply');
-		}
-
 		
 		switch(creep.memory.MyTask){
-			case 0://get more energy
+			case 'harvest'://get more energy
 				actHarvest.run(creep);
 			break;
-			case 1://go fill somethings energy
+			case 'deposit'://go fill somethings energy, this doesnt happen for this harvester!
     			actDeposit.run(creep);
 			break;
-			default://uhoh
-			creep.memory.MyTask = 1;
+			default:
+				creep.memory.MyTask = 'harvest';
 			break;
 		}
 	}
