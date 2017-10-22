@@ -107,24 +107,18 @@ function getEnergy(creep)
 
 function findBuildTarget(creep)
 {
-	var targets = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
-    if(targets != undefined)
-    {
-		creep.memory.myBuildTarget = targets.id;
-    }
+	var target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+	creep.memory.myBuildTarget = targets && target.id;
 }
 
 function findRepairTarget(creep)
 {
-	var targets = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+	var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
 		filter: (s) =>
 			(s.structureType != STRUCTURE_WALL && s.structureType != STRUCTURE_RAMPART) && s.hits < s.hitsMax
 	});
 
-    if(targets != undefined)
-    {
-		creep.memory.myRepairTarget = targets.id;
-    }
+	creep.memory.myRepairTarget = target && target.id;
 }
 
 

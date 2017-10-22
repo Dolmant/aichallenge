@@ -9,11 +9,8 @@ var spawner = {
         var MaxUpgrader = 20;
 
         var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
-        var totalHarvesterEnergy = totalEnergy;
         var referenceEnergy = totalEnergy * 50
-        var referenceHarvesterEnergy = totalEnergy * 50
         var partArray = [];
-        var harvesterPartArray = [];
 
         while (totalEnergy >= 4) {
             totalEnergy -= 4
@@ -23,20 +20,6 @@ var spawner = {
         }
 
         referenceEnergy -= totalEnergy * 50;
-
-        if (myRoom.memory.roadsPresent) {
-            totalHarvesterEnergy -= 1;
-            harvesterPartArray.push(MOVE);
-            while (totalHarvesterEnergy >= 3) {
-                totalHarvesterEnergy -= 3;
-                harvesterPartArray.push(WORK);
-                harvesterPartArray.push(CARRY);
-            }
-            referenceHarvesterEnergy -= totalHarvesterEnergy * 50;
-        } else {
-            harvesterPartArray = partArray;
-            referenceHarvesterEnergy = referenceEnergy;
-        }
 
         mySpawns.forEach(Spawn => {
             if (!Spawn.spawning)
@@ -50,11 +33,25 @@ var spawner = {
                         },
                     });
                 }
-                if(myCreepCount.harvester < MaxHarvester  && myRoom.energyAvailable >= referenceHarvesterEnergy)
+
+                // to kickstart a claimer, set room.memory.spawnClaimer and the target ID as room.memory.claimTarget
+                if(myRoom.memory.spawnClaimer > 1 && myRoom.energyAvailable >= 700)
+                {
+                    var newName = 'Claimer' + Game.time;
+                    Spawn.spawnCreep([CLAIM, MOVE, MOVE], newName, {
+                        memory: {
+                            role: 'claimer',
+                            claimTarget: myRoom.memory.claimTarget,
+                        },
+                    });
+                    myRoom.memory.spawnClaimer -= 1;
+                    referenceEnergy = 99999;
+                }
+                if(myCreepCount.harvester < MaxHarvester && myRoom.energyAvailable >= referenceEnergy)
                 {
                     var newName = 'Harvester' + Game.time;
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
-                    Spawn.spawnCreep(harvesterPartArray, newName, {
+                    Spawn.spawnCreep(partArray, newName, {
                         memory:{
                             role: 'harvester',
                             sourceSelect: myRoom.memory.sourceFlag,

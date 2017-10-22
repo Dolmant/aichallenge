@@ -14,7 +14,7 @@ var roleUpgrader = {
         }
         if(creep.carry.energy == 0)
         {
-            creep.memory.myTask == 'resupply';
+            creep.memory.myTask = 'resupply';
         }
         switch (creep.memory.myTask) {
             default:

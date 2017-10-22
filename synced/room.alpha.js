@@ -2,8 +2,9 @@ var roleUpgrader = require('role.upgrader');
 var roleHarvester = require('role.harvester');
 var roleMule = require('role.mule');
 var roleBuilder = require('role.builder');
-var spawner = require('spawner');
+var roleClaimer = require('role.claimer');
 
+var spawner = require('spawner');
 
 var runRoom = {
 
@@ -27,6 +28,7 @@ var runRoom = {
             upgrader: 0,
             builder: 0,
             mule: 0,
+            claim: 0,
         };
         var totalCreeps = 0;
 
@@ -49,6 +51,10 @@ var runRoom = {
                 case 'mule':
                     roleMule.run(creep);
                     myCreepCount.mule += 1;
+                    break;
+                case 'claimer':
+                    roleClaimer.run(creep);
+                    myCreepCount.claim += 1;
                     break;
             }
         })
