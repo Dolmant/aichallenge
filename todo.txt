@@ -6,6 +6,7 @@ count parts per energy
 create energy invaders
 build a repairer creepevery ROLE handles all TASKS
 have a better baseline for 6 harvest / 1 upgrade, everything else
+tag extensions structures as going to be filled and prevent other creeps trying to fill them
 1. better pathfinding
 find out what went wrong that caused all creeps to die!
 2. break out spawner
