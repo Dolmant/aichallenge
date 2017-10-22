@@ -41,26 +41,33 @@ var spawner = {
         mySpawns.forEach(Spawn => {
             if (!Spawn.spawning)
             {
+                if(myCreepCount.harvester < 1)//just in case, if there are no harvesters spawn a harvester
+                {
+                    Spawn.spawnCreep([WORK, CARRY, MOVE], 'Harvester', {memory:{role:'harvester'}});
+                }
                 if(myCreepCount.harvester < MaxHarvester  && myRoom.energyAvailable >= referenceHarvesterEnergy)
                 {
                     var newName = 'Harvester' + Game.time;
                     Spawn.spawnCreep(harvesterPartArray, newName, {memory:{role:'harvester'}});
                     console.log('Spawning: low '+ newName);
-                    continue;
+                    // skip other loops since break and continue dont work
+                    referenceEnergy = 99999;
                 }
                 if(myCreepCount.builder < MaxBuilder && myRoom.energyAvailable >= referenceEnergy)
                 {
                     var newName = 'Builder' + Game.time;
                     Spawn.spawnCreep(partArray, newName, {memory:{role:'builder'}});
                     console.log('Spawning: low '+ newName);
-                    continue
+                    // skip other loops since break and continue dont work
+                    referenceEnergy = 99999;
                 }
                 if(myCreepCount.mule < MaxMule && myRoom.energyAvailable >= referenceEnergy)
                 {
                     var newName = 'Mule' + Game.time;
                     Spawn.spawnCreep(partArray, newName, {memory: {role:'mule'}});
                     console.log('Spawning: low '+ newName);
-                    continue;
+                    // skip other loops since break and continue dont work
+                    referenceEnergy = 99999;
                 }
                 if(myCreepCount.upgrader < MaxUpgrader && myRoom.energyAvailable >= referenceEnergy)
                 {
@@ -68,10 +75,6 @@ var spawner = {
                     Spawn.spawnCreep(partArray, newName, {memory: {role:'upgrader'}});
                     console.log('Spawning: low '+ newName);
                 }
-            }
-            if(myCreepCount.harvester < 2)//just in case, if there are no harvesters spawn a harvester
-            {
-                Spawn.spawnCreep([WORK, CARRY, MOVE], 'Harvester', {memory:{role:'harvester'}});
             }
         });
     },
