@@ -1,3 +1,4 @@
+var actDeposit = require('action.deposit');
 var actHarvest = {
     
         /** @param {Creep} creep **/
@@ -22,9 +23,13 @@ var actHarvest = {
                 }
             }
             else if(Game.spawns['Spawn1'].energy < Game.spawns['Spawn1'].energyCapacity) {
+                console.log('creeps1')
                 if(creep.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(Game.spawns['Spawn1']);
                 }
+            }
+            else {
+                actDeposit(creep);
             }
         }
         // run: function(creep) {
