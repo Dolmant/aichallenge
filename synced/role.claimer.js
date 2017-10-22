@@ -6,12 +6,13 @@ var roleClaimer = {
 			return;
 		}
 
-		if (creep.memory.claimTarget) {
-            const targetRoom = Game.getObjectById(creep.memory.claimTarget);
-			if(creep.claimController(targetRoom.controller) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(targetRoom.controller);
+        if (creep.room.controller.my) {
+            creep.moveTo(26, 49);
+        } else {
+            if(creep.claimController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(creep.room.controller);
             }
-		}
+        }
 	}
 };
 
