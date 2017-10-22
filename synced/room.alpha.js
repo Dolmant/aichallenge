@@ -50,7 +50,6 @@ var runRoom = {
                     roleMule.run(creep);
                     myCreepCount.mule += 1;
                     break;
-                break;
             }
         })
         spawner.run(myRoom, mySpawns, myCreepCount, totalCreeps)

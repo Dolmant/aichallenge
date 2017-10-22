@@ -69,6 +69,7 @@ var roleBuilder = {
 						creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
 					}
 					if (!target || target.hits == target.hitsMax) {
+						findBuildTarget(creep);
 						findRepairTarget(creep);
 					}
 				}
