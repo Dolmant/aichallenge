@@ -27,8 +27,9 @@ var roleThief = {
             creep.memory.target = 'E43N51';
         }
 
+        // TODO: fix this to be less order dependant
         if (creep.room.name == creep.memory.home.room) {
-			creep.memory.myTask = 'upgrading';
+			creep.memory.myTask = 'deposit';
         }
         
         if (creep.carry.energy == 0) {
@@ -64,8 +65,8 @@ var roleThief = {
                 var homepath = new RoomPosition(creep.memory.home.x, creep.memory.home.y, creep.memory.home.room);
                 creep.moveTo(homepath);
 				break;
-			case 'upgrading':
-                actUpgrade.run(creep);
+			case 'deposit':
+                actDeposit.run(creep);
 				break;
 			default:
 				creep.memory.myTask = 'harvest';
