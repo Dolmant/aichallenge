@@ -36,6 +36,7 @@ var runRoom = {
             builder: 0,
             mule: 0,
             claim: 0,
+            thief: 0,
         };
         var totalCreeps = 0;
 

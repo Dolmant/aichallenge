@@ -1,6 +1,7 @@
 Need to do:
 
-invade bottom today
+invade bottom
+findsources dies when sources run out so will have to identify some other way
 count parts per energy
 create energy invaders
 build a repairer creepevery ROLE handles all TASKS
