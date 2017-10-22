@@ -6,8 +6,8 @@ var actHarvest = {
         run: function(creep) {
             var sources = creep.room.find(FIND_SOURCES);
             if (sources.length > 1) {
-                if(creep.harvest(sources[sourceSelect]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sources[sourceSelect]);
+                if(creep.harvest(sources[creep.memory.sourceSelect]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(sources[creep.memory.sourceSelect]);
                 }
             }
             else {

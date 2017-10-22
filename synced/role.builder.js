@@ -60,12 +60,15 @@ var roleBuilder = {
 					if(creep.build(target) == ERR_NOT_IN_RANGE) {
 						creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
 					}
+					if (!target) {
+						findBuildTarget(creep);
+					}
 				} else if (creep.memory.myRepairTarget) {
 					var target = Game.getObjectById(creep.memory.myRepairTarget);
 					if(creep.repair(target) == ERR_NOT_IN_RANGE) {
 						creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
 					}
-					if (target.hits == target.hitsMax) {
+					if (!target || target.hits == target.hitsMax) {
 						findRepairTarget(creep);
 					}
 				}
