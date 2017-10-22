@@ -9,11 +9,11 @@ var roleHarvester = {
 		return;
 		}
 
-		if (creep.energy == 0) {
+		if (creep.carry.energy == 0) {
 			creep.memory.myTask = 'harvest';
 		}
 
-		if (creep.energyCapacity == creep.energy) {
+		if (creep.carryCapacity == creep.carry.energy) {
 			creep.memory.myTask = 'deposit';
 		}
 		
