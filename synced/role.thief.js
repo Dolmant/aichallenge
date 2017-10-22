@@ -39,7 +39,7 @@ var roleThief = {
 			creep.memory.myTask = 'goHome';
         }
         
-        if (creep.room.name == creep.memory.home) {
+        if (creep.room.name == creep.memory.home.room) {
 			creep.memory.myTask = 'upgrading';
 		}
 		
