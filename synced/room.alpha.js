@@ -3,6 +3,7 @@ var roleHarvester = require('role.harvester');
 var roleMule = require('role.mule');
 var roleBuilder = require('role.builder');
 var roleClaimer = require('role.claimer');
+var roleThief = require('role.thief');
 
 var spawner = require('spawner');
 
@@ -63,6 +64,10 @@ var runRoom = {
                 case 'claimer':
                     roleClaimer.run(creep);
                     myCreepCount.claim += 1;
+                    break;
+                case 'theif':
+                    roleThief.run(creep);
+                    myCreepCount.thief += 1;
                     break;
             }
         })
