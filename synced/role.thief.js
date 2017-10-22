@@ -1,4 +1,5 @@
 var actSteal = require('action.steal');
+var actUpgrade = require('action.upgrade');
 var actDeposit = require('action.deposit');
 
 var roleThief = {
@@ -39,12 +40,11 @@ var roleThief = {
         }
         
         if (creep.room.name == creep.memory.home) {
-			creep.memory.myTask = 'deposit';
+			creep.memory.myTask = 'upgrading';
 		}
 		
 		switch(creep.memory.myTask){
             case 'goToTarget':
-                
                 if (creep.pos.x == 0) {
                     creep.move(RIGHT);
                 } else if (creep.pos.x == 49) {
@@ -54,7 +54,7 @@ var roleThief = {
                 } else if (creep.pos.y == 49) {
                     creep.move(TOP);
                 } else {
-                    creep.moveTo(creep.room.findExitTo(creep.memory.target))
+                    creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.target)))
                 }
                 break;
 			case 'steal':
@@ -64,8 +64,8 @@ var roleThief = {
                 var homepath = new RoomPosition(creep.memory.home.x, creep.memory.home.y, creep.memory.home.room);
                 creep.moveTo(homepath);
 				break;
-			case 'deposit':
-				actDeposit.run(creep);
+			case 'upgrading':
+                actUpgrade.run(creep);
 				break;
 			default:
 				creep.memory.myTask = 'harvest';

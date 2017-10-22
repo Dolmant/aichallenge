@@ -1,4 +1,5 @@
 var actResupply = require('action.resupply');
+var actUpgrade = require('action.upgrade');
 
 
 var roleUpgrader = {
@@ -23,9 +24,7 @@ var roleUpgrader = {
         switch (creep.memory.myTask) {
             default:
             case 'upgrading':
-                if(creep.upgradeController(myUpgrade) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(myUpgrade, {visualizePathStyle: {stroke: '#ffffff'}});
-                }
+                actUpgrade.run(creep);
                 break;
             case 'resupply':
                 actResupply.run(creep);
