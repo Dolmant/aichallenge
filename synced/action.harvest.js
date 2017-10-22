@@ -5,18 +5,14 @@ var actHarvest = {
         /** @param {Creep} creep **/
         run: function(creep) {
             var sources = creep.room.find(FIND_SOURCES);
-            if (!creep.memory.sourceSelect) {
-                if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                    if (creep.moveTo(sources[0]) == ERR_NO_PATH) {
-                        creep.memory.sourceSelect = 1;
-                    }
+            if (sources.length > 1) {
+                if(creep.harvest(sources[sourceSelect]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(sources[sourceSelect]);
                 }
             }
             else {
-                if(creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
-                    if (creep.moveTo(sources[1]) == ERR_NO_PATH) {
-                        creep.memory.sourceSelect = 0;
-                    }
+                if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(sources[0]);
                 }
             }
         }
