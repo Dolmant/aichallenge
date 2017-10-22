@@ -6,7 +6,7 @@
  * var mod = require('role.fixer');
  * mod.thing == 'a thing'; // true
  */
-var roleUpgrader = require('role.upgrader');
+var actUpgrade = require('action.upgrade');
 var roleBuilder = {
 
     /** @param {Creep} creep **/
@@ -15,18 +15,7 @@ var roleBuilder = {
 			return;
 		}
 		
-		//let people know if we're dying, it's just polite
-        if(creep.ticksToLive<10){
-            creep.say('Dying ' + creep.ticksToLive);
-            //TODO: respawn queu
-        }
-		
-		//if fatigue is run out, dont do anything
-        if(creep.fatigue!=0){
-		    return;
-		}
-		//AI state
-		
+	
 		if((creep.memory.myTask != 'harvest') && creep.carry.energy == 0){
     		creep.memory.myTask = 'harvest';
 		}
@@ -40,7 +29,7 @@ var roleBuilder = {
             getEnergy(creep);
 			break;
 		case 'upgrade':
-			roleUpgrader.run(creep);
+			actUpgrade.run(creep);
 		case 'repair':
 		case 'build':
 			//do I already have something to build? If not find something to fix and say fixit
