@@ -3,10 +3,11 @@ var spawner = {
     
     run: function(myRoom, mySpawns, myCreepCount, totalCreeps) {
 
-        var MaxHarvester = 6;
+        var MaxHarvester = 5;
         var MaxBuilder = 2;
         var MaxMule = 0;
-        var MaxUpgrader = 20;
+        var MaxUpgrader = 3;
+        var MaxThief = 3;
 
         var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
         var referenceEnergy = totalEnergy * 50
@@ -21,9 +22,25 @@ var spawner = {
 
         referenceEnergy -= totalEnergy * 50;
 
+        var totalEnergyThief = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
+        var referenceEnergyThief = totalEnergyThief * 50
+        var partArrayThief = [];
+
+        while (totalEnergyThief >= 6) {
+            totalEnergyThief -= 6
+            partArrayThief.push(WORK)
+            partArrayThief.push(MOVE)
+            partArrayThief.push(MOVE)
+            partArrayThief.push(CARRY)
+            partArrayThief.push(CARRY)
+        }
+
+        referenceEnergyThief -= totalEnergyThief * 50;
+
         mySpawns.forEach(Spawn => {
             if (!Spawn.spawning)
             {
+                let canSpawn = true;
                 if(myCreepCount.harvester < 1)//just in case, if there are no harvesters spawn a harvester
                 {
                     Spawn.spawnCreep([WORK, CARRY, MOVE], 'Harvester', {
@@ -44,12 +61,11 @@ var spawner = {
                             claimTarget: myRoom.memory.claimTarget,
                         },
                     });
-                    console.log('Spawning: low '+ newName);
+                    console.log('Spawning: '+ newName);
                     myRoom.memory.spawnClaimer -= 1;
-                    // skip other loops since break and continue dont work
-                    referenceEnergy = 99999;
+                    canSpawn = false;
                 }
-                if(myCreepCount.harvester < MaxHarvester && myRoom.energyAvailable >= referenceEnergy)
+                if(myCreepCount.harvester < MaxHarvester && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Harvester' + Game.time;
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
@@ -59,11 +75,10 @@ var spawner = {
                             sourceSelect: myRoom.memory.sourceFlag,
                         },
                     });
-                    console.log('Spawning: low '+ newName);
-                    // skip other loops since break and continue dont work
-                    referenceEnergy = 99999;
+                    console.log('Spawning: '+ newName);
+                    canSpawn = false;
                 }
-                if(myCreepCount.builder < MaxBuilder && myRoom.energyAvailable >= referenceEnergy)
+                if(myCreepCount.builder < MaxBuilder && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Builder' + Game.time;
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
@@ -73,11 +88,10 @@ var spawner = {
                             sourceSelect: myRoom.memory.sourceFlag,
                         },
                     });
-                    console.log('Spawning: low '+ newName);
-                    // skip other loops since break and continue dont work
-                    referenceEnergy = 99999;
+                    console.log('Spawning: '+ newName);
+                    canSpawn = false;
                 }
-                if(myCreepCount.mule < MaxMule && myRoom.energyAvailable >= referenceEnergy)
+                if(myCreepCount.mule < MaxMule && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Mule' + Game.time;
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
@@ -87,11 +101,10 @@ var spawner = {
                             sourceSelect: myRoom.memory.sourceFlag,
                         },
                     });
-                    console.log('Spawning: low '+ newName);
-                    // skip other loops since break and continue dont work
-                    referenceEnergy = 99999;
+                    console.log('Spawning: '+ newName);
+                    canSpawn = false;
                 }
-                if(myCreepCount.upgrader < MaxUpgrader && myRoom.energyAvailable >= referenceEnergy)
+                if(myCreepCount.upgrader < MaxUpgrader && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Upgrader' + Game.time;
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
@@ -101,7 +114,18 @@ var spawner = {
                             sourceSelect: myRoom.memory.sourceFlag,
                         },
                     });
-                    console.log('Spawning: low '+ newName);
+                    console.log('Spawning: '+ newName);
+                    canSpawn = false;
+                }
+                if(myCreepCount.thief < MaxThief && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                {
+                    var newName = 'Thief' + Game.time;
+                    Spawn.spawnCreep(partArray, newName, {
+                        memory: {
+                            role: 'thief',
+                        },
+                    });
+                    console.log('Spawning: '+ newName);
                 }
             }
         });

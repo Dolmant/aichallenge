@@ -14,7 +14,14 @@ var runRoom = {
         var myCreeps = myRoom.find(FIND_MY_CREEPS);
         var mySpawns = myRoom.find(FIND_MY_SPAWNS);
         var myTowers = myRoom.find(FIND_MY_STRUCTURES).filter(structure => structure.structureType == STRUCTURE_TOWER);
-
+        if(myRoom.memory.timer == undefined)
+        {
+            initializeRoomConsts(myRoom);
+        }
+        else
+        {
+            myRoom.memory.timer++;
+        }
         updateRoomConsts(myRoom);
         // this doesnt work
         // var tower_test = Room.find(STRUCTURE_TOWER);
@@ -59,15 +66,6 @@ var runRoom = {
             }
         })
         spawner.run(myRoom, mySpawns, myCreepCount, totalCreeps)
-
-        if(myRoom.memory.timer == undefined)
-        {
-            myRoom.memory.timer =0;
-        }
-        else
-        {
-            myRoom.memory.timer++;
-        }
 	}
 }
 
@@ -146,6 +144,11 @@ function runTowers(myTowers)
             
         }
     });
+}
+
+function initializeRoomConsts(myRoom) {
+    // TODO create the methods that scout adjacent rooms, which exit is better to steal from, etc
+    myRoom.memory.timer = 0;
 }
 
 function updateRoomConsts(myRoom, mySpawns) {

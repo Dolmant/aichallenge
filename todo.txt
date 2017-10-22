@@ -1,0 +1,16 @@
+Need to do:
+
+invade bottom today
+count parts per energy
+create energy invaders
+build a repairer creepevery ROLE handles all TASKS
+have a better baseline for 6 harvest / 1 upgrade, everything else
+1. better pathfinding
+find out what went wrong that caused all creeps to die!
+2. break out spawner
+3. spawn smarter - what is the optimal config
+4. spawn based on incoming energy
+5. Work out best combo of parts for things.
+6. Global harvest/upgrade/build flags depending on available energy levels and pathfinding
+
+
