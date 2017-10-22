@@ -6,8 +6,8 @@ var spawner = {
         var MaxHarvester = 5;
         var MaxBuilder = 2;
         var MaxMule = 0;
-        var MaxUpgrader = 3;
-        var MaxThief = 3;
+        var MaxUpgrader = 4;
+        var MaxThief = 15;
 
         var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
         var referenceEnergy = totalEnergy * 50
@@ -117,10 +117,10 @@ var spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if(myCreepCount.thief < MaxThief && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.thief < MaxThief && myRoom.energyAvailable >= referenceEnergyThief && canSpawn)
                 {
                     var newName = 'Thief' + Game.time;
-                    Spawn.spawnCreep(partArray, newName, {
+                    Spawn.spawnCreep(partArrayThief, newName, {
                         memory: {
                             role: 'thief',
                         },
