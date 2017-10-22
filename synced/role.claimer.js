@@ -11,7 +11,7 @@ var roleClaimer = {
                 controllerpos = new RoomPosition(claimTarget.x, claimTarget.y, claimTarget.room)
                 creep.moveTo(controllerpos);
             }
-            if (err = ERR_GCL_NOT_ENOUGH) {
+            if (err == ERR_GCL_NOT_ENOUGH) {
                 creep.reserveController(creep.room.controller);
                 controllerpos = new RoomPosition(claimTarget.x, claimTarget.y, claimTarget.room)
                 creep.moveTo(controllerpos);
