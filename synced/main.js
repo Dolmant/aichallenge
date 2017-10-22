@@ -1,6 +1,4 @@
 var roomControl = require('room.alpha');
-var spawner = require('spawner');
-
 
 module.exports.loop = function () {
 	for(let name in Memory.creeps)
@@ -11,12 +9,11 @@ module.exports.loop = function () {
 		}
 	}
 
-	for (roomName in Game.rooms) {
-		var Room = Game.rooms[roomName];
-		spawner.run(Room);
+	Game.rooms.forEach(Room => {
+
 		roomControl.run(Room)
 		if (Room.find(Game.FIND_HOSTILE_CREEPS).length > 0) {
 			Room.controller.activateSafeMode();
 		}
-	}
+	});
 }

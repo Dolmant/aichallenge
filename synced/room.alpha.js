@@ -2,16 +2,54 @@ var roleUpgrader = require('role.upgrader');
 var roleHarvester = require('role.harvester');
 var roleMule = require('role.mule');
 var roleBuilder = require('role.builder');
+var spawner = require('spawner');
+
 
 var runRoom = {
 
-    run: function(RoomName) {
+    run: function(myRoom) {
         //TODO: search the room and find my towers.
-        
-        //set values
-        myRoom = Game.rooms[RoomName];
+
+        var Creeps = Room.find(FIND_MY_CREEPS);
+        var Spawns = Room.find(FIND_MY_SPAWNS);
+        // this doesnt work
+        // var tower_test = Room.find(STRUCTURE_TOWER);
+        // console.log(tower_test);
         //TODO: make the towers dynamic
         //myTowers = myRoom.find(STRUCTURE_TOWER);
+        runTower('59b47e88e1065233e38d42ee');
+
+        var myCreeps = {
+            harvester: 0,
+            upgrader: 0,
+            builder: 0,
+            mule: 0,
+        };
+
+        Creeps.forEach(creep => {
+            switch(creep.memory.role){
+                case 'harvester':
+                    roleHarvester.run(creep);
+                    myCreeps.harvester += 1;
+                    break;
+                case 'upgrader':
+                    roleUpgrader.run(creep);
+                    myCreeps.upgrader += 1;
+                    break;
+                case 'builder':
+                    roleBuilder.run(creep);
+                    myCreeps.builder += 1;
+                    break;
+                case 'mule':
+                    roleMule.run(creep);
+                    myCreeps.mule += 1;
+                    break;
+                default:
+                break;
+            }
+        })
+        spawner.run(Room, Spawns, myCreeps)
+
         if(myRoom.memory.timer == undefined)
         {
             myRoom.memory.timer =0;
@@ -20,34 +58,7 @@ var runRoom = {
         {
             myRoom.memory.timer++;
         }
-        
-        if(myRoom.memory.mySpawn == undefined)
-        {
-            
-            //TODO: works for single spawner, upgrade this to multiple later.
-            mySpawn = myRoom.find(FIND_MY_SPAWNS);
-            
-            if(Array.isArray(mySpawn))
-            {
-                console.log(mySpawn.length);
-                myRoom.memory.mySpawn = mySpawn[0].id;
-                mySpawn = mySpawn[0];
-            }
-            else
-            {
-                myRoom.memory.mySpawn = mySpawn.id;
-            }
-        }
-        else
-        {
-            mySpawn = Game.getObjectById(myRoom.memory.mySpawn);
-        }
-        
-		var ThisRoomsCreeps = Game.creeps;
 
-		ThisRoomsCreeps = _(ThisRoomsCreeps).filter({memory: {myRoom: RoomName}}).value();
-
-		//not sure why I have to use this method
 		for(var name in Game.creeps)
 		{
 		    var creep = Game.creeps[name];
@@ -67,7 +78,6 @@ var runRoom = {
                     break;		
         		default:
         		    break;
-			//run the code and tally the things
     		}
 		}
 	}
@@ -179,7 +189,7 @@ function spawnGeneral(spawnPoint, typeOfSpawn, roomName, max = 13)
         i++;
         //console.log('looped once: ' + i);
     }
-	var name = Game.spawns[spawnPoint].createCreep( body, undefined,{role:typeOfSpawn,myRoom:roomName} );
+	var name = Game.spawns[spawnPoint].createCreep( body, undefined,{role:typeOfSpawn, myRoom: myRoom.name} );
 	console.log('Spawning: '+typeOfSpawn+ ', ' + name + ' size: ' + loop);
 }
 
@@ -254,9 +264,5 @@ function findTarget(myRoom)
 
 }
 */
+
 module.exports = runRoom;
-/*
-    for(var name in Game.creeps) {
-        var creep = Game.creeps[name];
-		switch(creep.memory.role){
-		*/
