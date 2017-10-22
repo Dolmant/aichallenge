@@ -2,9 +2,6 @@ var actDeposit = {
     
         /** @param {Creep} creep **/
         run: function(creep) {
-            if(creep.fatigue!=0){
-                return;
-            }
             //if I'm carrying something that is not energy
             if (_.sum(creep.carry) != creep.carry.energy)
             {

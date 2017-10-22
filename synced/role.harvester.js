@@ -5,8 +5,8 @@ var roleHarvester = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
-        if(creep.fatigue!=0){
-		return;
+		if (creep.fatigue != 0){
+			return;
 		}
 
 		if (creep.carry.energy <= 49) {

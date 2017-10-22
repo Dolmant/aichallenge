@@ -4,9 +4,6 @@ var actHarvest = {
         
         /** @param {Creep} creep **/
         run: function(creep) {
-            if(creep.fatigue!=0){
-                return;
-            }
             var sources = creep.room.find(FIND_SOURCES);
             if (sources.length > 1) {
                 if(creep.harvest(sources[creep.memory.sourceSelect]) == ERR_NOT_IN_RANGE) {

@@ -11,7 +11,9 @@ var roleBuilder = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
-        
+		if(creep.fatigue != 0){
+			return;
+		}
 		
 		//let people know if we're dying, it's just polite
         if(creep.ticksToLive<10){
@@ -108,7 +110,7 @@ function getEnergy(creep)
 function findBuildTarget(creep)
 {
 	var target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
-	creep.memory.myBuildTarget = targets && target.id;
+	creep.memory.myBuildTarget = target && target.id;
 }
 
 function findRepairTarget(creep)

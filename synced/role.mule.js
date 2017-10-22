@@ -3,8 +3,7 @@ var roleMule = {
     
         /** @param {Creep} creep **/
         run: function(creep) {
-            
-            if(creep.fatigue!=0){
+            if (creep.fatigue != 0){
                 return;
             }
             if(creep.memory.myTask != 0 && creep.carry.energy == 0)

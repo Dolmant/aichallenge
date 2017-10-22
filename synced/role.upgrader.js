@@ -5,6 +5,10 @@ var roleUpgrader = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
+        if (creep.fatigue != 0){
+			return;
+        }
+
         if( creep.memory.MyController == undefined){
             creep.memory.MyController = creep.room.controller.id;
         }
