@@ -18,13 +18,18 @@ var roleThief = {
             };
 
             // TODO fix this to find an optimal one
+            var possibleTargets = [];
             for (name in Game.map.describeExits(creep.room.name)) {
                 if (Game.map.isRoomAvailable(name)) {
-                    creep.memory.target = name;
+                    possibleTargets.push(name)
                 }
             }
-            // TODO remove hardcoding
-            creep.memory.target = 'E43N51';
+            if (possibleTargets.length > creep.room.memory.stealFlag) {
+                creep.room.memory.stealFlag = 1;
+            } else {
+                creep.room.memory.stealFlag += 1;
+            }
+            creep.memory.target = possibleTargets[creep.room.memory.stealFlag - 1];
         }
 
         // TODO: fix this to be less order dependant
