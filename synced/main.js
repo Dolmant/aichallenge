@@ -9,11 +9,11 @@ module.exports.loop = function () {
 		}
 	}
 
-	Game.rooms.forEach(Room => {
-
+	for (roomName in Game.rooms.forEach) {
+		var Room = Game.rooms[roomName]
 		roomControl.run(Room)
 		if (Room.find(Game.FIND_HOSTILE_CREEPS).length > 0) {
 			Room.controller.activateSafeMode();
 		}
-	});
+	}
 }
