@@ -11,7 +11,8 @@ module.exports.loop = function () {
 		}
 	}
 
-	for (Room in Game.rooms) {
+	for (roomName in Game.rooms) {
+		var Room = Game.rooms[roomName];
 		spawner.run(Room);
 		roomControl.run(Room)
 		if (Room.find(Game.FIND_HOSTILE_CREEPS).length > 0) {

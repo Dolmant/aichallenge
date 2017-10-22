@@ -7,12 +7,13 @@ var roleMule = require('role.mule');
 
 var spawner = {
     
-    run: function(Room) {
+    run: function(roomName) {
 
         var MaxHarvester = 6;
         var MaxBuilder = 2;
         var MaxMule = 1;
         var MaxUpgrader = 20;
+
         var Creeps = Room.find(FIND_MY_CREEPS);
         var tower_test = Room.find(STRUCTURE_TOWER);
         console.log(tower_test);
