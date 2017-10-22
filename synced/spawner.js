@@ -35,7 +35,7 @@ var spawner = {
                 }
 
                 // to kickstart a claimer, set room.memory.spawnClaimer and the target ID as room.memory.claimTarget
-                if(myRoom.memory.spawnClaimer > 1 && myRoom.energyAvailable >= 700)
+                if(myRoom.memory.spawnClaimer > 0 && myRoom.energyAvailable >= 700)
                 {
                     var newName = 'Claimer' + Game.time;
                     Spawn.spawnCreep([CLAIM, MOVE, MOVE], newName, {
@@ -44,7 +44,9 @@ var spawner = {
                             claimTarget: myRoom.memory.claimTarget,
                         },
                     });
+                    console.log('Spawning: low '+ newName);
                     myRoom.memory.spawnClaimer -= 1;
+                    // skip other loops since break and continue dont work
                     referenceEnergy = 99999;
                 }
                 if(myCreepCount.harvester < MaxHarvester && myRoom.energyAvailable >= referenceEnergy)
