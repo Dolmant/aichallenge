@@ -10,8 +10,8 @@ var runRoom = {
     run: function(myRoom) {
         //TODO: search the room and find my towers.
 
-        var Creeps = Room.find(FIND_MY_CREEPS);
-        var Spawns = Room.find(FIND_MY_SPAWNS);
+        var myCreeps = myRoom.find(FIND_MY_CREEPS);
+        var mySpawns = myRoom.find(FIND_MY_SPAWNS);
         // this doesnt work
         // var tower_test = Room.find(STRUCTURE_TOWER);
         // console.log(tower_test);
@@ -19,36 +19,36 @@ var runRoom = {
         //myTowers = myRoom.find(STRUCTURE_TOWER);
         runTower('59b47e88e1065233e38d42ee');
 
-        var myCreeps = {
+        var myCreepCount = {
             harvester: 0,
             upgrader: 0,
             builder: 0,
             mule: 0,
         };
 
-        Creeps.forEach(creep => {
+        myCreeps.forEach(creep => {
             switch(creep.memory.role){
                 case 'harvester':
                     roleHarvester.run(creep);
-                    myCreeps.harvester += 1;
+                    myCreepCount.harvester += 1;
                     break;
                 case 'upgrader':
                     roleUpgrader.run(creep);
-                    myCreeps.upgrader += 1;
+                    myCreepCount.upgrader += 1;
                     break;
                 case 'builder':
                     roleBuilder.run(creep);
-                    myCreeps.builder += 1;
+                    myCreepCount.builder += 1;
                     break;
                 case 'mule':
                     roleMule.run(creep);
-                    myCreeps.mule += 1;
+                    myCreepCount.mule += 1;
                     break;
                 default:
                 break;
             }
         })
-        spawner.run(Room, Spawns, myCreeps)
+        spawner.run(myRoom, mySpawns, myCreepCount)
 
         if(myRoom.memory.timer == undefined)
         {
@@ -58,28 +58,6 @@ var runRoom = {
         {
             myRoom.memory.timer++;
         }
-
-		for(var name in Game.creeps)
-		{
-		    var creep = Game.creeps[name];
-
-    		switch(creep.memory.role){
-                case 'upgrader':
-                    roleUpgrader.run(creep);
-        			break;
-                case 'mule':
-                    roleMule.run(creep);
-                    break;
-                case "harvester":
-                    roleHarvester.run(creep);
-                    break;		
-                case "builder":
-                    roleBuilder.run(creep);
-                    break;		
-        		default:
-        		    break;
-    		}
-		}
 	}
 }
 
