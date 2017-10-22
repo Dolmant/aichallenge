@@ -54,7 +54,7 @@ var roleThief = {
                 } else if (creep.pos.y == 49) {
                     creep.move(TOP);
                 } else {
-                    creep.moveTo(Game.map.findExit(creep.memory.home.room, creep.memory.target))
+                    creep.moveTo(creep.room.findExitTo(creep.memory.target))
                 }
                 break;
 			case 'steal':
