@@ -43,13 +43,23 @@ var spawner = {
             {
                 if(myCreepCount.harvester < 1)//just in case, if there are no harvesters spawn a harvester
                 {
-                    Spawn.spawnCreep([WORK, CARRY, MOVE], 'Harvester', {memory:{role:'harvester', sourceSelect: myRoom.sourceFlag}});
+                    Spawn.spawnCreep([WORK, CARRY, MOVE], 'Harvester', {
+                        memory: {
+                            role:'harvester',
+                            sourceSelect: myRoom.sourceFlag,
+                        },
+                    });
                 }
                 if(myCreepCount.harvester < MaxHarvester  && myRoom.energyAvailable >= referenceHarvesterEnergy)
                 {
                     var newName = 'Harvester' + Game.time;
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
-                    Spawn.spawnCreep(harvesterPartArray, newName, {memory:{role:'harvester', sourceSelect: myRoom.memory.sourceFlag}});
+                    Spawn.spawnCreep(harvesterPartArray, newName, {
+                        memory:{
+                            role:'harvester',
+                            sourceSelect: myRoom.memory.sourceFlag,
+                        },
+                    });
                     console.log('Spawning: low '+ newName);
                     // skip other loops since break and continue dont work
                     referenceEnergy = 99999;
@@ -58,7 +68,12 @@ var spawner = {
                 {
                     var newName = 'Builder' + Game.time;
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
-                    Spawn.spawnCreep(partArray, newName, {memory:{role:'builder', sourceSelect: myRoom.memory.sourceFlag}});
+                    Spawn.spawnCreep(partArray, newName, {
+                        memory: {
+                            role:'builder',
+                            sourceSelect: myRoom.memory.sourceFlag,
+                        },
+                    });
                     console.log('Spawning: low '+ newName);
                     // skip other loops since break and continue dont work
                     referenceEnergy = 99999;
@@ -67,7 +82,12 @@ var spawner = {
                 {
                     var newName = 'Mule' + Game.time;
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
-                    Spawn.spawnCreep(partArray, newName, {memory: {role:'mule', sourceSelect: myRoom.memory.sourceFlag}});
+                    Spawn.spawnCreep(partArray, newName, {
+                        memory: {
+                            role:'mule',
+                            sourceSelect: myRoom.memory.sourceFlag,
+                        },
+                    });
                     console.log('Spawning: low '+ newName);
                     // skip other loops since break and continue dont work
                     referenceEnergy = 99999;
@@ -76,7 +96,12 @@ var spawner = {
                 {
                     var newName = 'Upgrader' + Game.time;
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
-                    Spawn.spawnCreep(partArray, newName, {memory: {role:'upgrader', sourceSelect: myRoom.memory.sourceFlag}});
+                    Spawn.spawnCreep(partArray, newName, {
+                        memory: {
+                            role:'upgrader',
+                            sourceSelect: myRoom.memory.sourceFlag,
+                        },
+                    });
                     console.log('Spawning: low '+ newName);
                 }
             }
