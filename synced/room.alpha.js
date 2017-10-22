@@ -134,7 +134,12 @@ function runTowers(myTowers)
         }
         else
         {
-            var rampRepair = tower.room.find(FIND_STRUCTURES, {filter: s=> s.structureType == STRUCTURE_RAMPART || s.structureType == STRUCTURE_WALL|| s.structureType == STRUCTURE_ROAD});
+            var rampRepair = tower.room.find(FIND_STRUCTURES, {filter: s=>
+                s.structureType == STRUCTURE_RAMPART ||
+                s.structureType == STRUCTURE_WALL ||
+                s.structureType == STRUCTURE_ROAD ||
+                s.structureType == STRUCTURE_CONTAINER
+            });
             for (let ramps of rampRepair)
             {
                 if(ramps.hits < minRepair)//this could be a problem during an assault where towers start repairing instead of attacking.
