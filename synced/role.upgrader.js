@@ -5,31 +5,27 @@ var roleUpgrader = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
-        if(creep.fatigue!=0){
-		return;
-		}
         if( creep.memory.MyController == undefined){
             creep.memory.MyController = creep.room.controller.id;
         }
-        else
+        myUpgrade = Game.getObjectById(creep.memory.MyController);
+        if(!creep.memory.myTask == 'upgrading' && creep.carry.energy == creep.carryCapacity) {
+            creep.memory.upgrading = true;
+        }
+        if(creep.carry.energy == 0)
         {
-            myUpgrade = Game.getObjectById(creep.memory.MyController);
-    	    if(!creep.memory.upgrading && creep.carry.energy == creep.carryCapacity) {
-    	        creep.memory.upgrading = true;
-    	    }
-    	    if(creep.memory.upgrading) {
+            creep.memory.myTask == 'resupply';
+        }
+        switch (creep.memory.myTask) {
+            default:
+            case 'upgrading':
                 if(creep.upgradeController(myUpgrade) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(myUpgrade, {visualizePathStyle: {stroke: '#ffffff'}});
                 }
-            }
-            if(creep.memory.upgrading && creep.carry.energy == 0)
-            {
-                creep.say('Resupply');
-                creep.memory.upgrading = false;
-            }
-            if(!creep.memory.upgrading) {
+                break;
+            case 'resupply':
                 actResupply.run(creep);
-            }
+                break;
         }
     }
 };

@@ -9,7 +9,7 @@ var roleHarvester = {
 		return;
 		}
 
-		if (creep.carry.energy == 0) {
+		if (creep.carry.energy <= 49) {
 			creep.memory.myTask = 'harvest';
 		}
 
@@ -22,14 +22,7 @@ var roleHarvester = {
 				actHarvest.run(creep);
 			break;
 			case 'deposit':
-				if (Game.spawns['Spawn1'].energy < Game.spawns['Spawn1'].energyCapacity) {
-					if(creep.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-						creep.moveTo(Game.spawns['Spawn1']);
-					}
-				}
-				else {
-					actDeposit.run(creep);
-				}
+				actDeposit.run(creep);
 				break;
 			default:
 				creep.memory.myTask = 'harvest';

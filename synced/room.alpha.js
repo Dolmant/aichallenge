@@ -33,6 +33,7 @@ var runRoom = {
         myCreeps.forEach(creep => {
             totalCreeps += 1;
             switch(creep.memory.role){
+                default:
                 case 'harvester':
                     roleHarvester.run(creep);
                     myCreepCount.harvester += 1;
@@ -49,7 +50,6 @@ var runRoom = {
                     roleMule.run(creep);
                     myCreepCount.mule += 1;
                     break;
-                default:
                 break;
             }
         })

@@ -5,7 +5,7 @@ var spawner = {
 
         var MaxHarvester = 6;
         var MaxBuilder = 2;
-        var MaxMule = 1;
+        var MaxMule = 0;
         var MaxUpgrader = 20;
 
         var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
@@ -45,8 +45,8 @@ var spawner = {
                 {
                     Spawn.spawnCreep([WORK, CARRY, MOVE], 'Harvester', {
                         memory: {
-                            role:'harvester',
-                            sourceSelect: myRoom.sourceFlag,
+                            role: 'harvester',
+                            sourceSelect: 0,
                         },
                     });
                 }
@@ -56,7 +56,7 @@ var spawner = {
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
                     Spawn.spawnCreep(harvesterPartArray, newName, {
                         memory:{
-                            role:'harvester',
+                            role: 'harvester',
                             sourceSelect: myRoom.memory.sourceFlag,
                         },
                     });
@@ -70,7 +70,7 @@ var spawner = {
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
                     Spawn.spawnCreep(partArray, newName, {
                         memory: {
-                            role:'builder',
+                            role: 'builder',
                             sourceSelect: myRoom.memory.sourceFlag,
                         },
                     });
@@ -84,7 +84,7 @@ var spawner = {
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
                     Spawn.spawnCreep(partArray, newName, {
                         memory: {
-                            role:'mule',
+                            role: 'mule',
                             sourceSelect: myRoom.memory.sourceFlag,
                         },
                     });
@@ -98,7 +98,7 @@ var spawner = {
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
                     Spawn.spawnCreep(partArray, newName, {
                         memory: {
-                            role:'upgrader',
+                            role: 'upgrader',
                             sourceSelect: myRoom.memory.sourceFlag,
                         },
                     });
