@@ -27,21 +27,21 @@ var roleThief = {
             creep.memory.target = 'E43N51';
         }
 
-		if (creep.carry.energy == 0) {
+        if (creep.room.name == creep.memory.home.room) {
+			creep.memory.myTask = 'upgrading';
+        }
+        
+        if (creep.carry.energy == 0) {
 			creep.memory.myTask = 'goToTarget';
         }
 
-		if (creep.room.name == creep.memory.target) {
+        if (creep.room.name == creep.memory.target) {
 			creep.memory.myTask = 'steal';
-		}
-
-		if (creep.carryCapacity == creep.carry.energy) {
-			creep.memory.myTask = 'goHome';
         }
         
-        if (creep.room.name == creep.memory.home.room) {
-			creep.memory.myTask = 'upgrading';
-		}
+        if (creep.carryCapacity == creep.carry.energy) {
+			creep.memory.myTask = 'goHome';
+        }
 		
 		switch(creep.memory.myTask){
             case 'goToTarget':
