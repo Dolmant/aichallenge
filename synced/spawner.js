@@ -8,7 +8,7 @@ var spawner = {
         var MaxMule = 1;
         var MaxUpgrader = 20;
 
-        var totalEnergy = Math.floor((Room.energyCapacityAvailable - 100) / 50);
+        var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
         var totalHarvesterEnergy = totalEnergy;
         var referenceEnergy = totalEnergy * 50
         var referenceHarvesterEnergy = totalEnergy * 50
