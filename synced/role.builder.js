@@ -40,10 +40,10 @@ var roleBuilder = {
                 if(!creep.memory.myBuildTarget)
                 {
 					findRepairTarget(creep);
+					if (!creep.memory.myRepairTarget) {
+						creep.memory.myTask = 'upgrade';
+					}
                 }
-				if (!creep.memory.myRepairTarget) {
-					creep.memory.myTask = 'upgrade';
-				}
 			}
 			else
 			{
