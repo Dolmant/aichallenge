@@ -45,8 +45,8 @@ var spawner = {
                 {
                     Spawn.spawnCreep([WORK, CARRY, MOVE], 'Harvester', {
                         memory: {
-                            role: 'harvester',
-                            sourceSelect: 0,
+                            'role': 'harvester',
+                            'sourceSelect': 0,
                         },
                     });
                 }
@@ -57,8 +57,8 @@ var spawner = {
                     var newName = 'Claimer' + Game.time;
                     Spawn.spawnCreep([CLAIM, MOVE, MOVE], newName, {
                         memory: {
-                            role: 'claimer',
-                            claimTarget: myRoom.memory.claimTarget,
+                            'role': 'claimer',
+                            'claimTarget': myRoom.memory.claimTarget,
                         },
                     });
                     console.log('Spawning: '+ newName);
@@ -71,8 +71,8 @@ var spawner = {
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
                     Spawn.spawnCreep(partArray, newName, {
                         memory:{
-                            role: 'harvester',
-                            sourceSelect: myRoom.memory.sourceFlag,
+                            'role': 'harvester',
+                            'sourceSelect': myRoom.memory.sourceFlag,
                         },
                     });
                     console.log('Spawning: '+ newName);
@@ -84,8 +84,8 @@ var spawner = {
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
                     Spawn.spawnCreep(partArray, newName, {
                         memory: {
-                            role: 'builder',
-                            sourceSelect: myRoom.memory.sourceFlag,
+                            'role': 'builder',
+                            'sourceSelect': myRoom.memory.sourceFlag,
                         },
                     });
                     console.log('Spawning: '+ newName);
@@ -97,8 +97,8 @@ var spawner = {
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
                     Spawn.spawnCreep(partArray, newName, {
                         memory: {
-                            role: 'mule',
-                            sourceSelect: myRoom.memory.sourceFlag,
+                            'role': 'mule',
+                            'sourceSelect': myRoom.memory.sourceFlag,
                         },
                     });
                     console.log('Spawning: '+ newName);
@@ -110,8 +110,8 @@ var spawner = {
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
                     Spawn.spawnCreep(partArray, newName, {
                         memory: {
-                            role: 'upgrader',
-                            sourceSelect: myRoom.memory.sourceFlag,
+                            'role': 'upgrader',
+                            'sourceSelect': myRoom.memory.sourceFlag,
                         },
                     });
                     console.log('Spawning: '+ newName);
@@ -122,8 +122,8 @@ var spawner = {
                     var newName = 'Thief' + Game.time;
                     Spawn.spawnCreep(partArray, newName, {
                         memory: {
-                            role: 'thief',
-                            secondaryRole: totalCreeps > 15 ? 'upgrader' : 'harvester',
+                            'role': 'thief',
+                            'secondaryRole': totalCreeps > 15 ? 'upgrader' : 'harvester',
                         },
                     });
                     console.log('Spawning: '+ newName);
