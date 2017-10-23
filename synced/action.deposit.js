@@ -31,10 +31,11 @@ var actDeposit = {
                     //find the closest extension or tower
                     var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                         filter: (structure) => {
-                            return ((structure.structureType == STRUCTURE_EXTENSION ||
-                                structure.structureType == STRUCTURE_TOWER ||
-                                structure.structureType == STRUCTURE_STORAGE ||
-                                structure.structureType == STRUCTURE_CONTAINER) && structure.energy < structure.energyCapacity);
+                            return ((structure.structureType == STRUCTURE_EXTENSION) && structure.energy < structure.energyCapacity);
+                                // structure.structureType == STRUCTURE_TOWER ||
+                                // structure.structureType == STRUCTURE_STORAGE ||
+                                // structure.structureType == STRUCTURE_CONTAINER
+                                // They fill other crap up?
                             }
                         });
                     //found an extension or tower, depositing

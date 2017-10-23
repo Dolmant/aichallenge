@@ -30,6 +30,7 @@ var roleBuilder = {
 			break;
 		case 'upgrade':
 			actUpgrade.run(creep);
+			break;
 		case 'repair':
 		case 'build':
 			//do I already have something to build? If not find something to fix and say fixit

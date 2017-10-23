@@ -20,13 +20,13 @@ var roleHarvester = {
 		switch(creep.memory.myTask){
 			case 'harvest'://get more energy
 				actHarvest.run(creep);
-			break;
+				break;
 			case 'deposit':
 				actDeposit.run(creep);
 				break;
 			default:
 				creep.memory.myTask = 'harvest';
-			break;
+				break;
 		}
 	}
 };
