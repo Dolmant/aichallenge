@@ -1,5 +1,3 @@
-const util = require('util.js')
-
 const actDeposit = {
     run: function(creep) {
         //if I'm carrying something that is not energy
@@ -19,13 +17,14 @@ const actDeposit = {
             } else if (err == OK) {
                 // Adjust the promise on this object now it has been delivered
                 var transfer = currentEnergy - creep.carry.energy;
-                if (target.memory.energyRationPromise > transfer) {
-                    target.memory.energyRationPromise -= currentEnergy - creep.carry.energy;
+                if (!Memory.structures[target.id]) {Memory.structures[target.id] = {}};
+                if (Memory.structures[target.id].energyRationPromise > transfer) {
+                    Memory.structures[target.id].energyRationPromise -= currentEnergy - creep.carry.energy;
                 } else {
-                    target.memory.energyRationPromise = 0;
+                    Memory.structures[target.id].energyRationPromise = 0;
                 }
                 if (target.structureType == STRUCTURE_EXTENSION || target.structureType == STRUCTURE_SPAWN) {
-                    room.memory.energyRation -= transfer;
+                    creep.room.memory.energyRation -= transfer;
                 }
             }
         }
@@ -47,7 +46,7 @@ function deposit_target(creep) {
             return true;
         }
     }
-    if (room.memory.energyRation > 0) {
+    if (creep.room.memory.energyRation > 0) {
         // We must deposit to the nearest none full spawn or extension
         // We do declare that this energy will be given. Promise ticks down 1 energy per tick, if it reaches 0
         var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
@@ -56,7 +55,8 @@ function deposit_target(creep) {
             },
         });
         if (target) {
-            target.memory.energyRationPromise += creep.carry.energy;
+            if (!Memory.structures[target.id]) {Memory.structures[target.id] = {}};
+            Memory.structures[target.id].energyRationPromise += creep.carry.energy;
             creep.memory.depositTarget = target.id;
             return true;
         }
@@ -67,7 +67,8 @@ function deposit_target(creep) {
         },
     });
     if (target) {
-        target.memory.energyRationPromise += creep.carry.energy;
+        if (!Memory.structures[target.id]) {Memory.structures[target.id] = {}};
+        Memory.structures[target.id].energyRationPromise += creep.carry.energy;
         creep.memory.depositTarget = target.id;
         return true;
     }
@@ -90,7 +91,8 @@ function deposit_target(creep) {
         },
     });
     if (target) {
-        target.memory.energyRationPromise += creep.carry.energy;
+        if (!Memory.structures[target.id]) {Memory.structures[target.id] = {}};
+        Memory.structures[target.id].energyRationPromise += creep.carry.energy;
         creep.memory.depositTarget = target.id;
         return true;
     }
