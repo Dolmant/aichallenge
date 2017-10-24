@@ -1,6 +1,7 @@
 var roomControl = require('room.alpha');
 
 module.exports.loop = function () {
+	if (!Memory.structures) {Memory.structures = {}};
 	for(let name in Memory.creeps)
 	{
 		if(Game.creeps[name]==undefined)
