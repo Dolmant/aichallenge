@@ -74,7 +74,7 @@ var runRoom = {
 function runTowers(myTowers)
 {
     myTowers.forEach(tower => {
-        var minRepair = 100000;
+        var minRepair = 50000;
         var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if(closestHostile) {
             tower.attack(closestHostile);

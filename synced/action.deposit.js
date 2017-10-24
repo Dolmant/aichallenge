@@ -20,7 +20,7 @@ const actDeposit = {
                 creep.room.memory.structures[target.id].energyRationPromise = 0;
                 if (target.structureType == STRUCTURE_EXTENSION || target.structureType == STRUCTURE_SPAWN) {
                     if ((target.energyCapacity - target.energy) > currentEnergy) {
-                        creep.room.memory.energyRation -= transfer;
+                        creep.room.memory.energyRation -= currentEnergy;
                     } else {
                         creep.room.memory.energyRation -= target.energyCapacity - target.energy;
                     }
