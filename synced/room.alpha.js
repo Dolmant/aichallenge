@@ -20,6 +20,7 @@ var runRoom = {
         else
         {
             myRoom.memory.timer++;
+            myRoom.memory.energyTimer++;
         }
         updateRoomConsts(myRoom);
 
@@ -39,7 +40,7 @@ var runRoom = {
             totalCreeps += 1;
             //TODO fix this count
             // var creep_size = creep.body.filter(part => part == WORK).length;
-            var creep_size = 9;
+            var creep_size = creep.body.length / 3;
             switch(creep.memory.role){
                 default:
                 case 'harvester':
@@ -114,12 +115,13 @@ function initializeRoomConsts(myRoom) {
 }
 
 function updateRoomConsts(myRoom, mySpawns) {
-    if (myRoom.memory.timer % 300 == 0) {
+    if (myRoom.memory.energyTimer > 300) {
         // TODO Make this equal to the amount of energy in the room, not hardcoded
-        // TODO this isnt triggering. hardcode trigger in spawn?
+        // TODO this isnt triggering. hardcode trigger in spawn? WHY DOESNT THIS SET
         myRoom.memory.energyRation = 5000;
         console.log('ration update: ' + String(myRoom.memory.energyRation));
         myRoom.memory.structures = {};
+        myRoom.memory.energyTimer = 0;
     }
     if (myRoom.memory.timer % 1000 == 0) {
         var links = myRoom.find(FIND_STRUCTURES, {
