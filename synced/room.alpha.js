@@ -39,8 +39,8 @@ var runRoom = {
         myCreeps.forEach(creep => {
             totalCreeps += 1;
             //TODO fix this count
-            // var creep_size = creep.body.filter(part => part == WORK).length;
-            var creep_size = creep.body.length / 3;
+            var creep_size = creep.body.filter(part => part.type == WORK).length;
+            // var creep_size = creep.body.length / 3;
             switch(creep.memory.role){
                 default:
                 case 'harvester':
