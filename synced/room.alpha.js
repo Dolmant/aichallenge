@@ -66,7 +66,7 @@ var runRoom = {
                     break;
             }
         });
-        myRoom.memory.hasMules = myCreepCount.mule;
+        myRoom.memory.hasMule = myCreepCount.mule;
         spawner.run(myRoom, mySpawns, myCreepCount, totalCreeps);
 	}
 }
@@ -108,12 +108,14 @@ function runTowers(myTowers)
 function initializeRoomConsts(myRoom) {
     // TODO create the methods that scout adjacent rooms, which exit is better to steal from, etc
     myRoom.memory.timer = 0;
+    myRoom.structures = {};
 }
 
 function updateRoomConsts(myRoom, mySpawns) {
     if (myRoom.memory.timer % 300 == 0) {
         // TODO Make this equal to the amount of energy in the room, not hardcoded
         myRoom.memory.energyRation == 2000;
+        myRoom.memory.structures = {};
     }
     if (myRoom.memory.timer % 1000 == 0) {
         var links = myRoom.find(FIND_STRUCTURES, {

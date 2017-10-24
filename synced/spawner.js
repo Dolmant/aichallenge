@@ -9,7 +9,7 @@ var spawner = {
         var MaxUpgrader = 5;
         var MaxThief = 15;
         var totalEnergy2 = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
-        var referenceEnergy = Math.floor(totalEnergy2 / 4) * 50;
+        var referenceEnergy = Math.floor(totalEnergy2 / 4) * 4 * 50;
 
         mySpawns.forEach(Spawn => {
             if (!Spawn.spawning)
@@ -43,13 +43,12 @@ var spawner = {
                 {
                     var newName = 'Harvester' + Game.time;
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
-                    var err = Spawn.spawnCreep(getBody(myRoom, {'harvester': true}), newName, {
+                    Spawn.spawnCreep(getBody(myRoom, {'harvester': true}), newName, {
                         memory:{
                             'role': 'harvester',
                             'sourceSelect': myRoom.memory.sourceFlag,
                         },
                     });
-                    console.log(err)
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }

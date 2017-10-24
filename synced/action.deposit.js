@@ -16,8 +16,8 @@ const actDeposit = {
                 return creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
             } else if (err == OK) {
                 // Adjust the promise on this object now it has been delivered
-                if (!Memory.structures[target.id]) {Memory.structures[target.id] = {}};
-                Memory.structures[target.id].energyRationPromise = 0;
+                if (!creep.room.memory.structures[target.id]) {creep.room.memory.structures[target.id] = {}};
+                creep.room.memory.structures[target.id].energyRationPromise = 0;
                 if (target.structureType == STRUCTURE_EXTENSION || target.structureType == STRUCTURE_SPAWN) {
                     if ((structure.energyCapacity - structure.energy) > currentEnergy) {
                         creep.room.memory.energyRation -= transfer;
@@ -45,17 +45,18 @@ function deposit_target(creep) {
             return true;
         }
     }
+    console.log('check ration: ' + creep.room.memory.energyRation);
     if (creep.room.memory.energyRation > 0) {
         // We must deposit to the nearest none full spawn or extension
         // We do declare that this energy will be given. Promise ticks down 1 energy per tick, if it reaches 0
         var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
             'filter': (structure) => {
-                return ((structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_EXTENSION) && !(Memory.structures[structure.id] && Memory.structures[structure.id].energyRationPromise) && structure.energy < structure.energyCapacity);
+                return ((structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_EXTENSION) && !(creep.room.memory.structures[structure.id] && creep.room.memory.structures[structure.id].energyRationPromise) && structure.energy < structure.energyCapacity);
             },
         });
         if (target) {
-            if (!Memory.structures[target.id]) {Memory.structures[target.id] = {}};
-            Memory.structures[target.id].energyRationPromise += creep.carry.energy;
+            if (!creep.room.memory.structures[target.id]) {creep.room.memory.structures[target.id] = {}};
+            creep.room.memory.structures[target.id].energyRationPromise += creep.carry.energy;
             creep.memory.depositTarget = target.id;
             return true;
         }
@@ -66,8 +67,8 @@ function deposit_target(creep) {
         },
     });
     if (target) {
-        if (!Memory.structures[target.id]) {Memory.structures[target.id] = {}};
-        Memory.structures[target.id].energyRationPromise += creep.carry.energy;
+        if (!creep.room.memory.structures[target.id]) {creep.room.memory.structures[target.id] = {}};
+        creep.room.memory.structures[target.id].energyRationPromise += creep.carry.energy;
         creep.memory.depositTarget = target.id;
         return true;
     }
@@ -90,8 +91,8 @@ function deposit_target(creep) {
         },
     });
     if (target) {
-        if (!Memory.structures[target.id]) {Memory.structures[target.id] = {}};
-        Memory.structures[target.id].energyRationPromise += creep.carry.energy;
+        if (!creep.room.memory.structures[target.id]) {creep.room.memory.structures[target.id] = {}};
+        creep.room.memory.structures[target.id].energyRationPromise += creep.carry.energy;
         creep.memory.depositTarget = target.id;
         return true;
     }
