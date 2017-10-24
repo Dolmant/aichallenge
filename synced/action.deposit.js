@@ -17,6 +17,7 @@ const actDeposit = {
             } else if (err == OK) {
                 // Adjust the promise on this object now it has been delivered
                 var transfer = currentEnergy - creep.carry.energy;
+                console.log('delivered: ' + transfer)
                 if (!Memory.structures[target.id]) {Memory.structures[target.id] = {}};
                 if (Memory.structures[target.id].energyRationPromise > transfer) {
                     Memory.structures[target.id].energyRationPromise -= currentEnergy - creep.carry.energy;
