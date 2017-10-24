@@ -51,7 +51,7 @@ function deposit_target(creep) {
         // We do declare that this energy will be given. Promise ticks down 1 energy per tick, if it reaches 0
         var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
             'filter': (structure) => {
-                return ((structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_EXTENSION) && !(Memory.structures[target.id] && Memory.structures[target.id].energyRationPromise) && structure.energy < structure.energyCapacity);
+                return ((structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_EXTENSION) && !(Memory.structures[structure.id] && Memory.structures[structure.id].energyRationPromise) && structure.energy < structure.energyCapacity);
             },
         });
         if (target) {
