@@ -19,11 +19,12 @@ const actDeposit = {
                 if (!creep.room.memory.structures[target.id]) {creep.room.memory.structures[target.id] = {}};
                 creep.room.memory.structures[target.id].energyRationPromise = 0;
                 if (target.structureType == STRUCTURE_EXTENSION || target.structureType == STRUCTURE_SPAWN) {
-                    if ((target.energyCapacity - target.energy) > currentEnergy) {
-                        creep.room.memory.energyRation -= currentEnergy;
-                    } else {
-                        creep.room.memory.energyRation -= target.energyCapacity - target.energy;
-                    }
+                    //TODO disabled these two because ration updates arent working
+                    // if ((target.energyCapacity - target.energy) > currentEnergy) {
+                    //     creep.room.memory.energyRation -= currentEnergy;
+                    // } else {
+                    //     creep.room.memory.energyRation -= target.energyCapacity - target.energy;
+                    // }
                 }
             }
         }
@@ -45,7 +46,7 @@ function deposit_target(creep) {
             return true;
         }
     }
-    console.log('check ration: ' + creep.room.memory.energyRation);
+
     if (creep.room.memory.energyRation > 0) {
         // We must deposit to the nearest none full spawn or extension
         // We do declare that this energy will be given. Promise ticks down 1 energy per tick, if it reaches 0
