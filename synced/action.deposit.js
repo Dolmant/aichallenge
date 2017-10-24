@@ -19,10 +19,10 @@ const actDeposit = {
                 if (!creep.room.memory.structures[target.id]) {creep.room.memory.structures[target.id] = {}};
                 creep.room.memory.structures[target.id].energyRationPromise = 0;
                 if (target.structureType == STRUCTURE_EXTENSION || target.structureType == STRUCTURE_SPAWN) {
-                    if ((structure.energyCapacity - structure.energy) > currentEnergy) {
+                    if ((target.energyCapacity - target.energy) > currentEnergy) {
                         creep.room.memory.energyRation -= transfer;
                     } else {
-                        creep.room.memory.energyRation -= structure.energyCapacity - structure.energy;
+                        creep.room.memory.energyRation -= target.energyCapacity - target.energy;
                     }
                 }
             }
