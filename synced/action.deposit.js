@@ -16,16 +16,14 @@ const actDeposit = {
                 return creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
             } else if (err == OK) {
                 // Adjust the promise on this object now it has been delivered
-                var transfer = currentEnergy - creep.carry.energy;
-                console.log('delivered: ' + transfer)
                 if (!Memory.structures[target.id]) {Memory.structures[target.id] = {}};
-                if (Memory.structures[target.id].energyRationPromise > transfer) {
-                    Memory.structures[target.id].energyRationPromise -= currentEnergy - creep.carry.energy;
-                } else {
-                    Memory.structures[target.id].energyRationPromise = 0;
-                }
+                Memory.structures[target.id].energyRationPromise = 0;
                 if (target.structureType == STRUCTURE_EXTENSION || target.structureType == STRUCTURE_SPAWN) {
-                    creep.room.memory.energyRation -= transfer;
+                    if ((structure.energyCapacity - structure.energy) > currentEnergy) {
+                        creep.room.memory.energyRation -= transfer;
+                    } else {
+                        creep.room.memory.energyRation -= structure.energyCapacity - structure.energy;
+                    }
                 }
             }
         }
