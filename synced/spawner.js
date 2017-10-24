@@ -8,9 +8,9 @@ var spawner = {
         var MaxMule = 0;
         var MaxUpgrader = 5;
         var MaxThief = 15;
-        var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
-        referenceEnergy = Math.floor(totalEnergy / 4) * 50;
-        
+        var totalEnergy2 = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
+        var referenceEnergy = Math.floor(totalEnergy2 / 4) * 50;
+
         mySpawns.forEach(Spawn => {
             if (!Spawn.spawning)
             {
@@ -109,7 +109,6 @@ var spawner = {
 
 function getBody(myRoom, options = {}) {
     var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
-    referenceEnergy = Math.floor(totalEnergy / 4) * 50;
     var partArray = [];
 
 
