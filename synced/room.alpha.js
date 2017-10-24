@@ -114,7 +114,8 @@ function initializeRoomConsts(myRoom) {
 function updateRoomConsts(myRoom, mySpawns) {
     if (myRoom.memory.timer % 300 == 0) {
         // TODO Make this equal to the amount of energy in the room, not hardcoded
-        myRoom.memory.energyRation == 2000;
+        myRoom.memory.energyRation == 3000;
+        console.log('ration update: ' + myRoom.memory.energyRation);
         myRoom.memory.structures = {};
     }
     if (myRoom.memory.timer % 1000 == 0) {

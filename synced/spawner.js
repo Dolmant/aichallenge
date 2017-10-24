@@ -3,11 +3,11 @@ var spawner = {
     
     run: function(myRoom, mySpawns, myCreepCount, totalCreeps) {
         // These all relate to the number of work parts except Mule which is carry
-        var MaxHarvester = 4;
-        var MaxBuilder = 2;
+        var MaxHarvester = 36;
+        var MaxBuilder = 18;
         var MaxMule = 0;
-        var MaxUpgrader = 5;
-        var MaxThief = 15;
+        var MaxUpgrader = 45;
+        var MaxThief = 135;
         var totalEnergy2 = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
         var referenceEnergy = Math.floor(totalEnergy2 / 4) * 4 * 50;
 
