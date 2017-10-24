@@ -8,7 +8,9 @@ var spawner = {
         var MaxMule = 0;
         var MaxUpgrader = 5;
         var MaxThief = 15;
-
+        var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
+        referenceEnergy = Math.floor(totalEnergy / 4) * 50;
+        
         mySpawns.forEach(Spawn => {
             if (!Spawn.spawning)
             {
