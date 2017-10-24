@@ -43,12 +43,13 @@ var spawner = {
                 {
                     var newName = 'Harvester' + Game.time;
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
-                    Spawn.spawnCreep(getBody(myRoom, {'harvester': true}), newName, {
+                    var err = Spawn.spawnCreep(getBody(myRoom, {'harvester': true}), newName, {
                         memory:{
                             'role': 'harvester',
                             'sourceSelect': myRoom.memory.sourceFlag,
                         },
                     });
+                    console.log(err)
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
