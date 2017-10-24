@@ -136,8 +136,6 @@ function updateRoomConsts(myRoom, mySpawns) {
 
         myRoom.memory.hasStorage = storage.length > 0;
         myRoom.memory.hasLinks = links.length > 1;
-
-        Game.notify('One thousand ticks: ' + myRoom.memory.timer);
         
         // This function will update stuff like functional roads, etc. Runs every 1K ticks, will have to break this up or store the paths. commented out because I am not using it
         // myRoom.find(FIND_SOURCES).forEach(Source => {
