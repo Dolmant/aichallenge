@@ -2,40 +2,12 @@
 var spawner = {
     
     run: function(myRoom, mySpawns, myCreepCount, totalCreeps) {
-
+        // These all relate to the number of work parts except Mule which is carry
         var MaxHarvester = 4;
         var MaxBuilder = 2;
         var MaxMule = 0;
         var MaxUpgrader = 5;
         var MaxThief = 15;
-
-        var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
-        var referenceEnergy = totalEnergy * 50
-        var partArray = [];
-
-        while (totalEnergy >= 4) {
-            totalEnergy -= 4
-            partArray.push(WORK)
-            partArray.push(MOVE)
-            partArray.push(CARRY)
-        }
-
-        referenceEnergy -= totalEnergy * 50;
-
-        var totalEnergyThief = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
-        var referenceEnergyThief = totalEnergyThief * 50
-        var partArrayThief = [];
-
-        while (totalEnergyThief >= 6) {
-            totalEnergyThief -= 6
-            partArrayThief.push(WORK)
-            partArrayThief.push(MOVE)
-            partArrayThief.push(MOVE)
-            partArrayThief.push(CARRY)
-            partArrayThief.push(CARRY)
-        }
-
-        referenceEnergyThief -= totalEnergyThief * 50;
 
         mySpawns.forEach(Spawn => {
             if (!Spawn.spawning)
@@ -69,7 +41,7 @@ var spawner = {
                 {
                     var newName = 'Harvester' + Game.time;
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
-                    Spawn.spawnCreep(partArray, newName, {
+                    Spawn.spawnCreep(getBody(myRoom, {'harvester': true}), newName, {
                         memory:{
                             'role': 'harvester',
                             'sourceSelect': myRoom.memory.sourceFlag,
@@ -82,7 +54,7 @@ var spawner = {
                 {
                     var newName = 'Builder' + Game.time;
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
-                    Spawn.spawnCreep(partArray, newName, {
+                    Spawn.spawnCreep(getBody(myRoom), newName, {
                         memory: {
                             'role': 'builder',
                             'sourceSelect': myRoom.memory.sourceFlag,
@@ -95,7 +67,7 @@ var spawner = {
                 {
                     var newName = 'Mule' + Game.time;
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
-                    Spawn.spawnCreep(partArray, newName, {
+                    Spawn.spawnCreep(getBody(myRoom, {'carryOnly': true}), newName, {
                         memory: {
                             'role': 'mule',
                             'sourceSelect': myRoom.memory.sourceFlag,
@@ -108,7 +80,7 @@ var spawner = {
                 {
                     var newName = 'Upgrader' + Game.time;
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
-                    Spawn.spawnCreep(partArray, newName, {
+                    Spawn.spawnCreep(getBody(myRoom), newName, {
                         memory: {
                             'role': 'upgrader',
                             'sourceSelect': myRoom.memory.sourceFlag,
@@ -120,7 +92,7 @@ var spawner = {
                 if(myCreepCount.thief < MaxThief && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Thief' + Game.time;
-                    Spawn.spawnCreep(partArray, newName, {
+                    Spawn.spawnCreep(getBody(myRoom), newName, {
                         memory: {
                             'role': 'thief',
                             'secondaryRole': totalCreeps > 15 ? 'upgrader' : 'harvester',
@@ -131,6 +103,42 @@ var spawner = {
             }
         });
     },
+}
+
+function getBody(myRoom, options = {}) {
+    var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
+    referenceEnergy = Math.floor(totalEnergy / 4) * 50;
+    var partArray = [];
+
+
+    if (options.harvester && myRoom.memory.hasMule && myRoom.memory.hasLinks && myRoom.memory.hasStorage) {
+        partArray.push(WORK);
+        partArray.push(MOVE);
+        partArray.push(CARRY);
+        totalEnergy -= 4;
+        while (totalEnergy >= 4) {
+            partArray.push(WORK)
+            partArray.push(MOVE);
+            partArray.push(CARRY);
+            totalEnergy -= 4;
+            if (totalEnergy >= 4) {
+                partArray.push(WORK)
+                partArray.push(WORK)
+                totalEnergy -= 4;
+            }
+        }
+        return partArray;
+    }
+    while (totalEnergy >= 4) {
+        if (!options.carryOnly) {
+            partArray.push(WORK);
+            totalEnergy -= 2;
+        }
+        partArray.push(MOVE);
+        partArray.push(CARRY);
+        totalEnergy -= 2;
+    }
+    return partArray;
 }
 
 module.exports = spawner;

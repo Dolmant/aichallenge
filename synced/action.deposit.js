@@ -1,63 +1,114 @@
-var actDeposit = {
-    
-        /** @param {Creep} creep **/
-        run: function(creep) {
-            // TODO allow a priority to be passed OR deposit some into the container?
-            //if I'm carrying something that is not energy
-            if (_.sum(creep.carry) != creep.carry.energy)
-            {
-                    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                        filter: (structure) => {
-                            return (structure.structureType == STRUCTURE_STORAGE) ;
-                        }
-                    });
-                    //TODO: figure out what the command for deposit all is
-                    if (target != undefined) {
-                        creep.moveTo(target);
-                       for (const resourceType in creep.carry) {
-                            creep.transfer(target, resourceType);
-                        }  
-                    }
-            }
-            else
-            {
-                // TODO remove hardcoding of spawn
-                if (Game.spawns['Spawn1'].energyCapacity > Game.spawns['Spawn1'].energy && creep.transfer(Game.spawns['Spawn1'], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(Game.spawns['Spawn1']);
+const util = require('util.js')
+
+const actDeposit = {
+    run: function(creep) {
+        //if I'm carrying something that is not energy
+        var currentEnergy = creep.carry.energy;
+        if (_.sum(creep.carry) != currentEnergy) {
+            depositResource(creep);
+        }
+        else if (!creep.memory.depositTarget) {
+            deposit_target(creep);
+        }
+        var target = Game.getObjectById(creep.memory.depositTarget);
+        if (target) {
+            var err = creep.transfer(target, RESOURCE_ENERGY)
+            if (err == ERR_NOT_IN_RANGE) {
+                // Return early to prevent deletion of the deposit target
+                return creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
+            } else if (err == OK) {
+                // Adjust the promise on this object now it has been delivered
+                var transfer = currentEnergy - creep.carry.energy;
+                if (target.memory.energyRationPromise > transfer) {
+                    target.memory.energyRationPromise -= currentEnergy - creep.carry.energy;
+                } else {
+                    target.memory.energyRationPromise = 0;
                 }
-                else {
-                    // TODO prioritize this
-                    //I'm only carrrying energy, lets find a place to deposit it
-                    //find the closest extension or tower
-                    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                        filter: (structure) => {
-                            return ((structure.structureType == STRUCTURE_EXTENSION) && structure.energy < structure.energyCapacity);
-                                // structure.structureType == STRUCTURE_TOWER ||
-                                // structure.structureType == STRUCTURE_STORAGE ||
-                                // structure.structureType == STRUCTURE_CONTAINER
-                                // They fill other crap up?
-                            }
-                        });
-                    //found an extension or tower, depositing
-                    if (target!=undefined) {
-                        if(creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
-                        }
-                    }
-                    else {
-                        var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                        filter: (structure) => {
-                            return (structure.structureType == STRUCTURE_CONTROLLER);
-                            }
-                        });
-                        if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
-                        }
-                    }
+                if (target.structureType == STRUCTURE_EXTENSION || target.structureType == STRUCTURE_SPAWN) {
+                    room.memory.energyRation -= transfer;
                 }
             }
         }
-    };
-    
-    
-    module.exports = actDeposit;
+        // important to remove the depositTarget so a new one can be fetched
+        delete creep.memory.depositTarget;
+    }
+};
+function deposit_target(creep) {
+    if (creep.room.memory.hasContainers && creep.room.memory.hasLinks && creep.room.memory.hasMules) {
+        // We can use local links and containers and rely on mules for transport
+        var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+            'filter': (structure) => {
+                return ((structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_LINK) && structure.energy < structure.energyCapacity);
+            },
+            'algorithm': 'dijkstra',
+        });
+        if (target) {
+            creep.memory.depositTarget = target.id;
+            return true;
+        }
+    }
+    if (room.memory.energyRation > 0) {
+        // We must deposit to the nearest none full spawn or extension
+        // We do declare that this energy will be given. Promise ticks down 1 energy per tick, if it reaches 0
+        var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+            'filter': (structure) => {
+                return ((structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_EXTENSION) && !structure.memory.energyRationPromise && structure.energy < structure.energyCapacity);
+            },
+        });
+        if (target) {
+            target.memory.energyRationPromise += creep.carry.energy;
+            creep.memory.depositTarget = target.id;
+            return true;
+        }
+    }
+    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+        'filter': (structure) => {
+            return ((structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity);
+        },
+    });
+    if (target) {
+        target.memory.energyRationPromise += creep.carry.energy;
+        creep.memory.depositTarget = target.id;
+        return true;
+    }
+    // Otherwise, hand it to the container for other use.
+    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+        'filter': (structure) => {
+            return ((structure.structureType == STRUCTURE_CONTAINER) && structure.energy < structure.energyCapacity);
+        },
+    });
+    if (target) {
+        creep.memory.depositTarget = target.id;
+        return true;
+    }
+
+
+    // Failsafe, give it to spawn or extension
+    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+        'filter': (structure) => {
+            return ((structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_EXTENSION) && structure.energy < structure.energyCapacity);
+        },
+    });
+    if (target) {
+        target.memory.energyRationPromise += creep.carry.energy;
+        creep.memory.depositTarget = target.id;
+        return true;
+    }
+}
+
+function deposit_resource(creep) {
+    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+        filter: (structure) => {
+            return (structure.structureType == STRUCTURE_STORAGE) ;
+        }
+    });
+    //TODO: figure out what the command for deposit all is
+    if (target != undefined) {
+        creep.moveTo(target);
+        for (const resourceType in creep.carry) {
+            creep.transfer(target, resourceType);
+        }  
+    }
+}
+
+module.exports = actDeposit;

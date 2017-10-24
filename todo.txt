@@ -1,7 +1,8 @@
 Need to do:
-
+add eslint I am dying
 invade bottom
 findsources dies when sources run out so will have to identify some other way
+document all my objects (room, creep etc)
 count parts per energy
 create energy invaders
 build a repairer creepevery ROLE handles all TASKS
