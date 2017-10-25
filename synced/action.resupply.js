@@ -12,10 +12,13 @@ var actResupply = {
         }
         if(creep.memory.resupplyTarget) {
             var resupplyTarget = Game.getObjectById(creep.memory.resupplyTarget);
-            if (!resupplyTarget) {
-                getResupplyTarget(creep);
-            } else if(creep.withdraw(resupplyTarget, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            var err = resupplyTarget && creep.withdraw(resupplyTarget, RESOURCE_ENERGY)
+            if (err == OK) {
+                creep.memory.resupplyTarget = 0;
+            } else if(err == ERR_NOT_IN_RANGE) {
                 creep.moveTo(resupplyTarget, {visualizePathStyle: {stroke: '#ffffff'}});
+            } else {
+                getResupplyTarget(creep);
             }
         } else {
             actHarvest.run(creep);
