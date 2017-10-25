@@ -61,7 +61,6 @@ var runRoom = {
             'thiefCount': 0,
         };
         var totalCreeps = 0;
-
         myCreeps.forEach(creep => {
             totalCreeps += 1;
             //TODO fix this count
@@ -70,38 +69,57 @@ var runRoom = {
             switch(creep.memory.role){
                 default:
                 case 'harvester':
-                    roleHarvester.run(creep);
                     myCreepCount.harvesterParts += creep_size;
                     myCreepCount.harvesterCount += 1;
                     break;
                 case 'upgrader':
-                    roleUpgrader.run(creep);
                     myCreepCount.upgraderParts += creep_size;
                     myCreepCount.upgraderCount += 1;
                     break;
                 case 'builder':
-                    roleBuilder.run(creep);
                     myCreepCount.builderParts += creep_size;
                     myCreepCount.builderCount += 1;
                     break;
                 case 'mule':
-                    roleMule.run(creep);
                     myCreepCount.muleParts += creep.body.filter(part => part.type == CARRY).length;
                     myCreepCount.muleCount += 1;
                     break;
                 case 'claimer':
-                    roleClaimer.run(creep);
                     myCreepCount.claimParts += creep.body.filter(part => part.type == CLAIM).length;
                     myCreepCount.claimCount += 1;
                     break;
                 case 'thief':
-                    roleThief.run(creep);
                     myCreepCount.thiefParts += creep_size;
                     myCreepCount.thiefCount += 1;
                     break;
             }
         });
+
         myRoom.memory.myCreepCount = myCreepCount;
+        myCreeps.forEach(creep => {
+            switch(creep.memory.role){
+                default:
+                case 'harvester':
+                    roleHarvester.run(creep);
+                    break;
+                case 'upgrader':
+                    roleUpgrader.run(creep);
+                    break;
+                case 'builder':
+                    roleBuilder.run(creep);
+                    break;
+                case 'mule':
+                    roleMule.run(creep);
+                    break;
+                case 'claimer':
+                    roleClaimer.run(creep);
+                    break;
+                case 'thief':
+                    roleThief.run(creep);
+                    break;
+            }
+        });
+
         myRoom.memory.hasMules = myCreepCount.muleCount;
         spawner.run(myRoom, mySpawns, myCreepCount, totalCreeps);
 	}
