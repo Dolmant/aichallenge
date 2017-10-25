@@ -13,7 +13,7 @@ var actResupply = {
         if(creep.memory.resupplyTarget) {
             var resupplyTarget = Game.getObjectById(creep.memory.resupplyTarget);
             var err = resupplyTarget && creep.withdraw(resupplyTarget, RESOURCE_ENERGY)
-            if (err == OK) {
+            if (err == OK || err == ERR_NOT_ENOUGH_RESOURCES) {
                 creep.memory.resupplyTarget = 0;
             } else if(err == ERR_NOT_IN_RANGE) {
                 creep.moveTo(resupplyTarget, {visualizePathStyle: {stroke: '#ffffff'}});
