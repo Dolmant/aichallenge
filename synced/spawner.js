@@ -3,11 +3,16 @@ var spawner = {
     
     run: function(myRoom, mySpawns, myCreepCount, totalCreeps) {
         // These all relate to the number of work parts except Mule which is carry
-        var MaxHarvester = 24;
-        var MaxBuilder = 12;
-        var MaxMule = 0;
-        var MaxUpgrader = 24;
-        var MaxThief = 90;
+        var MaxHarvesterParts = 24;
+        var MaxBuilderParts = 12;
+        var MaxMuleParts = 0;
+        var MaxUpgraderParts = 24;
+        var MaxThiefParts = 90;
+        var MaxHarvesterCount = 6;
+        var MaxBuilderCount = 3;
+        var MaxMuleCount = 0;
+        var MaxUpgraderCount = 5;
+        var MaxThiefCount = 8;
         var totalEnergy2 = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
         var referenceEnergy = Math.floor(totalEnergy2 / 4) * 4 * 50;
 
@@ -39,7 +44,7 @@ var spawner = {
                     myRoom.memory.spawnClaimer -= 1;
                     canSpawn = false;
                 }
-                if(myCreepCount.harvester < MaxHarvester && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.harvesterParts < MaxHarvesterParts && myCreepCount.harvesterCount < MaxHarvesterCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Harvester' + Game.time;
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
@@ -52,7 +57,7 @@ var spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if(myCreepCount.builder < MaxBuilder && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.builderParts < MaxBuilderParts && myCreepCount.builderCount < MaxBuilderCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Builder' + Game.time;
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
@@ -65,7 +70,7 @@ var spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if(myCreepCount.mule < MaxMule && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.muleParts < MaxMuleParts && myCreepCount.muleCount < MaxMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Mule' + Game.time;
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
@@ -78,7 +83,7 @@ var spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if(myCreepCount.upgrader < MaxUpgrader && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.upgraderParts < MaxUpgraderParts && myCreepCount.upgraderCount < MaxUpgraderCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Upgrader' + Game.time;
                     myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
@@ -91,7 +96,7 @@ var spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if(myCreepCount.thief < MaxThief && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.thiefParts < MaxThiefParts && myCreepCount.thiefCount < MaxThiefCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Thief' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom), newName, {

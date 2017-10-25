@@ -26,12 +26,18 @@ var runRoom = {
         runTowers(myTowers);
 
         var myCreepCount = {
-            'harvester': 0,
-            'upgrader': 0,
-            'builder': 0,
-            'mule': 0,
-            'claim': 0,
-            'thief': 0,
+            'harvesterParts': 0,
+            'upgraderParts': 0,
+            'builderParts': 0,
+            'muleParts': 0,
+            'claimParts': 0,
+            'thiefParts': 0,
+            'harvesterCount': 0,
+            'upgraderCount': 0,
+            'builderCount': 0,
+            'muleCount': 0,
+            'claimCount': 0,
+            'thiefCount': 0,
         };
         var totalCreeps = 0;
 
@@ -44,27 +50,33 @@ var runRoom = {
                 default:
                 case 'harvester':
                     roleHarvester.run(creep);
-                    myCreepCount.harvester += creep_size;
+                    myCreepCount.harvesterParts += creep_size;
+                    myCreepCount.harvesterCount += 1;
                     break;
                 case 'upgrader':
                     roleUpgrader.run(creep);
-                    myCreepCount.upgrader += creep_size;
+                    myCreepCount.upgraderParts += creep_size;
+                    myCreepCount.upgraderCount += 1;
                     break;
                 case 'builder':
                     roleBuilder.run(creep);
-                    myCreepCount.builder += creep_size;
+                    myCreepCount.builderParts += creep_size;
+                    myCreepCount.builderCount += 1;
                     break;
                 case 'mule':
                     roleMule.run(creep);
-                    myCreepCount.mule += creep.body.filter(part => part.type == CARRY).length;;
+                    myCreepCount.muleParts += creep.body.filter(part => part.type == CARRY).length;
+                    myCreepCount.muleCount += 1;
                     break;
                 case 'claimer':
                     roleClaimer.run(creep);
-                    myCreepCount.claim += creep.body.filter(part => part.type == CLAIM).length;;
+                    myCreepCount.claimParts += creep.body.filter(part => part.type == CLAIM).length;
+                    myCreepCount.claimCount += 1;
                     break;
                 case 'thief':
                     roleThief.run(creep);
-                    myCreepCount.thief += creep_size;
+                    myCreepCount.thiefParts += creep_size;
+                    myCreepCount.thiefCount += 1;
                     break;
             }
         });
