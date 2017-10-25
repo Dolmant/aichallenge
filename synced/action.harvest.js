@@ -7,13 +7,16 @@ var actHarvest = {
         if (!source) {
             getSource(creep);
         } else if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(source);
+            var err = creep.moveTo(source);
+            if (err == ERR_NO_PATH) {
+                getSource(creep);
+            }
         }
     }
 };
 
 function getSource(creep) {
-    var nearestSource = creep.pos.findClosestByRange(FIND_SOURCES);
+    var nearestSource = creep.pos.findClosestByPath(FIND_SOURCES);
     creep.memory.sourceMap = nearestSource && nearestSource.id;
 }
 
