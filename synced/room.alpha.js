@@ -147,9 +147,9 @@ function transferLinks(myLinks) {
         var receive = [];
         var give = [];
         myLinksMapped.forEach(link => {
-            if (link.energy > 0) {
+            if (link.energy > link.energyCapacity - 100) {
                 give.push(link);
-            } else {
+            } else if (link.energy < 100) {
                 receive.push(link);
             }
         });
@@ -177,16 +177,17 @@ function updateRoomConsts(myRoom, mySpawns) {
         console.log('ration time: ' + String(myRoom.memory.timer));
         console.log('ration room: ' + String(myRoom.name));
     }
-    if (myRoom.memory.timer % 1000 == 0) {
-        var links = myRoom.find(FIND_STRUCTURES, {
-            'filter': (structure) => {
-                return (structure.structureType == STRUCTURE_LINK);
-            },
-        });
-
+    if (myRoom.memory.timer % 1000 == 0 || myRoom.memory.runUpdate) {
+        myRoom.memory.runUpdate = false;
         var container = myRoom.find(FIND_STRUCTURES, {
             'filter': (structure) => {
                 return (structure.structureType == STRUCTURE_CONTAINER);
+            },
+        });
+
+        var links = myRoom.find(FIND_STRUCTURES, {
+            'filter': (structure) => {
+                return (structure.structureType == STRUCTURE_LINK);
             },
         });
 

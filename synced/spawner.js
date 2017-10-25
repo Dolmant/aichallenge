@@ -7,11 +7,11 @@ var spawner = {
         var MaxBuilderParts = 12;
         var MaxMuleParts = 20;
         var MaxUpgraderParts = 24;
-        var MaxThiefParts = 90;
+        var MaxThiefParts = 70;
         var MaxHarvesterCount = 4;
         var MaxBuilderCount = 3;
         var MaxMuleCount = 2;
-        var MaxUpgraderCount = 5;
+        var MaxUpgraderCount = 4;
         var MaxThiefCount = 8;
         var totalEnergy2 = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
         var referenceEnergy = Math.floor(totalEnergy2 / 4) * 4 * 50;
@@ -21,7 +21,7 @@ var spawner = {
             {
                 var sourceMap = 99;
                 // TODO kill this as this is just a safetycheck
-                if (!myRoom.memory.sources) {myRoom.memory.sources = myRoom.find(FIND_SOURCES).map(source => source.id);}
+                // if (!myRoom.memory.sources) {myRoom.memory.sources = myRoom.find(FIND_SOURCES).map(source => source.id);}
 
                 myRoom.memory.sources.forEach(source => {
                     if (myCreepCount.sourceMap[source] < sourceMap) {sourceMap = myCreepCount.sourceMap[source]}
