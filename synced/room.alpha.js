@@ -20,7 +20,7 @@ var runRoom = {
         }
         var myCreeps = myRoom.find(FIND_MY_CREEPS);
         if (!myRoom.controller || (myRoom.controller && !myRoom.controller.my)) {
-            myRoom.memory.owner = !!myRoom.controller.owner;
+            myRoom.memory.owner = myRoom.controller && !!myRoom.controller.owner;
 
             myCreeps.forEach(creep => {
                 if(creep.memory.role == 'thief') {
