@@ -45,7 +45,7 @@ function getEnergy(creep) {
         }
     } else if (creep.memory.fetchTarget) {
         target = Game.getObjectById(creep.memory.fetchTarget);
-        var err = target && creep.pickup(target);
+        var err = target && creep.wthdraw(target, RESOURCE_ENERGY);
         if (err == ERR_NOT_IN_RANGE) {
             creep.moveTo(target);
         } else if (err == OK) {
