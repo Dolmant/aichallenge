@@ -26,6 +26,8 @@ const actDeposit = {
                         creep.room.memory.energyRation -= target.energyCapacity - target.energy;
                     }
                 }
+            } else {
+                deposit_target(creep);
             }
         }
         // important to remove the depositTarget so a new one can be fetched
@@ -99,6 +101,8 @@ function deposit_target(creep, isMule = false) {
         creep.memory.depositTarget = target.id;
         return true;
     }
+
+    creep.memory.depositTarget = 0;
 }
 
 function deposit_resource(creep) {

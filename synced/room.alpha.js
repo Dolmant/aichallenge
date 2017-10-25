@@ -146,7 +146,7 @@ function transferLinks(myLinks) {
         var myLinksMapped = myLinks.map(link => Game.getObjectById(link));
         var receive = [];
         var give = [];
-        myLinksMaps.forEach(link => {
+        myLinksMapped.forEach(link => {
             if (link.energy > 0) {
                 give.push(link);
             } else {
