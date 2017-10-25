@@ -117,7 +117,7 @@ function getBody(myRoom, options = {}) {
     var partArray = [];
 
 
-    if (options.harvester && myRoom.memory.hasMule && myRoom.memory.hasLinks && myRoom.memory.hasContainers) {
+    if (options.harvester && myRoom.memory.hasMules && myRoom.memory.hasLinks && myRoom.memory.hasContainers) {
         partArray.push(WORK);
         partArray.push(MOVE);
         partArray.push(CARRY);

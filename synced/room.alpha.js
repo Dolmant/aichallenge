@@ -101,7 +101,7 @@ var runRoom = {
                     break;
             }
         });
-        myRoom.memory.hasMule = myCreepCount.mule;
+        myRoom.memory.hasMules = myCreepCount.mule;
         spawner.run(myRoom, mySpawns, myCreepCount, totalCreeps);
 	}
 }
