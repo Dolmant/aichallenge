@@ -26,6 +26,7 @@ const actDeposit = {
                         creep.room.memory.energyRation -= target.energyCapacity - target.energy;
                     }
                 }
+                creep.memory.depositTarget = 0;
             } else {
                 deposit_target(creep);
             }

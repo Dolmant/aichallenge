@@ -9,6 +9,7 @@ var roleMule = {
         if(creep.carry.energy == 0)
         {
             creep.memory.myTask = 'fetch';
+            creep.memory.depositTarget = 0;
         } else if (creep.carry.energy == creep.carryCapacity) {
             creep.memory.fetchTarget = 0;
             creep.memory.dropTarget = 0;
