@@ -1,12 +1,12 @@
 const actDeposit = {
-    run: function(creep) {
+    run: function(creep, isMule) {
         //if I'm carrying something that is not energy
         var currentEnergy = creep.carry.energy;
         if (_.sum(creep.carry) != currentEnergy) {
             depositResource(creep);
         }
         else if (!creep.memory.depositTarget) {
-            deposit_target(creep);
+            deposit_target(creep, isMule);
         }
         var target = Game.getObjectById(creep.memory.depositTarget);
         if (target) {
@@ -26,9 +26,8 @@ const actDeposit = {
                         creep.room.memory.energyRation -= target.energyCapacity - target.energy;
                     }
                 }
-                creep.memory.depositTarget = 0;
             } else {
-                deposit_target(creep);
+                deposit_target(creep, isMule);
             }
         }
         // important to remove the depositTarget so a new one can be fetched
