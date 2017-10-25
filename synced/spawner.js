@@ -24,7 +24,7 @@ var spawner = {
                 if (!myRoom.memory.sources) {myRoom.memory.sources = myRoom.find(FIND_SOURCES).map(source => source.id);}
 
                 myRoom.memory.sources.forEach(source => {
-                    if (myCreepCount[source] < sourceMap) {sourceMap = myCreepCount[source]}
+                    if (myCreepCount.sourceMap[source] < sourceMap) {sourceMap = myCreepCount.sourceMap[source]}
                 });
                 let canSpawn = true;
                 if(myCreepCount.harvester < 1)//just in case, if there are no harvesters spawn a harvester
@@ -117,7 +117,7 @@ function getBody(myRoom, options = {}) {
     var partArray = [];
 
 
-    if (options.harvester && myRoom.memory.hasMule && myRoom.memory.hasLinks && myRoom.memory.hasContainer) {
+    if (options.harvester && myRoom.memory.hasMule && myRoom.memory.hasLinks && myRoom.memory.hasContainers) {
         partArray.push(WORK);
         partArray.push(MOVE);
         partArray.push(CARRY);
