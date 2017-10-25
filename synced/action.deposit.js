@@ -33,7 +33,8 @@ const actDeposit = {
     }
 };
 function deposit_target(creep, isMule = false) {
-    if ((creep.room.memory.hasStorage || creep.room.memory.hasLinks) && creep.room.memory.hasMules && !isMule) {
+    // Mule is the only one which will refuse to drop to a container
+    if ((creep.room.memory.hasContainer || creep.room.memory.hasLinks) && creep.room.memory.hasMules && !isMule) {
         // We can use local links and containers and rely on mules for transport
         var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
             'filter': (structure) => {
@@ -77,7 +78,7 @@ function deposit_target(creep, isMule = false) {
     // Otherwise, hand it to the container for other use.
     var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
         'filter': (structure) => {
-            return ((structure.structureType == STRUCTURE_CONTAINER) && structure.store.energy < structure.storeCapacity);
+            return ((structure.structureType == STRUCTURE_STORAGE) && structure.store.energy < structure.storeCapacity);
         },
     });
     if (target) {

@@ -184,15 +184,15 @@ function updateRoomConsts(myRoom, mySpawns) {
             },
         });
 
-        var storage = myRoom.find(FIND_STRUCTURES, {
+        var container = myRoom.find(FIND_STRUCTURES, {
             'filter': (structure) => {
-                return (structure.structureType == STRUCTURE_STORAGE);
+                return (structure.structureType == STRUCTURE_CONTAINER);
             },
         });
 
         myRoom.memory.links = links.map(link => link.id);
 
-        myRoom.memory.hasStorage = storage.length > 0;
+        myRoom.memory.hasContainer = container.length > 0;
         myRoom.memory.hasLinks = links.length > 1;
         
         // This function will update stuff like functional roads, etc. Runs every 1K ticks, will have to break this up or store the paths. commented out because I am not using it

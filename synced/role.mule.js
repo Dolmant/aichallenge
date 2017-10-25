@@ -36,7 +36,7 @@ function getEnergy(creep) {
         } else {
             target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                 filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_STORAGE) && (structure.store.energy > (creep.carryCapacity - creep.carry.energy));
+                    return (structure.structureType == STRUCTURE_CONTAINER) && (structure.store.energy > (creep.carryCapacity - creep.carry.energy));
                 }
             });
             if (target) {
