@@ -22,7 +22,7 @@ var roleHarvester = {
 				actHarvest.run(creep);
 				break;
 			case 'deposit':
-				actDeposit.run(creep);
+				actDeposit.run(creep, false);
 				break;
 			default:
 				creep.memory.myTask = 'harvest';

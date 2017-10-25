@@ -10,9 +10,6 @@ var spawner = require('spawner');
 var runRoom = {
 
     run: function(myRoom) {
-        var myCreeps = myRoom.find(FIND_MY_CREEPS);
-        var mySpawns = myRoom.find(FIND_MY_SPAWNS);
-        var myTowers = myRoom.find(FIND_MY_STRUCTURES).filter(structure => structure.structureType == STRUCTURE_TOWER);
         if(myRoom.memory.timer == undefined)
         {
             initializeRoomConsts(myRoom);
@@ -21,11 +18,35 @@ var runRoom = {
         {
             myRoom.memory.timer++;
         }
+        var myCreeps = myRoom.find(FIND_MY_CREEPS);
+        if (!myRoom.controller.my) {
+            myRoom.memory.owner = !!owner;
+
+            myCreeps.forEach(creep => {
+                if(creep.memory.role == 'thief') {
+                    roleThief.run(creep);
+                }
+            });
+
+            return false;
+        }
+
+        if (myRoom.find(FIND_HOSTILE_CREEPS).length > 0 && !myRoom.controller.safeMode && !myRoom.controller.safeModeCooldown && myRoom.controller.safeModeAvailable) {
+			myRoom.controller.activateSafeMode();
+		}
+
+
+        var mySpawns = myRoom.find(FIND_MY_SPAWNS);
+        var myTowers = myRoom.find(FIND_MY_STRUCTURES).filter(structure => structure.structureType == STRUCTURE_TOWER);
+
         updateRoomConsts(myRoom);
 
         runTowers(myTowers);
 
+        transferLinks(myRoom.memory.links);
+
         var myCreepCount = {
+            'sourceMap': {},
             'harvesterParts': 0,
             'upgraderParts': 0,
             'builderParts': 0,
@@ -45,7 +66,7 @@ var runRoom = {
             totalCreeps += 1;
             //TODO fix this count
             var creep_size = creep.body.filter(part => part.type == WORK).length;
-            // var creep_size = creep.body.length / 3;
+            myCreepCount.sourceMap[creep.memory.sourceMap] += 1;
             switch(creep.memory.role){
                 default:
                 case 'harvester':
@@ -119,10 +140,32 @@ function runTowers(myTowers)
     });
 }
 
+function transferLinks(myLinks) {
+    // Transer energy to empty links only. Leave 1 energy behind so links transferring dont count as empty
+    if (myLinks) {
+        var myLinksMapped = myLinks.map(link => Game.getObjectById(link));
+        var receive = [];
+        var give = [];
+        myLinksMaps.forEach(link => {
+            if (link.energy > 0) {
+                give.push(link);
+            } else {
+                receive.push(link);
+            }
+        });
+        var condition = give.length > receive.length ? receive.length : give.length;
+        for (var index = 0; index < condition; index += 1) {
+            give[index].transferEnergy(receive[index], give[index].energy - 1)
+        }
+    }
+}
+
 function initializeRoomConsts(myRoom) {
     // TODO create the methods that scout adjacent rooms, which exit is better to steal from, etc
     myRoom.memory.timer = 0;
-    myRoom.structures = {};
+    myRoom.memory.structures = {};
+    myRoom.memory.links = [];
+    myRoom.memory.sources = myRoom.find(FIND_SOURCES).map(source => source.id);
 }
 
 function updateRoomConsts(myRoom, mySpawns) {
@@ -131,7 +174,8 @@ function updateRoomConsts(myRoom, mySpawns) {
         // TODO this isnt triggering. hardcode trigger in spawn? WHY DOESNT THIS SET
         myRoom.memory.energyRation = 5000;
         console.log('ration update: ' + String(myRoom.memory.energyRation));
-        myRoom.memory.structures = {};
+        console.log('ration time: ' + String(myRoom.memory.timer));
+        console.log('ration room: ' + String(myRoom.name));
     }
     if (myRoom.memory.timer % 1000 == 0) {
         var links = myRoom.find(FIND_STRUCTURES, {
@@ -142,9 +186,11 @@ function updateRoomConsts(myRoom, mySpawns) {
 
         var storage = myRoom.find(FIND_STRUCTURES, {
             'filter': (structure) => {
-                return (structure.structureType == STRUCTURE_LINK);
+                return (structure.structureType == STRUCTURE_STORAGE);
             },
         });
+
+        myRoom.memory.links = links.map(link => link.id);
 
         myRoom.memory.hasStorage = storage.length > 0;
         myRoom.memory.hasLinks = links.length > 1;

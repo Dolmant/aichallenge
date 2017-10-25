@@ -7,6 +7,7 @@
  * mod.thing == 'a thing'; // true
  */
 var actUpgrade = require('action.upgrade');
+var actResupply = require('action.resupply');
 var roleBuilder = {
 
     /** @param {Creep} creep **/
@@ -16,17 +17,17 @@ var roleBuilder = {
 		}
 		
 	
-		if((creep.memory.myTask != 'harvest') && creep.carry.energy == 0){
-    		creep.memory.myTask = 'harvest';
+		if((creep.memory.myTask != 'resupply') && creep.carry.energy == 0){
+    		creep.memory.myTask = 'resupply';
 		}
-		if(creep.memory.myTask == 'harvest' && creep.carry.energy == creep.carryCapacity)
+		if(creep.memory.myTask == 'resupply' && creep.carry.energy == creep.carryCapacity)
 		{
 			creep.memory.myTask = 'build';
 		}
 		switch(creep.memory.myTask){
-		case 'harvest':
+		case 'resupply':
 			//hungry, go eat
-            getEnergy(creep);
+            actResupply(creep);
 			break;
 		case 'upgrade':
 			actUpgrade.run(creep);
@@ -69,33 +70,11 @@ var roleBuilder = {
 			break;
 		default:
 			console.log('agent: ' + creep.name + " the builder did not have an action.");
-			creep.memory.myTask = 'harvest';
+			creep.memory.myTask = 'resupply';
 			break;
 		}
     }
 };
-function getEnergy(creep)
-{
-    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-        filter: (structure) => {
-            return (structure.structureType == STRUCTURE_CONTAINER ||
-            structure.structureType == STRUCTURE_STORAGE) && (structure.store.energy > creep.carryCapacity-creep.carry.energy);
-            }
-    });
-    if(target) {
-        if(creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
-        }
-    }
-    else
-    {
-		var source = creep.pos.findClosestByPath(FIND_SOURCES);
-        if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});
-            creep.say('harvest');
-        }
-    }
-}
 
 function findBuildTarget(creep)
 {

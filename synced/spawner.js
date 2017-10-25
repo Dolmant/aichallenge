@@ -3,12 +3,12 @@ var spawner = {
     
     run: function(myRoom, mySpawns, myCreepCount, totalCreeps) {
         // These all relate to the number of work parts except Mule which is carry
-        var MaxHarvesterParts = 24;
+        var MaxHarvesterParts = 18;
         var MaxBuilderParts = 12;
         var MaxMuleParts = 0;
         var MaxUpgraderParts = 24;
         var MaxThiefParts = 90;
-        var MaxHarvesterCount = 6;
+        var MaxHarvesterCount = 4;
         var MaxBuilderCount = 3;
         var MaxMuleCount = 0;
         var MaxUpgraderCount = 5;
@@ -19,13 +19,17 @@ var spawner = {
         mySpawns.forEach(Spawn => {
             if (!Spawn.spawning)
             {
+                var sourceMap = 99;
+                myRoom.memory.sources.forEach(source => {
+                    if (myCreepCount[source] < sourceMap) {sourceMap = myCreepCount[source]}
+                });
                 let canSpawn = true;
                 if(myCreepCount.harvester < 1)//just in case, if there are no harvesters spawn a harvester
                 {
                     Spawn.spawnCreep([WORK, CARRY, MOVE], 'Harvester', {
                         memory: {
                             'role': 'harvester',
-                            'sourceSelect': 0,
+                            'sourceMap': sourceMap,
                         },
                     });
                 }
@@ -47,11 +51,10 @@ var spawner = {
                 if(myCreepCount.harvesterParts < MaxHarvesterParts && myCreepCount.harvesterCount < MaxHarvesterCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Harvester' + Game.time;
-                    myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
                     Spawn.spawnCreep(getBody(myRoom, {'harvester': true}), newName, {
-                        memory:{
+                        memory: {
                             'role': 'harvester',
-                            'sourceSelect': myRoom.memory.sourceFlag,
+                            'sourceMap': sourceMap,
                         },
                     });
                     console.log('Spawning: '+ newName);
@@ -60,11 +63,9 @@ var spawner = {
                 if(myCreepCount.builderParts < MaxBuilderParts && myCreepCount.builderCount < MaxBuilderCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Builder' + Game.time;
-                    myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
                     Spawn.spawnCreep(getBody(myRoom), newName, {
                         memory: {
                             'role': 'builder',
-                            'sourceSelect': myRoom.memory.sourceFlag,
                         },
                     });
                     console.log('Spawning: '+ newName);
@@ -73,11 +74,9 @@ var spawner = {
                 if(myCreepCount.muleParts < MaxMuleParts && myCreepCount.muleCount < MaxMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Mule' + Game.time;
-                    myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
                     Spawn.spawnCreep(getBody(myRoom, {'carryOnly': true}), newName, {
                         memory: {
                             'role': 'mule',
-                            'sourceSelect': myRoom.memory.sourceFlag,
                         },
                     });
                     console.log('Spawning: '+ newName);
@@ -86,11 +85,9 @@ var spawner = {
                 if(myCreepCount.upgraderParts < MaxUpgraderParts && myCreepCount.upgraderCount < MaxUpgraderCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Upgrader' + Game.time;
-                    myRoom.memory.sourceFlag = (myRoom.memory.sourceFlag - 1) * -1;
                     Spawn.spawnCreep(getBody(myRoom), newName, {
                         memory: {
                             'role': 'upgrader',
-                            'sourceSelect': myRoom.memory.sourceFlag,
                         },
                     });
                     console.log('Spawning: '+ newName);

@@ -22,7 +22,7 @@ var roleThief = {
             const possibleTargets = [];
             const exits = Game.map.describeExits(creep.room.name)
             for (name in exits) {
-                if (Game.map.isRoomAvailable(exits[name])) {
+                if (Game.map.isRoomAvailable(exits[name]) && !(Memory.rooms[name] && !Memory.rooms[name].owner)) {
                     possibleTargets.push(exits[name])
                 }
             }
@@ -33,19 +33,11 @@ var roleThief = {
             }
             creep.memory.target = possibleTargets[creep.room.memory.stealFlag - 1];
         }
-
-        // TODO: fix this to be less order dependant
       
-        if (creep.carry.energy == 0) {
-			creep.memory.myTask = 'goToTarget';
-        }
-
         if (creep.room.name == creep.memory.target) {
-			creep.memory.myTask = 'steal';
-        }
-        
-        if (creep.carryCapacity == creep.carry.energy) {
-			creep.memory.myTask = 'goHome';
+            creep.memory.myTask = 'steal';
+        } else if (creep.carry.energy == 0) {
+			creep.memory.myTask = 'goToTarget';
         }
 
         if (creep.room.name == creep.memory.home.room && creep.carry.energy > 0) {
@@ -54,6 +46,8 @@ var roleThief = {
             } else {
                 creep.memory.myTask = 'deposit';
             }
+        } else if (creep.carryCapacity == creep.carry.energy) {
+			creep.memory.myTask = 'goHome';
         }
 		
 		switch(creep.memory.myTask){
@@ -81,7 +75,7 @@ var roleThief = {
                 actUpgrade.run(creep);
 				break;
 			case 'deposit':
-                actDeposit.run(creep);
+                actDeposit.run(creep, false);
 				break;
 			default:
 				creep.memory.myTask = 'harvest';

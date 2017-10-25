@@ -32,12 +32,13 @@ const actDeposit = {
         delete creep.memory.depositTarget;
     }
 };
-function deposit_target(creep) {
-    if (creep.room.memory.hasContainers && creep.room.memory.hasLinks && creep.room.memory.hasMules) {
+function deposit_target(creep, isMule = false) {
+    if ((creep.room.memory.hasStorage || creep.room.memory.hasLinks) && creep.room.memory.hasMules && !isMule) {
         // We can use local links and containers and rely on mules for transport
         var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
             'filter': (structure) => {
-                return ((structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_LINK) && structure.energy < structure.energyCapacity);
+                // since links and stores have different energy checking methods, need this long filter to check both
+                return ((structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_LINK) && (structure.energy < structure.energyCapacity || (structure.storeCapacity && structure.store.energy < structure.storeCapacity)));
             },
             'algorithm': 'dijkstra',
         });
@@ -76,7 +77,7 @@ function deposit_target(creep) {
     // Otherwise, hand it to the container for other use.
     var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
         'filter': (structure) => {
-            return ((structure.structureType == STRUCTURE_CONTAINER) && structure.energy < structure.energyCapacity);
+            return ((structure.structureType == STRUCTURE_CONTAINER) && structure.store.energy < structure.storeCapacity);
         },
     });
     if (target) {
