@@ -20,7 +20,7 @@ var roleMule = {
                 getEnergy(creep);
                 break;
             case 'deposit'://go fill somethings energy
-                actDeposit(creep, true);
+                actDeposit.run(creep, true);
                 break;
             default://uhoh
                 creep.memory.myTask = 'fetch';
