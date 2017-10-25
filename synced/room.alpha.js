@@ -149,7 +149,7 @@ function transferLinks(myLinks) {
         myLinksMapped.forEach(link => {
             if (link.energy > link.energyCapacity - 100) {
                 give.push(link);
-            } else if (link.energy < 100) {
+            } else if (link.energy == 0) {
                 receive.push(link);
             }
         });
