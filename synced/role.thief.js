@@ -18,10 +18,11 @@ var roleThief = {
             };
         }
         if (!creep.memory.target) {
-            // TODO fix this to find an optimal one
+            // TODO fix !!!!
             const possibleTargets = [];
             const exits = Game.map.describeExits(creep.room.name)
             for (name in exits) {
+                // This is stil lbreaking
                 if (Game.map.isRoomAvailable(exits[name]) && !(Memory.rooms[name] && !Memory.rooms[name].owner)) {
                     possibleTargets.push(exits[name])
                 }
