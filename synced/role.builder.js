@@ -27,7 +27,7 @@ var roleBuilder = {
 		switch(creep.memory.myTask){
 		case 'resupply':
 			//hungry, go eat
-            actResupply(creep);
+            actResupply.run(creep);
 			break;
 		case 'upgrade':
 			actUpgrade.run(creep);
