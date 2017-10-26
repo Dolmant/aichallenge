@@ -54,7 +54,18 @@ var spawner = {
                         delete Spawn.memory.renewTarget;
                     }
                 }
-
+                if(myCreepCount.harvesterParts < MaxHarvesterParts && myCreepCount.harvesterCount < MaxHarvesterCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                {
+                    var newName = 'Harvester' + Game.time;
+                    Spawn.spawnCreep(getBody(myRoom, {'harvester': true}), newName, {
+                        memory: {
+                            'role': 'harvester',
+                            'sourceMap': sourceMap,
+                        },
+                    });
+                    console.log('Spawning: '+ newName);
+                    canSpawn = false;
+                }
                 if(myCreepCount.attackerParts < MaxAttackerParts && myCreepCount.attackerCount < MaxAttackerCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Attacker' + Game.time;
@@ -79,18 +90,6 @@ var spawner = {
                     });
                     console.log('Spawning: '+ newName);
                     myRoom.memory.spawnClaimer -= 1;
-                    canSpawn = false;
-                }
-                if(myCreepCount.harvesterParts < MaxHarvesterParts && myCreepCount.harvesterCount < MaxHarvesterCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
-                {
-                    var newName = 'Harvester' + Game.time;
-                    Spawn.spawnCreep(getBody(myRoom, {'harvester': true}), newName, {
-                        memory: {
-                            'role': 'harvester',
-                            'sourceMap': sourceMap,
-                        },
-                    });
-                    console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
                 if(myCreepCount.builderParts < MaxBuilderParts && myCreepCount.builderCount < MaxBuilderCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
