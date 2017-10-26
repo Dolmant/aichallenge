@@ -96,7 +96,6 @@ var runRoom = {
                     myCreepCount.thiefCount += 1;
                     break;
                 case 'attacker':
-                    roleAttacker.run(creep, mySpawns);
                     myCreepCount.attackerParts += creep.body.filter(part => part.type == ATTACK).length;
                     myCreepCount.attackerCount += 1;
                     break;
@@ -124,6 +123,9 @@ var runRoom = {
                     break;
                 case 'thief':
                     roleThief.run(creep);
+                    break;
+                case 'attacker':
+                    roleAttacker.run(creep, mySpawns);
                     break;
             }
         });
