@@ -29,4 +29,5 @@ module.exports.loop = function () {
 		var Room = Game.rooms[roomName]
 		roomControl.run(Room)
 	}
+	Memory.attackers.forceInActionCount = Memory.attackers.forceInAction;
 }
