@@ -3,7 +3,7 @@ var util = require('util');
 var roleRanged = {
     run(creep, mySpawns) {
         if (creep.hits == creep.hitsMax) {
-            Memory.attackers.forceInAction.ranged += 1;
+            Memory.misc.globalCreepsTemp.ranged += 1;
         }
         if (Memory.attackers.attacking) {
             // move to and attack

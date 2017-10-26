@@ -19,7 +19,7 @@ module.exports.loop = function () {
 			delete Memory.creeps[name];
 		}
 	}
-	Memory.attackers.forceInAction = {
+	Memory.misc.globalCreepsTemp = {
 		'healer': 0,
 		'melee': 0,
 		'ranged': 0,
@@ -38,10 +38,10 @@ module.exports.loop = function () {
 		var Room = Game.rooms[roomName]
 		roomControl.run(Room)
 	}
-	Memory.attackers.forceInActionCount = {
-		'healer': Memory.attackers.forceInAction.healer,
-		'ranged': Memory.attackers.forceInAction.ranged,
-		'melee': Memory.attackers.forceInAction.melee,
-		'thief': Memory.attackers.forceInAction.thief
+	Memory.misc.globalCreeps = {
+		'healer': Memory.misc.globalCreepsTemp.healer,
+		'ranged': Memory.misc.globalCreepsTemp.ranged,
+		'melee': Memory.misc.globalCreepsTemp.melee,
+		'thief': Memory.misc.globalCreepsTemp.thief
 	};
 }

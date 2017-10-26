@@ -120,7 +120,7 @@ var spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if(myCreepCount.thiefParts < MaxThiefParts && Memory.attackers.forceInActionCount.thief < MaxThiefCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.thiefParts < MaxThiefParts && Memory.misc.globalCreeps.thief < MaxThiefCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Thief' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom), newName, {
@@ -131,7 +131,7 @@ var spawner = {
                     });
                     console.log('Spawning: '+ newName);
                 }
-                if(myCreepCount.meleeParts < MaxMeleeParts && Memory.attackers.forceInActionCount.melee < MaxMeleeCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.meleeParts < MaxMeleeParts && Memory.misc.globalCreeps.melee < MaxMeleeCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Melee' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, {'melee': true}), newName, {
@@ -142,7 +142,7 @@ var spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if(myCreepCount.healerParts < MaxHealerParts && Memory.attackers.forceInActionCount.healer < MaxHealerCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.healerParts < MaxHealerParts && Memory.misc.globalCreeps.healer < MaxHealerCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Healer' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, {'healer': true}), newName, {
@@ -153,7 +153,7 @@ var spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if(myCreepCount.rangedParts < MaxRangedParts && Memory.attackers.forceInActionCount.ranged < MaxRangedCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.rangedParts < MaxRangedParts && Memory.misc.globalCreeps.ranged < MaxRangedCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Ranged' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, {'ranged': true}), newName, {

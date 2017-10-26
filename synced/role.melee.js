@@ -3,7 +3,7 @@ var util = require('util');
 var roleMelee = {
     run(creep, mySpawns) {
         if (creep.hits == creep.hitsMax) {
-            Memory.attackers.forceInAction.melee += 1;
+            Memory.misc.globalCreepsTemp.melee += 1;
         }
         if (Memory.attackers.attacking) {
             // move to and attack
