@@ -30,7 +30,9 @@ var spawner = {
                 // if (!myRoom.memory.sources) {myRoom.memory.sources = myRoom.find(FIND_SOURCES).map(source => source.id);}
 
                 myRoom.memory.sources.forEach(source => {
-                    if (myCreepCount.sourceMap[source] < sourceMap) {sourceMap = myCreepCount.sourceMap[source]}
+                    if ((myCreepCount.sourceMap[source] || 0) < sourceMap) {
+                        sourceMap = myCreepCount.sourceMap[source] || 0;
+                    }
                 });
                 let canSpawn = true;
                 if(myCreepCount.harvester < 1)//just in case, if there are no harvesters spawn a harvester
