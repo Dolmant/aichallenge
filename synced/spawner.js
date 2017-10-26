@@ -25,13 +25,16 @@ var spawner = {
         mySpawns.forEach(Spawn => {
             if (!Spawn.spawning)
             {
-                var sourceMap = 99;
+                var sourceMapNumber = 99;
+                var sourceMap = 0;
+
                 // TODO kill this as this is just a safetycheck
                 // if (!myRoom.memory.sources) {myRoom.memory.sources = myRoom.find(FIND_SOURCES).map(source => source.id);}
 
                 myRoom.memory.sources.forEach(source => {
-                    if ((myCreepCount.sourceMap[source] || 0) < sourceMap) {
-                        sourceMap = myCreepCount.sourceMap[source] || 0;
+                    if ((myCreepCount.sourceMap[source] || 0) < sourceMapNumber) {
+                        sourceMapNumber = myCreepCount.sourceMap[source] || 0;
+                        sourceMap = source.id;
                     }
                 });
                 let canSpawn = true;
