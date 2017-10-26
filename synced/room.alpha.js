@@ -106,11 +106,11 @@ var runRoom = {
                     myCreepCount.meleeCount += 1;
                     break;
                 case 'ranged':
-                    myCreepCount.rangedParts += creep.body.filter(part => part.type == ATTACK).length;
+                    myCreepCount.rangedParts += creep.body.filter(part => part.type == RANGED_ATTACK).length;
                     myCreepCount.rangedCount += 1;
                     break;
                 case 'healer':
-                    myCreepCount.healerParts += creep.body.filter(part => part.type == ATTACK).length;
+                    myCreepCount.healerParts += creep.body.filter(part => part.type == HEAL).length;
                     myCreepCount.healerCount += 1;
                     break;
             }
