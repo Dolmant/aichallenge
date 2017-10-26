@@ -2,7 +2,9 @@ var util = require('util');
 
 var roleAttacker = {
     run(creep, mySpawns) {
-        Memory.attackers.forceInAction += 1;
+        if (creep.hits == creep.hitsMax) {
+            Memory.attackers.forceInAction += 1;
+        }
         if (Memory.attackers.attacking) {
             // move to and attack
             if (creep.room.name == Memory.attackers.attackRoom.name) {
@@ -29,7 +31,7 @@ var roleAttacker = {
                 util.goToTarget(creep);
             }
         } else {
-            if (creep.room == Memory.attackers.marshallRoom.name) {
+            if (creep.room.name == Memory.attackers.marshallRoom.name) {
                 if (creep.memory.renewing && creep.ticksToLive > 1400) {
                     delete creep.memory.renewing;
                 }
