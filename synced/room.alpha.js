@@ -214,6 +214,8 @@ function initializeRoomConsts(myRoom) {
     myRoom.memory.timer = 0;
     myRoom.memory.structures = {};
     myRoom.memory.links = [];
+    myRoom.memory.marshalForce = false;
+    myRoom.memory.spawnClaimer = 0;
     myRoom.memory.sources = myRoom.find(FIND_SOURCES).map(source => source.id);
 }
 
