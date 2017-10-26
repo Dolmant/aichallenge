@@ -66,7 +66,7 @@ var spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if(myCreepCount.attackerParts < MaxAttackerParts && myCreepCount.attackerCount < MaxAttackerCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.attackerParts < MaxAttackerParts && Memory.attackers.forceInAction < MaxAttackerCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Attacker' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, {'attacker': true}), newName, {
