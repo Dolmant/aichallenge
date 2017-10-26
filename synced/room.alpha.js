@@ -35,9 +35,9 @@ var runRoom = {
         }
 
         if (myRoom.find(FIND_HOSTILE_CREEPS).length > 0 && !myRoom.controller.safeMode && !myRoom.controller.safeModeCooldown && myRoom.controller.safeModeAvailable) {
-			myRoom.controller.activateSafeMode();
+            // myRoom.controller.activateSafeMode();
+            // dont waste these!!
 		}
-
 
         var mySpawns = myRoom.find(FIND_MY_SPAWNS);
         var myTowers = myRoom.find(FIND_MY_STRUCTURES).filter(structure => structure.structureType == STRUCTURE_TOWER);

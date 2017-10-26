@@ -7,7 +7,12 @@ var roleHealer = {
         }
         if (Memory.attackers.attacking) {
             // move to and attack
-            if (creep.room.name == Memory.attackers.attackRoom.name) {
+            if (!Memory.flags['Attack']) {
+                console.log('Place Attack flag');
+                return null;
+            }
+            var attackFlag = Memory.flags['Attack'];
+            if (creep.room.name == attackFlag.room.name) {
                 if (!creep.memory.healCreep) {
                     findTarget(creep);
                 }
@@ -24,14 +29,19 @@ var roleHealer = {
                         findTarget(creep);
                     }
                 } else {
-                    creep.moveTo(new RoomPosition(Memory.attackers.attackRoom.x, Memory.attackers.attackRoom.y, Memory.attackers.attackRoom.name), {ignoreCreeps: true})
+                    creep.moveTo(new RoomPosition(attackFlag.pos.x, attackFlag.pos.y, attackFlag.room.name), {ignoreCreeps: true})
                 }
             } else {
-                creep.memory.goToTarget = Memory.attackers.attackRoom.name;
+                creep.memory.goToTarget = attackFlag.room.name;
                 util.goToTarget(creep);
             }
         } else {
-            if (creep.room.name == Memory.attackers.marshallRoom.name) {
+            if (!Memory.flags['Marshal']) {
+                console.log('Place Marshal flag');
+                return null;
+            }
+            var marshalFlag = Memory.flags['Marshal'];
+            if (creep.room.name == marshalFlag.room.name) {
                 if (creep.memory.renewing && creep.ticksToLive > 1400) {
                     delete creep.memory.renewing;
                 }
@@ -43,10 +53,10 @@ var roleHealer = {
                         creep.moveTo(mySpawns[0].pos);
                     }
                 } else {
-                    creep.moveTo(new RoomPosition(Memory.attackers.marshallRoom.x, Memory.attackers.marshallRoom.y, Memory.attackers.marshallRoom.name))
+                    creep.moveTo(new RoomPosition(marshalFlag.pos.x, marshalFlag.pos.y, marshalFlag.room.name))
                 }
             } else {
-                creep.memory.goToTarget = Memory.attackers.marshallRoom.name;
+                creep.memory.goToTarget = marshalFlag.room.name;
                 util.goToTarget(creep);
             }
         }
