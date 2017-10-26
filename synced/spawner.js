@@ -8,11 +8,13 @@ var spawner = {
         var MaxMuleParts = 20;
         var MaxUpgraderParts = 24;
         var MaxThiefParts = 70;
+        var MaxAttackerParts = 70;
         var MaxHarvesterCount = 4;
         var MaxBuilderCount = 3;
-        var MaxMuleCount = 2;
+        var MaxMuleCount = myRoom.memory.hasLinks && myRoom.memory.hasStorage ? 2 : 0;
         var MaxUpgraderCount = 4;
-        var MaxThiefCount = 8;
+        var MaxThiefCount = 0;
+        var MaxAttackerCounter = myRoom.memory.marshallForce ? 8 : 0;
         var totalEnergy2 = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
         var referenceEnergy = Math.floor(totalEnergy2 / 4) * 4 * 50;
 
@@ -37,8 +39,37 @@ var spawner = {
                     });
                 }
 
+                if (Spawn.memory.renewTarget) {
+                    canSpawn = false;
+                    var target = Game.getObjectById(Spawn.memory.renewTarget);
+                    if (target) {
+                        var err = Spawn.renewCreep(target);
+                        if (err == ERR_FULL || err == ERR_INVALID_TARGET) {
+                            delete Spawn.memory.renewTarget;
+                        } else if (err == ERR_NOT_IN_RANGE) {
+                            // Do something else while we wait for him to get close
+                            canSpawn = true;
+                        }
+                    } else {
+                        delete Spawn.memory.renewTarget;
+                    }
+                }
+
                 // to kickstart a claimer, set room.memory.spawnClaimer and the target ID as room.memory.claimTarget
-                if(myRoom.memory.spawnClaimer > 0 && myRoom.energyAvailable >= 700)
+                if(myCreepCount.attackerParts < MaxAttackerParts && myCreepCount.attackerCount < MaxAttackerCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                {
+                    var newName = 'Attacker' + Game.time;
+                    Spawn.spawnCreep(getBody(myRoom, {'attacker': true}), newName, {
+                        memory: {
+                            'role': 'attacker',
+                        },
+                    });
+                    console.log('Spawning: '+ newName);
+                    canSpawn = false;
+                }
+
+                // to kickstart a claimer, set room.memory.spawnClaimer and the target ID as room.memory.claimTarget
+                if(myRoom.memory.spawnClaimer > 0 && myRoom.energyAvailable >= 700 && canSpawn)
                 {
                     var newName = 'Claimer' + Game.time;
                     Spawn.spawnCreep([CLAIM, MOVE, MOVE], newName, {
@@ -116,7 +147,16 @@ function getBody(myRoom, options = {}) {
     var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
     var partArray = [];
 
-
+    if (options.attacker) {
+        while (totalEnergy >= 4) {
+            partArray.push(ATTACK)
+            partArray.push(MOVE);
+            partArray.push(ATTACK)
+            partArray.push(MOVE);
+            totalEnergy -= 4;
+        }
+        return partArray;
+    }
     if (options.harvester && myRoom.memory.hasMules && myRoom.memory.hasLinks && myRoom.memory.hasContainers) {
         partArray.push(WORK);
         partArray.push(MOVE);

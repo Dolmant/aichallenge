@@ -4,6 +4,7 @@ var roleMule = require('role.mule');
 var roleBuilder = require('role.builder');
 var roleClaimer = require('role.claimer');
 var roleThief = require('role.thief');
+var roleAttacker = require('role.attacker');
 
 var spawner = require('spawner');
 
@@ -53,12 +54,14 @@ var runRoom = {
             'muleParts': 0,
             'claimParts': 0,
             'thiefParts': 0,
+            'attackerParts': 0,
             'harvesterCount': 0,
             'upgraderCount': 0,
             'builderCount': 0,
             'muleCount': 0,
             'claimCount': 0,
             'thiefCount': 0,
+            'attackCount': 0,
         };
         var totalCreeps = 0;
         myCreeps.forEach(creep => {
@@ -91,6 +94,11 @@ var runRoom = {
                 case 'thief':
                     myCreepCount.thiefParts += creep_size;
                     myCreepCount.thiefCount += 1;
+                    break;
+                case 'attacker':
+                    roleAttacker.run(creep, mySpawns);
+                    myCreepCount.attackerParts += creep.body.filter(part => part.type == ATTACK).length;
+                    myCreepCount.attackerCount += 1;
                     break;
             }
         });
@@ -128,7 +136,7 @@ var runRoom = {
 function runTowers(myTowers)
 {
     myTowers.forEach(tower => {
-        var minRepair = 50000;
+        var minRepair = 10000;
         var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if(closestHostile) {
             tower.attack(closestHostile);
@@ -205,6 +213,12 @@ function updateRoomConsts(myRoom, mySpawns) {
             },
         });
 
+        var storage = myRoom.find(FIND_STRUCTURES, {
+            'filter': (structure) => {
+                return (structure.structureType == STRUCTURE_STORAGE);
+            },
+        });
+
         var links = myRoom.find(FIND_STRUCTURES, {
             'filter': (structure) => {
                 return (structure.structureType == STRUCTURE_LINK);
@@ -213,6 +227,7 @@ function updateRoomConsts(myRoom, mySpawns) {
 
         myRoom.memory.links = links.map(link => link.id);
 
+        myRoom.memory.hasStorage = storage.length > 0;
         myRoom.memory.hasContainers = container.length > 0;
         myRoom.memory.hasLinks = links.length > 1;
         

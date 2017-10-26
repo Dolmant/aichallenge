@@ -1,6 +1,7 @@
 var actSteal = require('action.steal');
 var actUpgrade = require('action.upgrade');
 var actDeposit = require('action.deposit');
+var util = require('util');
 
 var roleThief = {
 
@@ -17,7 +18,7 @@ var roleThief = {
                 y: creep.pos.y,
             };
         }
-        if (!creep.memory.target) {
+        if (!creep.memory.goToTarget) {
             // TODO fix !!!!
             const possibleTargets = [];
             const exits = Game.map.describeExits(creep.room.name)
@@ -32,10 +33,10 @@ var roleThief = {
             } else {
                 creep.room.memory.stealFlag += 1;
             }
-            creep.memory.target = possibleTargets[creep.room.memory.stealFlag - 1];
+            creep.memory.goToTarget = possibleTargets[creep.room.memory.stealFlag - 1];
         }
       
-        if (creep.room.name == creep.memory.target) {
+        if (creep.room.name == creep.memory.goToTarget) {
             creep.memory.myTask = 'steal';
         } else if (creep.carry.energy == 0) {
 			creep.memory.myTask = 'goToTarget';
@@ -53,17 +54,7 @@ var roleThief = {
 		
 		switch(creep.memory.myTask){
             case 'goToTarget':
-                if (creep.pos.x == 0) {
-                    creep.move(RIGHT);
-                } else if (creep.pos.x == 49) {
-                    creep.move(LEFT);
-                } else if (creep.pos.y == 0) {
-                    creep.move(BOTTOM);
-                } else if (creep.pos.y == 49) {
-                    creep.move(TOP);
-                } else {
-                    creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.target)))
-                }
+                util.goToTarget(creep);
                 break;
 			case 'steal':
 				actSteal.run(creep);
