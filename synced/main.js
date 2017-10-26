@@ -36,6 +36,6 @@ module.exports.loop = function () {
 	Memory.attackers.forceInActionCount = {
 		'healer': Memory.attackers.forceInAction.healer,
 		'ranged': Memory.attackers.forceInAction.ranged,
-		'melee': Memory.attackers.forceInActionmelee
+		'melee': Memory.attackers.forceInAction.melee
 	};
 }

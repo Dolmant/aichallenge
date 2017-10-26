@@ -14,7 +14,7 @@ var roleRanged = {
                 if (creep.memory.attackCreep) {
                     var target = Game.getObjectById(creep.memory.attackCreep);
                     if (target) {
-                        var err = creep.ranged_attack(target);
+                        var err = creep.rangedAttack(target);
                         if (err == ERR_NOT_IN_RANGE) {
                             creep.moveTo(target.pos);
                         } else if (err == ERR_INVALID_TARGET) {
