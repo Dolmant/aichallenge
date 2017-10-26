@@ -148,10 +148,11 @@ function getBody(myRoom, options = {}) {
 
     if (options.attacker) {
         while (totalEnergy >= 4) {
-            partArray.push(ATTACK)
+            partArray.push(ATTACK);
             partArray.push(MOVE);
-            partArray.push(ATTACK)
             partArray.push(MOVE);
+            partArray.push(TOUGH);
+            partArray.push(TOUGH);
             totalEnergy -= 4;
         }
         return partArray;
