@@ -4,7 +4,9 @@ var roleMule = require('role.mule');
 var roleBuilder = require('role.builder');
 var roleClaimer = require('role.claimer');
 var roleThief = require('role.thief');
-var roleAttacker = require('role.attacker');
+var roleMelee = require('role.melee');
+var roleRanged = require('role.ranged');
+var roleHealer = require('role.healer');
 
 var spawner = require('spawner');
 
@@ -54,14 +56,18 @@ var runRoom = {
             'muleParts': 0,
             'claimParts': 0,
             'thiefParts': 0,
-            'attackerParts': 0,
+            'meleeParts': 0,
+            'rangedParts': 0,
+            'healerParts': 0,
             'harvesterCount': 0,
             'upgraderCount': 0,
             'builderCount': 0,
             'muleCount': 0,
             'claimCount': 0,
             'thiefCount': 0,
-            'attackerCount': 0,
+            'meleeCount': 0,
+            'rangedCount': 0,
+            'healerCount': 0,
         };
         var totalCreeps = 0;
         myCreeps.forEach(creep => {
@@ -95,9 +101,17 @@ var runRoom = {
                     myCreepCount.thiefParts += creep_size;
                     myCreepCount.thiefCount += 1;
                     break;
-                case 'attacker':
-                    myCreepCount.attackerParts += creep.body.filter(part => part.type == ATTACK).length;
-                    myCreepCount.attackerCount += 1;
+                case 'melee':
+                    myCreepCount.meleeParts += creep.body.filter(part => part.type == ATTACK).length;
+                    myCreepCount.meleeCount += 1;
+                    break;
+                case 'ranged':
+                    myCreepCount.rangedParts += creep.body.filter(part => part.type == ATTACK).length;
+                    myCreepCount.rangedCount += 1;
+                    break;
+                case 'healer':
+                    myCreepCount.healerParts += creep.body.filter(part => part.type == ATTACK).length;
+                    myCreepCount.healerCount += 1;
                     break;
             }
         });
@@ -124,8 +138,14 @@ var runRoom = {
                 case 'thief':
                     roleThief.run(creep);
                     break;
-                case 'attacker':
-                    roleAttacker.run(creep, mySpawns);
+                case 'melee':
+                    roleMelee.run(creep, mySpawns);
+                    break;
+                case 'ranged':
+                    roleRanged.run(creep, mySpawns);
+                    break;
+                case 'healer':
+                    roleHealer.run(creep, mySpawns);
                     break;
             }
         });

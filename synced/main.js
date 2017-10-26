@@ -15,7 +15,11 @@ module.exports.loop = function () {
 	// 		delete Memory.creeps[name];
 	// 	}
 	// }
-	Memory.attackers.forceInAction = 0;
+	Memory.attackers.forceInAction = {
+		'healer': 0,
+		'melee': 0,
+		'ranged': 0,
+	};
 	// Lets keep this around just in case
 	// for(let name in Memory.rooms)
 	// {
@@ -29,5 +33,9 @@ module.exports.loop = function () {
 		var Room = Game.rooms[roomName]
 		roomControl.run(Room)
 	}
-	Memory.attackers.forceInActionCount = Memory.attackers.forceInAction;
+	Memory.attackers.forceInActionCount = {
+		'healer': Memory.attackers.forceInAction.healer,
+		'ranged': Memory.attackers.forceInAction.ranged,
+		'melee': Memory.attackers.forceInActionmelee
+	};
 }

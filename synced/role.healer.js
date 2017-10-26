@@ -1,20 +1,20 @@
 var util = require('util');
 
-var roleAttacker = {
+var roleHealer = {
     run(creep, mySpawns) {
         if (creep.hits == creep.hitsMax) {
-            Memory.attackers.forceInAction += 1;
+            Memory.attackers.forceInAction.healer += 1;
         }
         if (Memory.attackers.attacking) {
             // move to and attack
             if (creep.room.name == Memory.attackers.attackRoom.name) {
-                if (!creep.memory.attackCreep) {
+                if (!creep.memory.healCreep) {
                     findTarget(creep);
                 }
-                if (creep.memory.attackCreep) {
-                    var target = Game.getObjectById(creep.memory.attackCreep);
+                if (creep.memory.healCreep) {
+                    var target = Game.getObjectById(creep.memory.healCreep);
                     if (target) {
-                        var err = creep.attack(target);
+                        var err = creep.heal(target);
                         if (err == ERR_NOT_IN_RANGE) {
                             creep.moveTo(target.pos);
                         } else if (err == ERR_INVALID_TARGET) {
@@ -51,15 +51,14 @@ var roleAttacker = {
 };
 
 function findTarget(creep) {
-    var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
-    if (!target) {
-        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES);
-    }
+    var target = creep.pos.findClosestByPath(FIND_MY_CREEPS, {
+        'filter': creep => creep.hits < creep.hitsMax,
+    });
     if (target) {
-        creep.memory.attackCreep = target.id;
+        creep.memory.healCreep = target.id;
     } else {
-        delete creep.memory.attackCreep;
+        delete creep.memory.healCreep;
     }
 }
 
-module.exports = roleAttacker;
+module.exports = roleHealer;

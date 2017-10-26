@@ -8,13 +8,17 @@ var spawner = {
         var MaxMuleParts = 20;
         var MaxUpgraderParts = 24;
         var MaxThiefParts = 70;
-        var MaxAttackerParts = 70;
+        var MaxMeleeParts = 70;
+        var MaxRangedParts = 70;
+        var MaxHealerParts = 10;
         var MaxHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 6;
         var MaxBuilderCount = myRoom.memory.marshallForce ? 1 : 2;
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         var MaxUpgraderCount = myRoom.memory.marshallForce ? 1 : 2;
         var MaxThiefCount = myRoom.memory.marshallForce ? 0 : 4;
-        var MaxAttackerCount = myRoom.memory.marshallForce ? Memory.attackers.forceSize : 0;
+        var MaxMeleeCount = myRoom.memory.marshallForce ? Memory.attackers.forceSize - 3 : 0;
+        var MaxRangedCount = myRoom.memory.marshallForce ? 2 : 0;
+        var MaxHealerCount = myRoom.memory.marshallForce ? 1 : 0;
         var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
         var referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
 
@@ -125,12 +129,34 @@ var spawner = {
                     });
                     console.log('Spawning: '+ newName);
                 }
-                if(myCreepCount.attackerParts < MaxAttackerParts && Memory.attackers.forceInActionCount < MaxAttackerCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.meleeParts < MaxMeleeParts && Memory.attackers.forceInActionCount.melee < MaxMeleeCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
-                    var newName = 'Attacker' + Game.time;
-                    Spawn.spawnCreep(getBody(myRoom, {'attacker': true}), newName, {
+                    var newName = 'Melee' + Game.time;
+                    Spawn.spawnCreep(getBody(myRoom, {'melee': true}), newName, {
                         memory: {
-                            'role': 'attacker',
+                            'role': 'melee',
+                        },
+                    });
+                    console.log('Spawning: '+ newName);
+                    canSpawn = false;
+                }
+                if(myCreepCount.healerParts < MaxHealerParts && Memory.attackers.forceInActionCount.healer < MaxHealerCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                {
+                    var newName = 'Healer' + Game.time;
+                    Spawn.spawnCreep(getBody(myRoom, {'healer': true}), newName, {
+                        memory: {
+                            'role': 'healer',
+                        },
+                    });
+                    console.log('Spawning: '+ newName);
+                    canSpawn = false;
+                }
+                if(myCreepCount.rangedParts < MaxRangedParts && Memory.attackers.forceInActionCount.ranged < MaxRangedCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                {
+                    var newName = 'Ranged' + Game.time;
+                    Spawn.spawnCreep(getBody(myRoom, {'ranged': true}), newName, {
+                        memory: {
+                            'role': 'ranged',
                         },
                     });
                     console.log('Spawning: '+ newName);
@@ -146,9 +172,23 @@ function getBody(myRoom, options = {}) {
     var referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
     var partArray = [];
 
-    if (options.attacker) {
+    if (options.melee) {
         for (var i = 0; i < Math.floor(referenceEnergy/130); i += 1) {
             partArray.push(ATTACK);
+            partArray.push(MOVE);
+        }
+        return partArray;
+    }
+    if (options.healer) {
+        for (var i = 0; i < Math.floor(referenceEnergy/300); i += 1) {
+            partArray.push(HEAL);
+            partArray.push(MOVE);
+        }
+        return partArray;
+    }
+    if (options.ranged) {
+        for (var i = 0; i < Math.floor(referenceEnergy/200); i += 1) {
+            partArray.push(RANGED_ATTACK);
             partArray.push(MOVE);
         }
         return partArray;
