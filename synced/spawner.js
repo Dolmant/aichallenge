@@ -10,7 +10,7 @@ var spawner = {
         var MaxThiefParts = 70;
         var MaxAttackerParts = 70;
         var MaxHarvesterCount = myRoom.memory.hasLinks && myRoom.memory.hasStorage ? 4 : 6;
-        var MaxBuilderCount = 2;
+        var MaxBuilderCount = myRoom.memory.marshallForce ? 1 : 2;
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         var MaxUpgraderCount = myRoom.memory.marshallForce ? 1 : 2;
         var MaxThiefCount = myRoom.memory.marshallForce ? 0 : 4;
@@ -61,17 +61,6 @@ var spawner = {
                         memory: {
                             'role': 'harvester',
                             'sourceMap': sourceMap,
-                        },
-                    });
-                    console.log('Spawning: '+ newName);
-                    canSpawn = false;
-                }
-                if(myCreepCount.attackerParts < MaxAttackerParts && Memory.attackers.forceInActionCount < MaxAttackerCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
-                {
-                    var newName = 'Attacker' + Game.time;
-                    Spawn.spawnCreep(getBody(myRoom, {'attacker': true}), newName, {
-                        memory: {
-                            'role': 'attacker',
                         },
                     });
                     console.log('Spawning: '+ newName);
@@ -135,6 +124,17 @@ var spawner = {
                         },
                     });
                     console.log('Spawning: '+ newName);
+                }
+                if(myCreepCount.attackerParts < MaxAttackerParts && Memory.attackers.forceInActionCount < MaxAttackerCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                {
+                    var newName = 'Attacker' + Game.time;
+                    Spawn.spawnCreep(getBody(myRoom, {'attacker': true}), newName, {
+                        memory: {
+                            'role': 'attacker',
+                        },
+                    });
+                    console.log('Spawning: '+ newName);
+                    canSpawn = false;
                 }
             }
         });
