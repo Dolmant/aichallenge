@@ -36,7 +36,7 @@ var roleAttacker = {
                     delete creep.memory.renewing;
                 }
                 if (creep.ticksToLive < 1000 || creep.memory.renewing) {
-                    if (!mySpawns[0].memory.renewTarget) {Spawn.memory.renewTarget = creep.id};
+                    if (!mySpawns[0].memory.renewTarget) {mySpawns[0].memory.renewTarget = creep.id};
                     creep.memory.renewing = true;
                     creep.moveTo(mySpawns[0].pos);
                 } else {
