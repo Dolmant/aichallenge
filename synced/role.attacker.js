@@ -19,7 +19,7 @@ var roleAttacker = {
                         }
                     }
                 } else {
-                    creep.moveTo(new RoomPosition(Memory.attackers.attackRoom.x, Memory.attackers.attackRoom.y, Memory.attackers.attackRoom.name))
+                    creep.moveTo(new RoomPosition(Memory.attackers.attackRoom.x, Memory.attackers.attackRoom.y, Memory.attackers.attackRoom.name), {ignoreCreeps: true})
                 }
             } else {
                 if (!creep.memory.goToTarget) {creep.memory.goToTarget = Memory.attackers.attackRoom.name};
