@@ -81,7 +81,6 @@ var spawner = {
                     Spawn.spawnCreep([CLAIM, MOVE, MOVE], newName, {
                         memory: {
                             'role': 'claimer',
-                            'claimTarget': Memory.misc.claimTarget,
                         },
                     });
                     console.log('Spawning: '+ newName);
