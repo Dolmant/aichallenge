@@ -105,7 +105,7 @@ function deposit_target(creep, isMule = false) {
 
     var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
         'filter': (structure) => {
-            return ((structure.structureType == STRUCTURE_CONTAINER) && structure.energy < structure.energyCapacity);
+            return ((structure.structureType == STRUCTURE_CONTAINER) && structure.store.energy < structure.storeCapacity);
         },
     });
     if (target) {
