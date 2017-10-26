@@ -14,7 +14,7 @@ var spawner = {
         var MaxMuleCount = myRoom.memory.hasLinks && myRoom.memory.hasStorage ? 2 : 0;
         var MaxUpgraderCount = myRoom.memory.marshallForce ? 0 : 2;
         var MaxThiefCount = myRoom.memory.marshallForce ? 0 : 4;
-        var MaxAttackerCount = myRoom.memory.marshallForce ? 8 : 0;
+        var MaxAttackerCount = myRoom.memory.marshallForce ? Memory.attacker.forceSize : 0;
         var totalEnergy2 = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
         var referenceEnergy = Math.floor(totalEnergy2 / 4) * 4 * 50;
 
