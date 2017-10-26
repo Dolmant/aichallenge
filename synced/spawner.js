@@ -143,7 +143,7 @@ var spawner = {
 
 function getBody(myRoom, options = {}) {
     var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
-    var referenceEnergy = Math.floor(totalEnergy2 / 4) * 4 * 50;
+    var referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
     var partArray = [];
 
     if (options.attacker) {
