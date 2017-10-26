@@ -23,6 +23,7 @@ module.exports.loop = function () {
 		'healer': 0,
 		'melee': 0,
 		'ranged': 0,
+		'thief': 0,
 	};
 	// Lets keep this around just in case?
 	// for(let name in Memory.rooms)
@@ -40,6 +41,7 @@ module.exports.loop = function () {
 	Memory.attackers.forceInActionCount = {
 		'healer': Memory.attackers.forceInAction.healer,
 		'ranged': Memory.attackers.forceInAction.ranged,
-		'melee': Memory.attackers.forceInAction.melee
+		'melee': Memory.attackers.forceInAction.melee,
+		'thief': Memory.attackers.forceInAction.thief
 	};
 }

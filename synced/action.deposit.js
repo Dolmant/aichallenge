@@ -103,6 +103,18 @@ function deposit_target(creep, isMule = false) {
         return true;
     }
 
+    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+        'filter': (structure) => {
+            return ((structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_EXTENSION) && structure.energy < structure.energyCapacity);
+        },
+    });
+    if (target) {
+        if (!creep.room.memory.structures[target.id]) {creep.room.memory.structures[target.id] = {}};
+        creep.room.memory.structures[target.id].energyRationPromise += creep.carry.energy;
+        creep.memory.depositTarget = target.id;
+        return true;
+    }
+
     creep.memory.depositTarget = 0;
 }
 

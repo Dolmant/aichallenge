@@ -120,7 +120,7 @@ var spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if(myCreepCount.thiefParts < MaxThiefParts && myCreepCount.thiefCount < MaxThiefCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.thiefParts < MaxThiefParts && Memory.attackers.forceInActionCount.thief < MaxThiefCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Thief' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom), newName, {
