@@ -24,7 +24,7 @@ var roleAttacker = {
                 goToTarget(creep);
             }
         } else {
-            if (creep.ticksToLive < 1200) {
+            if (creep.ticksToLive < 1000) {
                 mySpawns[0].memory.renewTarget = creep.id;
                 creep.moveTo(mySpawns[0].pos);
             } else {
