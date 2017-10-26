@@ -8,6 +8,7 @@
  */
 var actUpgrade = require('action.upgrade');
 var actResupply = require('action.resupply');
+var util = require('util');
 var roleBuilder = {
 
     /** @param {Creep} creep **/
