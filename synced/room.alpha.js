@@ -22,31 +22,6 @@ var runRoom = {
             myRoom.memory.timer++;
         }
         var myCreeps = myRoom.find(FIND_MY_CREEPS);
-        if (!myRoom.controller || (myRoom.controller && !myRoom.controller.my)) {
-            myRoom.memory.owner = myRoom.controller && !!myRoom.controller.owner;
-
-            myCreeps.forEach(creep => {
-                if(creep.memory.role == 'thief') {
-                    roleThief.run(creep);
-                }
-            });
-
-            return false;
-        }
-
-        if (myRoom.find(FIND_HOSTILE_CREEPS).length > 0 && !myRoom.controller.safeMode && !myRoom.controller.safeModeCooldown && myRoom.controller.safeModeAvailable) {
-            // myRoom.controller.activateSafeMode();
-            // dont waste these!!
-		}
-
-        var mySpawns = myRoom.find(FIND_MY_SPAWNS);
-        var myTowers = myRoom.find(FIND_MY_STRUCTURES).filter(structure => structure.structureType == STRUCTURE_TOWER);
-
-        updateRoomConsts(myRoom);
-
-        runTowers(myTowers);
-
-        transferLinks(myRoom.memory.links);
 
         var myCreepCount = {
             'sourceMap': {},
@@ -149,6 +124,32 @@ var runRoom = {
                     break;
             }
         });
+
+        if (!myRoom.controller || (myRoom.controller && !myRoom.controller.my)) {
+            myRoom.memory.owner = myRoom.controller && !!myRoom.controller.owner;
+
+            myCreeps.forEach(creep => {
+                if(creep.memory.role == 'thief') {
+                    roleThief.run(creep);
+                }
+            });
+
+            return false;
+        }
+
+        if (myRoom.find(FIND_HOSTILE_CREEPS).length > 0 && !myRoom.controller.safeMode && !myRoom.controller.safeModeCooldown && myRoom.controller.safeModeAvailable) {
+            // myRoom.controller.activateSafeMode();
+            // dont waste these!!
+		}
+
+        var mySpawns = myRoom.find(FIND_MY_SPAWNS);
+        var myTowers = myRoom.find(FIND_MY_STRUCTURES).filter(structure => structure.structureType == STRUCTURE_TOWER);
+
+        updateRoomConsts(myRoom);
+
+        runTowers(myTowers);
+
+        transferLinks(myRoom.memory.links);
 
         myRoom.memory.hasMules = myCreepCount.muleCount;
         spawner.run(myRoom, mySpawns, myCreepCount, totalCreeps);
