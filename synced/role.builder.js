@@ -68,6 +68,12 @@ var roleBuilder = {
 				}
 			}
 			break;
+		case 'goToTarget':
+			util.goToTarget(creep);
+			if (creep.room.name == creep.memory.goToTarget) {
+				creep.memory.myTask = 'resupply';
+			}
+			break;
 		default:
 			console.log('agent: ' + creep.name + " the builder did not have an action.");
 			creep.memory.myTask = 'resupply';
