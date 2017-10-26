@@ -24,8 +24,12 @@ var roleAttacker = {
                 goToTarget(creep);
             }
         } else {
-            if (creep.ticksToLive < 1000) {
+            if (creep.memory.renewing && creep.ticksToLive > 1400) {
+                delete creep.memory.renewing;
+            }
+            if (creep.ticksToLive < 1000 || creep.memory.renewing) {
                 mySpawns[0].memory.renewTarget = creep.id;
+                creep.memory.renewing = true;
                 creep.moveTo(mySpawns[0].pos);
             } else {
                 creep.moveTo(new RoomPosition(Memory.attackers.marshallRoom.x, Memory.attackers.marshallRoom.y, Memory.attackers.marshallRoom.name))
