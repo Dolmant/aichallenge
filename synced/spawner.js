@@ -10,9 +10,9 @@ var spawner = {
         var MaxThiefParts = 70;
         var MaxAttackerParts = 70;
         var MaxHarvesterCount = 4;
-        var MaxBuilderCount = 3;
+        var MaxBuilderCount = 2;
         var MaxMuleCount = myRoom.memory.hasLinks && myRoom.memory.hasStorage ? 2 : 0;
-        var MaxUpgraderCount = 4;
+        var MaxUpgraderCount = 2;
         var MaxThiefCount = 0;
         var MaxAttackerCount = myRoom.memory.marshallForce ? 8 : 0;
         var totalEnergy2 = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
@@ -55,7 +55,6 @@ var spawner = {
                     }
                 }
 
-                // to kickstart a claimer, set room.memory.spawnClaimer and the target ID as room.memory.claimTarget
                 if(myCreepCount.attackerParts < MaxAttackerParts && myCreepCount.attackerCount < MaxAttackerCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Attacker' + Game.time;
