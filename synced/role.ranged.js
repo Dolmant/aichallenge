@@ -36,9 +36,12 @@ var roleRanged = {
                     delete creep.memory.renewing;
                 }
                 if (creep.ticksToLive < 1000 || creep.memory.renewing) {
-                    if (!mySpawns[0].memory.renewTarget) {mySpawns[0].memory.renewTarget = creep.id};
-                    creep.memory.renewing = true;
-                    creep.moveTo(mySpawns[0].pos);
+                    var inRange = creep.pos.getRangeTo(mySpawns[0].pos) <= 1;
+                    if (!mySpawns[0].memory.renewTarget && inRange) {
+                        mySpawns[0].memory.renewTarget = creep.id
+                    } else if (!inRange) {
+                        creep.moveTo(mySpawns[0].pos);
+                    }
                 } else {
                     creep.moveTo(new RoomPosition(Memory.attackers.marshallRoom.x, Memory.attackers.marshallRoom.y, Memory.attackers.marshallRoom.name))
                 }
