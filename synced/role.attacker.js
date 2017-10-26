@@ -17,6 +17,8 @@ var roleAttacker = {
                         } else if (err == ERR_INVALID_TARGET) {
                             findTarget(creep);
                         }
+                    } else {
+                        findTarget(creep);
                     }
                 } else {
                     creep.moveTo(new RoomPosition(Memory.attackers.attackRoom.x, Memory.attackers.attackRoom.y, Memory.attackers.attackRoom.name), {ignoreCreeps: true})
