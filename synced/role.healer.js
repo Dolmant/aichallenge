@@ -7,11 +7,11 @@ var roleHealer = {
         }
         if (Memory.attackers.attacking) {
             // move to and attack
-            if (!Memory.flags['Attack']) {
+            if (!Memory.Game.flags['Attack']) {
                 console.log('Place Attack flag');
                 return null;
             }
-            var attackFlag = Memory.flags['Attack'];
+            var attackFlag = Memory.Game.flags['Attack'];
             if (creep.room.name == attackFlag.room.name) {
                 if (!creep.memory.healCreep) {
                     findTarget(creep);
@@ -36,11 +36,11 @@ var roleHealer = {
                 util.goToTarget(creep);
             }
         } else {
-            if (!Memory.flags['Marshal']) {
+            if (!Memory.Game.flags['Marshal']) {
                 console.log('Place Marshal flag');
                 return null;
             }
-            var marshalFlag = Memory.flags['Marshal'];
+            var marshalFlag = Memory.Game.flags['Marshal'];
             if (creep.room.name == marshalFlag.room.name) {
                 if (creep.memory.renewing && creep.ticksToLive > 1400) {
                     delete creep.memory.renewing;

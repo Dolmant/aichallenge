@@ -14,6 +14,6 @@ find out what went wrong that caused all creeps to die!
 3. spawn smarter - what is the optimal config
 4. spawn based on incoming energy
 5. Work out best combo of parts for things.
-6. Global harvest/upgrade/build flags depending on available energy levels and pathfinding
+6. Global harvest/upgrade/build Game.flags depending on available energy levels and pathfinding
 
 
