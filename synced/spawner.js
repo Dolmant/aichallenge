@@ -53,6 +53,7 @@ var spawner = {
                         } else if (err == ERR_NOT_IN_RANGE) {
                             // Do something else while we wait for him to get close
                             canSpawn = true;
+                            delete Spawn.memory.renewTarget;
                         }
                     } else {
                         delete Spawn.memory.renewTarget;
