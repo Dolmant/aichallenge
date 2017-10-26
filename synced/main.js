@@ -8,7 +8,7 @@ To specify size, change forceSize on the Memory.attackers object
 To tell a room to marshal a force, change the room flag 'marshalForce' to true
 You can send a builder to another room by specifying the roomname on goToTarget and change their task name to goToTarget (make this global)
 
-You can claim by
+You can claim by setting Memory.misc.claimTarget to a room name and setting myRoom.memory.spawnClaimer to the number of claimers you want
 */
 
 module.exports.loop = function () {

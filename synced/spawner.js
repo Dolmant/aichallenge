@@ -11,7 +11,7 @@ var spawner = {
         var MaxMeleeParts = 70;
         var MaxRangedParts = 70;
         var MaxHealerParts = 10;
-        var MaxHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 6;
+        var MaxHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 3 : 5;
         var MaxBuilderCount = myRoom.memory.marshallForce ? 1 : 2;
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         var MaxUpgraderCount = myRoom.memory.marshallForce ? 1 : 2;
@@ -79,7 +79,7 @@ var spawner = {
                     Spawn.spawnCreep([CLAIM, MOVE, MOVE], newName, {
                         memory: {
                             'role': 'claimer',
-                            'claimTarget': myRoom.memory.claimTarget,
+                            'claimTarget': Memory.misc.claimTarget,
                         },
                     });
                     console.log('Spawning: '+ newName);
@@ -97,23 +97,23 @@ var spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if(myCreepCount.muleParts < MaxMuleParts && myCreepCount.muleCount < MaxMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
-                {
-                    var newName = 'Mule' + Game.time;
-                    Spawn.spawnCreep(getBody(myRoom, {'carryOnly': true}), newName, {
-                        memory: {
-                            'role': 'mule',
-                        },
-                    });
-                    console.log('Spawning: '+ newName);
-                    canSpawn = false;
-                }
                 if(myCreepCount.upgraderParts < MaxUpgraderParts && myCreepCount.upgraderCount < MaxUpgraderCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Upgrader' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom), newName, {
                         memory: {
                             'role': 'upgrader',
+                        },
+                    });
+                    console.log('Spawning: '+ newName);
+                    canSpawn = false;
+                }
+                if(myCreepCount.muleParts < MaxMuleParts && myCreepCount.muleCount < MaxMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                {
+                    var newName = 'Mule' + Game.time;
+                    Spawn.spawnCreep(getBody(myRoom, {'carryOnly': true}), newName, {
+                        memory: {
+                            'role': 'mule',
                         },
                     });
                     console.log('Spawning: '+ newName);
