@@ -61,7 +61,7 @@ var runRoom = {
             'muleCount': 0,
             'claimCount': 0,
             'thiefCount': 0,
-            'attackCount': 0,
+            'attackerCount': 0,
         };
         var totalCreeps = 0;
         myCreeps.forEach(creep => {
