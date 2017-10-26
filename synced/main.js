@@ -24,6 +24,7 @@ module.exports.loop = function () {
 		'melee': 0,
 		'ranged': 0,
 		'thief': 0,
+		'claimer': 0,
 	};
 	// Lets keep this around just in case?
 	// for(let name in Memory.rooms)
@@ -42,6 +43,7 @@ module.exports.loop = function () {
 		'healer': Memory.misc.globalCreepsTemp.healer,
 		'ranged': Memory.misc.globalCreepsTemp.ranged,
 		'melee': Memory.misc.globalCreepsTemp.melee,
-		'thief': Memory.misc.globalCreepsTemp.thief
+		'thief': Memory.misc.globalCreepsTemp.thief,
+		'claimer': Memory.misc.globalCreepsTemp.claimer
 	};
 }

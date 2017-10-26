@@ -95,23 +95,23 @@ var runRoom = {
                     break;
                 case 'claimer':
                     myCreepCount.claimParts += creep.body.filter(part => part.type == CLAIM).length;
-                    myCreepCount.claimCount += 1;
+                    globalCreepsTemp.claimer += 1;
                     break;
                 case 'thief':
                     myCreepCount.thiefParts += creep_size;
-                    myCreepCount.thiefCount += 1;
+                    globalCreepsTemp.thief += 1;
                     break;
                 case 'melee':
                     myCreepCount.meleeParts += creep.body.filter(part => part.type == ATTACK).length;
-                    myCreepCount.meleeCount += 1;
+                    globalCreepsTemp.melee += 1;
                     break;
                 case 'ranged':
                     myCreepCount.rangedParts += creep.body.filter(part => part.type == RANGED_ATTACK).length;
-                    myCreepCount.rangedCount += 1;
+                    globalCreepsTemp.ranged += 1;
                     break;
                 case 'healer':
                     myCreepCount.healerParts += creep.body.filter(part => part.type == HEAL).length;
-                    myCreepCount.healerCount += 1;
+                    globalCreepsTemp.healer += 1;
                     break;
             }
         });
