@@ -15,8 +15,8 @@ var spawner = {
         var MaxUpgraderCount = myRoom.memory.marshallForce ? 1 : 2;
         var MaxThiefCount = myRoom.memory.marshallForce ? 0 : 4;
         var MaxAttackerCount = myRoom.memory.marshallForce ? Memory.attackers.forceSize : 0;
-        var totalEnergy2 = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
-        var referenceEnergy = Math.floor(totalEnergy2 / 4) * 4 * 50;
+        var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
+        var referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
 
         mySpawns.forEach(Spawn => {
             if (!Spawn.spawning)
@@ -143,13 +143,13 @@ var spawner = {
 
 function getBody(myRoom, options = {}) {
     var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
+    var referenceEnergy = Math.floor(totalEnergy2 / 4) * 4 * 50;
     var partArray = [];
 
     if (options.attacker) {
-        while (totalEnergy >= 4) {
+        for (var i = 0; i < Math.floor(referenceEnergy/130); i += 1) {
             partArray.push(ATTACK);
             partArray.push(MOVE);
-            totalEnergy -= 4;
         }
         return partArray;
     }
