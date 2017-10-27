@@ -9,7 +9,7 @@ var roleRanged = {
         }
         var attackFlag = Game.flags['Attack'];
         if (Memory.attackers.attacking) {// && !attackFlag.room.controller.safeMode) {
-            if (creep.room.name == attackFlag.pos.name) {
+            if (creep.room.name == attackFlag.pos.roomName) {
                 if (!creep.memory.attackCreep) {
                     findTarget(creep);
                 }
@@ -26,10 +26,10 @@ var roleRanged = {
                         findTarget(creep);
                     }
                 } else {
-                    creep.moveTo(new RoomPosition(attackFlag.pos.x, attackFlag.pos.y, attackFlag.pos.name), {ignoreCreeps: true})
+                    creep.moveTo(new RoomPosition(attackFlag.pos.x, attackFlag.pos.y, attackFlag.pos.roomName), {ignoreCreeps: true})
                 }
             } else {
-                creep.memory.goToTarget = attackFlag.pos.name;
+                creep.memory.goToTarget = attackFlag.pos.roomName;
                 util.goToTarget(creep);
             }
         } else {
@@ -38,7 +38,7 @@ var roleRanged = {
                 return null;
             }
             var marshalFlag = Game.flags['Marshal'];
-            if (creep.room.name == marshalFlag.pos.name) {
+            if (creep.room.name == marshalFlag.pos.roomName) {
                 if (creep.memory.renewing && creep.ticksToLive > 1400) {
                     delete creep.memory.renewing;
                 }
@@ -54,7 +54,7 @@ var roleRanged = {
                     creep.moveTo(new RoomPosition(marshalFlag.pos))
                 }
             } else {
-                creep.memory.goToTarget = marshalFlag.pos.name;
+                creep.memory.goToTarget = marshalFlag.pos.roomName;
                 util.goToTarget(creep);
             }
         }
