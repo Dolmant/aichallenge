@@ -7,8 +7,11 @@ var roleClaimer = {
         }
         var claimTarget = creep.memory.claimTarget;
         if (Game.flags['Claim']) {
-            const err = creep.claimController(creep.room.controller);
-            if (err == ERR_NOT_IN_RANGE || err == ERR_INVALID_TARGET) {
+            let err = creep.claimController(creep.room.controller);
+            if (err == ERR_INVALID_TARGET) {
+                err = creep.attackController(creep.room.controller);
+            }
+            if (err == ERR_NOT_IN_RANGE) {
                 creep.moveTo(Game.flags['Claim'].pos);
             }
             if (err == ERR_GCL_NOT_ENOUGH) {

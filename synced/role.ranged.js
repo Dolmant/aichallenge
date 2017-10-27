@@ -71,7 +71,9 @@ function findTarget(creep) {
         });
     }
     if (!target) {
-        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES);
+        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
+            filter: structure => structure.structureType != STRUCTURE_CONTROLLER,
+        });
     }
     if (!target) {
         target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
