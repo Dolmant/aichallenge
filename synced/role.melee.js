@@ -5,13 +5,13 @@ var roleMelee = {
         if (creep.hits == creep.hitsMax) {
             Memory.misc.globalCreepsTemp.melee += 1;
         }
-        if (Memory.attackers.attacking) {
-            // move to and attack
-            if (!Game.flags['Attack']) {
-                console.log('Place Attack flag');
-                return null;
-            }
-            var attackFlag = Game.flags['Attack'];
+        // move to and attack
+        if (!Game.flags['Attack']) {
+            console.log('Place Attack flag');
+            return null;
+        }
+        var attackFlag = Game.flags['Attack'];
+        if (Memory.attackers.attacking && !attackFlag.room.controller.safeMode) {
             if (creep.room.name == attackFlag.name) {
                 if (!creep.memory.attackCreep) {
                     findTarget(creep);

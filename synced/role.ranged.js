@@ -5,13 +5,13 @@ var roleRanged = {
         if (creep.hits == creep.hitsMax) {
             Memory.misc.globalCreepsTemp.ranged += 1;
         }
-        if (Memory.attackers.attacking) {
-            // move to and attack
-            if (!Game.flags['Attack']) {
-                console.log('Place Attack flag');
-                return null;
-            }
-            var attackFlag = Game.flags['Attack'];
+        // move to and attack
+        if (!Game.flags['Attack']) {
+            console.log('Place Attack flag');
+            return null;
+        }
+        var attackFlag = Game.flags['Attack'];
+        if (Memory.attackers.attacking && !attackFlag.room.controller.safeMode) {
             if (creep.room.name == attackFlag.name) {
                 if (!creep.memory.attackCreep) {
                     findTarget(creep);
@@ -65,7 +65,9 @@ var roleRanged = {
 };
 
 function findTarget(creep) {
-    var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
+    var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS,{
+        filter: creep => creep.body.filter(part => (part.type == ATTACK) || (part.type == RANGED_ATTACK))
+    });
     if (!target) {
         target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES);
     }
