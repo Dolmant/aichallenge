@@ -66,7 +66,15 @@ function findTarget(creep) {
         filter: creep => creep.body.filter(part => (part.type == ATTACK) || (part.type == RANGED_ATTACK))
     });
     if (!target) {
+        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES,{
+            filter: structure => structure.structureType == STRUCTURE_TOWER,
+        });
+    }
+    if (!target) {
         target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES);
+    }
+    if (!target) {
+        target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
     }
     if (target) {
         creep.memory.attackCreep = target.id;

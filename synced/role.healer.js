@@ -61,13 +61,24 @@ var roleHealer = {
 };
 
 function findTarget(creep) {
-    var target = creep.pos.findClosestByPath(FIND_MY_CREEPS, {
-        'filter': creep => creep.hits < creep.hitsMax,
+    var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS,{
+        filter: creep => creep.body.filter(part => (part.type == ATTACK) || (part.type == RANGED_ATTACK))
     });
+    if (!target) {
+        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES,{
+            filter: structure => structure.structureType == STRUCTURE_TOWER,
+        });
+    }
+    if (!target) {
+        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES);
+    }
+    if (!target) {
+        target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
+    }
     if (target) {
-        creep.memory.healCreep = target.id;
+        creep.memory.attackCreep = target.id;
     } else {
-        delete creep.memory.healCreep;
+        delete creep.memory.attackCreep;
     }
 }
 
