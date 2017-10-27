@@ -4,8 +4,6 @@ var actDeposit = require('action.deposit');
 var util = require('util');
 
 var roleThief = {
-
-    /** @param {Creep} creep **/
     run: function(creep) {
 		if (creep.fatigue != 0){
 			return;

@@ -229,6 +229,14 @@ function initializeRoomConsts(myRoom) {
 }
 
 function updateRoomConsts(myRoom, mySpawns) {
+    if (Memory.methods.createRemoteWorkers) {
+        Memory.methods.createRemoteWorkers -= 1;
+        Memory.misc.request.push({
+            'role': 'worker',
+            'myTask': 'goToTarget',
+            'goToTarget': 'W41N51'
+        });
+    }
     if ((myRoom.memory.timer % 300) == 0 || myRoom.memory.runUpdate) {
         myRoom.memory.runUpdate = false;
         // TODO Make this equal to the amount of energy in the room, not hardcoded
