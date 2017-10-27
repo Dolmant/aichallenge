@@ -168,14 +168,14 @@ var spawner = {
                     canSpawn = false;
                 }
                 if(myRoom.energyAvailable >= referenceEnergy && canSpawn) {
-                    completeOutstandingRequests(myRoom);
+                    completeOutstandingRequests(myRoom, Spawn);
                 }
             }
         });
     },
 }
 
-function completeOutstandingRequests(myRoom) {
+function completeOutstandingRequests(myRoom, Spawn) {
     if (Memory.misc.requests.length) {
         var newName = Memory.misc.requests[0].role + Game.time;
         Spawn.spawnCreep(getBody(myRoom), newName, {
