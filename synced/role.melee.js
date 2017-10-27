@@ -2,9 +2,6 @@ var util = require('util');
 
 var roleMelee = {
     run(creep, mySpawns) {
-        if (creep.hits == creep.hitsMax) {
-            Memory.misc.globalCreepsTemp.melee += 1;
-        }
         // move to and attack
         if (!Game.flags['Attack']) {
             console.log('Place Attack flag');

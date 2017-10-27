@@ -2,9 +2,6 @@ var util = require('util');
 
 var roleHealer = {
     run(creep, mySpawns) {
-        if (creep.hits == creep.hitsMax) {
-            Memory.misc.globalCreepsTemp.healer += 1;
-        }
         // move to and attack
         if (!Game.flags['Attack']) {
             console.log('Place Attack flag');

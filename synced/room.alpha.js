@@ -78,15 +78,21 @@ var runRoom = {
                     break;
                 case 'melee':
                     myCreepCount.meleeParts += creep.body.filter(part => part.type == ATTACK).length;
-                    Memory.misc.globalCreepsTemp.melee += 1;
+                    if (creep.hits == creep.hitsMax) {
+                        Memory.misc.globalCreepsTemp.melee += 1;
+                    }
                     break;
                 case 'ranged':
                     myCreepCount.rangedParts += creep.body.filter(part => part.type == RANGED_ATTACK).length;
-                    Memory.misc.globalCreepsTemp.ranged += 1;
+                    if (creep.hits == creep.hitsMax) {
+                        Memory.misc.globalCreepsTemp.ranged += 1;
+                    }
                     break;
                 case 'healer':
                     myCreepCount.healerParts += creep.body.filter(part => part.type == HEAL).length;
-                    Memory.misc.globalCreepsTemp.healer += 1;
+                    if (creep.hits == creep.hitsMax) {
+                        Memory.misc.globalCreepsTemp.healer += 1;
+                    }
                     break;
             }
         });
