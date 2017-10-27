@@ -5,11 +5,11 @@ var roleClaimer = {
 		if (creep.fatigue != 0){
 			return;
         }
-        var claimTarget = creep.memory.claimTarget;
+
         if (Game.flags['Claim']) {
-            let err = creep.claimController(creep.room.controller);
+            let err = creep.claimController(Game.flags['Claim'].room.controller);
             if (err == ERR_INVALID_TARGET) {
-                err = creep.attackController(creep.room.controller);
+                err = creep.attackController(Game.flags['Claim'].room.controller);
             }
             if (err == ERR_NOT_IN_RANGE) {
                 creep.moveTo(Game.flags['Claim'].pos);
