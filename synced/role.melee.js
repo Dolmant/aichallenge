@@ -27,7 +27,7 @@ var roleMelee = {
                         findTarget(creep);
                     }
                 } else {
-                    creep.moveTo(new RoomPosition(attackFlag.pos), {ignoreCreeps: true})
+                    creep.moveTo(attackFlag.pos, {ignoreCreeps: true});
                 }
             } else {
                 creep.memory.goToTarget = attackFlag.pos.roomName;
@@ -52,7 +52,7 @@ var roleMelee = {
                     }
                     creep.memory.renewing = true;
                 } else {
-                    creep.moveTo(new RoomPosition(marshalFlag.pos))
+                    creep.moveTo(marshalFlag.pos);
                 }
             } else {
                 creep.memory.goToTarget = marshalFlag.pos.roomName;

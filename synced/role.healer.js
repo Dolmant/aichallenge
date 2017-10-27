@@ -26,7 +26,7 @@ var roleHealer = {
                         findTarget(creep);
                     }
                 } else {
-                    creep.moveTo(new RoomPosition(attackFlag.pos.x, attackFlag.pos.y, attackFlag.pos.roomName), {ignoreCreeps: true})
+                    creep.moveTo(attackFlag.pos, {ignoreCreeps: true});
                 }
             } else {
                 creep.memory.goToTarget = attackFlag.pos.roomName;
@@ -50,7 +50,7 @@ var roleHealer = {
                         creep.moveTo(mySpawns[0].pos);
                     }
                 } else {
-                    creep.moveTo(new RoomPosition(marshalFlag.pos))
+                    creep.moveTo(marshalFlag.pos);
                 }
             } else {
                 creep.memory.goToTarget = marshalFlag.pos.roomName;
