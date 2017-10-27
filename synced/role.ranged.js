@@ -7,11 +7,11 @@ var roleRanged = {
         }
         if (Memory.attackers.attacking) {
             // move to and attack
-            if (!Memory.Game.flags['Attack']) {
+            if (!Game.flags['Attack']) {
                 console.log('Place Attack flag');
                 return null;
             }
-            var attackFlag = Memory.Game.flags['Attack'];
+            var attackFlag = Game.flags['Attack'];
             if (creep.room.name == attackFlag.name) {
                 if (!creep.memory.attackCreep) {
                     findTarget(creep);
@@ -36,11 +36,11 @@ var roleRanged = {
                 util.goToTarget(creep);
             }
         } else {
-            if (!Memory.Game.flags['Marshal']) {
+            if (!Game.flags['Marshal']) {
                 console.log('Place Marshal flag');
                 return null;
             }
-            var marshalFlag = Memory.Game.flags['Marshal'];
+            var marshalFlag = Game.flags['Marshal'];
             if (creep.room.name == marshalFlag.room.name) {
                 if (creep.memory.renewing && creep.ticksToLive > 1400) {
                     delete creep.memory.renewing;
