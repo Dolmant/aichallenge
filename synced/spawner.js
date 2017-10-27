@@ -4,7 +4,7 @@ var spawner = {
     run: function(myRoom, mySpawns, myCreepCount, totalCreeps) {
         // These all relate to the number of work parts except Mule which is carry
         var MaxHarvesterParts = 18;
-        var MaxBuilderParts = 12;
+        var MaxWorkerParts = 12;
         var MaxMuleParts = 20;
         var MaxUpgraderParts = 24;
         var MaxThiefParts = 70;
@@ -12,7 +12,7 @@ var spawner = {
         var MaxRangedParts = 70;
         var MaxHealerParts = 10;
         var MaxHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 5;
-        var MaxBuilderCount = myRoom.memory.marshalForce ? 1 : 2;
+        var MaxWorkerCount = myRoom.memory.marshalForce ? 1 : 2;
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         var MaxUpgraderCount = myRoom.memory.hasLinks ? 2 : 4;
         var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 4;
@@ -90,12 +90,12 @@ var spawner = {
                     myRoom.memory.spawnClaimer -= 1;
                     canSpawn = false;
                 }
-                if(myCreepCount.builderParts < MaxBuilderParts && myCreepCount.builderCount < MaxBuilderCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.workerParts < MaxWorkerParts && myCreepCount.workerCount < MaxWorkerCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
-                    var newName = 'Builder' + Game.time;
+                    var newName = 'Worker' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom), newName, {
                         memory: {
-                            'role': 'builder',
+                            'role': 'worker',
                         },
                     });
                     console.log('Spawning: '+ newName);

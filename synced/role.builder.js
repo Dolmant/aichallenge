@@ -9,7 +9,7 @@
 var actUpgrade = require('action.upgrade');
 var actResupply = require('action.resupply');
 var util = require('util');
-var roleBuilder = {
+var roleWorker = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
@@ -41,10 +41,11 @@ var roleBuilder = {
                 findBuildTarget(creep);
                 if(!creep.memory.myBuildTarget)
                 {
-					findRepairTarget(creep);
-					if (!creep.memory.myRepairTarget) {
-						creep.memory.myTask = 'upgrade';
-					}
+					creep.memory.myTask = 'upgrade';
+					// towers can repair instead
+					// findRepairTarget(creep);
+					// if (!creep.memory.myRepairTarget) {
+					// }
                 }
 			}
 			else
@@ -76,7 +77,7 @@ var roleBuilder = {
 			}
 			break;
 		default:
-			console.log('agent: ' + creep.name + " the builder did not have an action.");
+			console.log('agent: ' + creep.name + " the worker did not have an action.");
 			creep.memory.myTask = 'resupply';
 			break;
 		}
@@ -89,6 +90,7 @@ function findBuildTarget(creep)
 	creep.memory.myBuildTarget = target && target.id;
 }
 
+// not used currently
 function findRepairTarget(creep)
 {
 	var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
@@ -100,4 +102,4 @@ function findRepairTarget(creep)
 }
 
 
-module.exports = roleBuilder;
+module.exports = roleWorker;

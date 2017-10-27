@@ -6,7 +6,7 @@ place a flag names 'Attack' to designate the attack room and location
 place a flag names 'Marshal' to designate a staging area.
 To specify size, change forceSize on the Memory.attackers object
 To tell a room to marshal a force, change the room flag 'marshalForce' to true
-You can send a builder to another room by specifying the roomname on goToTarget and change their task name to goToTarget (make this global)
+You can send a worker to another room by specifying the roomname on goToTarget and change their task name to goToTarget (make this global)
 
 You can claim by placing a Claim flag setting myRoom.memory.spawnClaimer to the number of claimers you want
 */

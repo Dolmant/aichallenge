@@ -1,7 +1,7 @@
 var roleUpgrader = require('role.upgrader');
 var roleHarvester = require('role.harvester');
 var roleMule = require('role.mule');
-var roleBuilder = require('role.builder');
+var roleWorker = require('role.worker');
 var roleClaimer = require('role.claimer');
 var roleThief = require('role.thief');
 var roleMelee = require('role.melee');
@@ -27,7 +27,7 @@ var runRoom = {
             'sourceMap': {},
             'harvesterParts': 0,
             'upgraderParts': 0,
-            'builderParts': 0,
+            'workerParts': 0,
             'muleParts': 0,
             'claimParts': 0,
             'thiefParts': 0,
@@ -36,7 +36,7 @@ var runRoom = {
             'healerParts': 0,
             'harvesterCount': 0,
             'upgraderCount': 0,
-            'builderCount': 0,
+            'workerCount': 0,
             'muleCount': 0,
             'claimCount': 0,
             'thiefCount': 0,
@@ -60,9 +60,9 @@ var runRoom = {
                     myCreepCount.upgraderParts += creep_size;
                     myCreepCount.upgraderCount += 1;
                     break;
-                case 'builder':
-                    myCreepCount.builderParts += creep_size;
-                    myCreepCount.builderCount += 1;
+                case 'worker':
+                    myCreepCount.workerParts += creep_size;
+                    myCreepCount.workerCount += 1;
                     break;
                 case 'mule':
                     myCreepCount.muleParts += creep.body.filter(part => part.type == CARRY).length;
@@ -101,8 +101,10 @@ var runRoom = {
                 case 'upgrader':
                     roleUpgrader.run(creep);
                     break;
+                // legacy, remove
                 case 'builder':
-                    roleBuilder.run(creep);
+                case 'worker':
+                    roleRorker.run(creep);
                     break;
                 case 'mule':
                     roleMule.run(creep);
