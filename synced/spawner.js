@@ -167,9 +167,24 @@ var spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
+                if(myRoom.energyAvailable >= referenceEnergy && canSpawn) {
+                    completeOutstandingRequests();
+                }
             }
         });
     },
+}
+
+function completeOutstandingRequests() {
+    if (Memory.misc.requests.length) {
+        var newName = Memory.misc.requests[0].role + Game.time;
+        Spawn.spawnCreep(getBody(myRoom), newName, {
+            memory: Memory.misc.requests[0],
+        });
+        Memory.misc.requests.splice(0, 1);
+        console.log('Spawning: '+ newName);
+        canSpawn = false;
+    }
 }
 
 function getBody(myRoom, options = {}) {

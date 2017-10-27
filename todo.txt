@@ -1,5 +1,9 @@
 Need to do:
 add eslint I am dying
+
+build vscode autocomplete extension!!
+add room request creeps
+
 invade bottom
 findsources dies when sources run out so will have to identify some other way
 document all my objects (room, creep etc)

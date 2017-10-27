@@ -36,8 +36,7 @@ var roleWorker = {
 		case 'repair':
 		case 'build':
 			//do I already have something to build? If not find something to fix and say fixit
-			if(!creep.memory.myBuildTarget && !creep.memory.myRepairTarget)
-			{
+			if(!creep.memory.myBuildTarget && !creep.memory.myRepairTarget) {
                 findBuildTarget(creep);
                 if(!creep.memory.myBuildTarget)
                 {
@@ -48,8 +47,7 @@ var roleWorker = {
 					// }
                 }
 			}
-			else
-			{
+			else {
 				if (creep.memory.myBuildTarget) {
 					var target = Game.getObjectById(creep.memory.myBuildTarget);
 					if(creep.build(target) == ERR_NOT_IN_RANGE) {
