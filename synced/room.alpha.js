@@ -169,10 +169,10 @@ function runTowers(myTowers)
     myTowers.forEach(tower => {
         var minRepair = 10000;
         var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        if(closestHostile) {
+        if (closestHostile) {
             tower.attack(closestHostile);
         }
-        else
+        else if (tower.energy > tower.energyCapacity / 2)
         {
             var structureList = tower.room.find(FIND_STRUCTURES, {filter: s=>
                 s.structureType == STRUCTURE_RAMPART ||
@@ -230,6 +230,7 @@ function initializeRoomConsts(myRoom) {
 
 function updateRoomConsts(myRoom, mySpawns) {
     if ((myRoom.memory.timer % 300) == 0 || myRoom.memory.runUpdate) {
+        myRoom.memory.runUpdate = false;
         // TODO Make this equal to the amount of energy in the room, not hardcoded
         // TODO this isnt triggering. hardcode trigger in spawn? WHY DOESNT THIS SET
         myRoom.memory.energyRation = 5000;
