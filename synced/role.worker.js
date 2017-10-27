@@ -70,9 +70,6 @@ var roleWorker = {
 			break;
 		case 'goToTarget':
 			util.goToTarget(creep);
-			if (creep.room.name == creep.memory.goToTarget) {
-				creep.memory.myTask = 'resupply';
-			}
 			break;
 		default:
 			console.log('agent: ' + creep.name + " the worker did not have an action.");

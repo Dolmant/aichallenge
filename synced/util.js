@@ -8,6 +8,9 @@ var util = {
             creep.move(BOTTOM);
         } else if (creep.pos.y == 49) {
             creep.move(TOP);
+        } else if (creep.room.name == creep.memory.goToTarget) {
+            delete creep.memory.goToTarget;
+            delete creep.memory.myTask;
         } else {
             creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.goToTarget)))
         }
