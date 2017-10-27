@@ -9,13 +9,11 @@ var roleClaimer = {
         if (Game.flags['Claim']) {
             const err = creep.claimController(creep.room.controller);
             if (err == ERR_NOT_IN_RANGE || err == ERR_INVALID_TARGET) {
-                controllerpos = new RoomPosition(Game.flags['Claim'].pos)
-                creep.moveTo(controllerpos);
+                creep.moveTo(Game.flags['Claim'].pos);
             }
             if (err == ERR_GCL_NOT_ENOUGH) {
                 creep.reserveController(creep.room.controller);
-                controllerpos = new RoomPosition(Game.flags['Claim'].pos)
-                creep.moveTo(controllerpos);
+                creep.moveTo(Game.flags['Claim'].pos);
             }
         }
 	}
