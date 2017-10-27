@@ -22,6 +22,7 @@ var runRoom = {
             myRoom.memory.timer++;
         }
         var myCreeps = myRoom.find(FIND_MY_CREEPS);
+        var mySpawns = myRoom.find(FIND_MY_SPAWNS);
 
         var myCreepCount = {
             'sourceMap': {},
@@ -150,7 +151,6 @@ var runRoom = {
             // dont waste these!!
 		}
 
-        var mySpawns = myRoom.find(FIND_MY_SPAWNS);
         var myTowers = myRoom.find(FIND_MY_STRUCTURES).filter(structure => structure.structureType == STRUCTURE_TOWER);
 
         updateRoomConsts(myRoom);
