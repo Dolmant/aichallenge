@@ -231,7 +231,7 @@ function initializeRoomConsts(myRoom) {
 function updateRoomConsts(myRoom, mySpawns) {
     if (Memory.methods.createRemoteWorkers) {
         Memory.methods.createRemoteWorkers -= 1;
-        Memory.misc.request.push({
+        Memory.misc.requests.push({
             'role': 'worker',
             'myTask': 'goToTarget',
             'goToTarget': 'W41N51'
