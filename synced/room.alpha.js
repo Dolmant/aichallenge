@@ -104,7 +104,7 @@ var runRoom = {
                 // legacy, remove
                 case 'builder':
                 case 'worker':
-                    roleRorker.run(creep);
+                    roleWorker.run(creep);
                     break;
                 case 'mule':
                     roleMule.run(creep);
