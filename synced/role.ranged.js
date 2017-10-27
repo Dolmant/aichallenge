@@ -8,7 +8,7 @@ var roleRanged = {
             return null;
         }
         var attackFlag = Game.flags['Attack'];
-        if (Memory.attackers.attacking && !attackFlag.room.controller.safeMode) {
+        if (Memory.attackers.attacking) {// && !attackFlag.room.controller.safeMode) {
             if (creep.room.name == attackFlag.pos.name) {
                 if (!creep.memory.attackCreep) {
                     findTarget(creep);
