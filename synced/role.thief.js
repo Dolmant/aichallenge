@@ -18,14 +18,14 @@ var roleThief = {
         }
         if (!creep.memory.goToTarget) {
             // TODO fix !!!!
-            const possibleTargets = [];
-            const exits = Game.map.describeExits(creep.room.name)
-            for (name in exits) {
-                // This is stil lbreaking
-                if (Game.map.isRoomAvailable(exits[name]) && !(Memory.rooms[name] && !Memory.rooms[name].owner)) {
-                    possibleTargets.push(exits[name])
-                }
-            }
+            const possibleTargets = ['W43N52', 'W43N51', 'W42N51', 'W44N51', 'W44N52', 'W44N53'];
+            // const exits = Game.map.describeExits(creep.room.name)
+            // for (name in exits) {
+            //     // This is stil lbreaking
+            //     if (Game.map.isRoomAvailable(exits[name]) && !(Memory.rooms[name] && !Memory.rooms[name].owner)) {
+            //         possibleTargets.push(exits[name])
+            //     }
+            // }
             if (possibleTargets.length <= creep.room.memory.stealFlag) {
                 creep.room.memory.stealFlag = 1;
             } else {
