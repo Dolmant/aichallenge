@@ -18,7 +18,7 @@ var roleWorker = {
 		}
 		
 	
-		if((creep.memory.myTask != 'resupply') && creep.carry.energy == 0){
+		if((creep.memory.myTask == 'repair' || creep.memory.myTask == 'build' || creep.memory.myTask == 'upgrade') && creep.carry.energy == 0){
     		creep.memory.myTask = 'resupply';
 		}
 		if(creep.memory.myTask == 'resupply' && creep.carry.energy == creep.carryCapacity)
@@ -74,6 +74,7 @@ var roleWorker = {
 		default:
 			console.log('agent: ' + creep.name + " the worker did not have an action.");
 			creep.memory.myTask = 'resupply';
+			actResupply.run(creep);
 			break;
 		}
     }
