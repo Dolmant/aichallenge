@@ -65,7 +65,9 @@ var roleMelee = {
 };
 
 function findTarget(creep) {
-    var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
+    var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS,{
+        filter: creep => creep.body.filter(part => (part.type == ATTACK) || (part.type == RANGED_ATTACK))
+    });
     if (!target) {
         target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES);
     }
