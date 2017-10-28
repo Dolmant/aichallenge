@@ -65,13 +65,23 @@ function getTargets(creep) {
         creep.memory.fetchTarget = 0;
     } else {
         target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return (structure.structureType == STRUCTURE_CONTAINER) && (structure.store.energy > 0);
+            filter: structure => {
+                return structure.structureType == STRUCTURE_CONTAINER && structure.store.energy > 0;
             }
         });
         if (target) {
             creep.memory.fetchTarget = target.id;
             creep.memory.dropTarget = 0;
+        } else {
+            target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+                filter: structure => {
+                    return structure.structureType == STRUCTURE_STORAGE && structure.store.energy > 0;
+                }
+            });
+            if (target) {
+                creep.memory.fetchTarget = target.id;
+                creep.memory.dropTarget = 0;
+            }
         }
     }
 }
