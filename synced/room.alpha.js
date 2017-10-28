@@ -241,11 +241,12 @@ function updateRoomConsts(myRoom, mySpawns) {
         myRoom.memory.runUpdate = false;
         // TODO Make this equal to the amount of energy in the room, not hardcoded
         // TODO this isnt triggering. hardcode trigger in spawn? WHY DOESNT THIS SET
+        console.log('ration time: ' + String(myRoom.memory.timer));
+        console.log('ration room: ' + String(myRoom.name));
+        console.log('ration update: ' + String(myRoom.memory.energyRation));
         myRoom.memory.energyRation = 5000;
         myRoom.memory.structures = {};
         console.log('ration update: ' + String(myRoom.memory.energyRation));
-        console.log('ration time: ' + String(myRoom.memory.timer));
-        console.log('ration room: ' + String(myRoom.name));
     }
     if (myRoom.memory.timer % 1000 == 0 || myRoom.memory.runUpdate) {
         myRoom.memory.runUpdate = false;
