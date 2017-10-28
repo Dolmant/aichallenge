@@ -1,6 +1,6 @@
-var util = require('util');
+import util from './util';
 
-var roleRanged = {
+const roleMelee = {
     run(creep, mySpawns) {
         // move to and attack
         if (!Game.flags['Attack']) {
@@ -8,7 +8,8 @@ var roleRanged = {
             return null;
         }
         var attackFlag = Game.flags['Attack'];
-        if (Memory.attackers.attacking) {// && !attackFlag.room.controller.safeMode) {
+        // implement this
+        if (Memory.attackers.attacking) {//&& !attackFlag.room.controller.safeMode) {
             if (creep.room.name == attackFlag.pos.roomName) {
                 if (!creep.memory.attackCreep) {
                     findTarget(creep);
@@ -16,7 +17,7 @@ var roleRanged = {
                 if (creep.memory.attackCreep) {
                     var target = Game.getObjectById(creep.memory.attackCreep);
                     if (target) {
-                        var err = creep.rangedAttack(target);
+                        var err = creep.attack(target);
                         if (err == ERR_NOT_IN_RANGE) {
                             creep.moveTo(target.pos);
                         } else if (err == ERR_INVALID_TARGET) {
@@ -61,6 +62,9 @@ var roleRanged = {
     },
 };
 
+export default roleMelee;
+
+
 function findTarget(creep) {
     var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS,{
         filter: creep => creep.body.filter(part => (part.type == ATTACK) || (part.type == RANGED_ATTACK))
@@ -84,5 +88,3 @@ function findTarget(creep) {
         delete creep.memory.attackCreep;
     }
 }
-
-module.exports = roleRanged;

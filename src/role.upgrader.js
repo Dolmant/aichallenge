@@ -1,8 +1,8 @@
-var actResupply = require('action.resupply');
-var actUpgrade = require('action.upgrade');
+import actResupply from './action.resupply';
+import actUpgrade from './action.upgrade';
 
 
-var roleUpgrader = {
+const roleUpgrader = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
@@ -29,4 +29,4 @@ var roleUpgrader = {
     }
 };
 
-module.exports = roleUpgrader;
+export default roleUpgrader;

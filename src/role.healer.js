@@ -1,6 +1,6 @@
-var util = require('util');
+import util from './util';
 
-var roleHealer = {
+const roleHealer = {
     run(creep, mySpawns) {
         // move to and attack
         if (!Game.flags['Attack']) {
@@ -60,6 +60,8 @@ var roleHealer = {
     },
 };
 
+export default roleHealer;
+
 function findTarget(creep) {
     var target = creep.pos.findClosestByPath(FIND_MY_CREEPS, {
         'filter': creep => creep.hits < creep.hitsMax,
@@ -70,5 +72,3 @@ function findTarget(creep) {
         delete creep.memory.healCreep;
     }
 }
-
-module.exports = roleHealer;

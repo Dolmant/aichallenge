@@ -1,5 +1,5 @@
 
-var spawner = {
+const spawner = {
     
     run: function(myRoom, mySpawns, myCreepCount, totalCreeps) {
         // These all relate to the number of work parts except Mule which is carry
@@ -245,4 +245,4 @@ function getBody(myRoom, options = {}) {
     return partArray;
 }
 
-module.exports = spawner;
+export default spawner;

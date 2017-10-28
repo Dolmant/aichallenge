@@ -34,6 +34,7 @@ const actDeposit = {
         delete creep.memory.depositTarget;
     }
 };
+
 function deposit_target(creep, isMule = false) {
     // Mule is the only one which will refuse to drop to a container
     var economy = creep.room.memory.myCreepCount.muleCount && (creep.room.memory.myCreepCount.harvesterCount > 1)
@@ -133,4 +134,4 @@ function deposit_resource(creep) {
     }
 }
 
-module.exports = actDeposit;
+export default actDeposit;

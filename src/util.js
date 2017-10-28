@@ -1,4 +1,4 @@
-var util = {
+const util = {
     goToTarget(creep) {
         if (creep.pos.x == 0) {
             creep.move(RIGHT);
@@ -17,4 +17,4 @@ var util = {
     }
 };
 
-module.exports = util;
+export default util;

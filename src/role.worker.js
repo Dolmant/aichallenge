@@ -1,22 +1,14 @@
-/*
- * Module code goes here. Use 'module.exports' to export things:
- * module.exports.thing = 'a thing';
- *
- * You can import it from another modules like this:
- * var mod = require('role.fixer');
- * mod.thing == 'a thing'; // true
- */
-var actUpgrade = require('action.upgrade');
-var actResupply = require('action.resupply');
-var util = require('util');
-var roleWorker = {
+import actUpgrade from './action.upgrade';
+import actResupply from './action.resupply';
+import util from './util';
+
+const roleWorker = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
 		if(creep.fatigue != 0){
 			return;
 		}
-		
 	
 		if((creep.memory.myTask == 'repair' || creep.memory.myTask == 'build' || creep.memory.myTask == 'upgrade') && creep.carry.energy == 0){
     		creep.memory.myTask = 'resupply';
@@ -80,6 +72,8 @@ var roleWorker = {
     }
 };
 
+export default roleWorker;
+
 function findBuildTarget(creep)
 {
 	var target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
@@ -96,6 +90,3 @@ function findRepairTarget(creep)
 
 	creep.memory.myRepairTarget = target && target.id;
 }
-
-
-module.exports = roleWorker;

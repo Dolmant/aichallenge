@@ -1,4 +1,4 @@
-var actHarvest = {
+const actHarvest = {
     run: function(creep) {
         if (!creep.memory.sourceMap) {
             getSource(creep);
@@ -17,4 +17,4 @@ function getSource(creep) {
     creep.memory.sourceMap = nearestSource && nearestSource.id;
 }
 
-module.exports = actHarvest;
+export default actHarvest;

@@ -1,6 +1,6 @@
-var util = require('util');
+import util from './util';
 
-var roleMelee = {
+const roleRanged = {
     run(creep, mySpawns) {
         // move to and attack
         if (!Game.flags['Attack']) {
@@ -8,8 +8,7 @@ var roleMelee = {
             return null;
         }
         var attackFlag = Game.flags['Attack'];
-        // implement this
-        if (Memory.attackers.attacking) {//&& !attackFlag.room.controller.safeMode) {
+        if (Memory.attackers.attacking) {// && !attackFlag.room.controller.safeMode) {
             if (creep.room.name == attackFlag.pos.roomName) {
                 if (!creep.memory.attackCreep) {
                     findTarget(creep);
@@ -17,7 +16,7 @@ var roleMelee = {
                 if (creep.memory.attackCreep) {
                     var target = Game.getObjectById(creep.memory.attackCreep);
                     if (target) {
-                        var err = creep.attack(target);
+                        var err = creep.rangedAttack(target);
                         if (err == ERR_NOT_IN_RANGE) {
                             creep.moveTo(target.pos);
                         } else if (err == ERR_INVALID_TARGET) {
@@ -62,6 +61,7 @@ var roleMelee = {
     },
 };
 
+export default roleRanged;
 
 function findTarget(creep) {
     var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS,{
@@ -86,5 +86,3 @@ function findTarget(creep) {
         delete creep.memory.attackCreep;
     }
 }
-
-module.exports = roleMelee;

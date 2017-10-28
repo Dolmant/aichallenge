@@ -1,7 +1,6 @@
+import actDeposit from './action.deposit';
 
-var actDeposit = require('action.deposit');
-
-var roleMule = {
+const roleMule = {
     run: function(creep) {
         if (creep.fatigue != 0){
             return;
@@ -57,6 +56,8 @@ function getEnergy(creep) {
     }
 }
 
+export default roleMule;
+
 function getTargets(creep) {
     var target = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
     if (target) {
@@ -74,5 +75,3 @@ function getTargets(creep) {
         }
     }
 }
-
-module.exports = roleMule;

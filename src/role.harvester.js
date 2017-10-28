@@ -1,9 +1,7 @@
-var actHarvest = require('action.harvest');
-var actDeposit = require('action.deposit');
+import actHarvest from './action.harvest';
+import actDeposit from './action.deposit';
 
-var roleHarvester = {
-
-    /** @param {Creep} creep **/
+const roleHarvester = {
     run: function(creep) {
 		if (creep.fatigue != 0){
 			return;
@@ -31,4 +29,4 @@ var roleHarvester = {
 	}
 };
 
-module.exports = roleHarvester;
+export default roleHarvester;

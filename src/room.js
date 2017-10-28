@@ -1,17 +1,16 @@
-var roleUpgrader = require('role.upgrader');
-var roleHarvester = require('role.harvester');
-var roleMule = require('role.mule');
-var roleWorker = require('role.worker');
-var roleClaimer = require('role.claimer');
-var roleThief = require('role.thief');
-var roleMelee = require('role.melee');
-var roleRanged = require('role.ranged');
-var roleHealer = require('role.healer');
+import roleUpgrader from './role.upgrader';
+import roleHarvester from './role.harvester';
+import roleMule from './role.mule';
+import roleWorker from './role.worker';
+import roleClaimer from './role.claimer';
+import roleThief from './role.thief';
+import roleMelee from './role.melee';
+import roleRanged from './role.ranged';
+import roleHealer from './role.healer';
 
-var spawner = require('spawner');
+import spawner from './spawner';
 
-var runRoom = {
-
+const Room = {
     run: function(myRoom) {
         if(myRoom.memory.timer == undefined)
         {
@@ -292,4 +291,4 @@ function updateRoomConsts(myRoom, mySpawns) {
     }
 }
 
-module.exports = runRoom;
+export default Room;

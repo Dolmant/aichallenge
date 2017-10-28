@@ -1,5 +1,7 @@
-var util = require('util');
-var roleClaimer = {
+import util from './util';
+
+
+const roleClaimer = {
     run: function(creep) {
 		if (creep.fatigue != 0){
 			return;
@@ -26,4 +28,4 @@ var roleClaimer = {
 	}
 };
 
-module.exports = roleClaimer;
+export default roleClaimer;

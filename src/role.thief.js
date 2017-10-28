@@ -1,9 +1,9 @@
-var actHarvest = require('action.harvest');
-var actUpgrade = require('action.upgrade');
-var actDeposit = require('action.deposit');
-var util = require('util');
+import actHarvest from './action.harvest';
+import actUpgrade from './action.upgrade';
+import actDeposit from './action.deposit';
+import util from './util';
 
-var roleThief = {
+const roleThief = {
     run: function(creep) {
 		if (creep.fatigue != 0){
 			return;
@@ -74,4 +74,4 @@ var roleThief = {
 	}
 };
 
-module.exports = roleThief;
+export default roleThief;

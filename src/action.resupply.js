@@ -1,6 +1,6 @@
-var actHarvest = require('action.harvest');
+import actHarvest from './action.harvest';
 
-var actResupply = {
+const actResupply = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
@@ -37,4 +37,4 @@ function getResupplyTarget(creep) {
     }
 }
 
-module.exports = actResupply;
+export default actResupply;

@@ -14,4 +14,4 @@ var actUpgrade = {
     }
 };
     
-module.exports = actUpgrade;
+export default actUpgrade;
