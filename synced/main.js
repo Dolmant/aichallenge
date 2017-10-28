@@ -380,8 +380,8 @@ function loop() {
 	// 	}
 	// }
 
-	for (roomName in Game.rooms) {
-		var Room = Game.rooms[roomName];
+	for (let roomName in Game.rooms) {
+		let Room = Game.rooms[roomName];
 		__WEBPACK_IMPORTED_MODULE_0__room__["a" /* default */].run(Room);
 	}
 	Memory.misc.globalCreeps = {

@@ -35,8 +35,8 @@ export function loop() {
 	// 	}
 	// }
 
-	for (roomName in Game.rooms) {
-		var Room = Game.rooms[roomName]
+	for (let roomName in Game.rooms) {
+		let Room = Game.rooms[roomName]
 		roomControl.run(Room)
 	}
 	Memory.misc.globalCreeps = {
