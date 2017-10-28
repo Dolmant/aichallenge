@@ -1,3 +1,5 @@
+import * as profiler from './screeps-profiler';
+
 import roleUpgrader from './role.upgrader';
 import roleHarvester from './role.harvester';
 import roleMule from './role.mule';
@@ -9,6 +11,16 @@ import roleRanged from './role.ranged';
 import roleHealer from './role.healer';
 
 import spawner from './spawner';
+
+profiler.registerObject(roleUpgrader, 'upgrader');
+profiler.registerObject(roleHarvester, 'harvester');
+profiler.registerObject(roleMule, 'mule');
+profiler.registerObject(roleWorker, 'worker');
+profiler.registerObject(roleClaimer, 'claimer');
+profiler.registerObject(roleThief, 'thief');
+profiler.registerObject(roleMelee, 'melee');
+profiler.registerObject(roleRanged, 'ranged');
+profiler.registerObject(roleHealer, 'healer');
 
 const Room = {
     run: function(myRoom) {
