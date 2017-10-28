@@ -3,7 +3,7 @@ var spawner = {
     
     run: function(myRoom, mySpawns, myCreepCount, totalCreeps) {
         // These all relate to the number of work parts except Mule which is carry
-        var MaxHarvesterParts = 18;
+        var MaxHarvesterParts = 12; // definitely
         var MaxWorkerParts = 12;
         var MaxMuleParts = 20;
         var MaxUpgraderParts = 24;
@@ -12,6 +12,8 @@ var spawner = {
         var MaxRangedParts = 70;
         var MaxHealerParts = 10;
         var MaxHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 5;
+        // implement levels
+        // var MinHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 5;
         var MaxWorkerCount = myRoom.memory.marshalForce ? 1 : 4;
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         var MaxUpgraderCount = myRoom.memory.hasLinks ? 2 : 1;
@@ -34,7 +36,7 @@ var spawner = {
                 myRoom.memory.sources.forEach(source => {
                     if ((myCreepCount.sourceMap[source] || 0) < sourceMapNumber) {
                         sourceMapNumber = myCreepCount.sourceMap[source] || 0;
-                        sourceMap = source.id;
+                        sourceMap = source;
                     }
                 });
                 let canSpawn = true;
