@@ -185,7 +185,6 @@ function completeOutstandingRequests(myRoom, Spawn) {
         });
         Memory.misc.requests.splice(0, 1);
         console.log('Spawning: '+ newName);
-        canSpawn = false;
     }
 }
 
@@ -215,21 +214,35 @@ function getBody(myRoom, options = {}) {
         }
         return partArray;
     }
+    let workCount = 0;
     if (options.harvester && myRoom.memory.hasMules && myRoom.memory.hasLinks && myRoom.memory.hasContainers) {
         partArray.push(WORK);
         partArray.push(MOVE);
         partArray.push(CARRY);
         totalEnergy -= 4;
-        while (totalEnergy >= 4) {
+        workCount = 1;
+        while (totalEnergy >= 4 && workCount < 8) {
             partArray.push(WORK)
             partArray.push(MOVE);
             partArray.push(CARRY);
             totalEnergy -= 4;
-            if (totalEnergy >= 4) {
+            workCount += 1;
+            if (totalEnergy >= 4 && workCount < 7) {
                 partArray.push(WORK)
                 partArray.push(WORK)
+                workCount += 2;
                 totalEnergy -= 4;
             }
+        }
+        return partArray;
+    }
+    if (options.harvester) {
+        while (totalEnergy >= 4 && workCount < 8) {
+            partArray.push(WORK)
+            partArray.push(MOVE);
+            partArray.push(CARRY);
+            totalEnergy -= 4;
+            workCount += 1;
         }
         return partArray;
     }

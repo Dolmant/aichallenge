@@ -4,7 +4,7 @@ const actDeposit = {
         //if I'm carrying something that is not energy
         var currentEnergy = creep.carry.energy;
         if (_.sum(creep.carry) != currentEnergy) {
-            depositResource(creep);
+            deposit_resource(creep);
         }
         else if (!creep.memory.depositTarget) {
             deposit_target(creep, isMule);
