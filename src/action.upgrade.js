@@ -1,3 +1,4 @@
+// @flow
 var actUpgrade = {
     run: function(creep) {
         if( creep.memory.MyController == undefined){

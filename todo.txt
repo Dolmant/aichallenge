@@ -1,19 +1,21 @@
 Need to do:
-add eslint I am dying
+add eslint rules I am dying
 
-build vscode autocomplete extension!!
-add room request creeps
+tomorrow:
+types
+global caches
+break out TASKS
+work on injecting react for work
 
-invade bottom
-findsources dies when sources run out so will have to identify some other way
+build flow types
+
 document all my objects (room, creep etc)
 count parts per energy
-create energy invaders
+
 build a repairer creepevery ROLE handles all TASKS
-have a better baseline for 6 harvest / 1 upgrade, everything else
+have a better baseline for max 12 harvest per with a limit of 4
 tag extensions structures as going to be filled and prevent other creeps trying to fill them
 1. better pathfinding
-find out what went wrong that caused all creeps to die!
 2. break out spawner
 3. spawn smarter - what is the optimal config
 4. spawn based on incoming energy

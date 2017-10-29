@@ -1,3 +1,4 @@
+// @flow
 import actUpgrade from './action.upgrade';
 import actResupply from './action.resupply';
 import util from './util';

@@ -1,3 +1,4 @@
+// @flow
 const util = {
     goToTarget(creep) {
         if (creep.pos.x == 0) {

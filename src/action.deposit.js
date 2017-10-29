@@ -1,3 +1,4 @@
+// @flow
 const actDeposit = {
     run: function(creep, isMule) {
         //if I'm carrying something that is not energy

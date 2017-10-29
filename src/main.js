@@ -1,3 +1,4 @@
+// @flow
 import roomControl from './room';
 import * as profiler from './screeps-profiler';
 // docs:

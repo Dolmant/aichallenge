@@ -1,6 +1,6 @@
 
+// @flow
 const spawner = {
-    
     run: function(myRoom, mySpawns, myCreepCount, totalCreeps) {
         // These all relate to the number of work parts except Mule which is carry
         var MaxHarvesterParts = 12; // definitely

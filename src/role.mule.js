@@ -1,3 +1,4 @@
+// @flow
 import actDeposit from './action.deposit';
 
 const roleMule = {

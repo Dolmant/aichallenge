@@ -1,3 +1,4 @@
+// @flow
 import actHarvest from './action.harvest';
 import actUpgrade from './action.upgrade';
 import actDeposit from './action.deposit';

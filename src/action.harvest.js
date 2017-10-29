@@ -1,3 +1,4 @@
+// @flow
 const actHarvest = {
     run: function(creep) {
         if (!creep.memory.sourceMap && !creep.memory.tempSourceMap) {

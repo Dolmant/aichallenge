@@ -1,3 +1,4 @@
+// @flow
 import * as profiler from './screeps-profiler';
 
 import roleUpgrader from './role.upgrader';
@@ -9,8 +10,10 @@ import roleThief from './role.thief';
 import roleMelee from './role.melee';
 import roleRanged from './role.ranged';
 import roleHealer from './role.healer';
+import type {Creep} from './../flow-typed/Creep';
 
 import spawner from './spawner';
+
 
 profiler.registerObject(roleUpgrader, 'upgrader');
 profiler.registerObject(roleHarvester, 'harvester');
@@ -32,7 +35,7 @@ const Room = {
         {
             myRoom.memory.timer++;
         }
-        var myCreeps = myRoom.find(FIND_MY_CREEPS);
+        var myCreeps: Creep = myRoom.find(FIND_MY_CREEPS);
         var mySpawns = myRoom.find(FIND_MY_SPAWNS);
 
         var myCreepCount = {

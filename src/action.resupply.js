@@ -1,8 +1,7 @@
+// @flow
 import actHarvest from './action.harvest';
 
 const actResupply = {
-
-    /** @param {Creep} creep **/
     run: function(creep) {
         //find the closest containr or storage that has enough energy to fill me
         //it's been a while since I looked into this, jeeze this eats up a lot of CPU, this should check once then head towards it
