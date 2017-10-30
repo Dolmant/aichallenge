@@ -113,6 +113,7 @@ const Room = {
         });
 
         myRoom.memory.myCreepCount = myCreepCount;
+        let convert = null;
         myCreeps.forEach(creep => {
             switch(creep.memory.role){
                 default:
@@ -126,13 +127,9 @@ const Room = {
                 case 'builder':
                 case 'worker':
                     if (myCreepCount.harvesterCount < 2) {
-                        myCreepCount.harvesterCount += 1;
-                        myCreepCount.workerCount -= 1;
-                        creep.memory.role = 'harvester';
-                        roleHarvester.run(creep);
-                    } else {
-                        roleWorker.run(creep);
+                        convert = creep;
                     }
+                    roleWorker.run(creep);
                     break;
                 case 'mule':
                     roleMule.run(creep);
@@ -181,7 +178,7 @@ const Room = {
         transferLinks(myRoom.memory.links);
 
         myRoom.memory.hasMules = myCreepCount.muleCount;
-        spawner.run(myRoom, mySpawns, myCreepCount, totalCreeps);
+        spawner.run(myRoom, mySpawns, myCreepCount, totalCreeps, convert);
 	}
 }
 

@@ -860,6 +860,7 @@ const Room = {
         });
 
         myRoom.memory.myCreepCount = myCreepCount;
+        let convert = null;
         myCreeps.forEach(creep => {
             switch (creep.memory.role) {
                 default:
@@ -873,13 +874,9 @@ const Room = {
                 case 'builder':
                 case 'worker':
                     if (myCreepCount.harvesterCount < 2) {
-                        myCreepCount.harvesterCount += 1;
-                        myCreepCount.workerCount -= 1;
-                        creep.memory.role = 'harvester';
-                        __WEBPACK_IMPORTED_MODULE_2__role_harvester__["a" /* default */].run(creep);
-                    } else {
-                        __WEBPACK_IMPORTED_MODULE_4__role_worker__["a" /* default */].run(creep);
+                        convert = creep;
                     }
+                    __WEBPACK_IMPORTED_MODULE_4__role_worker__["a" /* default */].run(creep);
                     break;
                 case 'mule':
                     __WEBPACK_IMPORTED_MODULE_3__role_mule__["a" /* default */].run(creep);
@@ -928,7 +925,7 @@ const Room = {
         transferLinks(myRoom.memory.links);
 
         myRoom.memory.hasMules = myCreepCount.muleCount;
-        __WEBPACK_IMPORTED_MODULE_10__spawner__["a" /* default */].run(myRoom, mySpawns, myCreepCount, totalCreeps);
+        __WEBPACK_IMPORTED_MODULE_10__spawner__["a" /* default */].run(myRoom, mySpawns, myCreepCount, totalCreeps, convert);
     }
 };
 
@@ -1743,7 +1740,7 @@ function findTarget(creep) {
 "use strict";
 
 const spawner = {
-    run: function (myRoom, mySpawns, myCreepCount, totalCreeps) {
+    run: function (myRoom, mySpawns, myCreepCount, totalCreeps, convert) {
         // These all relate to the number of work parts except Mule which is carry
         var MaxHarvesterParts = 12; // definitely
         var MaxWorkerParts = 12;
@@ -1790,6 +1787,12 @@ const spawner = {
                             }
                         });
                     }
+
+                if (myCreepCount.harvester < 2) {
+                    convert.memory.role = 'harvester';
+                    convert.memory.sourceMap = sourceMap;
+                    canSpawn = false;
+                }
 
                 if (Spawn.memory.renewTarget) {
                     canSpawn = false;

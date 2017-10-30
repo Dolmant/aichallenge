@@ -1,7 +1,7 @@
 
 // @flow
 const spawner = {
-    run: function(myRoom, mySpawns, myCreepCount, totalCreeps) {
+    run: function(myRoom, mySpawns, myCreepCount, totalCreeps, convert) {
         // These all relate to the number of work parts except Mule which is carry
         var MaxHarvesterParts = 12; // definitely
         var MaxWorkerParts = 12;
@@ -48,6 +48,12 @@ const spawner = {
                             'sourceMap': sourceMap,
                         },
                     });
+                }
+
+                if (myCreepCount.harvester < 2) {
+                    convert.memory.role = 'harvester';
+                    convert.memory.sourceMap = sourceMap;
+                    canSpawn = false;
                 }
 
                 if (Spawn.memory.renewTarget) {
