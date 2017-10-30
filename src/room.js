@@ -181,33 +181,44 @@ const Room = {
 function runTowers(myTowers)
 {
     myTowers.forEach(tower => {
-        var minRepair = 10000;
+        var minRepair = 20000;
         var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if (closestHostile) {
             tower.attack(closestHostile);
         }
-        else if (tower.energy > tower.energyCapacity / 2)
-        {
-            var structureList = tower.room.find(FIND_STRUCTURES, {filter: s=>
-                s.structureType == STRUCTURE_RAMPART ||
-                s.structureType == STRUCTURE_WALL ||
-                s.structureType == STRUCTURE_ROAD ||
-                s.structureType == STRUCTURE_CONTAINER
-            });
-            for (let structure of structureList)
-            {
-                if (structure.hits < structure.hitsMax && structure.hits < minRepair)//this could be a problem during an assault where towers start repairing instead of attacking.
-                {
-                    tower.repair(structure);
-                    break;
+        else if (tower.energy > tower.energyCapacity / 2) {
+            var repairTarget = 0;
+            var creepToRepair = tower.pos.findClosestByRange(FIND_MY_CREEPS, {filter: c=> c.hits < c.hitsMax});
+            if (creepToRepair != undefined) {
+                tower.heal(creepToRepair);
+                repairTarget = creepToRepair;
+            }
+            if (!repairTarget) {
+                var structureList = tower.room.find(FIND_STRUCTURES, {filter: s=>
+                    s.structureType == STRUCTURE_ROAD ||
+                    s.structureType == STRUCTURE_CONTAINER
+                });
+                for (let structure of structureList) {
+                    if (structure.hits < structure.hitsMax) {
+                        tower.repair(structure);
+                        repairTarget = structure.id;
+                        break;
+                    }
                 }
             }
-            var creepToRepair = tower.pos.findClosestByRange(FIND_MY_CREEPS, {filter: c=> c.hits < c.hitsMax});
-            if (creepToRepair != undefined)
-            {
-                tower.heal(creepToRepair);
+            if (!repairTarget) {
+                var structureList = tower.room.find(FIND_STRUCTURES, {filter: s=>
+                    s.structureType == STRUCTURE_RAMPART ||
+                    s.structureType == STRUCTURE_WALL
+                });
+                for (let structure of structureList) {
+                    if (structure.hits < structure.hitsMax && structure.hits < minRepair) {
+                        tower.repair(structure);
+                        repairTarget = structure.id;
+                        break;
+                    }
+                }
             }
-            
         }
     });
 }
