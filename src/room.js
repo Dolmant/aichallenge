@@ -125,7 +125,14 @@ const Room = {
                 // legacy, remove
                 case 'builder':
                 case 'worker':
-                    roleWorker.run(creep);
+                    if (myCreepCount.harvesterCount < 2) {
+                        myCreepCount.harvesterCount += 1;
+                        myCreepCount.workerCount -= 1;
+                        creep.memory.role = 'harvester';
+                        roleHarvester.run(creep);
+                    } else {
+                        roleWorker.run(creep);
+                    }
                     break;
                 case 'mule':
                     roleMule.run(creep);

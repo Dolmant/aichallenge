@@ -872,7 +872,14 @@ const Room = {
                 // legacy, remove
                 case 'builder':
                 case 'worker':
-                    __WEBPACK_IMPORTED_MODULE_4__role_worker__["a" /* default */].run(creep);
+                    if (myCreepCount.harvesterCount < 2) {
+                        myCreepCount.harvesterCount += 1;
+                        myCreepCount.workerCount -= 1;
+                        creep.memory.role = 'harvester';
+                        __WEBPACK_IMPORTED_MODULE_2__role_harvester__["a" /* default */].run(creep);
+                    } else {
+                        __WEBPACK_IMPORTED_MODULE_4__role_worker__["a" /* default */].run(creep);
+                    }
                     break;
                 case 'mule':
                     __WEBPACK_IMPORTED_MODULE_3__role_mule__["a" /* default */].run(creep);
@@ -1752,7 +1759,7 @@ const spawner = {
         var MaxWorkerCount = myRoom.memory.marshalForce ? 1 : 4;
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         var MaxUpgraderCount = myRoom.memory.hasLinks ? 2 : 1;
-        var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 8;
+        var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 4;
         var MaxMeleeCount = myRoom.memory.marshalForce ? Memory.attackers.forceSize - 3 : 0;
         var MaxRangedCount = myRoom.memory.marshalForce ? 2 : 0;
         var MaxHealerCount = myRoom.memory.marshalForce ? 1 : 0;
