@@ -279,10 +279,13 @@ function deposit_resource(creep) {
         }
     });
     //TODO: figure out what the command for deposit all is
+    var err;
     if (target != undefined) {
-        creep.moveTo(target);
         for (const resourceType in creep.carry) {
-            creep.transfer(target, resourceType);
+            err = creep.transfer(target, resourceType);
+            if (err == ERR_NOT_IN_RANGE) {
+                creep.moveTo(target);
+            }
         }
     }
 }
@@ -1756,7 +1759,7 @@ const spawner = {
         var MaxWorkerCount = myRoom.memory.marshalForce ? 1 : 4;
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         MaxMuleCount = myRoom.memory.hasLinks ? 2 : MaxMuleCount;
-        var MaxUpgraderCount = myRoom.memory.hasLinks ? 2 : 1;
+        var MaxUpgraderCount = myRoom.memory.hasLinks ? 1 : 1;
         var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 0;
         var MaxMeleeCount = myRoom.memory.marshalForce ? Memory.attackers.forceSize - 3 : 0;
         var MaxRangedCount = myRoom.memory.marshalForce ? 2 : 0;

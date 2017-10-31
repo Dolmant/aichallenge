@@ -130,10 +130,13 @@ function deposit_resource(creep) {
         }
     });
     //TODO: figure out what the command for deposit all is
+    var err;
     if (target != undefined) {
-        creep.moveTo(target);
         for (const resourceType in creep.carry) {
-            creep.transfer(target, resourceType);
+            err = creep.transfer(target, resourceType);
+            if (err == ERR_NOT_IN_RANGE) {
+                creep.moveTo(target);
+            }
         }  
     }
 }
