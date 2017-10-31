@@ -1744,8 +1744,8 @@ const spawner = {
         // These all relate to the number of work parts except Mule which is carry
         var MaxHarvesterParts = 12; // definitely
         var MaxWorkerParts = 12;
-        var MaxMuleParts = 20;
-        var MaxUpgraderParts = 24;
+        var MaxMuleParts = 16;
+        var MaxUpgraderParts = 12;
         var MaxThiefParts = 70;
         var MaxMeleeParts = 70;
         var MaxRangedParts = 70;
@@ -1755,8 +1755,9 @@ const spawner = {
         // var MinHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 5;
         var MaxWorkerCount = myRoom.memory.marshalForce ? 1 : 4;
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
+        MaxMuleCount = myRoom.memory.hasLinks ? 2 : MaxMuleCount;
         var MaxUpgraderCount = myRoom.memory.hasLinks ? 2 : 1;
-        var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 4;
+        var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 0;
         var MaxMeleeCount = myRoom.memory.marshalForce ? Memory.attackers.forceSize - 3 : 0;
         var MaxRangedCount = myRoom.memory.marshalForce ? 2 : 0;
         var MaxHealerCount = myRoom.memory.marshalForce ? 1 : 0;
@@ -1778,21 +1779,15 @@ const spawner = {
                     }
                 });
                 let canSpawn = true;
-                if (myCreepCount.harvester < 1) //just in case, if there are no harvesters spawn a harvester
+                if (myCreepCount.harvesterCount < 1) //just in case, if there are no harvesters spawn a harvester
                     {
-                        Spawn.spawnCreep([WORK, CARRY, MOVE], 'Harvester', {
+                        Spawn.spawnCreep([WORK, CARRY, MOVE], 'HarvesterLow' + Game.time, {
                             memory: {
                                 'role': 'harvester',
                                 'sourceMap': sourceMap
                             }
                         });
                     }
-
-                if (myCreepCount.harvester < 2) {
-                    convert.memory.role = 'harvester';
-                    convert.memory.sourceMap = sourceMap;
-                    canSpawn = false;
-                }
 
                 if (Spawn.memory.renewTarget) {
                     canSpawn = false;
@@ -1844,14 +1839,9 @@ const spawner = {
                     console.log('Spawning: ' + newName);
                     canSpawn = false;
                 }
-                if (myCreepCount.upgraderParts < MaxUpgraderParts && myCreepCount.upgraderCount < MaxUpgraderCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
-                    var newName = 'Upgrader' + Game.time;
-                    Spawn.spawnCreep(getBody(myRoom), newName, {
-                        memory: {
-                            'role': 'upgrader'
-                        }
-                    });
-                    console.log('Spawning: ' + newName);
+                if (convert && myCreepCount.harvesterCount < 2) {
+                    convert.memory.role = 'harvester';
+                    convert.memory.sourceMap = sourceMap;
                     canSpawn = false;
                 }
                 if (myCreepCount.muleParts < MaxMuleParts && myCreepCount.muleCount < MaxMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
@@ -1859,6 +1849,16 @@ const spawner = {
                     Spawn.spawnCreep(getBody(myRoom, { 'carryOnly': true }), newName, {
                         memory: {
                             'role': 'mule'
+                        }
+                    });
+                    console.log('Spawning: ' + newName);
+                    canSpawn = false;
+                }
+                if (myCreepCount.upgraderParts < MaxUpgraderParts && myCreepCount.upgraderCount < MaxUpgraderCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
+                    var newName = 'Upgrader' + Game.time;
+                    Spawn.spawnCreep(getBody(myRoom), newName, {
+                        memory: {
+                            'role': 'upgrader'
                         }
                     });
                     console.log('Spawning: ' + newName);
