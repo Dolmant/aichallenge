@@ -845,9 +845,7 @@ __WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPO
 __WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_4__role_worker__["a" /* default */], 'worker');
 __WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_5__role_claimer__["a" /* default */], 'claimer');
 __WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_6__role_thief__["a" /* default */], 'thief');
-__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](roleMelee, 'melee');
-__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](roleRanged, 'ranged');
-__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](roleHealer, 'healer');
+__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_7__role_offensive__["a" /* default */], 'run');
 
 const Room = {
     run: function (myRoom) {
@@ -944,8 +942,6 @@ const Room = {
                 case 'upgrader':
                     __WEBPACK_IMPORTED_MODULE_1__role_upgrader__["a" /* default */].run(creep);
                     break;
-                // legacy, remove
-                case 'builder':
                 case 'worker':
                     if (myCreepCount.harvesterCount < 2) {
                         convert = creep;
@@ -1146,8 +1142,8 @@ const roleUpgrader = {
             return;
         }
 
-        if (!(creep.memory.myTask == 'upgrading') && creep.carry.energy == creep.carryCapacity) {
-            creep.memory.myTask = 'upgrading';
+        if (!(creep.memory.myTask == 'upgrade') && creep.carry.energy == creep.carryCapacity) {
+            creep.memory.myTask = 'upgrade';
         }
         if (creep.carry.energy == 0) {
             creep.memory.myTask = 'resupply';
@@ -1209,8 +1205,6 @@ const roleMule = {
 
 "use strict";
 const roleWorker = {
-
-	/** @param {Creep} creep **/
 	run: function (creep) {
 		if (creep.fatigue != 0) {
 			return;
@@ -1304,7 +1298,7 @@ const roleThief = {
 
         if (creep.room.name == creep.memory.home.room && creep.carry.energy > 0) {
             if (creep.memory.secondaryRole == 'upgrader') {
-                creep.memory.myTask = 'upgrading';
+                creep.memory.myTask = 'upgrade';
             } else {
                 creep.memory.myTask = 'deposit';
             }
@@ -1395,16 +1389,17 @@ const roleOffensive = {
 
 const spawner = {
     run: function (myRoom, mySpawns, myCreepCount, totalCreeps, convert) {
-        // These all relate to the number of work parts except Mule which is carry
-        var MaxHarvesterParts = 12; // definitely
-        var MaxWorkerParts = 12;
-        var MaxMuleParts = 16;
-        var MaxUpgraderParts = 12;
-        var MaxThiefParts = 70;
-        var MaxMeleeParts = 70;
-        var MaxRangedParts = 70;
-        var MaxHealerParts = 10;
-        var MaxHarvesterCount = myRoom.memory.hasLinks || myRoom.memory.hasContainers ? 4 : 5;
+        var MaxParts = {
+            'harvester': 6, // definitely
+            'worker': 6,
+            'mule': 10,
+            'upgrader': 6,
+            'thief': 6,
+            'melee': 70,
+            'ranged': 70,
+            'healer': 10
+        };
+        var MaxHarvesterCount = myRoom.memory.hasLinks || myRoom.memory.hasContainers ? 2 : 4;
         // implement levels
         // var MinHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 5;
         var MaxWorkerCount = myRoom.memory.marshalForce ? 1 : 4;
@@ -1459,7 +1454,7 @@ const spawner = {
                         delete Spawn.memory.renewTarget;
                     }
                 }
-                if (myCreepCount.harvesterParts < MaxHarvesterParts && myCreepCount.harvesterCount < MaxHarvesterCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
+                if (myCreepCount.harvesterParts < MaxParts.harvester * myCreepCount.harvesterCount && myCreepCount.harvesterCount < MaxHarvesterCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Harvester' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, { 'harvester': true }), newName, {
                         memory: {
@@ -1483,7 +1478,7 @@ const spawner = {
                     myRoom.memory.spawnClaimer -= 1;
                     canSpawn = false;
                 }
-                if (myCreepCount.workerParts < MaxWorkerParts && myCreepCount.workerCount < MaxWorkerCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
+                if (myCreepCount.workerParts < MaxParts.worker * myCreepCount.workerCount && myCreepCount.workerCount < MaxWorkerCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Worker' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom), newName, {
                         memory: {
@@ -1498,7 +1493,7 @@ const spawner = {
                     convert.memory.sourceMap = sourceMap;
                     canSpawn = false;
                 }
-                if (myCreepCount.muleParts < MaxMuleParts && myCreepCount.muleCount < MaxMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
+                if (myCreepCount.muleParts < MaxParts.mule * myCreepCount.muleCount && myCreepCount.muleCount < MaxMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Mule' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, { 'carryOnly': true }), newName, {
                         memory: {
@@ -1508,7 +1503,7 @@ const spawner = {
                     console.log('Spawning: ' + newName);
                     canSpawn = false;
                 }
-                if (myCreepCount.upgraderParts < MaxUpgraderParts && myCreepCount.upgraderCount < MaxUpgraderCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
+                if (myCreepCount.upgraderParts < MaxParts.upgrader * myCreepCount.upgraderCount && myCreepCount.upgraderCount < MaxUpgraderCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Upgrader' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom), newName, {
                         memory: {
@@ -1518,7 +1513,7 @@ const spawner = {
                     console.log('Spawning: ' + newName);
                     canSpawn = false;
                 }
-                if (myCreepCount.thiefParts < MaxThiefParts && Memory.misc.globalCreeps.thief < MaxThiefCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
+                if (myCreepCount.thiefParts < MaxParts.thief * Memory.misc.globalCreeps.thief && Memory.misc.globalCreeps.thief < MaxThiefCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Thief' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom), newName, {
                         memory: {
@@ -1528,7 +1523,7 @@ const spawner = {
                     });
                     console.log('Spawning: ' + newName);
                 }
-                if (myCreepCount.meleeParts < MaxMeleeParts && Memory.misc.globalCreeps.melee < MaxMeleeCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
+                if (myCreepCount.meleeParts < MaxParts.melee * Memory.misc.globalCreeps.melee && Memory.misc.globalCreeps.melee < MaxMeleeCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Melee' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, { 'melee': true }), newName, {
                         memory: {
@@ -1538,7 +1533,7 @@ const spawner = {
                     console.log('Spawning: ' + newName);
                     canSpawn = false;
                 }
-                if (myCreepCount.healerParts < MaxHealerParts && Memory.misc.globalCreeps.healer < MaxHealerCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
+                if (myCreepCount.healerParts < MaxParts.healer * Memory.misc.globalCreeps.healer && Memory.misc.globalCreeps.healer < MaxHealerCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Healer' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, { 'healer': true }), newName, {
                         memory: {
@@ -1548,7 +1543,7 @@ const spawner = {
                     console.log('Spawning: ' + newName);
                     canSpawn = false;
                 }
-                if (myCreepCount.rangedParts < MaxRangedParts && Memory.misc.globalCreeps.ranged < MaxRangedCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
+                if (myCreepCount.rangedParts < MaxParts.ranged * Memory.misc.globalCreeps.ranged && Memory.misc.globalCreeps.ranged < MaxRangedCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Ranged' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, { 'ranged': true }), newName, {
                         memory: {
@@ -1693,7 +1688,7 @@ const taskManager = {
             case 'goToTarget':
                 __WEBPACK_IMPORTED_MODULE_7__util__["a" /* default */].goToTarget(creep);
                 break;
-            case 'upgrading':
+            case 'upgrade':
                 __WEBPACK_IMPORTED_MODULE_4__action_upgrade__["a" /* default */].run(creep);
                 break;
             case 'resupply':
