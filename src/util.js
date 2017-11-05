@@ -36,8 +36,6 @@ const util = {
             }
         } else if (creep.room.name == creep.memory.goToTarget) {
             creep.moveTo(new RoomPosition(25, 25, creep.memory.goToTarget));
-            delete creep.memory.goToTarget;
-            creep.memory.myTask = 'arrived';
         } else {
             creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.goToTarget)))
         }

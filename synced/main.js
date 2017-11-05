@@ -106,8 +106,6 @@ const util = {
             }
         } else if (creep.room.name == creep.memory.goToTarget) {
             creep.moveTo(new RoomPosition(25, 25, creep.memory.goToTarget));
-            delete creep.memory.goToTarget;
-            creep.memory.myTask = 'arrived';
         } else {
             creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.goToTarget)));
         }
@@ -1236,21 +1234,19 @@ const roleThiefMule = {
             creep.memory.stealTarget = possibleTargets[Memory.muleFlag - 1];
             creep.memory.home = homeArray[Memory.muleFlag - 1];
         }
-        if (creep.memory.myTask != 'goToTarget') {
-            if (creep.carry.energy == 0 && creep.room.name != creep.memory.stealTarget) {
-                creep.memory.myTask = 'goToTarget';
-                creep.memory.goToTarget = creep.memory.stealTarget;
-            }
-            if (creep.carry.energy == 0 && creep.room.name == creep.memory.stealTarget) {
-                creep.memory.myTask = 'fetch';
-            }
-            if (creep.carryCapacity == creep.carry.energy && creep.room.name != creep.memory.home) {
-                creep.memory.myTask = 'goToTarget';
-                creep.memory.goToTarget = creep.memory.home;
-            }
-            if (creep.carryCapacity == creep.carry.energy && creep.room.name == creep.memory.home) {
-                creep.memory.myTask = 'deposit';
-            }
+        if (creep.carry.energy == 0 && creep.room.name == creep.memory.stealTarget) {
+            creep.memory.myTask = 'fetch';
+        }
+        if (creep.carryCapacity == creep.carry.energy && creep.room.name != creep.memory.home) {
+            creep.memory.myTask = 'goToTarget';
+            creep.memory.goToTarget = creep.memory.home;
+        }
+        if (creep.carry.energy == 0 && creep.room.name != creep.memory.stealTarget) {
+            creep.memory.myTask = 'goToTarget';
+            creep.memory.goToTarget = creep.memory.stealTarget;
+        }
+        if (creep.carryCapacity == creep.carry.energy && creep.room.name == creep.memory.home) {
+            creep.memory.myTask = 'deposit';
         }
     }
 };
@@ -1277,7 +1273,7 @@ const roleOffensive = {
                 return null;
             }
             var attackFlag = Game.flags['Attack'];
-            if (creep.room.name == attackFlag.pos.roomName && creep.memory.myTask != 'goToTarget') {
+            if (creep.room.name == attackFlag.pos.roomName) {
                 if (creep.memory.myTask != 'heal' && creep.memory.myTask != 'attack' && creep.memory.myTask != 'block') {
                     __WEBPACK_IMPORTED_MODULE_1__action_offensive__["a" /* default */].findTarget(creep);
                     if (creep.memory.healCreep) {
