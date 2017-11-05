@@ -72,6 +72,9 @@ module.exports =
 const util = {
     goToTarget(creep) {
         var err = 0;
+        if (creep.pos.x === 1 || creep.pos.y === 1 || creep.pos.x === 48 || creep.pos.y === 48) {
+            creep.moveTo(new RoomPosition(25, 25, creep.memory.goToTarget));
+        }
         if (creep.pos.x == 0) {
             err = creep.move(RIGHT);
             if (err != OK) {
