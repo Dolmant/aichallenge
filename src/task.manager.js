@@ -27,7 +27,7 @@ const taskManager = {
             case 'goToTarget':
                 util.goToTarget(creep);
                 break;
-            case 'upgrading':
+            case 'upgrade':
                 actUpgrade.run(creep);
                 break;
             case 'resupply':

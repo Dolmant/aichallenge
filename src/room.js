@@ -120,8 +120,6 @@ const Room = {
                 case 'upgrader': 
                     roleUpgrader.run(creep);
                     break;
-                // legacy, remove
-                case 'builder':
                 case 'worker':
                     if (myCreepCount.harvesterCount < 2) {
                         convert = creep;

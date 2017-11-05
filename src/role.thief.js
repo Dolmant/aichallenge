@@ -43,7 +43,7 @@ const roleThief = {
 
         if (creep.room.name == creep.memory.home.room && creep.carry.energy > 0) {
             if (creep.memory.secondaryRole == 'upgrader') {
-                creep.memory.myTask = 'upgrading';
+                creep.memory.myTask = 'upgrade';
             } else {
                 creep.memory.myTask = 'deposit';
             }

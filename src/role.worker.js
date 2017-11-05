@@ -1,13 +1,10 @@
 // @flow
-
 const roleWorker = {
-
-    /** @param {Creep} creep **/
     run: function(creep) {
 		if(creep.fatigue != 0){
 			return;
 		}
-	
+
 		if((creep.memory.myTask == 'repair' || creep.memory.myTask == 'build' || creep.memory.myTask == 'upgrade') && creep.carry.energy == 0){
     		creep.memory.myTask = 'resupply';
 		}

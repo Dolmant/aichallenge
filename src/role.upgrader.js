@@ -5,8 +5,8 @@ const roleUpgrader = {
 			return;
         }
 
-        if(!(creep.memory.myTask == 'upgrading') && creep.carry.energy == creep.carryCapacity) {
-            creep.memory.myTask = 'upgrading';
+        if(!(creep.memory.myTask == 'upgrade') && creep.carry.energy == creep.carryCapacity) {
+            creep.memory.myTask = 'upgrade';
         }
         if(creep.carry.energy == 0)
         {
