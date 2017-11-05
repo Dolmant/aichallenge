@@ -652,7 +652,7 @@ var actOffensive = {
         }
     },
     attack: function (creep) {
-        var target = Game.getObjectById(creep.memory.healCreep);
+        var target = Game.getObjectById(creep.memory.attackCreep);
         if (target) {
             var err = creep.attack(target);
             if (err == ERR_NOT_IN_RANGE) {
@@ -667,7 +667,7 @@ var actOffensive = {
         }
     },
     rangedAttack: function (creep) {
-        var target = Game.getObjectById(creep.memory.healCreep);
+        var target = Game.getObjectById(creep.memory.attackCreep);
         if (target) {
             var err = creep.rangedAttack(target);
             if (err == ERR_NOT_IN_RANGE) {
