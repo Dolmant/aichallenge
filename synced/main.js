@@ -1185,7 +1185,7 @@ const roleThief = {
 
         if (!creep.memory.stealTarget) {
             // TODO fix !!!!
-            const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53']; // 'W43N51' not owned yet
+            const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W46N51'];
 
             // const exits = Game.map.describeExits(creep.room.name)
             // for (name in exits) {
@@ -1230,7 +1230,7 @@ const roleThiefMule = {
         }
 
         if (!creep.memory.stealTarget) {
-            const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W46N53'];
+            const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W46N51'];
             const homeArray = ['W43N53', 'W41N51', 'W41N51', 'W43N53', 'W43N53', 'W41N51', 'W45N53', 'W45N53'];
 
             if (possibleTargets.length <= Memory.muleFlag) {
@@ -1484,7 +1484,7 @@ const spawner = {
                 }
                 if (Memory.misc.globalCreeps.thiefmule < MaxThiefMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'ThiefMule' + Game.time;
-                    Spawn.spawnCreep(getBody(myRoom, MaxParts.mule), newName, {
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, { 'carryOnly': true }), newName, {
                         memory: {
                             'role': 'thiefmule'
                         }

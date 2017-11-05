@@ -7,7 +7,7 @@ const roleThief = {
 
         if (!creep.memory.stealTarget) {
             // TODO fix !!!!
-            const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53']; // 'W43N51' not owned yet
+            const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W46N51'];
 
             // const exits = Game.map.describeExits(creep.room.name)
             // for (name in exits) {

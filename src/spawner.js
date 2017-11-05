@@ -151,7 +151,7 @@ const spawner = {
                 if(Memory.misc.globalCreeps.thiefmule < MaxThiefMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'ThiefMule' + Game.time;
-                    Spawn.spawnCreep(getBody(myRoom, MaxParts.mule), newName, {
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, {'carryOnly': true}), newName, {
                         memory: {
                             'role': 'thiefmule',
                         },
