@@ -20,9 +20,7 @@ profiler.registerObject(roleMule, 'mule');
 profiler.registerObject(roleWorker, 'worker');
 profiler.registerObject(roleClaimer, 'claimer');
 profiler.registerObject(roleThief, 'thief');
-profiler.registerObject(roleMelee, 'melee');
-profiler.registerObject(roleRanged, 'ranged');
-profiler.registerObject(roleHealer, 'healer');
+profiler.registerObject(roleOffensive, 'run');
 
 const Room = {
     run: function(myRoom) {
