@@ -4,8 +4,11 @@ add eslint rules I am dying
 tomorrow:
 types
 global caches
-break out TASKS
-work on injecting react for work
+Fix spawner to be more module
+make tiers for different levels
+all tasks should delete themselves when done.
+All roles should assign new tasks only if the previous task has been deleted
+Tasks should be run first, then role logic
 
 build flow types
 
