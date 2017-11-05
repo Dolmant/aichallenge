@@ -11,8 +11,8 @@ const roleOffensive = {
                 return null;
             }
             var attackFlag = Game.flags['Attack'];
-            if (creep.room.name == attackFlag.pos.roomName) {
-                if(creep.memory.myTask != 'heal' || creep.memory.myTask != 'attack' || creep.memory.myTask != 'block') {
+            if (creep.room.name == attackFlag.pos.roomName && creep.memory.myTask != 'goToTarget') {
+                if(creep.memory.myTask != 'heal' && creep.memory.myTask != 'attack' && creep.memory.myTask != 'block') {
                     actOffensive.findTarget(creep);
                     if (creep.memory.healCreep) {
                         creep.memory.myTask = 'heal';

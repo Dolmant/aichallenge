@@ -1396,8 +1396,8 @@ const roleOffensive = {
                 return null;
             }
             var attackFlag = Game.flags['Attack'];
-            if (creep.room.name == attackFlag.pos.roomName) {
-                if (creep.memory.myTask != 'heal' || creep.memory.myTask != 'attack' || creep.memory.myTask != 'block') {
+            if (creep.room.name == attackFlag.pos.roomName && creep.memory.myTask != 'goToTarget') {
+                if (creep.memory.myTask != 'heal' && creep.memory.myTask != 'attack' && creep.memory.myTask != 'block') {
                     __WEBPACK_IMPORTED_MODULE_1__action_offensive__["a" /* default */].findTarget(creep);
                     if (creep.memory.healCreep) {
                         creep.memory.myTask = 'heal';
