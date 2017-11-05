@@ -118,182 +118,6 @@ function getSource(creep) {
 
 /***/ }),
 /* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var actUpgrade = {
-    run: function (creep) {
-        if (creep.memory.MyController == undefined) {
-            creep.memory.MyController = creep.room.controller.id;
-        }
-        let myUpgrade = Game.getObjectById(creep.memory.MyController);
-        if (creep.upgradeController(myUpgrade) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(myUpgrade, { visualizePathStyle: { stroke: '#ffffff' } });
-        }
-    }
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (actUpgrade);
-
-/***/ }),
-/* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-const actDeposit = {
-    run: function (creep, isMule) {
-        //if I'm carrying something that is not energy
-        var currentEnergy = creep.carry.energy;
-        if (_.sum(creep.carry) != currentEnergy) {
-            deposit_resource(creep);
-        } else if (!creep.memory.depositTarget) {
-            deposit_target(creep, isMule);
-        }
-        var target = Game.getObjectById(creep.memory.depositTarget);
-        if (target) {
-            var err = creep.transfer(target, RESOURCE_ENERGY);
-            if (err = ERR_INVALID_ARGS) {
-                var err = creep.transfer(target, RESOURCE_ENERGY, target.energyCapacity - target.energy || target.storeCapacity && target.storeCapacity - target.store.energy);
-            }
-            if (err == ERR_NOT_IN_RANGE) {
-                // Return early to prevent deletion of the deposit target
-                return creep.moveTo(target, { visualizePathStyle: { stroke: '#ffffff' } });
-            } else if (err == OK) {
-                // Adjust the promise on this object now it has been delivered
-                if (!creep.room.memory.structures[target.id]) {
-                    creep.room.memory.structures[target.id] = {};
-                };
-                creep.room.memory.structures[target.id].energyRationPromise = 0;
-                if (target.structureType == STRUCTURE_EXTENSION || target.structureType == STRUCTURE_SPAWN) {
-                    //TODO disabled these two because ration updates arent working
-                    if (target.energyCapacity - target.energy > currentEnergy) {
-                        creep.room.memory.energyRation -= currentEnergy;
-                    } else {
-                        creep.room.memory.energyRation -= target.energyCapacity - target.energy;
-                    }
-                }
-            } else {
-                deposit_target(creep, isMule);
-            }
-        }
-        // important to remove the depositTarget so a new one can be fetched
-        delete creep.memory.depositTarget;
-    }
-};
-
-function deposit_target(creep, isMule = false) {
-    // Mule is the only one which will refuse to drop to a container
-    var economy = creep.room.memory.myCreepCount.muleCount && creep.room.memory.myCreepCount.harvesterCount > 0;
-    if (creep.room.memory.hasContainers && economy && !isMule) {
-        // We can use local links and containers and rely on mules for transport
-        var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-            'filter': structure => {
-                // since links and stores have different energy checking methods, need this long filter to check both
-                return (structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_LINK) && (structure.energy < structure.energyCapacity || structure.storeCapacity && structure.store.energy < structure.storeCapacity);
-            },
-            'algorithm': 'dijkstra'
-        });
-        if (target) {
-            creep.memory.depositTarget = target.id;
-            return true;
-        }
-    }
-
-    if (creep.room.memory.energyRation > 0) {
-        // We must deposit to the nearest none full spawn or extension
-        // We do declare that this energy will be given. Promise ticks down 1 energy per tick, if it reaches 0
-        var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-            'filter': structure => {
-                return (structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_EXTENSION) && !(creep.room.memory.structures[structure.id] && creep.room.memory.structures[structure.id].energyRationPromise >= structure.energyCapacity - structure.energy) && structure.energy < structure.energyCapacity;
-            }
-        });
-        if (target) {
-            if (!creep.room.memory.structures[target.id]) {
-                creep.room.memory.structures[target.id] = {};
-            };
-            creep.room.memory.structures[target.id].energyRationPromise += creep.carry.energy;
-            creep.memory.depositTarget = target.id;
-            return true;
-        }
-    }
-    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-        'filter': structure => {
-            return structure.structureType == STRUCTURE_TOWER && structure.energy < structure.energyCapacity;
-        }
-    });
-    if (target) {
-        if (!creep.room.memory.structures[target.id]) {
-            creep.room.memory.structures[target.id] = {};
-        };
-        creep.room.memory.structures[target.id].energyRationPromise += creep.carry.energy;
-        creep.memory.depositTarget = target.id;
-        return true;
-    }
-    // Otherwise, hand it to the storage for other use.
-    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-        'filter': structure => {
-            return structure.structureType == STRUCTURE_STORAGE && structure.store.energy < structure.storeCapacity;
-        }
-    });
-    if (target) {
-        creep.memory.depositTarget = target.id;
-        return true;
-    }
-
-    // Failsafe, give it to spawn or extension
-    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-        'filter': structure => {
-            return (structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_EXTENSION) && structure.energy < structure.energyCapacity;
-        }
-    });
-    if (target) {
-        if (!creep.room.memory.structures[target.id]) {
-            creep.room.memory.structures[target.id] = {};
-        };
-        creep.room.memory.structures[target.id].energyRationPromise += creep.carry.energy;
-        creep.memory.depositTarget = target.id;
-        return true;
-    }
-
-    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-        'filter': structure => {
-            return structure.structureType == STRUCTURE_CONTAINER && structure.store.energy < structure.storeCapacity;
-        }
-    });
-    if (target) {
-        if (!creep.room.memory.structures[target.id]) {
-            creep.room.memory.structures[target.id] = {};
-        };
-        creep.room.memory.structures[target.id].energyRationPromise += creep.carry.energy;
-        creep.memory.depositTarget = target.id;
-        return true;
-    }
-
-    creep.memory.depositTarget = 0;
-}
-
-function deposit_resource(creep) {
-    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-        filter: structure => {
-            return structure.structureType == STRUCTURE_STORAGE;
-        }
-    });
-    //TODO: figure out what the command for deposit all is
-    var err;
-    if (target != undefined) {
-        for (const resourceType in creep.carry) {
-            err = creep.transfer(target, resourceType);
-            if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target);
-            }
-        }
-    }
-}
-
-/* harmony default export */ __webpack_exports__["a"] = (actDeposit);
-
-/***/ }),
-/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -630,49 +454,297 @@ module.exports = {
 };
 
 /***/ }),
-/* 5 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__action_harvest__ = __webpack_require__(1);
-
-
-const actResupply = {
+var actUpgrade = {
     run: function (creep) {
-        //find the closest containr or storage that has enough energy to fill me
-        //it's been a while since I looked into this, jeeze this eats up a lot of CPU, this should check once then head towards it
-        //TODO: make this not suck CPU, save the target etc.
-        if (!creep.memory.resupplyTarget) {
-            getResupplyTarget(creep);
+        if (creep.memory.MyController == undefined) {
+            creep.memory.MyController = creep.room.controller && creep.room.controller.id;
         }
-        if (creep.memory.resupplyTarget) {
-            var resupplyTarget = Game.getObjectById(creep.memory.resupplyTarget);
-            var err = resupplyTarget && creep.withdraw(resupplyTarget, RESOURCE_ENERGY);
-            if (err == OK || err == ERR_NOT_ENOUGH_RESOURCES) {
-                creep.memory.resupplyTarget = 0;
-            } else if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(resupplyTarget, { visualizePathStyle: { stroke: '#ffffff' } });
-            } else {
-                getResupplyTarget(creep);
-            }
-        } else {
-            __WEBPACK_IMPORTED_MODULE_0__action_harvest__["a" /* default */].run(creep);
+        let myUpgrade = Game.getObjectById(creep.memory.MyController);
+        if (creep.upgradeController(myUpgrade) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(myUpgrade, { visualizePathStyle: { stroke: '#ffffff' } });
         }
     }
 };
 
-function getResupplyTarget(creep) {
+/* harmony default export */ __webpack_exports__["a"] = (actUpgrade);
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const actDeposit = {
+    run: function (creep, isMule) {
+        //if I'm carrying something that is not energy
+        var currentEnergy = creep.carry.energy;
+        if (_.sum(creep.carry) != currentEnergy) {
+            deposit_resource(creep);
+        } else if (!creep.memory.depositTarget) {
+            deposit_target(creep, isMule);
+        }
+        var target = Game.getObjectById(creep.memory.depositTarget);
+        if (target) {
+            var err = creep.transfer(target, RESOURCE_ENERGY);
+            if (err = ERR_INVALID_ARGS) {
+                var err = creep.transfer(target, RESOURCE_ENERGY, target.energyCapacity - target.energy || target.storeCapacity && target.storeCapacity - target.store.energy);
+            }
+            if (err == ERR_NOT_IN_RANGE) {
+                // Return early to prevent deletion of the deposit target
+                return creep.moveTo(target, { visualizePathStyle: { stroke: '#ffffff' } });
+            } else if (err == OK) {
+                // Adjust the promise on this object now it has been delivered
+                if (!creep.room.memory.structures[target.id]) {
+                    creep.room.memory.structures[target.id] = {};
+                };
+                creep.room.memory.structures[target.id].energyRationPromise = 0;
+                if (target.structureType == STRUCTURE_EXTENSION || target.structureType == STRUCTURE_SPAWN) {
+                    //TODO disabled these two because ration updates arent working
+                    if (target.energyCapacity - target.energy > currentEnergy) {
+                        creep.room.memory.energyRation -= currentEnergy;
+                    } else {
+                        creep.room.memory.energyRation -= target.energyCapacity - target.energy;
+                    }
+                }
+            } else {
+                deposit_target(creep, isMule);
+            }
+        }
+        // important to remove the depositTarget so a new one can be fetched
+        delete creep.memory.depositTarget;
+    }
+};
+
+function deposit_target(creep, isMule = false) {
+    // Mule is the only one which will refuse to drop to a container
+    var economy = creep.room.memory.myCreepCount.muleCount && creep.room.memory.myCreepCount.harvesterCount > 0;
+    if (creep.room.memory.hasContainers && economy && !isMule) {
+        // We can use local links and containers and rely on mules for transport
+        var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+            'filter': structure => {
+                // since links and stores have different energy checking methods, need this long filter to check both
+                return (structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_LINK) && (structure.energy < structure.energyCapacity || structure.storeCapacity && structure.store.energy < structure.storeCapacity);
+            },
+            'algorithm': 'dijkstra'
+        });
+        if (target) {
+            creep.memory.depositTarget = target.id;
+            return true;
+        }
+    }
+
+    if (creep.room.memory.energyRation > 0) {
+        // We must deposit to the nearest none full spawn or extension
+        // We do declare that this energy will be given. Promise ticks down 1 energy per tick, if it reaches 0
+        var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+            'filter': structure => {
+                return (structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_EXTENSION) && !(creep.room.memory.structures[structure.id] && creep.room.memory.structures[structure.id].energyRationPromise >= structure.energyCapacity - structure.energy) && structure.energy < structure.energyCapacity;
+            }
+        });
+        if (target) {
+            if (!creep.room.memory.structures[target.id]) {
+                creep.room.memory.structures[target.id] = {};
+            };
+            creep.room.memory.structures[target.id].energyRationPromise += creep.carry.energy;
+            creep.memory.depositTarget = target.id;
+            return true;
+        }
+    }
     var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-        filter: structure => {
-            return (structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_LINK) && (structure.energy > 0 || structure.storeCapacity && structure.store.energy > 0);
+        'filter': structure => {
+            return structure.structureType == STRUCTURE_TOWER && structure.energy < structure.energyCapacity;
         }
     });
     if (target) {
-        creep.memory.resupplyTarget = target.id;
+        if (!creep.room.memory.structures[target.id]) {
+            creep.room.memory.structures[target.id] = {};
+        };
+        creep.room.memory.structures[target.id].energyRationPromise += creep.carry.energy;
+        creep.memory.depositTarget = target.id;
+        return true;
+    }
+    // Otherwise, hand it to the storage for other use.
+    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+        'filter': structure => {
+            return structure.structureType == STRUCTURE_STORAGE && structure.store.energy < structure.storeCapacity;
+        }
+    });
+    if (target) {
+        creep.memory.depositTarget = target.id;
+        return true;
+    }
+
+    // Failsafe, give it to spawn or extension
+    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+        'filter': structure => {
+            return (structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_EXTENSION) && structure.energy < structure.energyCapacity;
+        }
+    });
+    if (target) {
+        if (!creep.room.memory.structures[target.id]) {
+            creep.room.memory.structures[target.id] = {};
+        };
+        creep.room.memory.structures[target.id].energyRationPromise += creep.carry.energy;
+        creep.memory.depositTarget = target.id;
+        return true;
+    }
+
+    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+        'filter': structure => {
+            return structure.structureType == STRUCTURE_CONTAINER && structure.store.energy < structure.storeCapacity;
+        }
+    });
+    if (target) {
+        if (!creep.room.memory.structures[target.id]) {
+            creep.room.memory.structures[target.id] = {};
+        };
+        creep.room.memory.structures[target.id].energyRationPromise += creep.carry.energy;
+        creep.memory.depositTarget = target.id;
+        return true;
+    }
+
+    creep.memory.depositTarget = 0;
+}
+
+function deposit_resource(creep) {
+    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+        filter: structure => {
+            return structure.structureType == STRUCTURE_STORAGE;
+        }
+    });
+    //TODO: figure out what the command for deposit all is
+    var err;
+    if (target != undefined) {
+        for (const resourceType in creep.carry) {
+            err = creep.transfer(target, resourceType);
+            if (err == ERR_NOT_IN_RANGE) {
+                creep.moveTo(target);
+            }
+        }
     }
 }
 
-/* harmony default export */ __webpack_exports__["a"] = (actResupply);
+/* harmony default export */ __webpack_exports__["a"] = (actDeposit);
+
+/***/ }),
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+var actOffensive = {
+    heal: function (creep) {
+        var target = Game.getObjectById(creep.memory.healCreep);
+        if (target) {
+            var err = creep.heal(target);
+            if (err == ERR_NOT_IN_RANGE) {
+                creep.moveTo(target.pos);
+            } else if (err == ERR_INVALID_TARGET) {
+                delete creep.memory.myTask;
+                delete creep.memory.healCreep;
+            }
+        } else {
+            delete creep.memory.myTask;
+            delete creep.memory.healCreep;
+        }
+    },
+    attack: function (creep) {
+        var target = Game.getObjectById(creep.memory.healCreep);
+        if (target) {
+            var err = creep.attack(target);
+            if (err == ERR_NOT_IN_RANGE) {
+                creep.moveTo(target.pos);
+            } else if (err == ERR_INVALID_TARGET) {
+                delete creep.memory.myTask;
+                delete creep.memory.attackCreep;
+            }
+        } else {
+            delete creep.memory.myTask;
+            delete creep.memory.attackCreep;
+        }
+    },
+    rangedAttack: function (creep) {
+        var target = Game.getObjectById(creep.memory.healCreep);
+        if (target) {
+            var err = creep.rangedAttack(target);
+            if (err == ERR_NOT_IN_RANGE) {
+                creep.moveTo(target.pos);
+            } else if (err == ERR_INVALID_TARGET) {
+                delete creep.memory.myTask;
+                delete creep.memory.attackCreep;
+            }
+        } else {
+            delete creep.memory.myTask;
+            delete creep.memory.attackCreep;
+        }
+    },
+    gather: function (creep) {
+        if (Memory.attackers.attacking) {
+            creep.moveTo(Game.flags['Attack'].pos, { ignoreCreeps: true });
+        } else {
+            creep.moveTo(Game.flags['Marshal'].pos, { ignoreCreeps: true });
+        }
+    },
+    renew: function (creep, mySpawns) {
+        var inRange = creep.pos.getRangeTo(mySpawns[0].pos) <= 1;
+        if (!mySpawns[0].memory.renewTarget && inRange) {
+            mySpawns[0].memory.renewTarget = creep.id;
+        } else if (!inRange) {
+            creep.moveTo(mySpawns[0].pos);
+        }
+    },
+    findTarget: function (creep) {
+        if (creep.memory.role == 'healer') {
+            findHealingTarget(creep);
+        } else {
+            findAttackTarget(creep);
+        }
+    }
+};
+function findHealingTarget(creep) {
+    var target = creep.pos.findClosestByPath(FIND_MY_CREEPS, {
+        'filter': creep => creep.hits < creep.hitsMax
+    });
+    if (target) {
+        creep.memory.healCreep = target.id;
+    } else {
+        delete creep.memory.healCreep;
+    }
+}
+function findAttackTarget(creep) {
+    var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS, {
+        filter: creep => creep.body.filter(part => part.type == ATTACK || part.type == RANGED_ATTACK)
+    });
+    if (!target) {
+        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
+            filter: structure => structure.structureType == STRUCTURE_TOWER
+        });
+    }
+    if (!target) {
+        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
+            filter: structure => structure.structureType != STRUCTURE_CONTROLLER
+        });
+    }
+    if (!target) {
+        target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
+    }
+    if (!target) {
+        target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+            filter: structure => structure.structureType == STRUCTURE_WALL
+        });
+    }
+    if (target) {
+        creep.memory.attackCreep = target.id;
+        creep.memory.myTask = target.id;
+    } else {
+        delete creep.memory.attackCreep;
+    }
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (actOffensive);
 
 /***/ }),
 /* 6 */
@@ -682,7 +754,7 @@ function getResupplyTarget(creep) {
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["loop"] = loop;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__room__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__screeps_profiler__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__screeps_profiler__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__screeps_profiler___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__screeps_profiler__);
 
 
@@ -741,7 +813,7 @@ function loop() {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__screeps_profiler__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__screeps_profiler__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__screeps_profiler___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__role_upgrader__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__role_harvester__ = __webpack_require__(9);
@@ -749,10 +821,9 @@ function loop() {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__role_worker__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__role_claimer__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__role_thief__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__role_melee__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__role_ranged__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__role_healer__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__spawner__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__role_offensive__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__spawner__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__task_manager__ = __webpack_require__(16);
 
 
 
@@ -774,9 +845,9 @@ __WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPO
 __WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_4__role_worker__["a" /* default */], 'worker');
 __WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_5__role_claimer__["a" /* default */], 'claimer');
 __WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_6__role_thief__["a" /* default */], 'thief');
-__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_7__role_melee__["a" /* default */], 'melee');
-__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_8__role_ranged__["a" /* default */], 'ranged');
-__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_9__role_healer__["a" /* default */], 'healer');
+__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](roleMelee, 'melee');
+__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](roleRanged, 'ranged');
+__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](roleHealer, 'healer');
 
 const Room = {
     run: function (myRoom) {
@@ -891,15 +962,12 @@ const Room = {
                     __WEBPACK_IMPORTED_MODULE_6__role_thief__["a" /* default */].run(creep);
                     break;
                 case 'melee':
-                    __WEBPACK_IMPORTED_MODULE_7__role_melee__["a" /* default */].run(creep, mySpawns);
-                    break;
                 case 'ranged':
-                    __WEBPACK_IMPORTED_MODULE_8__role_ranged__["a" /* default */].run(creep, mySpawns);
-                    break;
                 case 'healer':
-                    __WEBPACK_IMPORTED_MODULE_9__role_healer__["a" /* default */].run(creep, mySpawns);
+                    __WEBPACK_IMPORTED_MODULE_7__role_offensive__["a" /* default */].run(creep, mySpawns);
                     break;
             }
+            __WEBPACK_IMPORTED_MODULE_9__task_manager__["a" /* default */].run(creep, mySpawns);
         });
 
         if (!myRoom.controller || myRoom.controller && !myRoom.controller.my) {
@@ -928,7 +996,7 @@ const Room = {
         transferLinks(myRoom.memory.links);
 
         myRoom.memory.hasMules = myCreepCount.muleCount;
-        __WEBPACK_IMPORTED_MODULE_10__spawner__["a" /* default */].run(myRoom, mySpawns, myCreepCount, totalCreeps, convert);
+        __WEBPACK_IMPORTED_MODULE_8__spawner__["a" /* default */].run(myRoom, mySpawns, myCreepCount, totalCreeps, convert);
     }
 };
 
@@ -1072,14 +1140,7 @@ function updateRoomConsts(myRoom, mySpawns) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__action_resupply__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__action_upgrade__ = __webpack_require__(2);
-
-
-
 const roleUpgrader = {
-
-    /** @param {Creep} creep **/
     run: function (creep) {
         if (creep.fatigue != 0) {
             return;
@@ -1091,15 +1152,6 @@ const roleUpgrader = {
         if (creep.carry.energy == 0) {
             creep.memory.myTask = 'resupply';
         }
-        switch (creep.memory.myTask) {
-            default:
-            case 'upgrading':
-                __WEBPACK_IMPORTED_MODULE_1__action_upgrade__["a" /* default */].run(creep);
-                break;
-            case 'resupply':
-                __WEBPACK_IMPORTED_MODULE_0__action_resupply__["a" /* default */].run(creep);
-                break;
-        }
     }
 };
 
@@ -1110,11 +1162,6 @@ const roleUpgrader = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__action_harvest__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__action_deposit__ = __webpack_require__(3);
-
-
-
 const roleHarvester = {
 	run: function (creep) {
 		if (creep.fatigue != 0) {
@@ -1128,19 +1175,6 @@ const roleHarvester = {
 		if (creep.carryCapacity == creep.carry.energy) {
 			creep.memory.myTask = 'deposit';
 		}
-
-		switch (creep.memory.myTask) {
-			case 'harvest':
-				//get more energy
-				__WEBPACK_IMPORTED_MODULE_0__action_harvest__["a" /* default */].run(creep);
-				break;
-			case 'deposit':
-				__WEBPACK_IMPORTED_MODULE_1__action_deposit__["a" /* default */].run(creep, false);
-				break;
-			default:
-				creep.memory.myTask = 'harvest';
-				break;
-		}
 	}
 };
 
@@ -1151,9 +1185,6 @@ const roleHarvester = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__action_deposit__ = __webpack_require__(3);
-
-
 const roleMule = {
     run: function (creep) {
         if (creep.fatigue != 0) {
@@ -1167,93 +1198,16 @@ const roleMule = {
             creep.memory.dropTarget = 0;
             creep.memory.myTask = 'deposit';
         }
-
-        switch (creep.memory.myTask) {
-            case 'fetch':
-                //get more energy
-                getEnergy(creep);
-                break;
-            case 'deposit':
-                //go fill somethings energy
-                __WEBPACK_IMPORTED_MODULE_0__action_deposit__["a" /* default */].run(creep, true);
-                break;
-            default:
-                //uhoh
-                creep.memory.myTask = 'fetch';
-                break;
-        }
     }
 };
-function getEnergy(creep) {
-    if (!creep.memory.fetchTarget && !creep.memory.dropTarget) {
-        getTargets(creep);
-    }
-    var target = 0;
-    if (creep.memory.dropTarget) {
-        target = Game.getObjectById(creep.memory.dropTarget);
-        var err = target && creep.pickup(target);
-        if (err == ERR_NOT_IN_RANGE) {
-            creep.moveTo(target);
-        } else if (err == OK) {
-            creep.memory.dropTarget = 0;
-        } else {
-            getTargets(creep);
-        }
-    } else if (creep.memory.fetchTarget) {
-        target = Game.getObjectById(creep.memory.fetchTarget);
-        var err = target && creep.withdraw(target, RESOURCE_ENERGY);
-        if (err == ERR_NOT_IN_RANGE) {
-            creep.moveTo(target);
-        } else if (err == OK) {
-            creep.memory.fetchTarget = 0;
-        } else {
-            getTargets(creep);
-        }
-    }
-}
 
 /* harmony default export */ __webpack_exports__["a"] = (roleMule);
-
-function getTargets(creep) {
-    var target = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
-    if (target) {
-        creep.memory.dropTarget = target.id;
-        creep.memory.fetchTarget = 0;
-    } else {
-        target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-            filter: structure => {
-                return structure.structureType == STRUCTURE_CONTAINER && structure.store.energy > 0;
-            }
-        });
-        if (target) {
-            creep.memory.fetchTarget = target.id;
-            creep.memory.dropTarget = 0;
-        } else {
-            target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                filter: structure => {
-                    return structure.structureType == STRUCTURE_STORAGE && structure.store.energy > 0;
-                }
-            });
-            if (target) {
-                creep.memory.fetchTarget = target.id;
-                creep.memory.dropTarget = 0;
-            }
-        }
-    }
-}
 
 /***/ }),
 /* 11 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__action_upgrade__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__action_resupply__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__util__ = __webpack_require__(0);
-
-
-
-
 const roleWorker = {
 
 	/** @param {Creep} creep **/
@@ -1268,74 +1222,10 @@ const roleWorker = {
 		if (creep.memory.myTask == 'resupply' && creep.carry.energy == creep.carryCapacity) {
 			creep.memory.myTask = 'build';
 		}
-		switch (creep.memory.myTask) {
-			case 'resupply':
-				//hungry, go eat
-				__WEBPACK_IMPORTED_MODULE_1__action_resupply__["a" /* default */].run(creep);
-				break;
-			case 'upgrade':
-				__WEBPACK_IMPORTED_MODULE_0__action_upgrade__["a" /* default */].run(creep);
-				break;
-			case 'repair':
-			case 'build':
-				//do I already have something to build? If not find something to fix and say fixit
-				if (!creep.memory.myBuildTarget && !creep.memory.myRepairTarget) {
-					findBuildTarget(creep);
-					if (!creep.memory.myBuildTarget) {
-						creep.memory.myTask = 'upgrade';
-						// towers can repair instead
-						// findRepairTarget(creep);
-						// if (!creep.memory.myRepairTarget) {
-						// }
-					}
-				} else {
-					if (creep.memory.myBuildTarget) {
-						var target = Game.getObjectById(creep.memory.myBuildTarget);
-						if (creep.build(target) == ERR_NOT_IN_RANGE) {
-							creep.moveTo(target, { visualizePathStyle: { stroke: '#ffffff' } });
-						}
-						if (!target) {
-							findBuildTarget(creep);
-						}
-					} else if (creep.memory.myRepairTarget) {
-						var target = Game.getObjectById(creep.memory.myRepairTarget);
-						if (creep.repair(target) == ERR_NOT_IN_RANGE) {
-							creep.moveTo(target, { visualizePathStyle: { stroke: '#ffffff' } });
-						}
-						if (!target || target.hits == target.hitsMax) {
-							findBuildTarget(creep);
-							findRepairTarget(creep);
-						}
-					}
-				}
-				break;
-			case 'goToTarget':
-				__WEBPACK_IMPORTED_MODULE_2__util__["a" /* default */].goToTarget(creep);
-				break;
-			default:
-				console.log('agent: ' + creep.name + " the worker did not have an action.");
-				creep.memory.myTask = 'resupply';
-				__WEBPACK_IMPORTED_MODULE_1__action_resupply__["a" /* default */].run(creep);
-				break;
-		}
 	}
 };
 
 /* harmony default export */ __webpack_exports__["a"] = (roleWorker);
-
-function findBuildTarget(creep) {
-	var target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
-	creep.memory.myBuildTarget = target && target.id;
-}
-
-// not used currently
-function findRepairTarget(creep) {
-	var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-		filter: s => s.structureType != STRUCTURE_WALL && s.structureType != STRUCTURE_RAMPART && s.hits < s.hitsMax
-	});
-
-	creep.memory.myRepairTarget = target && target.id;
-}
 
 /***/ }),
 /* 12 */
@@ -1352,22 +1242,9 @@ const roleClaimer = {
         }
 
         if (Game.flags['Claim']) {
-            if (creep.room.name == Game.flags['Claim'].pos.roomName) {
-                let err = creep.claimController(creep.room.controller);
-                if (err == ERR_INVALID_TARGET) {
-                    err = creep.attackController(creep.room.controller);
-                }
-                if (err == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(Game.flags['Claim'].pos);
-                }
-                if (err == ERR_GCL_NOT_ENOUGH) {
-                    creep.reserveController(creep.room.controller);
-                    creep.moveTo(Game.flags['Claim'].pos);
-                }
-            } else {
-                creep.memory.goToTarget = Game.flags['Claim'].pos.roomName;
-                __WEBPACK_IMPORTED_MODULE_0__util__["a" /* default */].goToTarget(creep);
-            }
+            creep.memory.myTask = 'claim';
+        } else if (creep.memory.myTask) {
+            delete creep.memory.myTask;
         }
     }
 };
@@ -1380,8 +1257,8 @@ const roleClaimer = {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__action_harvest__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__action_upgrade__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__action_deposit__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__action_upgrade__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__action_deposit__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__util__ = __webpack_require__(0);
 
 
@@ -1396,11 +1273,11 @@ const roleThief = {
 
         if (!creep.memory.home) {
             creep.memory.home = {
-                room: creep.room.name,
-                x: creep.pos.x,
-                y: creep.pos.y
+                room: creep.room.name
             };
         }
+
+        // TODO THE CREEP CAN NO LONGER RETURN HOME
         if (!creep.memory.goToTarget) {
             // TODO fix !!!!
             const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53']; // 'W43N51' not owned yet
@@ -1432,29 +1309,8 @@ const roleThief = {
                 creep.memory.myTask = 'deposit';
             }
         } else if (creep.carryCapacity == creep.carry.energy) {
-            creep.memory.myTask = 'goHome';
-        }
-
-        switch (creep.memory.myTask) {
-            case 'goToTarget':
-                __WEBPACK_IMPORTED_MODULE_3__util__["a" /* default */].goToTarget(creep);
-                break;
-            case 'harvest':
-                __WEBPACK_IMPORTED_MODULE_0__action_harvest__["a" /* default */].run(creep);
-                break;
-            case 'goHome':
-                var homepath = new RoomPosition(creep.memory.home.x, creep.memory.home.y, creep.memory.home.room);
-                creep.moveTo(homepath);
-                break;
-            case 'upgrading':
-                __WEBPACK_IMPORTED_MODULE_1__action_upgrade__["a" /* default */].run(creep);
-                break;
-            case 'deposit':
-                __WEBPACK_IMPORTED_MODULE_2__action_deposit__["a" /* default */].run(creep, false);
-                break;
-            default:
-                creep.memory.myTask = 'harvest';
-                break;
+            creep.memory.myTask = 'goToTarget';
+            creep.memory.goToTarget = creep.memory.home.room;
         }
     }
 };
@@ -1467,41 +1323,44 @@ const roleThief = {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__action_offensive__ = __webpack_require__(5);
 
 
-const roleMelee = {
+
+const roleOffensive = {
     run(creep, mySpawns) {
-        // move to and attack
-        if (!Game.flags['Attack']) {
-            console.log('Place Attack flag');
-            return null;
-        }
-        var attackFlag = Game.flags['Attack'];
-        // implement this
         if (Memory.attackers.attacking) {
             //&& !attackFlag.room.controller.safeMode) {
+            // move to and attack
+            if (!Game.flags['Attack']) {
+                console.log('Place Attack flag');
+                return null;
+            }
+            var attackFlag = Game.flags['Attack'];
             if (creep.room.name == attackFlag.pos.roomName) {
-                if (!creep.memory.attackCreep) {
-                    findTarget(creep);
-                }
-                if (creep.memory.attackCreep) {
-                    var target = Game.getObjectById(creep.memory.attackCreep);
-                    if (target) {
-                        var err = creep.attack(target);
-                        if (err == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(target.pos);
-                        } else if (err == ERR_INVALID_TARGET) {
-                            findTarget(creep);
+                if (creep.memory.myTask != 'heal' || creep.memory.myTask != 'attack') {
+                    __WEBPACK_IMPORTED_MODULE_1__action_offensive__["a" /* default */].findTarget(creep);
+                    if (creep.memory.healCreep) {
+                        creep.memory.myTask = 'heal';
+                    } else if (creep.memory.attackCreep) {
+                        switch (creep.memory.role) {
+                            case 'ranged':
+                                creep.memory.myTask = 'rangedAttack';
+                                break;
+                            case 'melee':
+                                creep.memory.myTask = 'attack';
+                                break;
+                            default:
+                                creep.memory.myTask = 'attack';
+                                break;
                         }
                     } else {
-                        findTarget(creep);
+                        creep.memory.myTask = 'gather';
                     }
-                } else {
-                    creep.moveTo(attackFlag.pos, { ignoreCreeps: true });
                 }
-            } else {
+            } else if (creep.memory.myTask != 'goToTarget') {
                 creep.memory.goToTarget = attackFlag.pos.roomName;
-                __WEBPACK_IMPORTED_MODULE_0__util__["a" /* default */].goToTarget(creep);
+                creep.memory.myTask = 'goToTarget';
             }
         } else {
             if (!Game.flags['Marshal']) {
@@ -1510,234 +1369,26 @@ const roleMelee = {
             }
             var marshalFlag = Game.flags['Marshal'];
             if (creep.room.name == marshalFlag.pos.roomName) {
-                if (creep.memory.renewing && creep.ticksToLive > 1400) {
-                    delete creep.memory.renewing;
+                if (creep.memory.myTask == 'renew' && creep.ticksToLive > 1400) {
+                    delete creep.memory.myTask;
                 }
-                if (creep.ticksToLive < 1000 || creep.memory.renewing) {
-                    var inRange = creep.pos.getRangeTo(mySpawns[0].pos) <= 1;
-                    if (!mySpawns[0].memory.renewTarget && inRange) {
-                        mySpawns[0].memory.renewTarget = creep.id;
-                    } else if (!inRange) {
-                        creep.moveTo(mySpawns[0].pos);
-                    }
-                    creep.memory.renewing = true;
+                if (creep.ticksToLive < 1000 || creep.memory.myTask == 'renew') {
+                    creep.memory.myTask = 'renew';
                 } else {
-                    creep.moveTo(marshalFlag.pos);
+                    creep.memory.myTask = 'gather';
                 }
-            } else {
+            } else if (creep.memory.myTask != 'goToTarget') {
                 creep.memory.goToTarget = marshalFlag.pos.roomName;
-                __WEBPACK_IMPORTED_MODULE_0__util__["a" /* default */].goToTarget(creep);
+                creep.memory.myTask = 'goToTarget';
             }
         }
     }
 };
 
-/* harmony default export */ __webpack_exports__["a"] = (roleMelee);
-
-function findTarget(creep) {
-    var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS, {
-        filter: creep => creep.body.filter(part => part.type == ATTACK || part.type == RANGED_ATTACK)
-    });
-    if (!target) {
-        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
-            filter: structure => structure.structureType == STRUCTURE_TOWER
-        });
-    }
-    if (!target) {
-        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
-            filter: structure => structure.structureType != STRUCTURE_CONTROLLER
-        });
-    }
-    if (!target) {
-        target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
-    }
-    if (target) {
-        creep.memory.attackCreep = target.id;
-    } else {
-        delete creep.memory.attackCreep;
-    }
-}
+/* harmony default export */ __webpack_exports__["a"] = (roleOffensive);
 
 /***/ }),
 /* 15 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__(0);
-
-
-const roleRanged = {
-    run(creep, mySpawns) {
-        // move to and attack
-        if (!Game.flags['Attack']) {
-            console.log('Place Attack flag');
-            return null;
-        }
-        var attackFlag = Game.flags['Attack'];
-        if (Memory.attackers.attacking) {
-            // && !attackFlag.room.controller.safeMode) {
-            if (creep.room.name == attackFlag.pos.roomName) {
-                if (!creep.memory.attackCreep) {
-                    findTarget(creep);
-                }
-                if (creep.memory.attackCreep) {
-                    var target = Game.getObjectById(creep.memory.attackCreep);
-                    if (target) {
-                        var err = creep.rangedAttack(target);
-                        if (err == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(target.pos);
-                        } else if (err == ERR_INVALID_TARGET) {
-                            findTarget(creep);
-                        }
-                    } else {
-                        findTarget(creep);
-                    }
-                } else {
-                    creep.moveTo(attackFlag.pos, { ignoreCreeps: true });
-                }
-            } else {
-                creep.memory.goToTarget = attackFlag.pos.roomName;
-                __WEBPACK_IMPORTED_MODULE_0__util__["a" /* default */].goToTarget(creep);
-            }
-        } else {
-            if (!Game.flags['Marshal']) {
-                console.log('Place Marshal flag');
-                return null;
-            }
-            var marshalFlag = Game.flags['Marshal'];
-            if (creep.room.name == marshalFlag.pos.roomName) {
-                if (creep.memory.renewing && creep.ticksToLive > 1400) {
-                    delete creep.memory.renewing;
-                }
-                if (creep.ticksToLive < 1000 || creep.memory.renewing) {
-                    var inRange = creep.pos.getRangeTo(mySpawns[0].pos) <= 1;
-                    if (!mySpawns[0].memory.renewTarget && inRange) {
-                        mySpawns[0].memory.renewTarget = creep.id;
-                    } else if (!inRange) {
-                        creep.moveTo(mySpawns[0].pos);
-                    }
-                    creep.memory.renewing = true;
-                } else {
-                    creep.moveTo(marshalFlag.pos);
-                }
-            } else {
-                creep.memory.goToTarget = marshalFlag.pos.roomName;
-                __WEBPACK_IMPORTED_MODULE_0__util__["a" /* default */].goToTarget(creep);
-            }
-        }
-    }
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (roleRanged);
-
-function findTarget(creep) {
-    var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS, {
-        filter: creep => creep.body.filter(part => part.type == ATTACK || part.type == RANGED_ATTACK)
-    });
-    if (!target) {
-        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
-            filter: structure => structure.structureType == STRUCTURE_TOWER
-        });
-    }
-    if (!target) {
-        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
-            filter: structure => structure.structureType != STRUCTURE_CONTROLLER
-        });
-    }
-    if (!target) {
-        target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
-    }
-    if (target) {
-        creep.memory.attackCreep = target.id;
-    } else {
-        delete creep.memory.attackCreep;
-    }
-}
-
-/***/ }),
-/* 16 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__(0);
-
-
-const roleHealer = {
-    run(creep, mySpawns) {
-        // move to and attack
-        if (!Game.flags['Attack']) {
-            console.log('Place Attack flag');
-            return null;
-        }
-        var attackFlag = Game.flags['Attack'];
-        if (Memory.attackers.attacking) {
-            //&& !attackFlag.room.controller.safeMode) {
-            if (creep.room.name == attackFlag.pos.roomName) {
-                if (!creep.memory.healCreep) {
-                    findTarget(creep);
-                }
-                if (creep.memory.healCreep) {
-                    var target = Game.getObjectById(creep.memory.healCreep);
-                    if (target) {
-                        var err = creep.heal(target);
-                        if (err == ERR_NOT_IN_RANGE) {
-                            creep.moveTo(target.pos);
-                        } else if (err == ERR_INVALID_TARGET) {
-                            findTarget(creep);
-                        }
-                    } else {
-                        findTarget(creep);
-                    }
-                } else {
-                    creep.moveTo(attackFlag.pos, { ignoreCreeps: true });
-                }
-            } else {
-                creep.memory.goToTarget = attackFlag.pos.roomName;
-                __WEBPACK_IMPORTED_MODULE_0__util__["a" /* default */].goToTarget(creep);
-            }
-        } else {
-            if (!Game.flags['Marshal']) {
-                console.log('Place Marshal flag');
-                return null;
-            }
-            var marshalFlag = Game.flags['Marshal'];
-            if (creep.room.name == marshalFlag.pos.roomName) {
-                if (creep.memory.renewing && creep.ticksToLive > 1400) {
-                    delete creep.memory.renewing;
-                }
-                if (creep.ticksToLive < 1000 || creep.memory.renewing) {
-                    var inRange = creep.pos.getRangeTo(mySpawns[0].pos) <= 1;
-                    if (!mySpawns[0].memory.renewTarget && inRange) {
-                        mySpawns[0].memory.renewTarget = creep.id;
-                    } else if (!inRange) {
-                        creep.moveTo(mySpawns[0].pos);
-                    }
-                } else {
-                    creep.moveTo(marshalFlag.pos);
-                }
-            } else {
-                creep.memory.goToTarget = marshalFlag.pos.roomName;
-                __WEBPACK_IMPORTED_MODULE_0__util__["a" /* default */].goToTarget(creep);
-            }
-        }
-    }
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (roleHealer);
-
-function findTarget(creep) {
-    var target = creep.pos.findClosestByPath(FIND_MY_CREEPS, {
-        'filter': creep => creep.hits < creep.hitsMax
-    });
-    if (target) {
-        creep.memory.healCreep = target.id;
-    } else {
-        delete creep.memory.healCreep;
-    }
-}
-
-/***/ }),
-/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1842,7 +1493,7 @@ const spawner = {
                     console.log('Spawning: ' + newName);
                     canSpawn = false;
                 }
-                if (convert && myCreepCount.harvesterCount < 2) {
+                if (convert && myCreepCount.harvesterCount < 2 && canSpawn) {
                     convert.memory.role = 'harvester';
                     convert.memory.sourceMap = sourceMap;
                     canSpawn = false;
@@ -1997,6 +1648,285 @@ function getBody(myRoom, options = {}) {
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (spawner);
+
+/***/ }),
+/* 16 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__action_deposit__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__action_resupply__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__action_claim__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__action_harvest__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__action_upgrade__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__action_build__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__action_offensive__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__util__ = __webpack_require__(0);
+
+
+
+
+
+
+
+
+
+
+const taskManager = {
+    run: function (creep, mySpawns) {
+        switch (creep.memory.myTask) {
+            case 'claim':
+                __WEBPACK_IMPORTED_MODULE_2__action_claim__["a" /* default */].run(creep);
+                break;
+            case 'fetch':
+                //get more energy
+                __WEBPACK_IMPORTED_MODULE_1__action_resupply__["a" /* default */].getEnergy(creep);
+                break;
+            case 'deposit':
+                //go fill somethings energy
+                __WEBPACK_IMPORTED_MODULE_0__action_deposit__["a" /* default */].run(creep, creep.memory.role == 'mule');
+                break;
+            case 'harvest':
+                //get more energy
+                __WEBPACK_IMPORTED_MODULE_3__action_harvest__["a" /* default */].run(creep);
+                break;
+            case 'goToTarget':
+                __WEBPACK_IMPORTED_MODULE_7__util__["a" /* default */].goToTarget(creep);
+                break;
+            case 'upgrading':
+                __WEBPACK_IMPORTED_MODULE_4__action_upgrade__["a" /* default */].run(creep);
+                break;
+            case 'resupply':
+                __WEBPACK_IMPORTED_MODULE_1__action_resupply__["a" /* default */].run(creep);
+                break;
+            case 'repair':
+            case 'build':
+                __WEBPACK_IMPORTED_MODULE_5__action_build__["a" /* default */].run(creep);
+                break;
+            case 'heal':
+                __WEBPACK_IMPORTED_MODULE_6__action_offensive__["a" /* default */].heal(creep);
+                break;
+            case 'attack':
+                __WEBPACK_IMPORTED_MODULE_6__action_offensive__["a" /* default */].attack(creep);
+                break;
+            case 'rangedAttack':
+                __WEBPACK_IMPORTED_MODULE_6__action_offensive__["a" /* default */].rangedAttack(creep);
+                break;
+            case 'gather':
+                __WEBPACK_IMPORTED_MODULE_6__action_offensive__["a" /* default */].gather(creep);
+                break;
+            case 'renew':
+                __WEBPACK_IMPORTED_MODULE_6__action_offensive__["a" /* default */].renew(creep, mySpawns);
+                break;
+            default:
+                switch (creep.memory.role) {
+                    case 'worker':
+                        creep.memory.myTask = 'resupply';
+                        __WEBPACK_IMPORTED_MODULE_1__action_resupply__["a" /* default */].run(creep);
+                        break;
+                    case 'mule':
+                        creep.memory.myTask = 'fetch';
+                        break;
+                    default:
+                        creep.memory.myTask = 'harvest';
+                        break;
+                }
+                break;
+        }
+    }
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (taskManager);
+
+/***/ }),
+/* 17 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__action_harvest__ = __webpack_require__(1);
+
+
+const actResupply = {
+    run: function (creep) {
+        //find the closest containr or storage that has enough energy to fill me
+        //it's been a while since I looked into this, jeeze this eats up a lot of CPU, this should check once then head towards it
+        //TODO: make this not suck CPU, save the target etc.
+        if (!creep.memory.resupplyTarget) {
+            getResupplyTarget(creep);
+        }
+        if (creep.memory.resupplyTarget) {
+            var resupplyTarget = Game.getObjectById(creep.memory.resupplyTarget);
+            var err = resupplyTarget && creep.withdraw(resupplyTarget, RESOURCE_ENERGY);
+            if (err == OK || err == ERR_NOT_ENOUGH_RESOURCES) {
+                creep.memory.resupplyTarget = 0;
+            } else if (err == ERR_NOT_IN_RANGE) {
+                creep.moveTo(resupplyTarget, { visualizePathStyle: { stroke: '#ffffff' } });
+            } else {
+                getResupplyTarget(creep);
+            }
+        } else {
+            __WEBPACK_IMPORTED_MODULE_0__action_harvest__["a" /* default */].run(creep);
+        }
+    },
+    getEnergy: function (creep) {
+        if (!creep.memory.fetchTarget && !creep.memory.dropTarget) {
+            getTargets(creep);
+        }
+        var target = 0;
+        if (creep.memory.dropTarget) {
+            target = Game.getObjectById(creep.memory.dropTarget);
+            var err = target && creep.pickup(target);
+            if (err == ERR_NOT_IN_RANGE) {
+                creep.moveTo(target);
+            } else if (err == OK) {
+                creep.memory.dropTarget = 0;
+            } else {
+                getTargets(creep);
+            }
+        } else if (creep.memory.fetchTarget) {
+            target = Game.getObjectById(creep.memory.fetchTarget);
+            var err = target && creep.withdraw(target, RESOURCE_ENERGY);
+            if (err == ERR_NOT_IN_RANGE) {
+                creep.moveTo(target);
+            } else if (err == OK) {
+                creep.memory.fetchTarget = 0;
+            } else {
+                getTargets(creep);
+            }
+        }
+    }
+};
+
+function getTargets(creep) {
+    var target = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
+    if (target) {
+        creep.memory.dropTarget = target.id;
+        creep.memory.fetchTarget = 0;
+    } else {
+        target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+            filter: structure => {
+                return structure.structureType == STRUCTURE_CONTAINER && structure.store.energy > 0;
+            }
+        });
+        if (target) {
+            creep.memory.fetchTarget = target.id;
+            creep.memory.dropTarget = 0;
+        } else {
+            target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+                filter: structure => {
+                    return structure.structureType == STRUCTURE_STORAGE && structure.store.energy > 0;
+                }
+            });
+            if (target) {
+                creep.memory.fetchTarget = target.id;
+                creep.memory.dropTarget = 0;
+            }
+        }
+    }
+}
+
+function getResupplyTarget(creep) {
+    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+        filter: structure => {
+            return (structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_LINK) && (structure.energy > 0 || structure.storeCapacity && structure.store.energy > 0);
+        }
+    });
+    if (target) {
+        creep.memory.resupplyTarget = target.id;
+    }
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (actResupply);
+
+/***/ }),
+/* 18 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__(0);
+
+
+const actClaim = {
+    run: function (creep) {
+        if (creep.room.name == Game.flags['Claim'].pos.roomName) {
+            let err = creep.claimController(creep.room.controller);
+            if (err == ERR_INVALID_TARGET) {
+                err = creep.attackController(creep.room.controller);
+            }
+            if (err == ERR_INVALID_TARGET) {
+                // If the claimers actions are both invalid, might have to reserve here as well? Need logic for reserve on weak rooms anyway
+                delete creep.memory.myTask;
+            }
+            if (err == ERR_NOT_IN_RANGE) {
+                creep.moveTo(Game.flags['Claim'].pos);
+            }
+            if (err == ERR_GCL_NOT_ENOUGH) {
+                creep.reserveController(creep.room.controller);
+                creep.moveTo(Game.flags['Claim'].pos);
+            }
+        } else {
+            creep.memory.goToTarget = Game.flags['Claim'].pos.roomName;
+            __WEBPACK_IMPORTED_MODULE_0__util__["a" /* default */].goToTarget(creep);
+        }
+    }
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (actClaim);
+
+/***/ }),
+/* 19 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const actBuild = {
+    run: function (creep) {
+        //do I already have something to build? If not find something to fix and say fixit
+        if (!creep.memory.myBuildTarget && !creep.memory.myRepairTarget) {
+            findBuildTarget(creep);
+            if (!creep.memory.myBuildTarget) {
+                creep.memory.myTask = 'upgrade';
+                // towers can repair instead
+                // findRepairTarget(creep);
+                // if (!creep.memory.myRepairTarget) {
+                // }
+            }
+        } else {
+            if (creep.memory.myBuildTarget) {
+                var target = Game.getObjectById(creep.memory.myBuildTarget);
+                if (creep.build(target) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(target, { visualizePathStyle: { stroke: '#ffffff' } });
+                }
+                if (!target) {
+                    findBuildTarget(creep);
+                }
+            } else if (creep.memory.myRepairTarget) {
+                var target = Game.getObjectById(creep.memory.myRepairTarget);
+                if (creep.repair(target) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(target, { visualizePathStyle: { stroke: '#ffffff' } });
+                }
+                if (!target || target.hits == target.hitsMax) {
+                    findBuildTarget(creep);
+                    findRepairTarget(creep);
+                }
+            }
+        }
+    }
+};
+
+function findBuildTarget(creep) {
+    var target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+    creep.memory.myBuildTarget = target && target.id;
+}
+// not used currently
+function findRepairTarget(creep) {
+    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+        filter: s => s.structureType != STRUCTURE_WALL && s.structureType != STRUCTURE_RAMPART && s.hits < s.hitsMax
+    });
+
+    creep.memory.myRepairTarget = target && target.id;
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (actBuild);
 
 /***/ })
 /******/ ]);
