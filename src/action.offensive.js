@@ -105,7 +105,7 @@ var actOffensive = {
     findTarget: function(creep) {
         if (creep.memory.role == 'healer') {
             findHealingTarget(creep);
-        } else if (creep.memory.role == 'tough') {
+        } else if (creep.memory.role == 'blocker') {
             creep.memory.myTask = 'block';
         } else {
             findAttackTarget(creep);
