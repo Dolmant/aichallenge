@@ -41,11 +41,15 @@ const actDeposit = {
         if (creep.memory.lazyContainer) {
             const lazyContainer = Game.getObjectById(creep.memory.lazyContainer);
             if (lazyContainer) {
-                var err = creep.transfer(lazyContainer);
-                if (err == ERR_FULL || err == ERR_INVALID_ARGS || err == ERR_NOT_ENOUGH_RESOURCES) {
-                    creep.drop(RESOURCE_ENERGY);
-                } else if (err == ERR_NOT_IN_RANGE) {
-                    delete creep.memory.lazyContainer;
+                if (lazyContainer.hits < lazyContainer.hitsMax / 2) {
+                    creep.repair(lazyContainer);
+                } else {
+                    var err = creep.transfer(lazyContainer);
+                    if (err == ERR_FULL || err == ERR_INVALID_ARGS || err == ERR_NOT_ENOUGH_RESOURCES) {
+                        creep.drop(RESOURCE_ENERGY);
+                    } else if (err == ERR_NOT_IN_RANGE) {
+                        delete creep.memory.lazyContainer;
+                    }
                 }
             } else {
                 delete creep.memory.lazyContainer;
@@ -61,6 +65,7 @@ const actDeposit = {
                 if (container_site.length > 0) {
                     creep.memory.lazyContainer = container_site[0].id
                 } else {
+                    // Could create it on the creep for guanranteed space, but I am pretty sure you cant build on what you are standing on
                     for(var x = -1; x < 2; x += 1) {
                         for(var y = -1; y < 2; y += 1) {
                             var err = creep.room.createConstructionSite(creep.pos.x + x, creep.pos.y + y, STRUCTURE_CONTAINER);
