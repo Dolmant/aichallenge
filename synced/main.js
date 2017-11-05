@@ -915,6 +915,8 @@ const Room = {
             'meleeParts': 0,
             'rangedParts': 0,
             'healerParts': 0,
+            'toughParts': 0,
+            'blockerParts': 0,
             'harvesterCount': 0,
             'upgraderCount': 0,
             'workerCount': 0,
@@ -1463,7 +1465,7 @@ const spawner = {
             'melee': 70,
             'ranged': 70,
             'healer': 10,
-            'blocker': 1 //not used current
+            'blocker': 2 //not used current
         };
         var MaxHarvesterCount = myRoom.memory.hasLinks || myRoom.memory.hasContainers ? 2 : 4;
         var MaxHarvesterCount = myRoom.memory.hasLinks || myRoom.memory.hasContainers ? 2 : 4;

@@ -11,7 +11,7 @@ const spawner = {
             'melee': 70,
             'ranged': 70,
             'healer': 10,
-            'blocker': 1, //not used current
+            'blocker': 2, //not used current
         }
         var MaxHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 2 : 4;
         var MaxHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 2 : 4;

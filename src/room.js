@@ -46,6 +46,8 @@ const Room = {
             'meleeParts': 0,
             'rangedParts': 0,
             'healerParts': 0,
+            'toughParts': 0,
+            'blockerParts': 0,
             'harvesterCount': 0,
             'upgraderCount': 0,
             'workerCount': 0,
