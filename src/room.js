@@ -7,6 +7,7 @@ import roleMule from './role.mule';
 import roleWorker from './role.worker';
 import roleClaimer from './role.claimer';
 import roleThief from './role.thief';
+import roleThiefMule from './role.thiefmule';
 import roleOffensive from './role.offensive';
 import type {Creep} from './../flow-typed/Creep';
 
@@ -92,6 +93,9 @@ const Room = {
                     myCreepCount.thiefParts += creep_size;
                     Memory.misc.globalCreepsTemp.thief += 1;
                     break;
+                case 'thiefmule':
+                    Memory.misc.globalCreepsTemp.thiefmule += 1;
+                    break;
                 case 'melee':
                     myCreepCount.meleeParts += creep.body.filter(part => part.type == ATTACK).length;
                     if (creep.hits == creep.hitsMax) {
@@ -150,6 +154,9 @@ const Room = {
                     break;
                 case 'thief':
                     roleThief.run(creep);
+                    break;
+                case 'thiefmule':
+                    roleThiefMule.run(creep);
                     break;
                 case 'melee':
                 case 'ranged':

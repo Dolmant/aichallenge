@@ -36,6 +36,42 @@ const actDeposit = {
         }
         // important to remove the depositTarget so a new one can be fetched
         delete creep.memory.depositTarget;
+    },
+    lazydeposit: function(creep) {
+        if (creep.memory.lazyContainer) {
+            const lazyContainer = Game.getObjectById(creep.memory.lazyContainer);
+            if (lazyContainer) {
+                var err = creep.transfer(lazyContainer);
+                if (err == ERR_FULL || err == ERR_INVALID_ARGS || err == ERR_NOT_ENOUGH_RESOURCES) {
+                    creep.drop(RESOURCE_ENERGY);
+                } else if (err == ERR_NOT_IN_RANGE) {
+                    delete creep.memory.lazyContainer;
+                }
+            } else {
+                delete creep.memory.lazyContainer;
+            }
+        } else {
+            var const_site = creep.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 2);
+            if (const_site.length > 0) {
+                creep.build(const_site[0]);
+            } else {
+                var container_site = creep.pos.findInRange(FIND_MY_STRUCTURES, {
+                    filter: structure => structure.type == STRUCTURE_CONTAINER
+                });
+                if (container_site.length > 0) {
+                    creep.memory.lazyContainer = container_site[0].id
+                } else {
+                    for(var x = -1; x < 2; x += 1) {
+                        for(var y = -1; y < 2; y += 1) {
+                            var err = creep.room.createConstructionSite(creep.pos.x + x, creep.pos.y + y, STRUCTURE_CONTAINER);
+                            if (OK == err) {
+                                return
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 };
 

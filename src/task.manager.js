@@ -15,13 +15,16 @@ const taskManager = {
             case 'claim':
                 actClaim.run(creep);
                 break;
-            case 'fetch'://get more energy
+            case 'fetch':
                 actResupply.getEnergy(creep);
                 break;
-            case 'deposit'://go fill somethings energy
+            case 'deposit':
                 actDeposit.run(creep, creep.memory.role == 'mule');
                 break;
-            case 'harvest'://get more energy
+            case 'lazydeposit':
+                actDeposit.lazydeposit(creep);
+                break;
+            case 'harvest':
                 actHarvest.run(creep);
                 break;
             case 'goToTarget':
