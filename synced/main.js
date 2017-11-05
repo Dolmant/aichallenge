@@ -1456,7 +1456,7 @@ const spawner = {
                 }
                 if (myCreepCount.harvesterParts < MaxParts.harvester * myCreepCount.harvesterCount && myCreepCount.harvesterCount < MaxHarvesterCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Harvester' + Game.time;
-                    Spawn.spawnCreep(getBody(myRoom, { 'harvester': true }), newName, {
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.harvester, { 'harvester': true }), newName, {
                         memory: {
                             'role': 'harvester',
                             'sourceMap': sourceMap
@@ -1480,7 +1480,7 @@ const spawner = {
                 }
                 if (myCreepCount.workerParts < MaxParts.worker * myCreepCount.workerCount && myCreepCount.workerCount < MaxWorkerCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Worker' + Game.time;
-                    Spawn.spawnCreep(getBody(myRoom), newName, {
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.worker), newName, {
                         memory: {
                             'role': 'worker'
                         }
@@ -1495,7 +1495,7 @@ const spawner = {
                 }
                 if (myCreepCount.muleParts < MaxParts.mule * myCreepCount.muleCount && myCreepCount.muleCount < MaxMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Mule' + Game.time;
-                    Spawn.spawnCreep(getBody(myRoom, { 'carryOnly': true }), newName, {
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, { 'carryOnly': true }), newName, {
                         memory: {
                             'role': 'mule'
                         }
@@ -1505,7 +1505,7 @@ const spawner = {
                 }
                 if (myCreepCount.upgraderParts < MaxParts.upgrader * myCreepCount.upgraderCount && myCreepCount.upgraderCount < MaxUpgraderCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Upgrader' + Game.time;
-                    Spawn.spawnCreep(getBody(myRoom), newName, {
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.upgrader), newName, {
                         memory: {
                             'role': 'upgrader'
                         }
@@ -1515,7 +1515,7 @@ const spawner = {
                 }
                 if (myCreepCount.thiefParts < MaxParts.thief * Memory.misc.globalCreeps.thief && Memory.misc.globalCreeps.thief < MaxThiefCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Thief' + Game.time;
-                    Spawn.spawnCreep(getBody(myRoom), newName, {
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.thief), newName, {
                         memory: {
                             'role': 'thief',
                             'secondaryRole': totalCreeps > 15 ? 'upgrader' : 'harvester'
@@ -1525,7 +1525,7 @@ const spawner = {
                 }
                 if (myCreepCount.meleeParts < MaxParts.melee * Memory.misc.globalCreeps.melee && Memory.misc.globalCreeps.melee < MaxMeleeCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Melee' + Game.time;
-                    Spawn.spawnCreep(getBody(myRoom, { 'melee': true }), newName, {
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.melee, { 'melee': true }), newName, {
                         memory: {
                             'role': 'melee'
                         }
@@ -1535,7 +1535,7 @@ const spawner = {
                 }
                 if (myCreepCount.healerParts < MaxParts.healer * Memory.misc.globalCreeps.healer && Memory.misc.globalCreeps.healer < MaxHealerCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Healer' + Game.time;
-                    Spawn.spawnCreep(getBody(myRoom, { 'healer': true }), newName, {
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.healer, { 'healer': true }), newName, {
                         memory: {
                             'role': 'healer'
                         }
@@ -1545,7 +1545,7 @@ const spawner = {
                 }
                 if (myCreepCount.rangedParts < MaxParts.ranged * Memory.misc.globalCreeps.ranged && Memory.misc.globalCreeps.ranged < MaxRangedCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Ranged' + Game.time;
-                    Spawn.spawnCreep(getBody(myRoom, { 'ranged': true }), newName, {
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.ranged, { 'ranged': true }), newName, {
                         memory: {
                             'role': 'ranged'
                         }
@@ -1572,27 +1572,27 @@ function completeOutstandingRequests(myRoom, Spawn) {
     }
 }
 
-function getBody(myRoom, options = {}) {
+function getBody(myRoom, MaxParts, options = {}) {
     var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
     var referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
     var partArray = [];
 
     if (options.melee) {
-        for (var i = 0; i < Math.floor(referenceEnergy / 130); i += 1) {
+        for (var i = 0; i < Math.floor(referenceEnergy / 130) && i < MaxParts; i += 1) {
             partArray.push(ATTACK);
             partArray.push(MOVE);
         }
         return partArray;
     }
     if (options.healer) {
-        for (var i = 0; i < Math.floor(referenceEnergy / 300); i += 1) {
+        for (var i = 0; i < Math.floor(referenceEnergy / 300) && i < MaxParts; i += 1) {
             partArray.push(HEAL);
             partArray.push(MOVE);
         }
         return partArray;
     }
     if (options.ranged) {
-        for (var i = 0; i < Math.floor(referenceEnergy / 200); i += 1) {
+        for (var i = 0; i < Math.floor(referenceEnergy / 200) && i < MaxParts; i += 1) {
             partArray.push(RANGED_ATTACK);
             partArray.push(MOVE);
         }
@@ -1605,13 +1605,12 @@ function getBody(myRoom, options = {}) {
         partArray.push(CARRY);
         totalEnergy -= 4;
         workCount = 1;
-        while (totalEnergy >= 4 && workCount < 8) {
+        while (totalEnergy >= 4 && workCount < MaxParts) {
             partArray.push(WORK);
             partArray.push(MOVE);
-            partArray.push(CARRY);
             totalEnergy -= 4;
             workCount += 1;
-            if (totalEnergy >= 4 && workCount < 7) {
+            if (totalEnergy >= 4 && workCount < MaxParts) {
                 partArray.push(WORK);
                 partArray.push(WORK);
                 workCount += 2;
@@ -1621,7 +1620,7 @@ function getBody(myRoom, options = {}) {
         return partArray;
     }
     if (options.harvester) {
-        while (totalEnergy >= 4 && workCount < 8) {
+        while (totalEnergy >= 4 && workCount < MaxParts) {
             partArray.push(WORK);
             partArray.push(MOVE);
             partArray.push(CARRY);
@@ -1630,7 +1629,7 @@ function getBody(myRoom, options = {}) {
         }
         return partArray;
     }
-    while (totalEnergy >= 4) {
+    while (totalEnergy >= 4 && workCount < MaxParts) {
         if (!options.carryOnly) {
             partArray.push(WORK);
             totalEnergy -= 2;
@@ -1638,6 +1637,7 @@ function getBody(myRoom, options = {}) {
         partArray.push(MOVE);
         partArray.push(CARRY);
         totalEnergy -= 2;
+        workCount += 1;
     }
     return partArray;
 }
