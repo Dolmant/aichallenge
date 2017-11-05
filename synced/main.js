@@ -72,9 +72,6 @@ module.exports =
 const util = {
     goToTarget(creep) {
         var err = 0;
-        if (creep.pos.x === 1 || creep.pos.y === 1 || creep.pos.x === 48 || creep.pos.y === 48) {
-            creep.moveTo(new RoomPosition(25, 25, creep.memory.goToTarget));
-        }
         if (creep.pos.x == 0) {
             err = creep.move(RIGHT);
             if (err != OK) {
@@ -108,8 +105,9 @@ const util = {
                 err = creep.move(TOP_LEFT);
             }
         } else if (creep.room.name == creep.memory.goToTarget) {
+            creep.moveTo(new RoomPosition(25, 25, creep.memory.goToTarget));
             delete creep.memory.goToTarget;
-            delete creep.memory.myTask;
+            creep.memory.myTask = 'arrived';
         } else {
             creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.goToTarget)));
         }
@@ -1179,10 +1177,6 @@ const roleClaimer = {
 "use strict";
 const roleThief = {
     run: function (creep) {
-        if (creep.fatigue != 0) {
-            return;
-        }
-
         if (!creep.memory.stealTarget) {
             // TODO fix !!!!
             const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W46N51'];
@@ -1203,7 +1197,7 @@ const roleThief = {
             creep.memory.stealTarget = possibleTargets[Memory.stealFlag - 1];
         }
 
-        if (creep.room.name == creep.memory.stealTarget && creep.memory.myTask != 'goToTarget') {
+        if (creep.room.name == creep.memory.stealTarget || creep.memory.myTask == 'arrived') {
             if (creep.carry.energy == 0) {
                 creep.memory.myTask = 'harvest';
             } else if (creep.carry.energy == creep.carryCapacity) {
@@ -1242,7 +1236,7 @@ const roleThiefMule = {
             creep.memory.stealTarget = possibleTargets[Memory.muleFlag - 1];
             creep.memory.home = homeArray[Memory.muleFlag - 1];
         }
-        if (creep.memory.myTask != 'goToTarget') {
+        if (creep.memory.myTask == 'arrived' || creep.room.name == creep.memory.stealTarget) {
             if (creep.carry.energy == 0 && creep.room.name != creep.memory.stealTarget) {
                 creep.memory.myTask = 'goToTarget';
                 creep.memory.goToTarget = creep.memory.stealTarget;
@@ -1257,6 +1251,9 @@ const roleThiefMule = {
             if (creep.carryCapacity == creep.carry.energy && creep.room.name == creep.memory.home) {
                 creep.memory.myTask = 'deposit';
             }
+        } else {
+            creep.memory.myTask = 'goToTarget';
+            creep.memory.goToTarget = creep.memory.stealTarget;
         }
     }
 };
@@ -1791,7 +1788,7 @@ const actDeposit = {
                 if (lazyContainer.hits < lazyContainer.hitsMax / 2) {
                     creep.repair(lazyContainer);
                 } else {
-                    var err = creep.transfer(lazyContainer);
+                    var err = creep.transfer(lazyContainer, RESOURCE_ENERGY);
                     if (err == ERR_FULL || err == ERR_INVALID_ARGS || err == ERR_NOT_ENOUGH_RESOURCES) {
                         creep.drop(RESOURCE_ENERGY);
                     } else if (err == ERR_NOT_IN_RANGE) {
@@ -1806,8 +1803,8 @@ const actDeposit = {
             if (const_site.length > 0) {
                 creep.build(const_site[0]);
             } else {
-                var container_site = creep.pos.findInRange(FIND_MY_STRUCTURES, {
-                    filter: structure => structure.type == STRUCTURE_CONTAINER
+                var container_site = creep.pos.findInRange(FIND_STRUCTURES, 2, {
+                    filter: structure => structure.structureType == STRUCTURE_CONTAINER
                 });
                 if (container_site.length > 0) {
                     creep.memory.lazyContainer = container_site[0].id;

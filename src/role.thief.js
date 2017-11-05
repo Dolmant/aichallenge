@@ -1,10 +1,6 @@
 // @flow
 const roleThief = {
     run: function(creep) {
-		if (creep.fatigue != 0){
-			return;
-        }
-
         if (!creep.memory.stealTarget) {
             // TODO fix !!!!
             const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W46N51'];
@@ -25,7 +21,7 @@ const roleThief = {
             creep.memory.stealTarget = possibleTargets[Memory.stealFlag - 1];
         }
 
-        if (creep.room.name == creep.memory.stealTarget && creep.memory.myTask != 'goToTarget') {
+        if (creep.room.name == creep.memory.stealTarget || creep.memory.myTask == 'arrived') {
             if (creep.carry.energy == 0) {
                 creep.memory.myTask = 'harvest';
             } else if (creep.carry.energy == creep.carryCapacity) {

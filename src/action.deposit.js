@@ -44,7 +44,7 @@ const actDeposit = {
                 if (lazyContainer.hits < lazyContainer.hitsMax / 2) {
                     creep.repair(lazyContainer);
                 } else {
-                    var err = creep.transfer(lazyContainer);
+                    var err = creep.transfer(lazyContainer, RESOURCE_ENERGY);
                     if (err == ERR_FULL || err == ERR_INVALID_ARGS || err == ERR_NOT_ENOUGH_RESOURCES) {
                         creep.drop(RESOURCE_ENERGY);
                     } else if (err == ERR_NOT_IN_RANGE) {
@@ -59,8 +59,8 @@ const actDeposit = {
             if (const_site.length > 0) {
                 creep.build(const_site[0]);
             } else {
-                var container_site = creep.pos.findInRange(FIND_MY_STRUCTURES, {
-                    filter: structure => structure.type == STRUCTURE_CONTAINER
+                var container_site = creep.pos.findInRange(FIND_STRUCTURES, 2, {
+                    filter: structure => structure.structureType == STRUCTURE_CONTAINER
                 });
                 if (container_site.length > 0) {
                     creep.memory.lazyContainer = container_site[0].id

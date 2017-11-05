@@ -2,9 +2,6 @@
 const util = {
     goToTarget(creep) {
         var err = 0;
-        if(creep.pos.x === 1 || creep.pos.y === 1 || creep.pos.x === 48 || creep.pos.y === 48) {
-            creep.moveTo(new RoomPosition(25, 25, creep.memory.goToTarget));
-        }
         if (creep.pos.x == 0) {
             err = creep.move(RIGHT);
             if (err != OK) {
@@ -38,8 +35,9 @@ const util = {
                 err = creep.move(TOP_LEFT);
             }
         } else if (creep.room.name == creep.memory.goToTarget) {
+            creep.moveTo(new RoomPosition(25, 25, creep.memory.goToTarget));
             delete creep.memory.goToTarget;
-            delete creep.memory.myTask;
+            creep.memory.myTask = 'arrived';
         } else {
             creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.goToTarget)))
         }
