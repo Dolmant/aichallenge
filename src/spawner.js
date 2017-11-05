@@ -11,18 +11,22 @@ const spawner = {
             'melee': 70,
             'ranged': 70,
             'healer': 10,
+            'blocker': 1, //not used current
         }
+        var MaxHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 2 : 4;
         var MaxHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 2 : 4;
         // implement levels
         // var MinHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 5;
-        var MaxWorkerCount = myRoom.memory.marshalForce ? 1 : 4;
+        var MaxWorkerCount = myRoom.memory.marshalForce ? 1 : 2;
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         MaxMuleCount = myRoom.memory.hasLinks ? 2 : MaxMuleCount;
-        var MaxUpgraderCount = myRoom.memory.hasLinks ? 1 : 1;
+        var MaxUpgraderCount = myRoom.memory.hasLinks ? 0 : 0;
         var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 0;
         var MaxMeleeCount = myRoom.memory.marshalForce ? Memory.attackers.forceSize - 3 : 0;
         var MaxRangedCount = myRoom.memory.marshalForce ? 2 : 0;
         var MaxHealerCount = myRoom.memory.marshalForce ? 1 : 0;
+        var MaxBlockerCount = myRoom.memory.marshalDisrupter ? 20 : 0;
+        var MaxToughCount = myRoom.memory.marshalForce ? 5 : 0;
         var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
         var referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
 
@@ -105,7 +109,7 @@ const spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if (convert && myCreepCount.harvesterCount < 2 && canSpawn) {
+                if (convert && myCreepCount.harvesterCount < 2 && canSpawn && myRoom.energyAvailable <= referenceEnergy * 0.75) {
                     convert.memory.role = 'harvester';
                     convert.memory.sourceMap = sourceMap;
                     canSpawn = false;
@@ -176,6 +180,28 @@ const spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
+                if(myCreepCount.blockerParts < MaxParts.blocker * MaxBlockerCount && Memory.misc.globalCreeps.blocker < MaxBlockerCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                {
+                    var newName = 'Blocker' + Game.time;
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.blocker, {'blocker': true}), newName, {
+                        memory: {
+                            'role': 'blocker',
+                        },
+                    });
+                    console.log('Spawning: '+ newName);
+                    canSpawn = false;
+                }
+                if(myCreepCount.toughParts < MaxParts.tough * MaxToughCount && Memory.misc.globalCreeps.tough < MaxToughCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                {
+                    var newName = 'Tough' + Game.time;
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.tough, {'tough': true}), newName, {
+                        memory: {
+                            'role': 'tough',
+                        },
+                    });
+                    console.log('Spawning: '+ newName);
+                    canSpawn = false;
+                }
                 if(myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     completeOutstandingRequests(myRoom, Spawn);
                 }
@@ -200,6 +226,21 @@ function getBody(myRoom, MaxParts, options = {}) {
     var referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
     var partArray = [];
 
+    if (options.blocker) {
+        partArray.push(TOUGH);
+        partArray.push(MOVE);
+        return partArray;
+    }
+    if (options.tough) {
+        partArray.push(ATTACK);
+        partArray.push(MOVE);
+        for (var i = 0; (i < Math.floor((referenceEnergy - 130)/70) && i < MaxParts - 1); i += 1) {
+            partArray.push(TOUGH);
+            partArray.push(TOUGH);
+            partArray.push(MOVE);
+        }
+        return partArray;
+    }
     if (options.melee) {
         for (var i = 0; (i < Math.floor(referenceEnergy/130) && i < MaxParts); i += 1) {
             partArray.push(ATTACK);

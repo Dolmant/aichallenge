@@ -46,6 +46,47 @@ var actOffensive = {
             delete creep.memory.attackCreep;
         }
     },
+    block: function(creep) {
+        var block1Flag = Game.flags['blocker1'];
+        var block2Flag = Game.flags['blocker2'];
+        var block3Flag = Game.flags['blocker3'];
+        var err = 0;
+        if (!creep.memory.blockTarget && !creep.memory.done) {
+            if (block1Flag) {
+                err = creep.moveTo(block1Flag.pos);
+                if (err == ERR_NO_PATH) {
+                    if (block2Flag) {
+                        var err = creep.moveTo(block2Flag.pos);
+                        if (err == ERR_NO_PATH) {
+                            if (block3Flag) {
+                                var err = creep.moveTo(block3Flag.pos);
+                                if (err == ERR_NO_PATH) {
+                                    return
+                                } else {
+                                    creep.memory.blockTarget = block3Flag.id;
+                                }
+                            }
+                        } else {
+                            creep.memory.blockTarget = block2Flag.id;
+                        }
+                    }
+                } else {
+                    creep.memory.blockTarget = block1Flag.id;
+                }
+            }
+        }
+        if (creep.memory.blockTarget && !creep.memory.done) {
+            var blockTarget = Game.getObjectById(creep.memory.blockTarget);
+            if (creep.pos.getRangeTo(blockTarget.pos) <= 1) {
+                creep.memory.done = true;
+            } else {
+                err = creep.moveTo(blockTarget.pos);
+                if (err = ERR_NO_PATH) {
+                    delete creep.memory.blockTarget;
+                }
+            }
+        }
+    },
     gather: function(creep) {
         if (Memory.attackers.attacking) {
             creep.moveTo(Game.flags['Attack'].pos, {ignoreCreeps: true});
@@ -64,6 +105,8 @@ var actOffensive = {
     findTarget: function(creep) {
         if (creep.memory.role == 'healer') {
             findHealingTarget(creep);
+        } else if (creep.memory.role == 'tough') {
+            creep.memory.myTask = 'block';
         } else {
             findAttackTarget(creep);
         }

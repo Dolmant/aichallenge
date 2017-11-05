@@ -46,6 +46,9 @@ const taskManager = {
             case 'rangedAttack':
                 actOffensive.rangedAttack(creep);
                 break;
+            case 'block':
+                actOffensive.block(creep);
+                break;
             case 'gather':
                 actOffensive.gather(creep);
                 break;

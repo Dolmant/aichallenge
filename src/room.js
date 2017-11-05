@@ -55,6 +55,8 @@ const Room = {
             'meleeCount': 0,
             'rangedCount': 0,
             'healerCount': 0,
+            'toughCount': 0,
+            'blockerCount': 0,
         };
         var totalCreeps = 0;
         myCreeps.forEach(creep => {
@@ -106,6 +108,18 @@ const Room = {
                         Memory.misc.globalCreepsTemp.healer += 1;
                     }
                     break;
+                case 'blocker':
+                    myCreepCount.blockerParts += creep.body.filter(part => part.type == TOUGH).length;
+                    if (creep.hits == creep.hitsMax) {
+                        Memory.misc.globalCreepsTemp.blocker += 1;
+                    }
+                    break;
+                case 'tough':
+                    myCreepCount.toughParts += creep.body.filter(part => part.type == TOUGH).length;
+                    if (creep.hits == creep.hitsMax) {
+                        Memory.misc.globalCreepsTemp.tough += 1;
+                    }
+                    break;
             }
         });
 
@@ -138,6 +152,8 @@ const Room = {
                 case 'melee':
                 case 'ranged':
                 case 'healer':
+                case 'blocker':
+                case 'tough':
                     roleOffensive.run(creep, mySpawns);
                     break;
             }

@@ -29,6 +29,8 @@ export function loop() {
 			'ranged': 0,
 			'thief': 0,
 			'claimer': 0,
+			'tough': 0,
+			'blocker': 0,
 		};
 		// Lets keep this around just in case?
 		// for(let name in Memory.rooms)
@@ -48,7 +50,9 @@ export function loop() {
 			'ranged': Memory.misc.globalCreepsTemp.ranged,
 			'melee': Memory.misc.globalCreepsTemp.melee,
 			'thief': Memory.misc.globalCreepsTemp.thief,
-			'claimer': Memory.misc.globalCreepsTemp.claimer
+			'claimer': Memory.misc.globalCreepsTemp.claimer,
+			'tough': Memory.misc.globalCreepsTemp.tough,
+			'blocker': Memory.misc.globalCreepsTemp.blocker,
 		};
 	});
 }

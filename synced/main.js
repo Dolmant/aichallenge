@@ -681,6 +681,47 @@ var actOffensive = {
             delete creep.memory.attackCreep;
         }
     },
+    block: function (creep) {
+        var block1Flag = Game.flags['blocker1'];
+        var block2Flag = Game.flags['blocker2'];
+        var block3Flag = Game.flags['blocker3'];
+        var err = 0;
+        if (!creep.memory.blockTarget && !creep.memory.done) {
+            if (block1Flag) {
+                err = creep.moveTo(block1Flag.pos);
+                if (err == ERR_NO_PATH) {
+                    if (block2Flag) {
+                        var err = creep.moveTo(block2Flag.pos);
+                        if (err == ERR_NO_PATH) {
+                            if (block3Flag) {
+                                var err = creep.moveTo(block3Flag.pos);
+                                if (err == ERR_NO_PATH) {
+                                    return;
+                                } else {
+                                    creep.memory.blockTarget = block3Flag.id;
+                                }
+                            }
+                        } else {
+                            creep.memory.blockTarget = block2Flag.id;
+                        }
+                    }
+                } else {
+                    creep.memory.blockTarget = block1Flag.id;
+                }
+            }
+        }
+        if (creep.memory.blockTarget && !creep.memory.done) {
+            var blockTarget = Game.getObjectById(creep.memory.blockTarget);
+            if (creep.pos.getRangeTo(blockTarget.pos) <= 1) {
+                creep.memory.done = true;
+            } else {
+                err = creep.moveTo(blockTarget.pos);
+                if (err = ERR_NO_PATH) {
+                    delete creep.memory.blockTarget;
+                }
+            }
+        }
+    },
     gather: function (creep) {
         if (Memory.attackers.attacking) {
             creep.moveTo(Game.flags['Attack'].pos, { ignoreCreeps: true });
@@ -699,6 +740,8 @@ var actOffensive = {
     findTarget: function (creep) {
         if (creep.memory.role == 'healer') {
             findHealingTarget(creep);
+        } else if (creep.memory.role == 'tough') {
+            creep.memory.myTask = 'block';
         } else {
             findAttackTarget(creep);
         }
@@ -783,7 +826,9 @@ function loop() {
 			'melee': 0,
 			'ranged': 0,
 			'thief': 0,
-			'claimer': 0
+			'claimer': 0,
+			'tough': 0,
+			'blocker': 0
 		};
 		// Lets keep this around just in case?
 		// for(let name in Memory.rooms)
@@ -803,7 +848,9 @@ function loop() {
 			'ranged': Memory.misc.globalCreepsTemp.ranged,
 			'melee': Memory.misc.globalCreepsTemp.melee,
 			'thief': Memory.misc.globalCreepsTemp.thief,
-			'claimer': Memory.misc.globalCreepsTemp.claimer
+			'claimer': Memory.misc.globalCreepsTemp.claimer,
+			'tough': Memory.misc.globalCreepsTemp.tough,
+			'blocker': Memory.misc.globalCreepsTemp.blocker
 		};
 	});
 }
@@ -876,7 +923,9 @@ const Room = {
             'thiefCount': 0,
             'meleeCount': 0,
             'rangedCount': 0,
-            'healerCount': 0
+            'healerCount': 0,
+            'toughCount': 0,
+            'blockerCount': 0
         };
         var totalCreeps = 0;
         myCreeps.forEach(creep => {
@@ -928,6 +977,18 @@ const Room = {
                         Memory.misc.globalCreepsTemp.healer += 1;
                     }
                     break;
+                case 'blocker':
+                    myCreepCount.blockerParts += creep.body.filter(part => part.type == TOUGH).length;
+                    if (creep.hits == creep.hitsMax) {
+                        Memory.misc.globalCreepsTemp.blocker += 1;
+                    }
+                    break;
+                case 'tough':
+                    myCreepCount.toughParts += creep.body.filter(part => part.type == TOUGH).length;
+                    if (creep.hits == creep.hitsMax) {
+                        Memory.misc.globalCreepsTemp.tough += 1;
+                    }
+                    break;
             }
         });
 
@@ -960,6 +1021,8 @@ const Room = {
                 case 'melee':
                 case 'ranged':
                 case 'healer':
+                case 'blocker':
+                case 'tough':
                     __WEBPACK_IMPORTED_MODULE_7__role_offensive__["a" /* default */].run(creep, mySpawns);
                     break;
             }
@@ -1332,7 +1395,7 @@ const roleOffensive = {
             }
             var attackFlag = Game.flags['Attack'];
             if (creep.room.name == attackFlag.pos.roomName) {
-                if (creep.memory.myTask != 'heal' || creep.memory.myTask != 'attack') {
+                if (creep.memory.myTask != 'heal' || creep.memory.myTask != 'attack' || creep.memory.myTask != 'block') {
                     __WEBPACK_IMPORTED_MODULE_1__action_offensive__["a" /* default */].findTarget(creep);
                     if (creep.memory.healCreep) {
                         creep.memory.myTask = 'heal';
@@ -1348,6 +1411,8 @@ const roleOffensive = {
                                 creep.memory.myTask = 'attack';
                                 break;
                         }
+                    } else if (creep.memory.myTask == 'block') {
+                        return;
                     } else {
                         creep.memory.myTask = 'gather';
                     }
@@ -1397,19 +1462,23 @@ const spawner = {
             'thief': 6,
             'melee': 70,
             'ranged': 70,
-            'healer': 10
+            'healer': 10,
+            'blocker': 1 //not used current
         };
+        var MaxHarvesterCount = myRoom.memory.hasLinks || myRoom.memory.hasContainers ? 2 : 4;
         var MaxHarvesterCount = myRoom.memory.hasLinks || myRoom.memory.hasContainers ? 2 : 4;
         // implement levels
         // var MinHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 5;
-        var MaxWorkerCount = myRoom.memory.marshalForce ? 1 : 4;
+        var MaxWorkerCount = myRoom.memory.marshalForce ? 1 : 2;
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         MaxMuleCount = myRoom.memory.hasLinks ? 2 : MaxMuleCount;
-        var MaxUpgraderCount = myRoom.memory.hasLinks ? 1 : 1;
+        var MaxUpgraderCount = myRoom.memory.hasLinks ? 0 : 0;
         var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 0;
         var MaxMeleeCount = myRoom.memory.marshalForce ? Memory.attackers.forceSize - 3 : 0;
         var MaxRangedCount = myRoom.memory.marshalForce ? 2 : 0;
         var MaxHealerCount = myRoom.memory.marshalForce ? 1 : 0;
+        var MaxBlockerCount = myRoom.memory.marshalDisrupter ? 20 : 0;
+        var MaxToughCount = myRoom.memory.marshalForce ? 5 : 0;
         var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
         var referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
 
@@ -1488,7 +1557,7 @@ const spawner = {
                     console.log('Spawning: ' + newName);
                     canSpawn = false;
                 }
-                if (convert && myCreepCount.harvesterCount < 2 && canSpawn) {
+                if (convert && myCreepCount.harvesterCount < 2 && canSpawn && myRoom.energyAvailable <= referenceEnergy * 0.75) {
                     convert.memory.role = 'harvester';
                     convert.memory.sourceMap = sourceMap;
                     canSpawn = false;
@@ -1553,6 +1622,26 @@ const spawner = {
                     console.log('Spawning: ' + newName);
                     canSpawn = false;
                 }
+                if (myCreepCount.blockerParts < MaxParts.blocker * MaxBlockerCount && Memory.misc.globalCreeps.blocker < MaxBlockerCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
+                    var newName = 'Blocker' + Game.time;
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.blocker, { 'blocker': true }), newName, {
+                        memory: {
+                            'role': 'blocker'
+                        }
+                    });
+                    console.log('Spawning: ' + newName);
+                    canSpawn = false;
+                }
+                if (myCreepCount.toughParts < MaxParts.tough * MaxToughCount && Memory.misc.globalCreeps.tough < MaxToughCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
+                    var newName = 'Tough' + Game.time;
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.tough, { 'tough': true }), newName, {
+                        memory: {
+                            'role': 'tough'
+                        }
+                    });
+                    console.log('Spawning: ' + newName);
+                    canSpawn = false;
+                }
                 if (myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     completeOutstandingRequests(myRoom, Spawn);
                 }
@@ -1577,6 +1666,21 @@ function getBody(myRoom, MaxParts, options = {}) {
     var referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
     var partArray = [];
 
+    if (options.blocker) {
+        partArray.push(TOUGH);
+        partArray.push(MOVE);
+        return partArray;
+    }
+    if (options.tough) {
+        partArray.push(ATTACK);
+        partArray.push(MOVE);
+        for (var i = 0; i < Math.floor((referenceEnergy - 130) / 70) && i < MaxParts - 1; i += 1) {
+            partArray.push(TOUGH);
+            partArray.push(TOUGH);
+            partArray.push(MOVE);
+        }
+        return partArray;
+    }
     if (options.melee) {
         for (var i = 0; i < Math.floor(referenceEnergy / 130) && i < MaxParts; i += 1) {
             partArray.push(ATTACK);
@@ -1706,6 +1810,9 @@ const taskManager = {
                 break;
             case 'rangedAttack':
                 __WEBPACK_IMPORTED_MODULE_6__action_offensive__["a" /* default */].rangedAttack(creep);
+                break;
+            case 'block':
+                __WEBPACK_IMPORTED_MODULE_6__action_offensive__["a" /* default */].block(creep);
                 break;
             case 'gather':
                 __WEBPACK_IMPORTED_MODULE_6__action_offensive__["a" /* default */].gather(creep);

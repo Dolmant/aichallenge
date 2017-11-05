@@ -12,7 +12,7 @@ const roleOffensive = {
             }
             var attackFlag = Game.flags['Attack'];
             if (creep.room.name == attackFlag.pos.roomName) {
-                if(creep.memory.myTask != 'heal' || creep.memory.myTask != 'attack') {
+                if(creep.memory.myTask != 'heal' || creep.memory.myTask != 'attack' || creep.memory.myTask != 'block') {
                     actOffensive.findTarget(creep);
                     if (creep.memory.healCreep) {
                         creep.memory.myTask = 'heal';
@@ -28,6 +28,8 @@ const roleOffensive = {
                                 creep.memory.myTask = 'attack';
                                 break;
                         }
+                    } else if (creep.memory.myTask == 'block') {
+                        return;
                     } else {
                         creep.memory.myTask = 'gather';
                     }
