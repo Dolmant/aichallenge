@@ -7,13 +7,12 @@ import roleMule from './role.mule';
 import roleWorker from './role.worker';
 import roleClaimer from './role.claimer';
 import roleThief from './role.thief';
-import roleMelee from './role.melee';
-import roleRanged from './role.ranged';
-import roleHealer from './role.healer';
+import roleOffensive from './role.offensive';
 import type {Creep} from './../flow-typed/Creep';
 
 import spawner from './spawner';
 
+import taskManager from './task.manager';
 
 profiler.registerObject(roleUpgrader, 'upgrader');
 profiler.registerObject(roleHarvester, 'harvester');
@@ -120,7 +119,7 @@ const Room = {
                 case 'harvester':
                     roleHarvester.run(creep);
                     break;
-                case 'upgrader':
+                case 'upgrader': 
                     roleUpgrader.run(creep);
                     break;
                 // legacy, remove
@@ -141,15 +140,12 @@ const Room = {
                     roleThief.run(creep);
                     break;
                 case 'melee':
-                    roleMelee.run(creep, mySpawns);
-                    break;
                 case 'ranged':
-                    roleRanged.run(creep, mySpawns);
-                    break;
                 case 'healer':
-                    roleHealer.run(creep, mySpawns);
+                    roleOffensive.run(creep, mySpawns);
                     break;
             }
+            taskManager.run(creep, mySpawns);
         });
 
         if (!myRoom.controller || (myRoom.controller && !myRoom.controller.my)) {

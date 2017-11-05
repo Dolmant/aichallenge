@@ -104,7 +104,7 @@ const spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if (convert && myCreepCount.harvesterCount < 2) {
+                if (convert && myCreepCount.harvesterCount < 2 && canSpawn) {
                     convert.memory.role = 'harvester';
                     convert.memory.sourceMap = sourceMap;
                     canSpawn = false;
