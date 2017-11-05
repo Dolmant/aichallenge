@@ -68,7 +68,7 @@ const spawner = {
                         delete Spawn.memory.renewTarget;
                     }
                 }
-                if(myCreepCount.harvesterParts < MaxParts.harvester * myCreepCount.harvesterCount && myCreepCount.harvesterCount < MaxHarvesterCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.harvesterParts < MaxParts.harvester * MaxHarvesterCount && myCreepCount.harvesterCount < MaxHarvesterCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Harvester' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.harvester, {'harvester': true}), newName, {
@@ -94,7 +94,7 @@ const spawner = {
                     myRoom.memory.spawnClaimer -= 1;
                     canSpawn = false;
                 }
-                if(myCreepCount.workerParts < MaxParts.worker * myCreepCount.workerCount && myCreepCount.workerCount < MaxWorkerCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.workerParts < MaxParts.worker * MaxWorkerCount && myCreepCount.workerCount < MaxWorkerCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Worker' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.worker), newName, {
@@ -110,7 +110,7 @@ const spawner = {
                     convert.memory.sourceMap = sourceMap;
                     canSpawn = false;
                 }
-                if(myCreepCount.muleParts < MaxParts.mule * myCreepCount.muleCount && myCreepCount.muleCount < MaxMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.muleParts < MaxParts.mule * MaxMuleCount && myCreepCount.muleCount < MaxMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Mule' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, {'carryOnly': true}), newName, {
@@ -121,7 +121,7 @@ const spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if(myCreepCount.upgraderParts < MaxParts.upgrader * myCreepCount.upgraderCount && myCreepCount.upgraderCount < MaxUpgraderCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.upgraderParts < MaxUpgraderCount && myCreepCount.upgraderCount < MaxUpgraderCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Upgrader' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.upgrader), newName, {
@@ -132,7 +132,7 @@ const spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if(myCreepCount.thiefParts < MaxParts.thief * Memory.misc.globalCreeps.thief && Memory.misc.globalCreeps.thief < MaxThiefCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.thiefParts < MaxParts.thief * MaxThiefCount && Memory.misc.globalCreeps.thief < MaxThiefCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Thief' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.thief), newName, {
@@ -143,7 +143,7 @@ const spawner = {
                     });
                     console.log('Spawning: '+ newName);
                 }
-                if(myCreepCount.meleeParts < MaxParts.melee * Memory.misc.globalCreeps.melee && Memory.misc.globalCreeps.melee < MaxMeleeCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.meleeParts < MaxParts.melee * MaxMeleeCount && Memory.misc.globalCreeps.melee < MaxMeleeCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Melee' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.melee, {'melee': true}), newName, {
@@ -154,7 +154,7 @@ const spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if(myCreepCount.healerParts < MaxParts.healer * Memory.misc.globalCreeps.healer && Memory.misc.globalCreeps.healer < MaxHealerCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.healerParts < MaxParts.healer * MaxHealerCount && Memory.misc.globalCreeps.healer < MaxHealerCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Healer' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.healer, {'healer': true}), newName, {
@@ -165,7 +165,7 @@ const spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if(myCreepCount.rangedParts < MaxParts.ranged * Memory.misc.globalCreeps.ranged && Memory.misc.globalCreeps.ranged < MaxRangedCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.rangedParts < MaxParts.ranged * MaxRangedCount && Memory.misc.globalCreeps.ranged < MaxRangedCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Ranged' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.ranged, {'ranged': true}), newName, {
