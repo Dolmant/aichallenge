@@ -8,7 +8,7 @@ const actHarvest = {
         if (!source) {
             getSource(creep);
         } else if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-            var err = creep.moveTo(source);
+            var err = creep.moveTo(source, {'maxRooms': 1});
         }
     }
 };

@@ -15,7 +15,7 @@ const actResupply = {
             if (err == OK || err == ERR_NOT_ENOUGH_RESOURCES) {
                 creep.memory.resupplyTarget = 0;
             } else if(err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(resupplyTarget, {visualizePathStyle: {stroke: '#ffffff'}});
+                creep.moveTo(resupplyTarget, {'visualizePathStyle': {stroke: '#ffffff'}, 'maxRooms': 1});
             } else {
                 getResupplyTarget(creep);
             }

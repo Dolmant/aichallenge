@@ -626,7 +626,7 @@ const actHarvest = {
         if (!source) {
             getSource(creep);
         } else if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-            var err = creep.moveTo(source);
+            var err = creep.moveTo(source, { 'maxRooms': 1 });
         }
     }
 };
@@ -1753,7 +1753,7 @@ const actDeposit = {
             }
             if (err == ERR_NOT_IN_RANGE) {
                 // Return early to prevent deletion of the deposit target
-                return creep.moveTo(target, { visualizePathStyle: { stroke: '#ffffff' } });
+                return creep.moveTo(target, { 'visualizePathStyle': { stroke: '#ffffff' }, 'maxRooms': 1 });
             } else if (err == OK) {
                 // Adjust the promise on this object now it has been delivered
                 if (!creep.room.memory.structures[target.id]) {
@@ -1786,7 +1786,7 @@ const actDeposit = {
                     if (err == ERR_FULL || err == ERR_INVALID_ARGS || err == ERR_NOT_ENOUGH_RESOURCES) {
                         creep.drop(RESOURCE_ENERGY);
                     } else if (err == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(lazyContainer.pos);
+                        creep.moveTo(lazyContainer.pos, { 'maxRooms': 1 });
                     }
                 }
             } else {
@@ -1921,7 +1921,7 @@ function deposit_resource(creep) {
         for (const resourceType in creep.carry) {
             err = creep.transfer(target, resourceType);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target);
+                creep.moveTo(target, { 'maxRooms': 1 });
             }
         }
     }
@@ -1951,7 +1951,7 @@ const actResupply = {
             if (err == OK || err == ERR_NOT_ENOUGH_RESOURCES) {
                 creep.memory.resupplyTarget = 0;
             } else if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(resupplyTarget, { visualizePathStyle: { stroke: '#ffffff' } });
+                creep.moveTo(resupplyTarget, { 'visualizePathStyle': { stroke: '#ffffff' }, 'maxRooms': 1 });
             } else {
                 getResupplyTarget(creep);
             }
@@ -2049,11 +2049,11 @@ const actClaim = {
                 delete creep.memory.myTask;
             }
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(Game.flags['Claim'].pos);
+                creep.moveTo(Game.flags['Claim'].pos, { 'maxRooms': 1 });
             }
             if (err == ERR_GCL_NOT_ENOUGH) {
                 creep.reserveController(creep.room.controller);
-                creep.moveTo(Game.flags['Claim'].pos);
+                creep.moveTo(Game.flags['Claim'].pos, { 'maxRooms': 1 });
             }
         } else {
             creep.memory.goToTarget = Game.flags['Claim'].pos.roomName;
