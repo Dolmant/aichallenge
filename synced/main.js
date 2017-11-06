@@ -105,7 +105,8 @@ const util = {
                 err = creep.move(TOP_LEFT);
             }
         } else if (creep.room.name == creep.memory.goToTarget) {
-            creep.moveTo(new RoomPosition(25, 25, creep.memory.goToTarget));
+            delete creep.memory.goToTarget;
+            delete creep.memory.myTask;
         } else {
             creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.goToTarget)));
         }
@@ -1177,7 +1178,7 @@ const roleThief = {
     run: function (creep) {
         if (!creep.memory.stealTarget) {
             // TODO fix !!!!
-            const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W46N51'];
+            const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52'];
 
             // const exits = Game.map.describeExits(creep.room.name)
             // for (name in exits) {
@@ -1222,8 +1223,8 @@ const roleThiefMule = {
         }
 
         if (!creep.memory.stealTarget) {
-            const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W46N51'];
-            const homeArray = ['W43N53', 'W41N51', 'W41N51', 'W43N53', 'W43N53', 'W41N51', 'W45N53', 'W45N53'];
+            const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52'];
+            const homeArray = ['W43N53', 'W41N51', 'W41N51', 'W43N53', 'W43N53', 'W41N51', 'W45N53'];
 
             if (possibleTargets.length <= Memory.muleFlag) {
                 Memory.muleFlag = 1;
@@ -1352,7 +1353,7 @@ const spawner = {
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         MaxMuleCount = myRoom.memory.hasLinks ? 2 : MaxMuleCount;
         var MaxUpgraderCount = myRoom.memory.hasLinks ? 0 : 0;
-        var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 8;
+        var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 7;
         var MaxThiefMuleCount = MaxThiefCount * 2;
         var MaxMeleeCount = myRoom.memory.marshalForce ? Memory.attackers.forceSize - 3 : 0;
         var MaxRangedCount = myRoom.memory.marshalForce ? 2 : 0;
@@ -1785,7 +1786,7 @@ const actDeposit = {
                     if (err == ERR_FULL || err == ERR_INVALID_ARGS || err == ERR_NOT_ENOUGH_RESOURCES) {
                         creep.drop(RESOURCE_ENERGY);
                     } else if (err == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(creep.memory.lazyContainer.pos);
+                        creep.moveTo(lazyContainer.pos);
                     }
                 }
             } else {
@@ -1967,7 +1968,7 @@ const actResupply = {
             target = Game.getObjectById(creep.memory.dropTarget);
             var err = target && creep.pickup(target);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target);
+                creep.moveTo(target, { 'maxRooms': 1 });
             } else if (err == OK) {
                 creep.memory.dropTarget = 0;
             } else {
@@ -1977,7 +1978,7 @@ const actResupply = {
             target = Game.getObjectById(creep.memory.fetchTarget);
             var err = target && creep.withdraw(target, RESOURCE_ENERGY);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target);
+                creep.moveTo(target, { 'maxRooms': 1 });
             } else if (err == OK) {
                 creep.memory.fetchTarget = 0;
             } else {

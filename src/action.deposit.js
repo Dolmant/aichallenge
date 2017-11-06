@@ -48,7 +48,7 @@ const actDeposit = {
                     if (err == ERR_FULL || err == ERR_INVALID_ARGS || err == ERR_NOT_ENOUGH_RESOURCES) {
                         creep.drop(RESOURCE_ENERGY);
                     } else if (err == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(creep.memory.lazyContainer.pos);
+                        creep.moveTo(lazyContainer.pos);
                     }
                 }
             } else {

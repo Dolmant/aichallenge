@@ -32,7 +32,7 @@ const actResupply = {
             target = Game.getObjectById(creep.memory.dropTarget);
             var err = target && creep.pickup(target);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target);
+                creep.moveTo(target, {'maxRooms': 1});
             } else if (err == OK) {
                 creep.memory.dropTarget = 0
             } else {
@@ -42,7 +42,7 @@ const actResupply = {
             target = Game.getObjectById(creep.memory.fetchTarget);
             var err = target && creep.withdraw(target, RESOURCE_ENERGY);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target);
+                creep.moveTo(target, {'maxRooms': 1});
             } else if (err == OK) {
                 creep.memory.fetchTarget = 0
             } else {
