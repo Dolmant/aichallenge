@@ -108,7 +108,7 @@ const util = {
             delete creep.memory.goToTarget;
             delete creep.memory.myTask;
         } else {
-            creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.goToTarget)));
+            creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.goToTarget)), { 'maxRooms': 1 });
         }
     }
 };
