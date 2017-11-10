@@ -110,6 +110,16 @@ const util = {
         } else {
             creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.goToTarget)), { 'maxRooms': 1 });
         }
+    },
+    moveToTarget(creep) {
+        if (creep.pos.x == creep.memory.moveToTargetx && creep.pos.y == creep.memory.moveToTargety) {
+            delete creep.memory.myTask;
+        } else {
+            var err = creep.moveTo(creep.memory.moveToTargetx, creep.memory.moveToTargety, { 'maxRooms': 1, 'ignoreCreeps': true });
+            if (err == ERR_NO_PATH || err == ERR_INVALID_TARGET) {
+                delete creep.memory.myTask;
+            }
+        }
     }
 };
 
@@ -626,7 +636,17 @@ const actHarvest = {
         if (!source) {
             getSource(creep);
         } else if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-            var err = creep.moveTo(source, { 'maxRooms': 1 });
+            creep.memory.myTask = "moveTo";
+            var container = source.pos.findInRange(FIND_MY_STRUCTURES, 1, {
+                filter: structure => structure.structureType == STRUCTURE_CONTAINER
+            });
+            if (container.length > 0) {
+                creep.memory.moveToTargetx = container.pos.x;
+                creep.memory.moveToTargety = container.pos.y;
+            } else {
+                creep.memory.moveToTargetx = source.pos.x;
+                creep.memory.moveToTargety = source.pos.y;
+            }
         }
     },
     runMinerals: function (creep) {
@@ -1116,7 +1136,7 @@ const roleHarvester = {
 			return;
 		}
 
-		if (creep.carry.energy <= 49) {
+		if (creep.carry.energy == 0 && creep.memory.myTask != 'moveToTarget') {
 			creep.memory.myTask = 'harvest';
 		}
 
@@ -1129,7 +1149,7 @@ const roleHarvester = {
 			return;
 		}
 
-		if (_.sum(creep.carry) <= 49) {
+		if (_.sum(creep.carry) == 0 && creep.memory.myTask != 'moveToTarget') {
 			creep.memory.myTask = 'harvestMinerals';
 		}
 
@@ -1393,7 +1413,7 @@ const spawner = {
         // var MinHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 5;
         var MaxWorkerCount = myRoom.memory.marshalForce ? 1 : 2;
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
-        MaxMuleCount = myRoom.memory.hasLinks ? 2 : MaxMuleCount;
+        MaxMuleCount = myRoom.memory.hasExtractor ? 3 : MaxMuleCount;
         var MaxUpgraderCount = myRoom.memory.hasLinks ? 0 : 0;
         var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 7;
         var MaxThiefMuleCount = MaxThiefCount * 2;
@@ -1736,6 +1756,9 @@ const taskManager = {
             case 'harvestMinerals':
                 __WEBPACK_IMPORTED_MODULE_3__action_harvest__["a" /* default */].runMinerals(creep);
                 break;
+            case 'moveToTarget':
+                __WEBPACK_IMPORTED_MODULE_7__util__["a" /* default */].moveToTarget(creep);
+                break;
             case 'goToTarget':
                 __WEBPACK_IMPORTED_MODULE_7__util__["a" /* default */].goToTarget(creep);
                 break;
@@ -2072,7 +2095,7 @@ function getTargets(creep) {
     } else {
         target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: structure => {
-                return structure.structureType == STRUCTURE_CONTAINER && _.sum(structure.store) > creep.carryCapacity;
+                return structure.structureType == STRUCTURE_CONTAINER && _.sum(structure.store) >= creep.carryCapacity;
             }
         });
         if (target) {
@@ -2081,7 +2104,7 @@ function getTargets(creep) {
         } else {
             target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                 filter: structure => {
-                    return structure.structureType == STRUCTURE_STORAGE && _.sum(structure.store) > creep.carryCapacity;
+                    return structure.structureType == STRUCTURE_STORAGE && _.sum(structure.store) >= creep.carryCapacity;
                 }
             });
             if (target) {
@@ -2105,7 +2128,7 @@ function getTargets(creep) {
 function getResupplyTarget(creep) {
     var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
         filter: structure => {
-            return (structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_LINK) && (structure.energy > creep.carryCapacity || structure.storeCapacity && structure.store.energy > creep.carryCapacity);
+            return (structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_LINK) && (structure.energy > 0 || structure.storeCapacity && structure.store.energy >= creep.carryCapacity);
         }
     });
     if (target) {

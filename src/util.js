@@ -40,6 +40,16 @@ const util = {
         } else {
             creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.goToTarget)), {'maxRooms': 1})
         }
+    },
+    moveToTarget(creep) {
+        if (creep.pos.x == creep.memory.moveToTargetx && creep.pos.y == creep.memory.moveToTargety) {
+            delete creep.memory.myTask;
+        } else {
+            var err = creep.moveTo(creep.memory.moveToTargetx, creep.memory.moveToTargety,{'maxRooms': 1, 'ignoreCreeps': true});
+            if (err == ERR_NO_PATH || err == ERR_INVALID_TARGET) {
+                delete creep.memory.myTask;
+            }
+        }
     }
 };
 

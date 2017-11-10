@@ -30,6 +30,9 @@ const taskManager = {
             case 'harvestMinerals':
                 actHarvest.runMinerals(creep);
                 break;
+            case 'moveToTarget':
+                util.moveToTarget(creep);
+                break;
             case 'goToTarget':
                 util.goToTarget(creep);
                 break;

@@ -5,7 +5,7 @@ const roleHarvester = {
 			return;
 		}
 
-		if (creep.carry.energy <= 49) {
+		if (creep.carry.energy == 0 && creep.memory.myTask != 'moveToTarget') {
 			creep.memory.myTask = 'harvest';
 		}
 
@@ -18,7 +18,7 @@ const roleHarvester = {
 			return;
 		}
 
-		if (_.sum(creep.carry) <= 49) {
+		if (_.sum(creep.carry) == 0 && creep.memory.myTask != 'moveToTarget') {
 			creep.memory.myTask = 'harvestMinerals';
 		}
 
