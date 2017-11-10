@@ -645,9 +645,6 @@ const actHarvest = {
                 creep.memory.moveToTargety = container[0].pos.y;
                 creep.memory.moveToTargetrange = 0;
             } else {
-                var miningspot = source.pos.findInRange(FIND_STRUCTURES, 1, {
-                    filter: structure => structure.structureType == STRUCTURE_CONTAINER
-                });
                 creep.memory.moveToTargetx = source.pos.x;
                 creep.memory.moveToTargety = source.pos.y;
                 creep.memory.moveToTargetrange = 1;
@@ -672,9 +669,6 @@ const actHarvest = {
                 creep.memory.moveToTargety = container[0].pos.y;
                 creep.memory.moveToTargetrange = 0;
             } else {
-                var miningspot = source.pos.findInRange(FIND_STRUCTURES, 1, {
-                    filter: structure => structure.structureType == STRUCTURE_CONTAINER
-                });
                 creep.memory.moveToTargetx = source.pos.x;
                 creep.memory.moveToTargety = source.pos.y;
                 creep.memory.moveToTargetrange = 1;
@@ -1277,7 +1271,7 @@ const roleThief = {
             creep.memory.stealTarget = possibleTargets[Memory.stealFlag - 1];
         }
 
-        if (creep.room.name == creep.memory.stealTarget && creep.memory.myTask != 'goToTarget') {
+        if (creep.room.name == creep.memory.stealTarget && creep.memory.myTask != 'goToTarget' && creep.memory.myTask != 'moveToTarget') {
             if (creep.carry.energy == 0) {
                 creep.memory.myTask = 'harvest';
             } else if (creep.carry.energy == creep.carryCapacity) {

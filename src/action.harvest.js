@@ -17,9 +17,6 @@ const actHarvest = {
                 creep.memory.moveToTargety = container[0].pos.y;
                 creep.memory.moveToTargetrange = 0;
             } else {
-                var miningspot = source.pos.findInRange(FIND_STRUCTURES, 1, {
-                    filter: structure => structure.structureType == STRUCTURE_CONTAINER
-                });
                 creep.memory.moveToTargetx = source.pos.x;
                 creep.memory.moveToTargety = source.pos.y;
                 creep.memory.moveToTargetrange = 1;
@@ -44,9 +41,6 @@ const actHarvest = {
                 creep.memory.moveToTargety = container[0].pos.y;
                 creep.memory.moveToTargetrange = 0;
             } else {
-                var miningspot = source.pos.findInRange(FIND_STRUCTURES, 1, {
-                    filter: structure => structure.structureType == STRUCTURE_CONTAINER
-                });
                 creep.memory.moveToTargetx = source.pos.x;
                 creep.memory.moveToTargety = source.pos.y;
                 creep.memory.moveToTargetrange = 1;
