@@ -1398,7 +1398,7 @@ const spawner = {
         var MaxParts = {
             'harvester': 6, // definitely
             'harvesterExtractor': 6,
-            'worker': 6,
+            'worker': 10,
             'mule': 12,
             'upgrader': 6,
             'thief': 3, //halved for non reserved rez
@@ -1492,7 +1492,7 @@ const spawner = {
                 }
                 if (myCreepCount.workerParts < MaxParts.worker * MaxWorkerCount && myCreepCount.workerCount < MaxWorkerCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Worker' + Game.time;
-                    Spawn.spawnCreep(getBody(myRoom, MaxParts.worker), newName, {
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.worker, { 'worker': true }), newName, {
                         memory: {
                             'role': 'worker'
                         }
@@ -1696,6 +1696,21 @@ function getBody(myRoom, MaxParts, options = {}) {
         }
         return partArray;
     }
+    if (options.worker) {
+        while (totalEnergy >= 4 && workCount < MaxParts) {
+            partArray.push(WORK);
+            partArray.push(MOVE);
+            partArray.push(CARRY);
+            totalEnergy -= 4;
+            workCount += 1;
+            if (totalEnergy >= 4 && workCount < MaxParts) {
+                partArray.push(WORK);
+                totalEnergy -= 2;
+                workCount += 1;
+            }
+        }
+        return partArray;
+    }
     while (totalEnergy >= 4 && workCount < MaxParts) {
         if (!options.carryOnly) {
             partArray.push(WORK);
@@ -1832,7 +1847,7 @@ const actDeposit = {
             }
             if (err == ERR_NOT_IN_RANGE) {
                 // Return early to prevent deletion of the deposit target
-                return creep.moveTo(target, { 'visualizePathStyle': { stroke: '#ffffff' }, 'maxRooms': 1 });
+                return creep.moveTo(target, { 'ignoreCreeps': true, 'maxRooms': 1 });
             } else if (err == OK) {
                 // Adjust the promise on this object now it has been delivered
                 if (!creep.room.memory.structures[target.id]) {
@@ -1865,7 +1880,7 @@ const actDeposit = {
                     if (err == ERR_FULL || err == ERR_INVALID_ARGS || err == ERR_NOT_ENOUGH_RESOURCES) {
                         creep.drop(RESOURCE_ENERGY);
                     } else if (err == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(lazyContainer.pos, { 'maxRooms': 1 });
+                        creep.moveTo(lazyContainer.pos, { 'maxRooms': 1, 'ignoreCreeps': true });
                     }
                 }
             } else {
@@ -2009,7 +2024,7 @@ function deposit_resource(creep, isMule) {
         for (const resourceType in creep.carry) {
             err = creep.transfer(target, resourceType);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target, { 'maxRooms': 1 });
+                creep.moveTo(target, { 'maxRooms': 1, 'ignoreCreeps': true });
             }
         }
     }
@@ -2056,7 +2071,7 @@ const actResupply = {
             target = Game.getObjectById(creep.memory.dropTarget);
             var err = target && creep.pickup(target);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target, { 'maxRooms': 1 });
+                creep.moveTo(target, { 'maxRooms': 1, 'ignoreCreeps': true });
             } else if (err == OK) {
                 creep.memory.dropTarget = 0;
             } else {
@@ -2066,7 +2081,7 @@ const actResupply = {
             target = Game.getObjectById(creep.memory.fetchTarget);
             var err = target && creep.withdraw(target, RESOURCE_ENERGY);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target, { 'maxRooms': 1 });
+                creep.moveTo(target, { 'maxRooms': 1, 'ignoreCreeps': true });
             } else if (err == OK) {
                 creep.memory.fetchTarget = 0;
             } else if (err == ERR_NOT_ENOUGH_RESOURCES) {
@@ -2074,7 +2089,7 @@ const actResupply = {
                 // first one is usually energy due to alphbetical order TODO fix this to be error free
                 err = creep.withdraw(target, resources[1]);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, { 'maxRooms': 1 });
+                    creep.moveTo(target, { 'maxRooms': 1, 'ignoreCreeps': true });
                 } else if (err == OK) {
                     creep.memory.fetchTarget = 0;
                 } else {
@@ -2185,7 +2200,7 @@ var actUpgrade = {
         }
         let myUpgrade = Game.getObjectById(creep.memory.MyController);
         if (creep.upgradeController(myUpgrade) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(myUpgrade, { visualizePathStyle: { stroke: '#ffffff' } });
+            creep.moveTo(myUpgrade, { 'maxRooms': 1, 'ignoreCreeps': true });
         }
     }
 };
@@ -2213,7 +2228,7 @@ const actBuild = {
             if (creep.memory.myBuildTarget) {
                 var target = Game.getObjectById(creep.memory.myBuildTarget);
                 if (creep.build(target) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, { visualizePathStyle: { stroke: '#ffffff' } });
+                    creep.moveTo(target, { 'maxRooms': 1, 'ignoreCreeps': true });
                 }
                 if (!target) {
                     findBuildTarget(creep);
@@ -2221,7 +2236,7 @@ const actBuild = {
             } else if (creep.memory.myRepairTarget) {
                 var target = Game.getObjectById(creep.memory.myRepairTarget);
                 if (creep.repair(target) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, { visualizePathStyle: { stroke: '#ffffff' } });
+                    creep.moveTo(target, { 'maxRooms': 1, 'ignoreCreeps': true });
                 }
                 if (!target || target.hits == target.hitsMax) {
                     findBuildTarget(creep);

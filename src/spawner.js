@@ -5,7 +5,7 @@ const spawner = {
         var MaxParts = {
             'harvester': 6, // definitely
             'harvesterExtractor': 6,
-            'worker': 6,
+            'worker': 10,
             'mule': 12,
             'upgrader': 6,
             'thief': 3, //halved for non reserved rez
@@ -103,7 +103,7 @@ const spawner = {
                 if(myCreepCount.workerParts < MaxParts.worker * MaxWorkerCount && myCreepCount.workerCount < MaxWorkerCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Worker' + Game.time;
-                    Spawn.spawnCreep(getBody(myRoom, MaxParts.worker), newName, {
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.worker, {'worker': true}), newName, {
                         memory: {
                             'role': 'worker',
                         },
@@ -314,6 +314,21 @@ function getBody(myRoom, MaxParts, options = {}) {
             partArray.push(CARRY);
             totalEnergy -= 4;
             workCount += 1;
+        }
+        return partArray;
+    }
+    if (options.worker) {
+        while (totalEnergy >= 4 && workCount < MaxParts) {
+            partArray.push(WORK)
+            partArray.push(MOVE);
+            partArray.push(CARRY);
+            totalEnergy -= 4;
+            workCount += 1;
+            if (totalEnergy >= 4 && workCount < MaxParts) {
+                partArray.push(WORK)
+                totalEnergy -= 2;
+                workCount += 1;
+            }
         }
         return partArray;
     }
