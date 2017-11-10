@@ -85,12 +85,29 @@ function deposit_target(creep, isMule) {
     var economy = creep.room.memory.myCreepCount.muleCount && (creep.room.memory.myCreepCount.harvesterCount > 0)
     if ((creep.room.memory.hasContainers) && economy && !isMule) {
         // We can use local links and containers and rely on mules for transport
-        var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+        var target = creep.pos.findInRange(FIND_STRUCTURES, 1, {
+            'filter': (structure) => {
+                // since links and stores have different energy checking methods, need this long filter to check both
+                return ((structure.structureType == STRUCTURE_LINK) && (structure.energy < structure.energyCapacity || (structure.storeCapacity && structure.store.energy < structure.storeCapacity)));
+            },
+            'algorithm': 'dijkstra',
+            'ignoreCreeps': true,
+        });
+        target = target ? target : creep.pos.findInRange(FIND_STRUCTURES, 1, {
+            'filter': (structure) => {
+                // since links and stores have different energy checking methods, need this long filter to check both
+                return ((structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER) && (structure.energy < structure.energyCapacity || (structure.storeCapacity && structure.store.energy < structure.storeCapacity)));
+            },
+            'algorithm': 'dijkstra',
+            'ignoreCreeps': true,
+        });
+        target = target ? target : creep.pos.findClosestByPath(FIND_STRUCTURES, {
             'filter': (structure) => {
                 // since links and stores have different energy checking methods, need this long filter to check both
                 return ((structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_LINK) && (structure.energy < structure.energyCapacity || (structure.storeCapacity && structure.store.energy < structure.storeCapacity)));
             },
             'algorithm': 'dijkstra',
+            'ignoreCreeps': true,
         });
         if (target) {
             creep.memory.depositTarget = target.id;
@@ -105,6 +122,7 @@ function deposit_target(creep, isMule) {
             'filter': (structure) => {
                 return ((structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_EXTENSION) && !(creep.room.memory.structures[structure.id] && (creep.room.memory.structures[structure.id].energyRationPromise >= (structure.energyCapacity - structure.energy))) && structure.energy < structure.energyCapacity);
             },
+            'ignoreCreeps': true,
         });
         if (target) {
             if (!creep.room.memory.structures[target.id]) {creep.room.memory.structures[target.id] = {}};
