@@ -2,8 +2,11 @@ Need to do:
 add eslint rules I am dying
 
 tomorrow:
+graphana
 better state machine - once the task is done, return TRUE. If return TRUE, run the roles switch.
-harvest new type of material
+make labs do something
+recycle creeps experiment
+when the ignorecreeps is on, is the moveTo command doesnt work, does it return an error? if so, we can still use ignorecreeps
 make sure moves are more efficient inside of room
 make more efficient energy setup
 auto build roads when over certasin threshold

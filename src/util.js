@@ -42,7 +42,7 @@ const util = {
         }
     },
     moveToTarget(creep) {
-        if (creep.pos.x == creep.memory.moveToTargetx && creep.pos.y == creep.memory.moveToTargety) {
+        if (creep.pos.getRangeTo(creep.memory.moveToTargetx, creep.memory.moveToTargety) <= creep.memory.moveToTargetrange) {
             delete creep.memory.myTask;
         } else {
             var err = creep.moveTo(creep.memory.moveToTargetx, creep.memory.moveToTargety,{'maxRooms': 1, 'ignoreCreeps': true});
