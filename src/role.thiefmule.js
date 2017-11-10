@@ -18,18 +18,18 @@ const roleThiefMule = {
             creep.memory.stealTarget = possibleTargets[Memory.muleFlag - 1];
             creep.memory.home = homeArray[Memory.muleFlag - 1];
         }
-        if (creep.carry.energy == 0 && creep.room.name == creep.memory.stealTarget) {
+        if (_.sum(creep.carry) == 0 && creep.room.name == creep.memory.stealTarget) {
             creep.memory.myTask = 'fetch';
         }
-        if (creep.carryCapacity == creep.carry.energy && creep.room.name != creep.memory.home) {
+        if (creep.carryCapacity == _.sum(creep.carry) && creep.room.name != creep.memory.home) {
             creep.memory.myTask = 'goToTarget';
             creep.memory.goToTarget = creep.memory.home;
         }
-        if (creep.carry.energy == 0 && creep.room.name != creep.memory.stealTarget) {
+        if (_.sum(creep.carry) == 0 && creep.room.name != creep.memory.stealTarget) {
             creep.memory.myTask = 'goToTarget';
             creep.memory.goToTarget = creep.memory.stealTarget;
         }
-        if (creep.carryCapacity == creep.carry.energy && creep.room.name == creep.memory.home) {
+        if (creep.carryCapacity == _.sum(creep.carry) && creep.room.name == creep.memory.home) {
             creep.memory.myTask = 'deposit';
         }
 	}
