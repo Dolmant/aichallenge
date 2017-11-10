@@ -167,7 +167,7 @@ function deposit_target(creep, isMule = false) {
 function deposit_resource(creep) {
     var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
         filter: (structure) => {
-            return (structure.structureType == STRUCTURE_STORAGE) ;
+            return (structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER) && _.sum(structure.store) < structure.storeCapacity;
         }
     });
     //TODO: figure out what the command for deposit all is

@@ -45,6 +45,16 @@ const actResupply = {
                 creep.moveTo(target, {'maxRooms': 1});
             } else if (err == OK) {
                 creep.memory.fetchTarget = 0
+            } else if (err == ERR_INVALID_ARGS) {
+                var resources = Object.keys(target);
+                err = creep.withdraw(target, resources[0]);
+                if (err == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(target, {'maxRooms': 1});
+                } else if (err == OK) {
+                    creep.memory.fetchTarget = 0
+                } else {
+                    getTargets(creep);
+                }
             } else {
                 getTargets(creep);
             }
@@ -60,7 +70,7 @@ function getTargets(creep) {
     } else {
         target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: structure => {
-                return structure.structureType == STRUCTURE_CONTAINER && structure.store.energy > 0;
+                return structure.structureType == STRUCTURE_CONTAINER && _.sum(structure.store) > 0;
             }
         });
         if (target) {
@@ -69,7 +79,7 @@ function getTargets(creep) {
         } else {
             target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                 filter: structure => {
-                    return structure.structureType == STRUCTURE_STORAGE && structure.store.energy > 0;
+                    return structure.structureType == STRUCTURE_STORAGE && _.sum(structure.store) > 0;
                 }
             });
             if (target) {

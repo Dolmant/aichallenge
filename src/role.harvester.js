@@ -12,6 +12,19 @@ const roleHarvester = {
 		if (creep.carryCapacity == creep.carry.energy) {
 			creep.memory.myTask = 'deposit';
 		}
+	},
+    runExtractors: function(creep) {
+		if (creep.fatigue != 0){
+			return;
+		}
+
+		if (_.sum(creep.carry) <= 49) {
+			creep.memory.myTask = 'harvestMinerals';
+		}
+
+		if (creep.carryCapacity == _.sum(creep.carry)) {
+			creep.memory.myTask = 'deposit';
+		}
 	}
 };
 

@@ -628,6 +628,18 @@ const actHarvest = {
         } else if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
             var err = creep.moveTo(source, { 'maxRooms': 1 });
         }
+    },
+    runMinerals: function (creep) {
+        if (!creep.memory.sourceMap) {
+            var nearestSource = creep.pos.findClosestByPath(FIND_MINERALS);
+            creep.memory.sourceMap = nearestSource && nearestSource.id;
+        }
+        var source = Game.getObjectById(creep.memory.sourceMap);
+        if (!source) {
+            return;
+        } else if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+            var err = creep.moveTo(source, { 'maxRooms': 1 });
+        }
     }
 };
 
@@ -760,6 +772,7 @@ const Room = {
         var myCreepCount = {
             'sourceMap': {},
             'harvesterParts': 0,
+            'harvesterExtractorParts': 0,
             'upgraderParts': 0,
             'workerParts': 0,
             'muleParts': 0,
@@ -771,6 +784,7 @@ const Room = {
             'toughParts': 0,
             'blockerParts': 0,
             'harvesterCount': 0,
+            'harvesterExtractorCount': 0,
             'upgraderCount': 0,
             'workerCount': 0,
             'muleCount': 0,
@@ -793,6 +807,10 @@ const Room = {
                 case 'harvester':
                     myCreepCount.harvesterParts += creep_size;
                     myCreepCount.harvesterCount += 1;
+                    break;
+                case 'harvesterExtractor':
+                    myCreepCount.harvesterExtractorParts += creep_size;
+                    myCreepCount.harvesterExtractorCount += 1;
                     break;
                 case 'upgrader':
                     myCreepCount.upgraderParts += creep_size;
@@ -857,6 +875,9 @@ const Room = {
                 default:
                 case 'harvester':
                     __WEBPACK_IMPORTED_MODULE_2__role_harvester__["a" /* default */].run(creep);
+                    break;
+                case 'harvesterExtractor':
+                    __WEBPACK_IMPORTED_MODULE_2__role_harvester__["a" /* default */].runExtractor(creep);
                     break;
                 case 'upgrader':
                     __WEBPACK_IMPORTED_MODULE_1__role_upgrader__["a" /* default */].run(creep);
@@ -1029,11 +1050,18 @@ function updateRoomConsts(myRoom, mySpawns) {
             }
         });
 
+        var extractor = myRoom.find(FIND_STRUCTURES, {
+            'filter': structure => {
+                return structure.structureType == STRUCTURE_EXTRACTOR;
+            }
+        });
+
         myRoom.memory.links = links.map(link => link.id);
 
         myRoom.memory.hasStorage = storage.length > 0;
         myRoom.memory.hasContainers = container.length > 0;
         myRoom.memory.hasLinks = links.length > 1;
+        myRoom.memory.hasExtractor = extractor.length > 1;
 
         // This function will update stuff like functional roads, etc. Runs every 1K ticks, will have to break this up or store the paths. commented out because I am not using it
         // myRoom.find(FIND_SOURCES).forEach(Source => {
@@ -1093,6 +1121,19 @@ const roleHarvester = {
 		}
 
 		if (creep.carryCapacity == creep.carry.energy) {
+			creep.memory.myTask = 'deposit';
+		}
+	},
+	runExtractors: function (creep) {
+		if (creep.fatigue != 0) {
+			return;
+		}
+
+		if (_.sum(creep.carry) <= 49) {
+			creep.memory.myTask = 'harvestMinerals';
+		}
+
+		if (creep.carryCapacity == _.sum(creep.carry)) {
 			creep.memory.myTask = 'deposit';
 		}
 	}
@@ -1178,7 +1219,7 @@ const roleThief = {
     run: function (creep) {
         if (!creep.memory.stealTarget) {
             // TODO fix !!!!
-            const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52'];
+            const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51'];
 
             // const exits = Game.map.describeExits(creep.room.name)
             // for (name in exits) {
@@ -1223,8 +1264,8 @@ const roleThiefMule = {
         }
 
         if (!creep.memory.stealTarget) {
-            const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52'];
-            const homeArray = ['W43N53', 'W41N51', 'W41N51', 'W43N53', 'W43N53', 'W41N51', 'W45N53'];
+            const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51'];
+            const homeArray = ['W43N53', 'W41N51', 'W41N51', 'W43N53', 'W43N53', 'W41N51', 'W45N53', 'W45N53'];
 
             if (possibleTargets.length <= Memory.muleFlag) {
                 Memory.muleFlag = 1;
@@ -1336,17 +1377,18 @@ const spawner = {
     run: function (myRoom, mySpawns, myCreepCount, totalCreeps, convert) {
         var MaxParts = {
             'harvester': 6, // definitely
+            'harvesterExtractor': 6,
             'worker': 6,
-            'mule': 10,
+            'mule': 12,
             'upgrader': 6,
-            'thief': 6,
+            'thief': 3, //halved for non reserved rez
             'melee': 70,
             'ranged': 70,
             'healer': 10,
             'blocker': 2 //not used current
         };
         var MaxHarvesterCount = myRoom.memory.hasLinks || myRoom.memory.hasContainers ? 2 : 4;
-        var MaxHarvesterCount = myRoom.memory.hasLinks || myRoom.memory.hasContainers ? 2 : 4;
+        var MaxHarvesterExtractorCount = myRoom.memory.hasContainers && myRoom.memory.hasExtractor ? 1 : 0;
         // implement levels
         // var MinHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 5;
         var MaxWorkerCount = myRoom.memory.marshalForce ? 1 : 2;
@@ -1458,6 +1500,16 @@ const spawner = {
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.upgrader), newName, {
                         memory: {
                             'role': 'upgrader'
+                        }
+                    });
+                    console.log('Spawning: ' + newName);
+                    canSpawn = false;
+                }
+                if (myCreepCount.harvesterExtractorParts < MaxParts.harvesterExtractor * MaxHarvesterExtractorCount && myCreepCount.harvesterExtractorCount < MaxHarvesterExtractorCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
+                    var newName = 'HarvesterExtractor' + Game.time;
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.harvesterExtractor, { 'harvester': true }), newName, {
+                        memory: {
+                            'role': 'harvesterExtractor'
                         }
                     });
                     console.log('Spawning: ' + newName);
@@ -1627,7 +1679,8 @@ function getBody(myRoom, MaxParts, options = {}) {
     while (totalEnergy >= 4 && workCount < MaxParts) {
         if (!options.carryOnly) {
             partArray.push(WORK);
-            totalEnergy -= 2;
+            partArray.push(CARRY);
+            totalEnergy -= 1;
         }
         partArray.push(MOVE);
         partArray.push(CARRY);
@@ -1679,6 +1732,9 @@ const taskManager = {
                 break;
             case 'harvest':
                 __WEBPACK_IMPORTED_MODULE_3__action_harvest__["a" /* default */].run(creep);
+                break;
+            case 'harvestMinerals':
+                __WEBPACK_IMPORTED_MODULE_3__action_harvest__["a" /* default */].runMinerals(creep);
                 break;
             case 'goToTarget':
                 __WEBPACK_IMPORTED_MODULE_7__util__["a" /* default */].goToTarget(creep);
@@ -1912,7 +1968,7 @@ function deposit_target(creep, isMule = false) {
 function deposit_resource(creep) {
     var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
         filter: structure => {
-            return structure.structureType == STRUCTURE_STORAGE;
+            return (structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER) && _.sum(structure.store) < structure.storeCapacity;
         }
     });
     //TODO: figure out what the command for deposit all is
@@ -1981,6 +2037,16 @@ const actResupply = {
                 creep.moveTo(target, { 'maxRooms': 1 });
             } else if (err == OK) {
                 creep.memory.fetchTarget = 0;
+            } else if (err == ERR_INVALID_ARGS) {
+                var resources = Object.keys(target);
+                err = creep.withdraw(target, resources[0]);
+                if (err == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(target, { 'maxRooms': 1 });
+                } else if (err == OK) {
+                    creep.memory.fetchTarget = 0;
+                } else {
+                    getTargets(creep);
+                }
             } else {
                 getTargets(creep);
             }
@@ -1996,7 +2062,7 @@ function getTargets(creep) {
     } else {
         target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: structure => {
-                return structure.structureType == STRUCTURE_CONTAINER && structure.store.energy > 0;
+                return structure.structureType == STRUCTURE_CONTAINER && _.sum(structure.store) > 0;
             }
         });
         if (target) {
@@ -2005,7 +2071,7 @@ function getTargets(creep) {
         } else {
             target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                 filter: structure => {
-                    return structure.structureType == STRUCTURE_STORAGE && structure.store.energy > 0;
+                    return structure.structureType == STRUCTURE_STORAGE && _.sum(structure.store) > 0;
                 }
             });
             if (target) {

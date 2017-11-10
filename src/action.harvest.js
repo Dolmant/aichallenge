@@ -10,6 +10,18 @@ const actHarvest = {
         } else if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
             var err = creep.moveTo(source, {'maxRooms': 1});
         }
+    },
+    runMinerals: function(creep) {
+        if (!creep.memory.sourceMap) {
+            var nearestSource = creep.pos.findClosestByPath(FIND_MINERALS);
+            creep.memory.sourceMap = nearestSource && nearestSource.id;
+        }
+        var source = Game.getObjectById(creep.memory.sourceMap);
+        if (!source) {
+            return;
+        } else if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+            var err = creep.moveTo(source, {'maxRooms': 1});
+        }
     }
 };
 

@@ -4,17 +4,18 @@ const spawner = {
     run: function(myRoom, mySpawns, myCreepCount, totalCreeps, convert) {
         var MaxParts = {
             'harvester': 6, // definitely
+            'harvesterExtractor': 6,
             'worker': 6,
-            'mule': 10,
+            'mule': 12,
             'upgrader': 6,
-            'thief': 6,
+            'thief': 3, //halved for non reserved rez
             'melee': 70,
             'ranged': 70,
             'healer': 10,
             'blocker': 2, //not used current
         }
         var MaxHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 2 : 4;
-        var MaxHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 2 : 4;
+        var MaxHarvesterExtractorCount = (myRoom.memory.hasContainers && myRoom.memory.hasExtractor) ? 1 : 0;
         // implement levels
         // var MinHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 5;
         var MaxWorkerCount = myRoom.memory.marshalForce ? 1 : 2;
@@ -132,6 +133,17 @@ const spawner = {
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.upgrader), newName, {
                         memory: {
                             'role': 'upgrader',
+                        },
+                    });
+                    console.log('Spawning: '+ newName);
+                    canSpawn = false;
+                }
+                if(myCreepCount.harvesterExtractorParts < MaxParts.harvesterExtractor * MaxHarvesterExtractorCount && myCreepCount.harvesterExtractorCount < MaxHarvesterExtractorCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                {
+                    var newName = 'HarvesterExtractor' + Game.time;
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.harvesterExtractor, {'harvester': true}), newName, {
+                        memory: {
+                            'role': 'harvesterExtractor',
                         },
                     });
                     console.log('Spawning: '+ newName);
@@ -308,7 +320,8 @@ function getBody(myRoom, MaxParts, options = {}) {
     while (totalEnergy >= 4  && workCount < MaxParts) {
         if (!options.carryOnly) {
             partArray.push(WORK);
-            totalEnergy -= 2;
+            partArray.push(CARRY);
+            totalEnergy -= 1;
         }
         partArray.push(MOVE);
         partArray.push(CARRY);

@@ -2,6 +2,10 @@ Need to do:
 add eslint rules I am dying
 
 tomorrow:
+harvest new type of material
+make sure moves are more efficient inside of room
+make more efficient energy setup
+auto build roads when over certasin threshold
 types
 global caches
 Fix spawner to be more module
