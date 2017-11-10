@@ -57,7 +57,10 @@ const actDeposit = {
         } else {
             var const_site = creep.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 2);
             if (const_site.length > 0) {
-                creep.build(const_site[0]);
+                var err = creep.build(const_site[0]);
+                if (err == ERR_INVALID_TARGET) {
+                    creep.move(TOP) && creep.move(BOTTOM) && creep.move(LEFT) && creep.move(RIGHT) && creep.move(TOP_LEFT) && creep.move(TOP_RIGHT) && creep.move(BOTTOM_LEFT) && creep.move(BOTTOM_RIGHT)
+                }
             } else {
                 var container_site = creep.pos.findInRange(FIND_STRUCTURES, 2, {
                     filter: structure => structure.structureType == STRUCTURE_CONTAINER
@@ -66,14 +69,7 @@ const actDeposit = {
                     creep.memory.lazyContainer = container_site[0].id
                 } else {
                     // Could create it on the creep for guanranteed space, but I am pretty sure you cant build on what you are standing on
-                    for(var x = -1; x < 2; x += 1) {
-                        for(var y = -1; y < 2; y += 1) {
-                            var err = creep.room.createConstructionSite(creep.pos.x + x, creep.pos.y + y, STRUCTURE_CONTAINER);
-                            if (OK == err) {
-                                return
-                            }
-                        }
-                    }
+                    creep.room.createConstructionSite(creep.pos.x, creep.pos.y, STRUCTURE_CONTAINER);
                 }
             }
         }
