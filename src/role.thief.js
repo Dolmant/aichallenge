@@ -21,7 +21,7 @@ const roleThief = {
             creep.memory.stealTarget = possibleTargets[Memory.stealFlag - 1];
         }
 
-        if (creep.room.name == creep.memory.stealTarget) {
+        if (creep.room.name == creep.memory.stealTarget && creep.memory.myTask != 'goToTarget') {
             if (creep.carry.energy == 0) {
                 creep.memory.myTask = 'harvest';
             } else if (creep.carry.energy == creep.carryCapacity) {
