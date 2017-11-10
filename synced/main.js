@@ -1925,7 +1925,7 @@ function deposit_target(creep, isMule) {
             'algorithm': 'dijkstra',
             'ignoreCreeps': true
         });
-        target = target ? target : creep.pos.findInRange(FIND_STRUCTURES, 1, {
+        target = target.length > 0 ? target : creep.pos.findInRange(FIND_STRUCTURES, 1, {
             'filter': structure => {
                 // since links and stores have different energy checking methods, need this long filter to check both
                 return (structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER) && (structure.energy < structure.energyCapacity || structure.storeCapacity && structure.store.energy < structure.storeCapacity);
@@ -1933,7 +1933,7 @@ function deposit_target(creep, isMule) {
             'algorithm': 'dijkstra',
             'ignoreCreeps': true
         });
-        target = target ? target : creep.pos.findClosestByPath(FIND_STRUCTURES, {
+        target = target.length > 0 ? target[0] : creep.pos.findClosestByPath(FIND_STRUCTURES, {
             'filter': structure => {
                 // since links and stores have different energy checking methods, need this long filter to check both
                 return (structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_LINK) && (structure.energy < structure.energyCapacity || structure.storeCapacity && structure.store.energy < structure.storeCapacity);
