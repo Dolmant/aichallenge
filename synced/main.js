@@ -115,7 +115,7 @@ const util = {
         if (creep.pos.getRangeTo(creep.memory.moveToTargetx, creep.memory.moveToTargety) <= creep.memory.moveToTargetrange) {
             delete creep.memory.myTask;
         } else {
-            var err = creep.moveTo(creep.memory.moveToTargetx, creep.memory.moveToTargety, { 'maxRooms': 1, 'ignoreCreeps': true });
+            var err = creep.moveTo(creep.memory.moveToTargetx, creep.memory.moveToTargety, { 'maxRooms': 1 });
             if (err == ERR_NO_PATH || err == ERR_INVALID_TARGET) {
                 delete creep.memory.myTask;
             }
@@ -2096,7 +2096,7 @@ const actResupply = {
             target = Game.getObjectById(creep.memory.dropTarget);
             var err = target && creep.pickup(target);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target, { 'maxRooms': 1, 'ignoreCreeps': true });
+                creep.moveTo(target, { 'maxRooms': 1 });
             } else if (err == OK) {
                 creep.memory.dropTarget = 0;
             } else {
@@ -2106,7 +2106,7 @@ const actResupply = {
             target = Game.getObjectById(creep.memory.fetchTarget);
             var err = target && creep.withdraw(target, RESOURCE_ENERGY);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target, { 'maxRooms': 1, 'ignoreCreeps': true });
+                creep.moveTo(target, { 'maxRooms': 1 });
             } else if (err == OK) {
                 creep.memory.fetchTarget = 0;
             } else if (err == ERR_NOT_ENOUGH_RESOURCES) {
@@ -2114,7 +2114,7 @@ const actResupply = {
                 // first one is usually energy due to alphbetical order TODO fix this to be error free
                 err = creep.withdraw(target, resources[1]);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, { 'maxRooms': 1, 'ignoreCreeps': true });
+                    creep.moveTo(target, { 'maxRooms': 1 });
                 } else if (err == OK) {
                     creep.memory.fetchTarget = 0;
                 } else {
@@ -2225,7 +2225,7 @@ var actUpgrade = {
         }
         let myUpgrade = Game.getObjectById(creep.memory.MyController);
         if (creep.upgradeController(myUpgrade) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(myUpgrade, { 'maxRooms': 1, 'ignoreCreeps': true });
+            creep.moveTo(myUpgrade, { 'maxRooms': 1 });
         }
     }
 };

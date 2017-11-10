@@ -45,7 +45,7 @@ const util = {
         if (creep.pos.getRangeTo(creep.memory.moveToTargetx, creep.memory.moveToTargety) <= creep.memory.moveToTargetrange) {
             delete creep.memory.myTask;
         } else {
-            var err = creep.moveTo(creep.memory.moveToTargetx, creep.memory.moveToTargety,{'maxRooms': 1, 'ignoreCreeps': true});
+            var err = creep.moveTo(creep.memory.moveToTargetx, creep.memory.moveToTargety,{'maxRooms': 1});
             if (err == ERR_NO_PATH || err == ERR_INVALID_TARGET) {
                 delete creep.memory.myTask;
             }
