@@ -8,7 +8,7 @@ const actHarvest = {
         if (!source) {
             getSource(creep);
         } else if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-            creep.memory.myTask = "moveTo";
+            creep.memory.myTask = "moveToTarget";
             var container = source.pos.findInRange(FIND_MY_STRUCTURES, 1, {
                 filter: structure => structure.structureType == STRUCTURE_CONTAINER
             });

@@ -636,7 +636,7 @@ const actHarvest = {
         if (!source) {
             getSource(creep);
         } else if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-            creep.memory.myTask = "moveTo";
+            creep.memory.myTask = "moveToTarget";
             var container = source.pos.findInRange(FIND_MY_STRUCTURES, 1, {
                 filter: structure => structure.structureType == STRUCTURE_CONTAINER
             });
@@ -1847,7 +1847,7 @@ const actDeposit = {
             }
             if (err == ERR_NOT_IN_RANGE) {
                 // Return early to prevent deletion of the deposit target
-                return creep.moveTo(target, { 'ignoreCreeps': true, 'maxRooms': 1 });
+                return creep.moveTo(target, { 'maxRooms': 1 });
             } else if (err == OK) {
                 // Adjust the promise on this object now it has been delivered
                 if (!creep.room.memory.structures[target.id]) {
@@ -1880,7 +1880,7 @@ const actDeposit = {
                     if (err == ERR_FULL || err == ERR_INVALID_ARGS || err == ERR_NOT_ENOUGH_RESOURCES) {
                         creep.drop(RESOURCE_ENERGY);
                     } else if (err == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(lazyContainer.pos, { 'maxRooms': 1, 'ignoreCreeps': true });
+                        creep.moveTo(lazyContainer.pos, { 'maxRooms': 1 });
                     }
                 }
             } else {
@@ -2039,7 +2039,7 @@ function deposit_resource(creep, isMule) {
         for (const resourceType in creep.carry) {
             err = creep.transfer(target, resourceType);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target, { 'maxRooms': 1, 'ignoreCreeps': true });
+                creep.moveTo(target, { 'maxRooms': 1 });
             }
         }
     }
