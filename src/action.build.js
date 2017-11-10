@@ -17,7 +17,7 @@ const actBuild = {
             if (creep.memory.myBuildTarget) {
                 var target = Game.getObjectById(creep.memory.myBuildTarget);
                 if(creep.build(target) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, {'maxRooms': 1, 'ignoreCreeps': true});
+                    creep.moveTo(target, {'maxRooms': 1});
                 }
                 if (!target) {
                     findBuildTarget(creep);
@@ -25,7 +25,7 @@ const actBuild = {
             } else if (creep.memory.myRepairTarget) {
                 var target = Game.getObjectById(creep.memory.myRepairTarget);
                 if(creep.repair(target) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, {'maxRooms': 1, 'ignoreCreeps': true});
+                    creep.moveTo(target, {'maxRooms': 1});
                 }
                 if (!target || target.hits == target.hitsMax) {
                     findBuildTarget(creep);

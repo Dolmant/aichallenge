@@ -1922,24 +1922,21 @@ function deposit_target(creep, isMule) {
                 // since links and stores have different energy checking methods, need this long filter to check both
                 return structure.structureType == STRUCTURE_LINK && (structure.energy < structure.energyCapacity || structure.storeCapacity && structure.store.energy < structure.storeCapacity);
             },
-            'algorithm': 'dijkstra',
-            'ignoreCreeps': true
+            'algorithm': 'dijkstra'
         });
         target = target.length > 0 ? target : creep.pos.findInRange(FIND_STRUCTURES, 1, {
             'filter': structure => {
                 // since links and stores have different energy checking methods, need this long filter to check both
                 return (structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER) && (structure.energy < structure.energyCapacity || structure.storeCapacity && structure.store.energy < structure.storeCapacity);
             },
-            'algorithm': 'dijkstra',
-            'ignoreCreeps': true
+            'algorithm': 'dijkstra'
         });
         target = target.length > 0 ? target[0] : creep.pos.findClosestByPath(FIND_STRUCTURES, {
             'filter': structure => {
                 // since links and stores have different energy checking methods, need this long filter to check both
                 return (structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_LINK) && (structure.energy < structure.energyCapacity || structure.storeCapacity && structure.store.energy < structure.storeCapacity);
             },
-            'algorithm': 'dijkstra',
-            'ignoreCreeps': true
+            'algorithm': 'dijkstra'
         });
         if (target) {
             creep.memory.depositTarget = target.id;
@@ -2246,7 +2243,7 @@ const actBuild = {
             if (creep.memory.myBuildTarget) {
                 var target = Game.getObjectById(creep.memory.myBuildTarget);
                 if (creep.build(target) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, { 'maxRooms': 1, 'ignoreCreeps': true });
+                    creep.moveTo(target, { 'maxRooms': 1 });
                 }
                 if (!target) {
                     findBuildTarget(creep);
@@ -2254,7 +2251,7 @@ const actBuild = {
             } else if (creep.memory.myRepairTarget) {
                 var target = Game.getObjectById(creep.memory.myRepairTarget);
                 if (creep.repair(target) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, { 'maxRooms': 1, 'ignoreCreeps': true });
+                    creep.moveTo(target, { 'maxRooms': 1 });
                 }
                 if (!target || target.hits == target.hitsMax) {
                     findBuildTarget(creep);

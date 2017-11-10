@@ -91,7 +91,6 @@ function deposit_target(creep, isMule) {
                 return ((structure.structureType == STRUCTURE_LINK) && (structure.energy < structure.energyCapacity || (structure.storeCapacity && structure.store.energy < structure.storeCapacity)));
             },
             'algorithm': 'dijkstra',
-            'ignoreCreeps': true,
         });
         target = target.length > 0 ? target : creep.pos.findInRange(FIND_STRUCTURES, 1, {
             'filter': (structure) => {
@@ -99,7 +98,6 @@ function deposit_target(creep, isMule) {
                 return ((structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER) && (structure.energy < structure.energyCapacity || (structure.storeCapacity && structure.store.energy < structure.storeCapacity)));
             },
             'algorithm': 'dijkstra',
-            'ignoreCreeps': true,
         });
         target = target.length > 0 ? target[0] : creep.pos.findClosestByPath(FIND_STRUCTURES, {
             'filter': (structure) => {
@@ -107,7 +105,6 @@ function deposit_target(creep, isMule) {
                 return ((structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_LINK) && (structure.energy < structure.energyCapacity || (structure.storeCapacity && structure.store.energy < structure.storeCapacity)));
             },
             'algorithm': 'dijkstra',
-            'ignoreCreeps': true,
         });
         if (target) {
             creep.memory.depositTarget = target.id;
