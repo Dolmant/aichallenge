@@ -19,7 +19,7 @@ const taskManager = {
                 actResupply.getEnergy(creep);
                 break;
             case 'deposit':
-                actDeposit.run(creep, creep.memory.role == 'mule');
+                actDeposit.run(creep, creep.memory.role == 'mule' || creep.memory.role == 'thiefmule');
                 break;
             case 'lazydeposit':
                 actDeposit.lazydeposit(creep);

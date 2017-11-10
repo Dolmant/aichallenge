@@ -1020,7 +1020,6 @@ function updateRoomConsts(myRoom, mySpawns) {
         });
     }
     if (myRoom.memory.timer % 300 == 0 || myRoom.memory.runUpdate) {
-        myRoom.memory.runUpdate = false;
         // TODO Make this equal to the amount of energy in the room, not hardcoded
         // TODO this isnt triggering. hardcode trigger in spawn? WHY DOESNT THIS SET
         console.log('ration time: ' + String(myRoom.memory.timer));
@@ -1725,7 +1724,7 @@ const taskManager = {
                 __WEBPACK_IMPORTED_MODULE_1__action_resupply__["a" /* default */].getEnergy(creep);
                 break;
             case 'deposit':
-                __WEBPACK_IMPORTED_MODULE_0__action_deposit__["a" /* default */].run(creep, creep.memory.role == 'mule');
+                __WEBPACK_IMPORTED_MODULE_0__action_deposit__["a" /* default */].run(creep, creep.memory.role == 'mule' || creep.memory.role == 'thiefmule');
                 break;
             case 'lazydeposit':
                 __WEBPACK_IMPORTED_MODULE_0__action_deposit__["a" /* default */].lazydeposit(creep);
