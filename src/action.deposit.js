@@ -20,6 +20,7 @@ const actDeposit = {
                 return creep.moveTo(target, {'maxRooms': 1});
             } else if (err == OK) {
                 // Adjust the promise on this object now it has been delivered
+                delete creep.memory.depositTarget;
                 if (!creep.room.memory.structures[target.id]) {creep.room.memory.structures[target.id] = {}};
                 creep.room.memory.structures[target.id].energyRationPromise = 0;
                 if (target.structureType == STRUCTURE_EXTENSION || target.structureType == STRUCTURE_SPAWN) {
@@ -115,7 +116,6 @@ function deposit_target(creep, isMule) {
             'filter': (structure) => {
                 return ((structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_EXTENSION) && !(creep.room.memory.structures[structure.id] && (creep.room.memory.structures[structure.id].energyRationPromise >= (structure.energyCapacity - structure.energy))) && structure.energy < structure.energyCapacity);
             },
-            'ignoreCreeps': true,
         });
         if (target) {
             if (!creep.room.memory.structures[target.id]) {creep.room.memory.structures[target.id] = {}};
