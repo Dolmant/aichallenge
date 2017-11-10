@@ -1277,7 +1277,7 @@ const roleThief = {
             } else if (creep.carry.energy == creep.carryCapacity) {
                 creep.memory.myTask = 'lazydeposit';
             }
-        } else {
+        } else if (creep.memory.myTask != 'goToTarget' && creep.memory.myTask != 'moveToTarget') {
             creep.memory.myTask = 'goToTarget';
             creep.memory.goToTarget = creep.memory.stealTarget;
         }
