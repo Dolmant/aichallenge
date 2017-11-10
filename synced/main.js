@@ -1797,7 +1797,7 @@ const actDeposit = {
         //if I'm carrying something that is not energy
         var currentEnergy = creep.carry.energy;
         if (_.sum(creep.carry) != currentEnergy) {
-            deposit_resource(creep);
+            deposit_resource(creep, isMule);
         } else if (!creep.memory.depositTarget) {
             deposit_target(creep, isMule);
         }
@@ -1874,7 +1874,7 @@ const actDeposit = {
     }
 };
 
-function deposit_target(creep, isMule = false) {
+function deposit_target(creep, isMule) {
     // Mule is the only one which will refuse to drop to a container
     var economy = creep.room.memory.myCreepCount.muleCount && creep.room.memory.myCreepCount.harvesterCount > 0;
     if (creep.room.memory.hasContainers && economy && !isMule) {
@@ -1965,12 +1965,21 @@ function deposit_target(creep, isMule = false) {
     creep.memory.depositTarget = 0;
 }
 
-function deposit_resource(creep) {
-    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-        filter: structure => {
-            return (structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER) && _.sum(structure.store) < structure.storeCapacity;
-        }
-    });
+function deposit_resource(creep, isMule) {
+    var target;
+    if (isMule) {
+        target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+            filter: structure => {
+                return structure.structureType == STRUCTURE_STORAGE && _.sum(structure.store) < structure.storeCapacity;
+            }
+        });
+    } else {
+        target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+            filter: structure => {
+                return (structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER) && _.sum(structure.store) < structure.storeCapacity;
+            }
+        });
+    }
     //TODO: figure out what the command for deposit all is
     var err;
     if (target != undefined) {
@@ -2038,8 +2047,9 @@ const actResupply = {
             } else if (err == OK) {
                 creep.memory.fetchTarget = 0;
             } else if (err == ERR_NOT_ENOUGH_RESOURCES) {
-                var resources = Object.keys(target);
-                err = creep.withdraw(target, resources[0]);
+                var resources = Object.keys(target.store);
+                // first one is usually energy due to alphbetical order TODO fix this to be error free
+                err = creep.withdraw(target, resources[1]);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target, { 'maxRooms': 1 });
                 } else if (err == OK) {

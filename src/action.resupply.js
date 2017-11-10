@@ -46,8 +46,9 @@ const actResupply = {
             } else if (err == OK) {
                 creep.memory.fetchTarget = 0
             } else if (err == ERR_NOT_ENOUGH_RESOURCES) {
-                var resources = Object.keys(target);
-                err = creep.withdraw(target, resources[0]);
+                var resources = Object.keys(target.store);
+                // first one is usually energy due to alphbetical order TODO fix this to be error free
+                err = creep.withdraw(target, resources[1]);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target, {'maxRooms': 1});
                 } else if (err == OK) {
