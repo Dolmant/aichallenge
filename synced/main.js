@@ -1905,9 +1905,6 @@ const actDeposit = {
             var const_site = creep.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 2);
             if (const_site.length > 0) {
                 var err = creep.build(const_site[0]);
-                if (err == ERR_INVALID_TARGET) {
-                    creep.move(TOP) && creep.move(BOTTOM) && creep.move(LEFT) && creep.move(RIGHT) && creep.move(TOP_LEFT) && creep.move(TOP_RIGHT) && creep.move(BOTTOM_LEFT) && creep.move(BOTTOM_RIGHT);
-                }
             } else {
                 var container_site = creep.pos.findInRange(FIND_STRUCTURES, 2, {
                     filter: structure => structure.structureType == STRUCTURE_CONTAINER
@@ -1955,12 +1952,13 @@ function deposit_target(creep, isMule) {
         }
     }
 
-    if (creep.room.memory.energyRation > 0) {
+    if (true) {
+        //(creep.room.memory.energyRation > 0) {
         // We must deposit to the nearest none full spawn or extension
         // We do declare that this energy will be given. Promise ticks down 1 energy per tick, if it reaches 0
         var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
             'filter': structure => {
-                return (structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_EXTENSION) && !(creep.room.memory.structures[structure.id] && creep.room.memory.structures[structure.id].energyRationPromise >= structure.energyCapacity - structure.energy) && structure.energy < structure.energyCapacity;
+                return (structure.structureType == STRUCTURE_SPAWN || structure.structureType == STRUCTURE_EXTENSION) && structure.energy < structure.energyCapacity; //&& !(creep.room.memory.structures[structure.id] && (creep.room.memory.structures[structure.id].energyRationPromise >= (structure.energyCapacity - structure.energy))) 
             }
         });
         if (target) {
@@ -2135,7 +2133,7 @@ function getTargets(creep) {
     } else {
         target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: structure => {
-                return structure.structureType == STRUCTURE_CONTAINER && _.sum(structure.store) >= creep.carryCapacity;
+                return structure.structureType == STRUCTURE_CONTAINER && _.sum(structure.store) >= creep.carryCapacity / 2;
             }
         });
         if (target) {
@@ -2144,7 +2142,7 @@ function getTargets(creep) {
         } else {
             target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                 filter: structure => {
-                    return structure.structureType == STRUCTURE_STORAGE && _.sum(structure.store) >= creep.carryCapacity;
+                    return structure.structureType == STRUCTURE_STORAGE && _.sum(structure.store) >= creep.carryCapacity / 2;
                 }
             });
             if (target) {
