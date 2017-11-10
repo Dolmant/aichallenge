@@ -13,7 +13,7 @@ const roleHarvester = {
 			creep.memory.myTask = 'deposit';
 		}
 	},
-    runExtractors: function(creep) {
+    runExtractor: function(creep) {
 		if (creep.fatigue != 0){
 			return;
 		}

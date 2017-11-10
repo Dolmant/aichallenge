@@ -1006,6 +1006,7 @@ function initializeRoomConsts(myRoom) {
     myRoom.memory.structures = {};
     myRoom.memory.links = [];
     myRoom.memory.marshalForce = false;
+    myRoom.memory.runUpdate = false;
     myRoom.memory.spawnClaimer = 0;
     myRoom.memory.sources = myRoom.find(FIND_SOURCES).map(source => source.id);
 }
@@ -1060,7 +1061,7 @@ function updateRoomConsts(myRoom, mySpawns) {
         myRoom.memory.hasStorage = storage.length > 0;
         myRoom.memory.hasContainers = container.length > 0;
         myRoom.memory.hasLinks = links.length > 1;
-        myRoom.memory.hasExtractor = extractor.length > 1;
+        myRoom.memory.hasExtractor = extractor.length > 0;
 
         // This function will update stuff like functional roads, etc. Runs every 1K ticks, will have to break this up or store the paths. commented out because I am not using it
         // myRoom.find(FIND_SOURCES).forEach(Source => {
@@ -1123,7 +1124,7 @@ const roleHarvester = {
 			creep.memory.myTask = 'deposit';
 		}
 	},
-	runExtractors: function (creep) {
+	runExtractor: function (creep) {
 		if (creep.fatigue != 0) {
 			return;
 		}
@@ -2036,7 +2037,7 @@ const actResupply = {
                 creep.moveTo(target, { 'maxRooms': 1 });
             } else if (err == OK) {
                 creep.memory.fetchTarget = 0;
-            } else if (err == ERR_INVALID_ARGS) {
+            } else if (err == ERR_NOT_ENOUGH_RESOURCES) {
                 var resources = Object.keys(target);
                 err = creep.withdraw(target, resources[0]);
                 if (err == ERR_NOT_IN_RANGE) {
