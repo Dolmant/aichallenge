@@ -1,6 +1,4 @@
 // @flow
-import util from './util';
-
 const actClaim = {
     run: function(creep: Creep) {
         if (creep.room.name == Game.flags['Claim'].pos.roomName) {
@@ -10,7 +8,7 @@ const actClaim = {
             }
             if (err == ERR_INVALID_TARGET) {
                 // If the claimers actions are both invalid, might have to reserve here as well? Need logic for reserve on weak rooms anyway
-                delete creep.memory.myTask;
+                return true;
             }
             if (err == ERR_NOT_IN_RANGE) {
                 creep.moveTo(Game.flags['Claim'].pos, {'maxRooms': 1});
@@ -21,7 +19,7 @@ const actClaim = {
             }
         } else {
             creep.memory.goToTarget = Game.flags['Claim'].pos.roomName;
-            util.goToTarget(creep);
+            return true;
         }
 	}
 };

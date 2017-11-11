@@ -106,18 +106,24 @@ const util = {
             }
         } else if (creep.room.name == creep.memory.goToTarget) {
             delete creep.memory.goToTarget;
-            delete creep.memory.myTask;
+            return true;
         } else {
             creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.goToTarget)), { 'maxRooms': 1 });
         }
     },
     moveToTarget(creep) {
         if (creep.pos.getRangeTo(creep.memory.moveToTargetx, creep.memory.moveToTargety) <= creep.memory.moveToTargetrange) {
-            delete creep.memory.myTask;
+            delete creep.memory.moveToTargetx;
+            delete creep.memory.moveToTargety;
+            delete creep.memory.moveToTargetrange;
+            return true;
         } else {
             var err = creep.moveTo(creep.memory.moveToTargetx, creep.memory.moveToTargety, { 'maxRooms': 1 });
             if (err == ERR_NO_PATH || err == ERR_INVALID_TARGET) {
-                delete creep.memory.myTask;
+                delete creep.memory.moveToTargetx;
+                delete creep.memory.moveToTargety;
+                delete creep.memory.moveToTargetrange;
+                return true;
             }
         }
     }
@@ -476,12 +482,12 @@ var actOffensive = {
             if (err == ERR_NOT_IN_RANGE) {
                 creep.moveTo(target.pos);
             } else if (err == ERR_INVALID_TARGET) {
-                delete creep.memory.myTask;
                 delete creep.memory.healCreep;
+                return true;
             }
         } else {
-            delete creep.memory.myTask;
             delete creep.memory.healCreep;
+            return true;
         }
     },
     attack: function (creep) {
@@ -491,12 +497,12 @@ var actOffensive = {
             if (err == ERR_NOT_IN_RANGE) {
                 creep.moveTo(target.pos);
             } else if (err == ERR_INVALID_TARGET) {
-                delete creep.memory.myTask;
                 delete creep.memory.attackCreep;
+                return true;
             }
         } else {
-            delete creep.memory.myTask;
             delete creep.memory.attackCreep;
+            return true;
         }
     },
     rangedAttack: function (creep) {
@@ -506,12 +512,12 @@ var actOffensive = {
             if (err == ERR_NOT_IN_RANGE) {
                 creep.moveTo(target.pos);
             } else if (err == ERR_INVALID_TARGET) {
-                delete creep.memory.myTask;
                 delete creep.memory.attackCreep;
+                return true;
             }
         } else {
-            delete creep.memory.myTask;
             delete creep.memory.attackCreep;
+            return true;
         }
     },
     block: function (creep) {
@@ -632,11 +638,14 @@ const actHarvest = {
         if (!creep.memory.sourceMap && !creep.memory.tempSourceMap) {
             getSource(creep);
         }
+        if (creep.carry.energy == creep.carryCapacity) {
+            // expect state change to deposit
+            return true;
+        }
         var source = Game.getObjectById(creep.memory.sourceMap || creep.memory.tempSourceMap);
         if (!source) {
             getSource(creep);
         } else if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-            creep.memory.myTask = "moveToTarget";
             var container = source.pos.findInRange(FIND_STRUCTURES, 1, {
                 filter: structure => structure.structureType == STRUCTURE_CONTAINER
             });
@@ -649,6 +658,8 @@ const actHarvest = {
                 creep.memory.moveToTargety = source.pos.y;
                 creep.memory.moveToTargetrange = 1;
             }
+            // expect state change to movetotarget
+            return true;
         }
     },
     runMinerals: function (creep) {
@@ -656,11 +667,14 @@ const actHarvest = {
             var nearestSource = creep.pos.findClosestByPath(FIND_MINERALS);
             creep.memory.sourceMap = nearestSource && nearestSource.id;
         }
+        if (_.sum(creep.carry) == creep.carryCapacity) {
+            // expect state change to deposit
+            return true;
+        }
         var source = Game.getObjectById(creep.memory.sourceMap);
         if (!source) {
             return;
         } else if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-            creep.memory.myTask = "moveToTarget";
             var container = source.pos.findInRange(FIND_STRUCTURES, 1, {
                 filter: structure => structure.structureType == STRUCTURE_CONTAINER
             });
@@ -673,6 +687,8 @@ const actHarvest = {
                 creep.memory.moveToTargety = source.pos.y;
                 creep.memory.moveToTargetrange = 1;
             }
+            // expect state to change to movetotarget
+            return true;
         }
     }
 };
@@ -759,14 +775,14 @@ function loop() {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__screeps_profiler__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__screeps_profiler___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__role_upgrader__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__role_harvester__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__role_mule__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__role_worker__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__role_claimer__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__role_thief__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__role_thiefmule__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__role_offensive__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__roles_role_upgrader__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__roles_role_harvester__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__roles_role_mule__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__roles_role_worker__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__roles_role_claimer__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__roles_role_thief__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__roles_role_thiefmule__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__roles_role_offensive__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__spawner__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__task_manager__ = __webpack_require__(15);
 
@@ -784,13 +800,13 @@ function loop() {
 
 
 
-__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_1__role_upgrader__["a" /* default */], 'upgrader');
-__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_2__role_harvester__["a" /* default */], 'harvester');
-__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_3__role_mule__["a" /* default */], 'mule');
-__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_4__role_worker__["a" /* default */], 'worker');
-__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_5__role_claimer__["a" /* default */], 'claimer');
-__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_6__role_thief__["a" /* default */], 'thief');
-__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_8__role_offensive__["a" /* default */], 'run');
+__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_1__roles_role_upgrader__["a" /* default */], 'upgrader');
+__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_2__roles_role_harvester__["a" /* default */], 'harvester');
+__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_3__roles_role_mule__["a" /* default */], 'mule');
+__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_4__roles_role_worker__["a" /* default */], 'worker');
+__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_5__roles_role_claimer__["a" /* default */], 'claimer');
+__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_6__roles_role_thief__["a" /* default */], 'thief');
+__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_8__roles_role_offensive__["a" /* default */], 'run');
 
 const RoomController = {
     run: function (myRoom) {
@@ -901,48 +917,62 @@ const RoomController = {
                     break;
             }
         });
-
+        // switch(creep.memory.role) {
+        //     case 'worker':
+        //         creep.memory.myTask = 'resupply';
+        //         actResupply.run(creep);
+        //         break;
+        //     case 'mule':
+        //         creep.memory.myTask = 'fetch';
+        //         break;
+        //     default:
+        //         creep.memory.myTask = 'harvest';
+        //         break;
+        // }
+        // break;
         myRoom.memory.myCreepCount = myCreepCount;
+
         let convert = null;
         myCreeps.forEach(creep => {
-            switch (creep.memory.role) {
-                default:
-                case 'harvester':
-                    __WEBPACK_IMPORTED_MODULE_2__role_harvester__["a" /* default */].run(creep);
-                    break;
-                case 'harvesterExtractor':
-                    __WEBPACK_IMPORTED_MODULE_2__role_harvester__["a" /* default */].runExtractor(creep);
-                    break;
-                case 'upgrader':
-                    __WEBPACK_IMPORTED_MODULE_1__role_upgrader__["a" /* default */].run(creep);
-                    break;
-                case 'worker':
-                    if (myCreepCount.harvesterCount < 2) {
-                        convert = creep;
-                    }
-                    __WEBPACK_IMPORTED_MODULE_4__role_worker__["a" /* default */].run(creep);
-                    break;
-                case 'mule':
-                    __WEBPACK_IMPORTED_MODULE_3__role_mule__["a" /* default */].run(creep);
-                    break;
-                case 'claimer':
-                    __WEBPACK_IMPORTED_MODULE_5__role_claimer__["a" /* default */].run(creep);
-                    break;
-                case 'thief':
-                    __WEBPACK_IMPORTED_MODULE_6__role_thief__["a" /* default */].run(creep);
-                    break;
-                case 'thiefmule':
-                    __WEBPACK_IMPORTED_MODULE_7__role_thiefmule__["a" /* default */].run(creep);
-                    break;
-                case 'melee':
-                case 'ranged':
-                case 'healer':
-                case 'blocker':
-                case 'tough':
-                    __WEBPACK_IMPORTED_MODULE_8__role_offensive__["a" /* default */].run(creep, mySpawns);
-                    break;
+            if (__WEBPACK_IMPORTED_MODULE_10__task_manager__["a" /* default */].run(creep, mySpawns)) {
+                switch (creep.memory.role) {
+                    default:
+                    case 'harvester':
+                        __WEBPACK_IMPORTED_MODULE_2__roles_role_harvester__["a" /* default */].run(creep);
+                        break;
+                    case 'harvesterExtractor':
+                        __WEBPACK_IMPORTED_MODULE_2__roles_role_harvester__["a" /* default */].runExtractor(creep);
+                        break;
+                    case 'upgrader':
+                        __WEBPACK_IMPORTED_MODULE_1__roles_role_upgrader__["a" /* default */].run(creep);
+                        break;
+                    case 'worker':
+                        if (myCreepCount.harvesterCount < 2) {
+                            convert = creep;
+                        }
+                        __WEBPACK_IMPORTED_MODULE_4__roles_role_worker__["a" /* default */].run(creep);
+                        break;
+                    case 'mule':
+                        __WEBPACK_IMPORTED_MODULE_3__roles_role_mule__["a" /* default */].run(creep);
+                        break;
+                    case 'claimer':
+                        __WEBPACK_IMPORTED_MODULE_5__roles_role_claimer__["a" /* default */].run(creep);
+                        break;
+                    case 'thief':
+                        __WEBPACK_IMPORTED_MODULE_6__roles_role_thief__["a" /* default */].run(creep);
+                        break;
+                    case 'thiefmule':
+                        __WEBPACK_IMPORTED_MODULE_7__roles_role_thiefmule__["a" /* default */].run(creep);
+                        break;
+                    case 'melee':
+                    case 'ranged':
+                    case 'healer':
+                    case 'blocker':
+                    case 'tough':
+                        __WEBPACK_IMPORTED_MODULE_8__roles_role_offensive__["a" /* default */].run(creep, mySpawns);
+                        break;
+                }
             }
-            __WEBPACK_IMPORTED_MODULE_10__task_manager__["a" /* default */].run(creep, mySpawns);
         });
 
         if (!myRoom.controller || myRoom.controller && !myRoom.controller.my) {
@@ -950,7 +980,7 @@ const RoomController = {
 
             myCreeps.forEach(creep => {
                 if (creep.memory.role == 'thief') {
-                    __WEBPACK_IMPORTED_MODULE_6__role_thief__["a" /* default */].run(creep);
+                    __WEBPACK_IMPORTED_MODULE_6__roles_role_thief__["a" /* default */].run(creep);
                 }
             });
 
@@ -1150,11 +1180,11 @@ const roleHarvester = {
 			return;
 		}
 
-		if (creep.carry.energy == 0 && creep.memory.myTask != 'moveToTarget') {
+		if (creep.memory.moveToTargetx) {
+			creep.memory.myTask = "moveToTarget";
+		} else if (creep.carry.energy < creep.carryCapacity) {
 			creep.memory.myTask = 'harvest';
-		}
-
-		if (creep.carryCapacity == creep.carry.energy) {
+		} else if (creep.carryCapacity == creep.carry.energy) {
 			creep.memory.myTask = 'deposit';
 		}
 	},
@@ -1162,12 +1192,11 @@ const roleHarvester = {
 		if (creep.fatigue != 0) {
 			return;
 		}
-
-		if (_.sum(creep.carry) == 0 && creep.memory.myTask != 'moveToTarget') {
+		if (creep.memory.moveToTargetx) {
+			creep.memory.myTask = "moveToTarget";
+		} else if (_.sum(creep.carry) < creep.carryCapacity) {
 			creep.memory.myTask = 'harvestMinerals';
-		}
-
-		if (creep.carryCapacity == _.sum(creep.carry)) {
+		} else if (creep.carryCapacity == _.sum(creep.carry)) {
 			creep.memory.myTask = 'deposit';
 		}
 	}
@@ -1204,18 +1233,22 @@ const roleMule = {
 
 "use strict";
 const roleWorker = {
-	run: function (creep) {
-		if (creep.fatigue != 0) {
-			return;
-		}
+    run: function (creep) {
+        if (creep.fatigue != 0) {
+            return;
+        }
 
-		if ((creep.memory.myTask == 'repair' || creep.memory.myTask == 'build' || creep.memory.myTask == 'upgrade') && creep.carry.energy == 0) {
-			creep.memory.myTask = 'resupply';
-		}
-		if (creep.memory.myTask == 'resupply' && creep.carry.energy == creep.carryCapacity) {
-			creep.memory.myTask = 'build';
-		}
-	}
+        if (creep.memory.myTask == 'repair' || creep.memory.myTask == 'build' || creep.memory.myTask == 'upgrade') {
+            if (creep.memory.myBuildTarget) {
+                creep.memory.myTask = 'resupply';
+            } else {
+                creep.memory.myTask = 'upgrade';
+            }
+        }
+        if (creep.memory.myTask == 'resupply' && creep.carry.energy == creep.carryCapacity) {
+            creep.memory.myTask = 'build';
+        }
+    }
 };
 
 /* harmony default export */ __webpack_exports__["a"] = (roleWorker);
@@ -1234,10 +1267,12 @@ const roleClaimer = {
             return;
         }
 
-        if (Game.flags['Claim']) {
-            creep.memory.myTask = 'claim';
-        } else if (creep.memory.myTask) {
-            delete creep.memory.myTask;
+        if (!Game.flags['Claim']) {
+            console.log('Please define the claim flag target');
+            creep.memory.myTask = '';
+        } else {
+            creep.memory.goToTarget = Game.flags['Claim'].room.name;
+            creep.memory.myTask = 'goToTarget';
         }
     }
 };
@@ -1250,37 +1285,39 @@ const roleClaimer = {
 
 "use strict";
 const roleThief = {
-    run: function (creep) {
-        if (!creep.memory.stealTarget) {
-            // TODO fix !!!!
-            const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51', 'W46N53'];
-
-            // const exits = Game.map.describeExits(creep.room.name)
-            // for (name in exits) {
-            //     // This is still breaking
-            //     if (Game.map.isRoomAvailable(exits[name]) && !(Memory.rooms[name] && !Memory.rooms[name].owner)) {
-            //         possibleTargets.push(exits[name])
-            //     }
-            // }
-            if (possibleTargets.length <= Memory.stealFlag) {
-                Memory.stealFlag = 1;
-            } else {
-                Memory.stealFlag += 1;
-            }
-            creep.memory.goToTarget = possibleTargets[Memory.stealFlag - 1];
-            creep.memory.stealTarget = possibleTargets[Memory.stealFlag - 1];
+    run(creep) {
+        if (creep.memory.myTask == 'lazydeposit' && creep.memory.myBuildTarget) {
+            creep.memory.myTask = 'build';
         }
 
-        if (creep.room.name == creep.memory.stealTarget && creep.memory.myTask != 'goToTarget' && creep.memory.myTask != 'moveToTarget') {
-            if (creep.carry.energy == 0) {
+        if (creep.room.name == creep.memory.stealTarget) {
+            if (creep.carry.energy < creep.carryCapacity) {
                 creep.memory.myTask = 'harvest';
             } else if (creep.carry.energy == creep.carryCapacity) {
                 creep.memory.myTask = 'lazydeposit';
             }
-        } else if (creep.memory.myTask != 'goToTarget' && creep.memory.myTask != 'moveToTarget') {
-            creep.memory.myTask = 'goToTarget';
+        } else {
             creep.memory.goToTarget = creep.memory.stealTarget;
+            creep.memory.myTask = 'goToTarget';
         }
+    },
+    generateStealTarget() {
+        // TODO fix !!!!
+        const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51', 'W46N53'];
+
+        // const exits = Game.map.describeExits(creep.room.name)
+        // for (name in exits) {
+        //     // This is still breaking
+        //     if (Game.map.isRoomAvailable(exits[name]) && !(Memory.rooms[name] && !Memory.rooms[name].owner)) {
+        //         possibleTargets.push(exits[name])
+        //     }
+        // }
+        if (possibleTargets.length <= Memory.stealFlag) {
+            Memory.stealFlag = 1;
+        } else {
+            Memory.stealFlag += 1;
+        }
+        return possibleTargets[Memory.stealFlag - 1];
     }
 };
 
@@ -1292,24 +1329,11 @@ const roleThief = {
 
 "use strict";
 const roleThiefMule = {
-    run: function (creep) {
+    run(creep) {
         if (creep.fatigue != 0) {
             return;
         }
 
-        if (!creep.memory.stealTarget) {
-            const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51', 'W46N53'];
-            const homeArray = ['W43N53', 'W41N51', 'W41N51', 'W43N53', 'W43N53', 'W41N51', 'W45N53', 'W45N53', 'W45N53'];
-
-            if (possibleTargets.length <= Memory.muleFlag) {
-                Memory.muleFlag = 1;
-            } else {
-                Memory.muleFlag += 1;
-            }
-            creep.memory.goToTarget = possibleTargets[Memory.muleFlag - 1];
-            creep.memory.stealTarget = possibleTargets[Memory.muleFlag - 1];
-            creep.memory.home = homeArray[Memory.muleFlag - 1];
-        }
         if (_.sum(creep.carry) == 0 && creep.room.name == creep.memory.stealTarget) {
             creep.memory.myTask = 'fetch';
         }
@@ -1324,6 +1348,17 @@ const roleThiefMule = {
         if (creep.carryCapacity == _.sum(creep.carry) && creep.room.name == creep.memory.home) {
             creep.memory.myTask = 'deposit';
         }
+    },
+    generateHaulTargets() {
+        const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51', 'W46N53'];
+        const homeArray = ['W43N53', 'W41N51', 'W41N51', 'W43N53', 'W43N53', 'W41N51', 'W45N53', 'W45N53', 'W45N53'];
+
+        if (possibleTargets.length <= Memory.muleFlag) {
+            Memory.muleFlag = 1;
+        } else {
+            Memory.muleFlag += 1;
+        }
+        return [possibleTargets[Memory.muleFlag - 1], homeArray[Memory.muleFlag - 1]];
     }
 };
 
@@ -1335,7 +1370,7 @@ const roleThiefMule = {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__action_offensive__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__ = __webpack_require__(2);
 
 
 
@@ -1351,7 +1386,7 @@ const roleOffensive = {
             var attackFlag = Game.flags['Attack'];
             if (creep.room.name == attackFlag.pos.roomName) {
                 if (creep.memory.myTask != 'heal' && creep.memory.myTask != 'attack' && creep.memory.myTask != 'block') {
-                    __WEBPACK_IMPORTED_MODULE_1__action_offensive__["a" /* default */].findTarget(creep);
+                    __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__["a" /* default */].findTarget(creep);
                     if (creep.memory.healCreep) {
                         creep.memory.myTask = 'heal';
                     } else if (creep.memory.attackCreep) {
@@ -1406,6 +1441,10 @@ const roleOffensive = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__roles_role_thief__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__roles_role_thiefmule__ = __webpack_require__(12);
+
+
 
 const spawner = {
     run: function (myRoom, mySpawns, myCreepCount, totalCreeps, convert) {
@@ -1486,6 +1525,7 @@ const spawner = {
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.harvester, { 'harvester': true }), newName, {
                         memory: {
                             'role': 'harvester',
+                            'myTask': 'harvest',
                             'sourceMap': sourceMap
                         }
                     });
@@ -1498,7 +1538,8 @@ const spawner = {
                     var newName = 'Claimer' + Game.time;
                     Spawn.spawnCreep([CLAIM, MOVE, MOVE], newName, {
                         memory: {
-                            'role': 'claimer'
+                            'role': 'claimer',
+                            'myTask': null //generate a target from the claimer role
                         }
                     });
                     console.log('Spawning: ' + newName);
@@ -1509,7 +1550,8 @@ const spawner = {
                     var newName = 'Worker' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.worker, { 'worker': true }), newName, {
                         memory: {
-                            'role': 'worker'
+                            'role': 'worker',
+                            'myTask': 'resupply'
                         }
                     });
                     console.log('Spawning: ' + newName);
@@ -1524,7 +1566,8 @@ const spawner = {
                     var newName = 'Mule' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, { 'carryOnly': true }), newName, {
                         memory: {
-                            'role': 'mule'
+                            'role': 'mule',
+                            'myTask': 'fetch'
                         }
                     });
                     console.log('Spawning: ' + newName);
@@ -1534,7 +1577,8 @@ const spawner = {
                     var newName = 'Upgrader' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.upgrader), newName, {
                         memory: {
-                            'role': 'upgrader'
+                            'role': 'upgrader',
+                            'myTask': 'resupply'
                         }
                     });
                     console.log('Spawning: ' + newName);
@@ -1544,7 +1588,8 @@ const spawner = {
                     var newName = 'HarvesterExtractor' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.harvesterExtractor, { 'harvester': true }), newName, {
                         memory: {
-                            'role': 'harvesterExtractor'
+                            'role': 'harvesterExtractor',
+                            'myTask': 'harvestMinerals'
                         }
                     });
                     console.log('Spawning: ' + newName);
@@ -1552,9 +1597,13 @@ const spawner = {
                 }
                 if (myCreepCount.thiefParts < MaxParts.thief * MaxThiefCount && Memory.misc.globalCreeps.thief < MaxThiefCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Thief' + Game.time;
+                    var target_room = __WEBPACK_IMPORTED_MODULE_0__roles_role_thief__["a" /* default */].generateStealTarget();
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.thief), newName, {
                         memory: {
-                            'role': 'thief'
+                            'role': 'thief',
+                            'goToTarget': target_room,
+                            'stealTarget': target_room,
+                            'myTask': 'goToTarget'
                         }
                     });
                     console.log('Spawning: ' + newName);
@@ -1562,9 +1611,15 @@ const spawner = {
                 }
                 if (Memory.misc.globalCreeps.thiefmule < MaxThiefMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'ThiefMule' + Game.time;
+                    var targets = __WEBPACK_IMPORTED_MODULE_1__roles_role_thiefmule__["a" /* default */].generateHaulTargets();
+                    var target_room = targets[0];
+                    var home = targets[1];
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, { 'carryOnly': true }), newName, {
                         memory: {
-                            'role': 'thiefmule'
+                            'role': 'thiefmule',
+                            'myTask': 'goToTarget',
+                            'goToTarget': target_room,
+                            'home': home
                         }
                     });
                     console.log('Spawning: ' + newName);
@@ -1747,13 +1802,13 @@ function getBody(myRoom, MaxParts, options = {}) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__action_deposit__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__action_resupply__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__action_claim__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__action_harvest__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__action_upgrade__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__action_build__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__action_offensive__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__actions_action_deposit__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_resupply__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__actions_action_claim__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__actions_action_harvest__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__actions_action_upgrade__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__actions_action_build__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__util__ = __webpack_require__(0);
 
 
@@ -1765,75 +1820,51 @@ function getBody(myRoom, MaxParts, options = {}) {
 
 
 
+/**
+* Runs the current state and returns the state machine results. A return of true means we need to assign a new task.
+*/
+
 const taskManager = {
     run: function (creep, mySpawns) {
         switch (creep.memory.myTask) {
             case 'claim':
-                __WEBPACK_IMPORTED_MODULE_2__action_claim__["a" /* default */].run(creep);
-                break;
+                return __WEBPACK_IMPORTED_MODULE_2__actions_action_claim__["a" /* default */].run(creep);
             case 'fetch':
-                __WEBPACK_IMPORTED_MODULE_1__action_resupply__["a" /* default */].getEnergy(creep);
-                break;
+                return __WEBPACK_IMPORTED_MODULE_1__actions_action_resupply__["a" /* default */].getEnergy(creep);
             case 'deposit':
-                __WEBPACK_IMPORTED_MODULE_0__action_deposit__["a" /* default */].run(creep, creep.memory.role == 'mule' || creep.memory.role == 'thiefmule');
-                break;
+                return __WEBPACK_IMPORTED_MODULE_0__actions_action_deposit__["a" /* default */].run(creep, creep.memory.role == 'mule' || creep.memory.role == 'thiefmule');
             case 'lazydeposit':
-                __WEBPACK_IMPORTED_MODULE_0__action_deposit__["a" /* default */].lazydeposit(creep);
-                break;
+                return __WEBPACK_IMPORTED_MODULE_0__actions_action_deposit__["a" /* default */].lazydeposit(creep);
             case 'harvest':
-                __WEBPACK_IMPORTED_MODULE_3__action_harvest__["a" /* default */].run(creep);
-                break;
+                return __WEBPACK_IMPORTED_MODULE_3__actions_action_harvest__["a" /* default */].run(creep);
             case 'harvestMinerals':
-                __WEBPACK_IMPORTED_MODULE_3__action_harvest__["a" /* default */].runMinerals(creep);
-                break;
+                return __WEBPACK_IMPORTED_MODULE_3__actions_action_harvest__["a" /* default */].runMinerals(creep);
             case 'moveToTarget':
-                __WEBPACK_IMPORTED_MODULE_7__util__["a" /* default */].moveToTarget(creep);
-                break;
+                return __WEBPACK_IMPORTED_MODULE_7__util__["a" /* default */].moveToTarget(creep);
             case 'goToTarget':
-                __WEBPACK_IMPORTED_MODULE_7__util__["a" /* default */].goToTarget(creep);
-                break;
+                return __WEBPACK_IMPORTED_MODULE_7__util__["a" /* default */].goToTarget(creep);
             case 'upgrade':
-                __WEBPACK_IMPORTED_MODULE_4__action_upgrade__["a" /* default */].run(creep);
-                break;
+                return __WEBPACK_IMPORTED_MODULE_4__actions_action_upgrade__["a" /* default */].run(creep);
             case 'resupply':
-                __WEBPACK_IMPORTED_MODULE_1__action_resupply__["a" /* default */].run(creep);
-                break;
+                return __WEBPACK_IMPORTED_MODULE_1__actions_action_resupply__["a" /* default */].run(creep);
             case 'repair':
             case 'build':
-                __WEBPACK_IMPORTED_MODULE_5__action_build__["a" /* default */].run(creep);
-                break;
+                return __WEBPACK_IMPORTED_MODULE_5__actions_action_build__["a" /* default */].run(creep);
             case 'heal':
-                __WEBPACK_IMPORTED_MODULE_6__action_offensive__["a" /* default */].heal(creep);
-                break;
+                return __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__["a" /* default */].heal(creep);
             case 'attack':
-                __WEBPACK_IMPORTED_MODULE_6__action_offensive__["a" /* default */].attack(creep);
-                break;
+                return __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__["a" /* default */].attack(creep);
             case 'rangedAttack':
-                __WEBPACK_IMPORTED_MODULE_6__action_offensive__["a" /* default */].rangedAttack(creep);
-                break;
+                return __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__["a" /* default */].rangedAttack(creep);
             case 'block':
-                __WEBPACK_IMPORTED_MODULE_6__action_offensive__["a" /* default */].block(creep);
-                break;
+                return __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__["a" /* default */].block(creep);
             case 'gather':
-                __WEBPACK_IMPORTED_MODULE_6__action_offensive__["a" /* default */].gather(creep);
-                break;
+                return __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__["a" /* default */].gather(creep);
             case 'renew':
-                __WEBPACK_IMPORTED_MODULE_6__action_offensive__["a" /* default */].renew(creep, mySpawns);
-                break;
+                return __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__["a" /* default */].renew(creep, mySpawns);
             default:
-                switch (creep.memory.role) {
-                    case 'worker':
-                        creep.memory.myTask = 'resupply';
-                        __WEBPACK_IMPORTED_MODULE_1__action_resupply__["a" /* default */].run(creep);
-                        break;
-                    case 'mule':
-                        creep.memory.myTask = 'fetch';
-                        break;
-                    default:
-                        creep.memory.myTask = 'harvest';
-                        break;
-                }
-                break;
+                console.log('State machine failed, investigate');
+                return true;
         }
     }
 };
@@ -1859,10 +1890,10 @@ const actDeposit = {
             var err = creep.transfer(target, RESOURCE_ENERGY);
             if (err = ERR_INVALID_ARGS) {
                 var err = creep.transfer(target, RESOURCE_ENERGY, target.energyCapacity - target.energy || target.storeCapacity && target.storeCapacity - target.store.energy);
-            }
-            if (err == ERR_NOT_IN_RANGE) {
+            } else if (err == ERR_NOT_IN_RANGE) {
+                creep.moveTo(target, { 'maxRooms': 1 });
                 // Return early to prevent deletion of the deposit target
-                return creep.moveTo(target, { 'maxRooms': 1 });
+                return false;
             } else if (err == OK) {
                 // Adjust the promise on this object now it has been delivered
                 delete creep.memory.depositTarget;
@@ -1878,6 +1909,10 @@ const actDeposit = {
                         creep.room.memory.energyRation -= target.energyCapacity - target.energy;
                     }
                 }
+            } else if (err == ERR_NOT_ENOUGH_RESOURCES) {
+                //expect a return to harvesting or muling here
+                delete creep.memory.depositTarget;
+                return true;
             } else {
                 deposit_target(creep, isMule);
             }
@@ -1905,7 +1940,9 @@ const actDeposit = {
         } else {
             var const_site = creep.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 2);
             if (const_site.length > 0) {
-                var err = creep.build(const_site[0]);
+                creep.memory.myBuildTarget = const_site[0].id;
+                // expect state change to build
+                return true;
             } else {
                 var container_site = creep.pos.findInRange(FIND_STRUCTURES, 2, {
                     filter: structure => structure.structureType == STRUCTURE_CONTAINER
@@ -2069,6 +2106,10 @@ const actResupply = {
         //find the closest containr or storage that has enough energy to fill me
         //it's been a while since I looked into this, jeeze this eats up a lot of CPU, this should check once then head towards it
         //TODO: make this not suck CPU, save the target etc.
+        if (_.sum(creep.carry) == creep.carryCapacity) {
+            delete creep.memory.resupplyTarget;
+            return true;
+        }
         if (!creep.memory.resupplyTarget) {
             getResupplyTarget(creep);
         }
@@ -2076,7 +2117,7 @@ const actResupply = {
             var resupplyTarget = Game.getObjectById(creep.memory.resupplyTarget);
             var err = resupplyTarget && creep.withdraw(resupplyTarget, RESOURCE_ENERGY);
             if (err == OK || err == ERR_NOT_ENOUGH_RESOURCES) {
-                creep.memory.resupplyTarget = 0;
+                delete creep.memory.resupplyTarget;
             } else if (err == ERR_NOT_IN_RANGE) {
                 creep.moveTo(resupplyTarget, { 'visualizePathStyle': { stroke: '#ffffff' }, 'maxRooms': 1 });
             } else {
@@ -2090,6 +2131,11 @@ const actResupply = {
         if (!creep.memory.fetchTarget && !creep.memory.dropTarget) {
             getTargets(creep);
         }
+        if (_.sum(creep.carry) == creep.carryCapacity) {
+            delete creep.memory.dropTarget;
+            delete creep.memory.fetchTarget;
+            return true;
+        }
         var target;
         if (creep.memory.dropTarget) {
             target = Game.getObjectById(creep.memory.dropTarget);
@@ -2097,7 +2143,7 @@ const actResupply = {
             if (err == ERR_NOT_IN_RANGE) {
                 creep.moveTo(target, { 'maxRooms': 1 });
             } else if (err == OK) {
-                creep.memory.dropTarget = 0;
+                delete creep.memory.dropTarget;
             } else {
                 getTargets(creep);
             }
@@ -2115,7 +2161,7 @@ const actResupply = {
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target, { 'maxRooms': 1 });
                 } else if (err == OK) {
-                    creep.memory.fetchTarget = 0;
+                    delete creep.memory.fetchTarget;
                 } else {
                     getTargets(creep);
                 }
@@ -2130,7 +2176,7 @@ function getTargets(creep) {
     var target = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
     if (target) {
         creep.memory.dropTarget = target.id;
-        creep.memory.fetchTarget = 0;
+        delete creep.memory.fetchTarget;
     } else {
         target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: structure => {
@@ -2139,7 +2185,7 @@ function getTargets(creep) {
         });
         if (target) {
             creep.memory.fetchTarget = target.id;
-            creep.memory.dropTarget = 0;
+            delete creep.memory.dropTarget;
         } else {
             target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                 filter: structure => {
@@ -2148,7 +2194,7 @@ function getTargets(creep) {
             });
             if (target) {
                 creep.memory.fetchTarget = target.id;
-                creep.memory.dropTarget = 0;
+                delete creep.memory.dropTarget;
             } else {
                 target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                     filter: structure => {
@@ -2157,7 +2203,7 @@ function getTargets(creep) {
                 });
                 if (target) {
                     creep.memory.fetchTarget = target.id;
-                    creep.memory.dropTarget = 0;
+                    delete creep.memory.dropTarget;
                 }
             }
         }
@@ -2182,9 +2228,6 @@ function getResupplyTarget(creep) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__(0);
-
-
 const actClaim = {
     run: function (creep) {
         if (creep.room.name == Game.flags['Claim'].pos.roomName) {
@@ -2194,7 +2237,7 @@ const actClaim = {
             }
             if (err == ERR_INVALID_TARGET) {
                 // If the claimers actions are both invalid, might have to reserve here as well? Need logic for reserve on weak rooms anyway
-                delete creep.memory.myTask;
+                return true;
             }
             if (err == ERR_NOT_IN_RANGE) {
                 creep.moveTo(Game.flags['Claim'].pos, { 'maxRooms': 1 });
@@ -2205,7 +2248,7 @@ const actClaim = {
             }
         } else {
             creep.memory.goToTarget = Game.flags['Claim'].pos.roomName;
-            __WEBPACK_IMPORTED_MODULE_0__util__["a" /* default */].goToTarget(creep);
+            return true;
         }
     }
 };
@@ -2221,6 +2264,10 @@ var actUpgrade = {
     run: function (creep) {
         if (creep.memory.MyController == undefined) {
             creep.memory.MyController = creep.room.controller && creep.room.controller.id;
+        }
+        if (creep.carry.energy == 0) {
+            // expect state to return to fetch/resupply
+            return true;
         }
         let myUpgrade = Game.getObjectById(creep.memory.MyController);
         if (creep.upgradeController(myUpgrade) == ERR_NOT_IN_RANGE) {
@@ -2242,7 +2289,9 @@ const actBuild = {
         if (!creep.memory.myBuildTarget && !creep.memory.myRepairTarget) {
             findBuildTarget(creep);
             if (!creep.memory.myBuildTarget) {
-                creep.memory.myTask = 'upgrade';
+                // expect state change to upgrade
+                return true;
+
                 // towers can repair instead
                 // findRepairTarget(creep);
                 // if (!creep.memory.myRepairTarget) {
@@ -2251,16 +2300,24 @@ const actBuild = {
         } else {
             if (creep.memory.myBuildTarget) {
                 var target = Game.getObjectById(creep.memory.myBuildTarget);
-                if (creep.build(target) == ERR_NOT_IN_RANGE) {
+                var err = creep.build(target);
+                if (err == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target, { 'maxRooms': 1 });
+                } else if (err == ERR_NOT_ENOUGH_RESOURCES) {
+                    // expect state change to resupply
+                    return true;
                 }
                 if (!target) {
                     findBuildTarget(creep);
                 }
             } else if (creep.memory.myRepairTarget) {
                 target: Structure = Game.getObjectById(creep.memory.myRepairTarget);
-                if (creep.repair(target) == ERR_NOT_IN_RANGE) {
+                var err = creep.repair(target);
+                if (err == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target, { 'maxRooms': 1 });
+                } else if (err == ERR_NOT_ENOUGH_RESOURCES) {
+                    //expect state change to resupply
+                    return true;
                 }
                 if (!target || target.hits == target.hitsMax) {
                     findBuildTarget(creep);

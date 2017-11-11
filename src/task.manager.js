@@ -1,83 +1,59 @@
 // @flow
-import actDeposit from './action.deposit';
-import actResupply from './action.resupply';
-import actClaim from './action.claim';
-import actHarvest from './action.harvest';
-import actUpgrade from './action.upgrade';
-import actBuild from './action.build';
-import actOffensive from './action.offensive';
+import actDeposit from './actions/action.deposit';
+import actResupply from './actions/action.resupply';
+import actClaim from './actions/action.claim';
+import actHarvest from './actions/action.harvest';
+import actUpgrade from './actions/action.upgrade';
+import actBuild from './actions/action.build';
+import actOffensive from './actions/action.offensive';
 
 import util from './util';
+
+/**
+* Runs the current state and returns the state machine results. A return of true means we need to assign a new task.
+*/
 
 const taskManager = {
     run: function(creep: Creep, mySpawns: Array<StructureSpawn>) {
         switch(creep.memory.myTask){
             case 'claim':
-                actClaim.run(creep);
-                break;
+                return actClaim.run(creep);
             case 'fetch':
-                actResupply.getEnergy(creep);
-                break;
+                return actResupply.getEnergy(creep);
             case 'deposit':
-                actDeposit.run(creep, creep.memory.role == 'mule' || creep.memory.role == 'thiefmule');
-                break;
+                return actDeposit.run(creep, creep.memory.role == 'mule' || creep.memory.role == 'thiefmule');
             case 'lazydeposit':
-                actDeposit.lazydeposit(creep);
-                break;
+                return actDeposit.lazydeposit(creep);
             case 'harvest':
-                actHarvest.run(creep);
-                break;
+                return actHarvest.run(creep);
             case 'harvestMinerals':
-                actHarvest.runMinerals(creep);
-                break;
+                return actHarvest.runMinerals(creep);
             case 'moveToTarget':
-                util.moveToTarget(creep);
-                break;
+                return util.moveToTarget(creep);
             case 'goToTarget':
-                util.goToTarget(creep);
-                break;
+                return util.goToTarget(creep);
             case 'upgrade':
-                actUpgrade.run(creep);
-                break;
+                return actUpgrade.run(creep);
             case 'resupply':
-                actResupply.run(creep);
-                break;
+                return actResupply.run(creep);
             case 'repair':
             case 'build':
-                actBuild.run(creep);
-                break;
+                return actBuild.run(creep);
             case 'heal':
-                actOffensive.heal(creep);
-                break;
+                return actOffensive.heal(creep);
             case 'attack':
-                actOffensive.attack(creep);
-                break;
+                return actOffensive.attack(creep);
             case 'rangedAttack':
-                actOffensive.rangedAttack(creep);
-                break;
+                return actOffensive.rangedAttack(creep);
             case 'block':
-                actOffensive.block(creep);
-                break;
+                return actOffensive.block(creep);
             case 'gather':
-                actOffensive.gather(creep);
-                break;
+                return actOffensive.gather(creep);
             case 'renew':
-                actOffensive.renew(creep, mySpawns);
-                break;
+                return actOffensive.renew(creep, mySpawns);
             default:
-                switch(creep.memory.role) {
-                    case 'worker':
-                        creep.memory.myTask = 'resupply';
-                        actResupply.run(creep);
-                        break;
-                    case 'mule':
-                        creep.memory.myTask = 'fetch';
-                        break;
-                    default:
-                        creep.memory.myTask = 'harvest';
-                        break;
-                }
-                break;
+                console.log('State machine failed, investigate');
+                return true;
         }
     }
 }

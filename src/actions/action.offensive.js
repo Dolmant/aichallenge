@@ -8,12 +8,12 @@ var actOffensive = {
             if (err == ERR_NOT_IN_RANGE) {
                 creep.moveTo(target.pos);
             } else if (err == ERR_INVALID_TARGET) {
-                delete creep.memory.myTask;
                 delete creep.memory.healCreep;
+                return true;
             }
         } else {
-            delete creep.memory.myTask;
             delete creep.memory.healCreep;
+            return true;
         }
     },
     attack: function(creep: Creep) {
@@ -23,12 +23,12 @@ var actOffensive = {
             if (err == ERR_NOT_IN_RANGE) {
                 creep.moveTo(target.pos);
             } else if (err == ERR_INVALID_TARGET) {
-                delete creep.memory.myTask;
                 delete creep.memory.attackCreep;
+                return true;
             }
         } else {
-            delete creep.memory.myTask;
             delete creep.memory.attackCreep;
+            return true;
         }
     },
     rangedAttack: function(creep: Creep) {
@@ -38,12 +38,12 @@ var actOffensive = {
             if (err == ERR_NOT_IN_RANGE) {
                 creep.moveTo(target.pos);
             } else if (err == ERR_INVALID_TARGET) {
-                delete creep.memory.myTask;
                 delete creep.memory.attackCreep;
+                return true;
             }
         } else {
-            delete creep.memory.myTask;
             delete creep.memory.attackCreep;
+            return true;
         }
     },
     block: function(creep: Creep) {

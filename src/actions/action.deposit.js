@@ -14,10 +14,10 @@ const actDeposit = {
             var err = creep.transfer(target, RESOURCE_ENERGY)
             if (err = ERR_INVALID_ARGS) {
                 var err = creep.transfer(target, RESOURCE_ENERGY, (target.energyCapacity - target.energy) || (target.storeCapacity && (target.storeCapacity - target.store.energy)))
-            }
-            if (err == ERR_NOT_IN_RANGE) {
+            }else if (err == ERR_NOT_IN_RANGE) {
+                creep.moveTo(target, {'maxRooms': 1});
                 // Return early to prevent deletion of the deposit target
-                return creep.moveTo(target, {'maxRooms': 1});
+                return false;
             } else if (err == OK) {
                 // Adjust the promise on this object now it has been delivered
                 delete creep.memory.depositTarget;
@@ -31,6 +31,10 @@ const actDeposit = {
                         creep.room.memory.energyRation -= target.energyCapacity - target.energy;
                     }
                 }
+            } else if (err == ERR_NOT_ENOUGH_RESOURCES) {
+                //expect a return to harvesting or muling here
+                delete creep.memory.depositTarget;
+                return true;
             } else {
                 deposit_target(creep, isMule);
             }
@@ -58,7 +62,9 @@ const actDeposit = {
         } else {
             var const_site = creep.pos.findInRange(FIND_MY_CONSTRUCTION_SITES, 2);
             if (const_site.length > 0) {
-                var err = creep.build(const_site[0]);
+                creep.memory.myBuildTarget = const_site[0].id;
+                // expect state change to build
+                return true;
             } else {
                 var container_site = creep.pos.findInRange(FIND_STRUCTURES, 2, {
                     filter: structure => structure.structureType == STRUCTURE_CONTAINER

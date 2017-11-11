@@ -1,14 +1,14 @@
 // @flow
 import * as profiler from './screeps-profiler';
 
-import roleUpgrader from './role.upgrader';
-import roleHarvester from './role.harvester';
-import roleMule from './role.mule';
-import roleWorker from './role.worker';
-import roleClaimer from './role.claimer';
-import roleThief from './role.thief';
-import roleThiefMule from './role.thiefmule';
-import roleOffensive from './role.offensive';
+import roleUpgrader from './roles/role.upgrader';
+import roleHarvester from './roles/role.harvester';
+import roleMule from './roles/role.mule';
+import roleWorker from './roles/role.worker';
+import roleClaimer from './roles/role.claimer';
+import roleThief from './roles/role.thief';
+import roleThiefMule from './roles/role.thiefmule';
+import roleOffensive from './roles/role.offensive';
 
 import spawner from './spawner';
 
@@ -134,48 +134,62 @@ const RoomController = {
                     break;
             }
         });
-
+        // switch(creep.memory.role) {
+        //     case 'worker':
+        //         creep.memory.myTask = 'resupply';
+        //         actResupply.run(creep);
+        //         break;
+        //     case 'mule':
+        //         creep.memory.myTask = 'fetch';
+        //         break;
+        //     default:
+        //         creep.memory.myTask = 'harvest';
+        //         break;
+        // }
+        // break;
         myRoom.memory.myCreepCount = myCreepCount;
+        
         let convert = null;
         myCreeps.forEach(creep => {
-            switch(creep.memory.role){
-                default:
-                case 'harvester':
-                    roleHarvester.run(creep);
-                    break;
-                case 'harvesterExtractor':
-                    roleHarvester.runExtractor(creep);
-                    break;
-                case 'upgrader': 
-                    roleUpgrader.run(creep);
-                    break;
-                case 'worker':
-                    if (myCreepCount.harvesterCount < 2) {
-                        convert = creep;
-                    }
-                    roleWorker.run(creep);
-                    break;
-                case 'mule':
-                    roleMule.run(creep);
-                    break;
-                case 'claimer':
-                    roleClaimer.run(creep);
-                    break;
-                case 'thief':
-                    roleThief.run(creep);
-                    break;
-                case 'thiefmule':
-                    roleThiefMule.run(creep);
-                    break;
-                case 'melee':
-                case 'ranged':
-                case 'healer':
-                case 'blocker':
-                case 'tough':
-                    roleOffensive.run(creep, mySpawns);
-                    break;
+            if (taskManager.run(creep, mySpawns)) {
+                switch(creep.memory.role){
+                    default:
+                    case 'harvester':
+                        roleHarvester.run(creep);
+                        break;
+                    case 'harvesterExtractor':
+                        roleHarvester.runExtractor(creep);
+                        break;
+                    case 'upgrader': 
+                        roleUpgrader.run(creep);
+                        break;
+                    case 'worker':
+                        if (myCreepCount.harvesterCount < 2) {
+                            convert = creep;
+                        }
+                        roleWorker.run(creep);
+                        break;
+                    case 'mule':
+                        roleMule.run(creep);
+                        break;
+                    case 'claimer':
+                        roleClaimer.run(creep);
+                        break;
+                    case 'thief':
+                        roleThief.run(creep);
+                        break;
+                    case 'thiefmule':
+                        roleThiefMule.run(creep);
+                        break;
+                    case 'melee':
+                    case 'ranged':
+                    case 'healer':
+                    case 'blocker':
+                    case 'tough':
+                        roleOffensive.run(creep, mySpawns);
+                        break;
+                }
             }
-            taskManager.run(creep, mySpawns);
         });
 
         if (!myRoom.controller || (myRoom.controller && !myRoom.controller.my)) {

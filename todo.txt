@@ -2,36 +2,29 @@ Need to do:
 add eslint rules I am dying
 
 tomorrow:
-graphana
-fix resupply bug due to link going empty for one tick
 better state machine - once the task is done, return TRUE. If return TRUE, run the roles switch.
-make labs do something
+Tasks should be run first, then role logic
+thiefs should more efficiently go to sources.
+graphana
 recycle creeps experiment
-when the ignorecreeps is on, is the moveTo command doesnt work, does it return an error? if so, we can still use ignorecreeps
+fix resupply bug due to link going empty for one tick
+
+profiling
+make labs do something
 make sure moves are more efficient inside of room
-make more efficient energy setup
 auto build roads when over certasin threshold
-types
 global caches
 Fix spawner to be more module
 make tiers for different levels
-all tasks should delete themselves when done.
-All roles should assign new tasks only if the previous task has been deleted
-Tasks should be run first, then role logic
-
-build flow types
 
 document all my objects (room, creep etc)
 count parts per energy
 
-build a repairer creepevery ROLE handles all TASKS
-have a better baseline for max 12 harvest per with a limit of 4
+build a repairer creep
+build a map in memory I can use to navigate?
+
 tag extensions structures as going to be filled and prevent other creeps trying to fill them
 1. better pathfinding
 2. break out spawner
-3. spawn smarter - what is the optimal config
-4. spawn based on incoming energy
-5. Work out best combo of parts for things.
-6. Global harvest/upgrade/build Game.flags depending on available energy levels and pathfinding
 
 

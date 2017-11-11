@@ -1,6 +1,6 @@
 // @flow
-import util from './util';
-import actOffensive from './action.offensive';
+import util from './../util';
+import actOffensive from './../actions/action.offensive';
 
 const roleOffensive = {
     run(creep: Creep, mySpawns: Array<StructureSpawn>) {

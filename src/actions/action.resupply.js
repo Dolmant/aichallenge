@@ -6,6 +6,10 @@ const actResupply = {
         //find the closest containr or storage that has enough energy to fill me
         //it's been a while since I looked into this, jeeze this eats up a lot of CPU, this should check once then head towards it
         //TODO: make this not suck CPU, save the target etc.
+        if (_.sum(creep.carry) == creep.carryCapacity) {
+            delete creep.memory.resupplyTarget;
+            return true;
+        }
         if (!creep.memory.resupplyTarget) {
             getResupplyTarget(creep);
         }
@@ -13,7 +17,7 @@ const actResupply = {
             var resupplyTarget = Game.getObjectById(creep.memory.resupplyTarget);
             var err = resupplyTarget && creep.withdraw(resupplyTarget, RESOURCE_ENERGY)
             if (err == OK || err == ERR_NOT_ENOUGH_RESOURCES) {
-                creep.memory.resupplyTarget = 0;
+                delete creep.memory.resupplyTarget;
             } else if(err == ERR_NOT_IN_RANGE) {
                 creep.moveTo(resupplyTarget, {'visualizePathStyle': {stroke: '#ffffff'}, 'maxRooms': 1});
             } else {
@@ -27,6 +31,11 @@ const actResupply = {
         if (!creep.memory.fetchTarget && !creep.memory.dropTarget) {
             getTargets(creep);
         }
+        if (_.sum(creep.carry) == creep.carryCapacity) {
+            delete creep.memory.dropTarget;
+            delete creep.memory.fetchTarget;
+            return true;
+        }
         var target: (StructureContainer | StructureStorage);
         if (creep.memory.dropTarget) {
             target = Game.getObjectById(creep.memory.dropTarget);
@@ -34,7 +43,7 @@ const actResupply = {
             if (err == ERR_NOT_IN_RANGE) {
                 creep.moveTo(target, {'maxRooms': 1});
             } else if (err == OK) {
-                creep.memory.dropTarget = 0
+                delete creep.memory.dropTarget;
             } else {
                 getTargets(creep);
             }
@@ -52,7 +61,7 @@ const actResupply = {
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target, {'maxRooms': 1});
                 } else if (err == OK) {
-                    creep.memory.fetchTarget = 0
+                    delete creep.memory.fetchTarget;
                 } else {
                     getTargets(creep);
                 }
@@ -67,7 +76,7 @@ function getTargets(creep: Creep) {
     var target = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
     if (target) {
         creep.memory.dropTarget = target.id;
-        creep.memory.fetchTarget = 0;
+        delete creep.memory.fetchTarget;
     } else {
         target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: structure => {
@@ -76,7 +85,7 @@ function getTargets(creep: Creep) {
         });
         if (target) {
             creep.memory.fetchTarget = target.id;
-            creep.memory.dropTarget = 0;
+            delete creep.memory.dropTarget;
         } else {
             target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                 filter: structure => {
@@ -85,7 +94,7 @@ function getTargets(creep: Creep) {
             });
             if (target) {
                 creep.memory.fetchTarget = target.id;
-                creep.memory.dropTarget = 0;
+                delete creep.memory.dropTarget;
             } else {
                 target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                     filter: structure => {
@@ -94,7 +103,7 @@ function getTargets(creep: Creep) {
                 });
                 if (target) {
                     creep.memory.fetchTarget = target.id;
-                    creep.memory.dropTarget = 0;
+                    delete creep.memory.dropTarget;
                 }
             }
         }

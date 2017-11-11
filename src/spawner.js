@@ -1,5 +1,8 @@
-
 // @flow
+
+import roleThief from './roles/role.thief';
+import roleThiefMule from './roles/role.thiefmule';
+
 const spawner = {
     run: function(myRoom: Room, mySpawns: Array<StructureSpawn>, myCreepCount: myCreepCountType, totalCreeps: number, convert: Creep) {
         var MaxParts = {
@@ -81,6 +84,7 @@ const spawner = {
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.harvester, {'harvester': true}), newName, {
                         memory: {
                             'role': 'harvester',
+                            'myTask': 'harvest',
                             'sourceMap': sourceMap,
                         },
                     });
@@ -95,6 +99,7 @@ const spawner = {
                     Spawn.spawnCreep([CLAIM, MOVE, MOVE], newName, {
                         memory: {
                             'role': 'claimer',
+                            'myTask': null, //generate a target from the claimer role
                         },
                     });
                     console.log('Spawning: '+ newName);
@@ -107,6 +112,7 @@ const spawner = {
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.worker, {'worker': true}), newName, {
                         memory: {
                             'role': 'worker',
+                            'myTask': 'resupply',
                         },
                     });
                     console.log('Spawning: '+ newName);
@@ -123,6 +129,7 @@ const spawner = {
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, {'carryOnly': true}), newName, {
                         memory: {
                             'role': 'mule',
+                            'myTask': 'fetch',
                         },
                     });
                     console.log('Spawning: '+ newName);
@@ -134,6 +141,7 @@ const spawner = {
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.upgrader), newName, {
                         memory: {
                             'role': 'upgrader',
+                            'myTask': 'resupply',
                         },
                     });
                     console.log('Spawning: '+ newName);
@@ -145,6 +153,7 @@ const spawner = {
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.harvesterExtractor, {'harvester': true}), newName, {
                         memory: {
                             'role': 'harvesterExtractor',
+                            'myTask': 'harvestMinerals',
                         },
                     });
                     console.log('Spawning: '+ newName);
@@ -153,9 +162,13 @@ const spawner = {
                 if(myCreepCount.thiefParts < MaxParts.thief * MaxThiefCount && Memory.misc.globalCreeps.thief < MaxThiefCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Thief' + Game.time;
+                    var target_room = roleThief.generateStealTarget();
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.thief), newName, {
                         memory: {
                             'role': 'thief',
+                            'goToTarget': target_room,
+                            'stealTarget': target_room,
+                            'myTask': 'goToTarget',
                         },
                     });
                     console.log('Spawning: '+ newName);
@@ -164,9 +177,15 @@ const spawner = {
                 if(Memory.misc.globalCreeps.thiefmule < MaxThiefMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'ThiefMule' + Game.time;
+                    var targets = roleThiefMule.generateHaulTargets();
+                    var target_room = targets[0];
+                    var home = targets[1];
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, {'carryOnly': true}), newName, {
                         memory: {
                             'role': 'thiefmule',
+                            'myTask': 'goToTarget',
+                            'goToTarget': target_room,
+                            'home': home,
                         },
                     });
                     console.log('Spawning: '+ newName);

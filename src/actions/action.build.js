@@ -6,7 +6,9 @@ const actBuild = {
             findBuildTarget(creep);
             if(!creep.memory.myBuildTarget)
             {
-                creep.memory.myTask = 'upgrade';
+                // expect state change to upgrade
+                return true;
+                
                 // towers can repair instead
                 // findRepairTarget(creep);
                 // if (!creep.memory.myRepairTarget) {
@@ -16,16 +18,24 @@ const actBuild = {
         else {
             if (creep.memory.myBuildTarget) {
                 var target: ConstructionSite = Game.getObjectById(creep.memory.myBuildTarget);
-                if(creep.build(target) == ERR_NOT_IN_RANGE) {
+                var err = creep.build(target);
+                if(err == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target, {'maxRooms': 1});
+                } else if (err == ERR_NOT_ENOUGH_RESOURCES) {
+                    // expect state change to resupply
+                    return true;
                 }
                 if (!target) {
                     findBuildTarget(creep);
                 }
             } else if (creep.memory.myRepairTarget) {
                 target: Structure = Game.getObjectById(creep.memory.myRepairTarget);
-                if(creep.repair(target) == ERR_NOT_IN_RANGE) {
+                var err = creep.repair(target);
+                if(err == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target, {'maxRooms': 1});
+                } else if (err == ERR_NOT_ENOUGH_RESOURCES) {
+                    //expect state change to resupply
+                    return true;
                 }
                 if (!target || target.hits == target.hitsMax) {
                     findBuildTarget(creep);
