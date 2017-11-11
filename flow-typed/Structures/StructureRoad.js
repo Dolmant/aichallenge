@@ -7,7 +7,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/207713089-StructureRoad}
  */
-export type StructureRoad = {
+export type StructureRoad = Structure & {
     /**
      * The amount of game ticks when this road will lose some hit points.
      *

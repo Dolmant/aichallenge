@@ -1,6 +1,6 @@
 // @flow
 const actBuild = {
-    run: function(creep) {
+    run: function(creep: Creep) {
         //do I already have something to build? If not find something to fix and say fixit
         if(!creep.memory.myBuildTarget && !creep.memory.myRepairTarget) {
             findBuildTarget(creep);
@@ -15,7 +15,7 @@ const actBuild = {
         }
         else {
             if (creep.memory.myBuildTarget) {
-                var target = Game.getObjectById(creep.memory.myBuildTarget);
+                var target: ConstructionSite = Game.getObjectById(creep.memory.myBuildTarget);
                 if(creep.build(target) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target, {'maxRooms': 1});
                 }
@@ -23,7 +23,7 @@ const actBuild = {
                     findBuildTarget(creep);
                 }
             } else if (creep.memory.myRepairTarget) {
-                var target = Game.getObjectById(creep.memory.myRepairTarget);
+                target: Structure = Game.getObjectById(creep.memory.myRepairTarget);
                 if(creep.repair(target) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target, {'maxRooms': 1});
                 }

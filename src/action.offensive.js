@@ -1,7 +1,7 @@
 
 // @flow
 var actOffensive = {
-    heal: function(creep) {
+    heal: function(creep: Creep) {
         var target = Game.getObjectById(creep.memory.healCreep);
         if (target) {
             var err = creep.heal(target);
@@ -16,7 +16,7 @@ var actOffensive = {
             delete creep.memory.healCreep;
         }
     },
-    attack: function(creep) {
+    attack: function(creep: Creep) {
         var target = Game.getObjectById(creep.memory.attackCreep);
         if (target) {
             var err = creep.attack(target);
@@ -31,7 +31,7 @@ var actOffensive = {
             delete creep.memory.attackCreep;
         }
     },
-    rangedAttack: function(creep) {
+    rangedAttack: function(creep: Creep) {
         var target = Game.getObjectById(creep.memory.attackCreep);
         if (target) {
             var err = creep.rangedAttack(target);
@@ -46,7 +46,7 @@ var actOffensive = {
             delete creep.memory.attackCreep;
         }
     },
-    block: function(creep) {
+    block: function(creep: Creep) {
         var block1Flag = Game.flags['blocker1'];
         var block2Flag = Game.flags['blocker2'];
         var block3Flag = Game.flags['blocker3'];
@@ -87,14 +87,14 @@ var actOffensive = {
             }
         }
     },
-    gather: function(creep) {
+    gather: function(creep: Creep) {
         if (Memory.attackers.attacking) {
             creep.moveTo(Game.flags['Attack'].pos, {ignoreCreeps: true});
         } else {
             creep.moveTo(Game.flags['Marshal'].pos, {ignoreCreeps: true});
         }
     },
-    renew: function(creep, mySpawns) {
+    renew: function(creep: Creep, mySpawns: Array<StructureSpawn>) {
         var inRange = creep.pos.getRangeTo(mySpawns[0].pos) <= 1;
         if (!mySpawns[0].memory.renewTarget && inRange) {
             mySpawns[0].memory.renewTarget = creep.id
@@ -102,7 +102,7 @@ var actOffensive = {
             creep.moveTo(mySpawns[0].pos);
         }
     },
-    findTarget: function(creep) {
+    findTarget: function(creep: Creep) {
         if (creep.memory.role == 'healer') {
             findHealingTarget(creep);
         } else if (creep.memory.role == 'blocker') {
@@ -112,7 +112,7 @@ var actOffensive = {
         }
     }
 };
-function findHealingTarget(creep) {
+function findHealingTarget(creep: Creep) {
     var target = creep.pos.findClosestByPath(FIND_MY_CREEPS, {
         'filter': creep => creep.hits < creep.hitsMax,
     });
@@ -122,7 +122,7 @@ function findHealingTarget(creep) {
         delete creep.memory.healCreep;
     }
 }
-function findAttackTarget(creep) {
+function findAttackTarget(creep: Creep) {
     var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS,{
         filter: creep => creep.body.filter(part => (part.type == ATTACK) || (part.type == RANGED_ATTACK))
     });

@@ -2,7 +2,7 @@
 import actHarvest from './action.harvest';
 
 const actResupply = {
-    run: function(creep) {
+    run: function(creep: Creep) {
         //find the closest containr or storage that has enough energy to fill me
         //it's been a while since I looked into this, jeeze this eats up a lot of CPU, this should check once then head towards it
         //TODO: make this not suck CPU, save the target etc.
@@ -23,11 +23,11 @@ const actResupply = {
             actHarvest.run(creep);
         }
     },
-    getEnergy: function(creep) {
+    getEnergy: function(creep: Creep) {
         if (!creep.memory.fetchTarget && !creep.memory.dropTarget) {
             getTargets(creep);
         }
-        var target = 0;
+        var target: (StructureContainer | StructureStorage);
         if (creep.memory.dropTarget) {
             target = Game.getObjectById(creep.memory.dropTarget);
             var err = target && creep.pickup(target);
@@ -63,7 +63,7 @@ const actResupply = {
     }
 };
 
-function getTargets(creep) {
+function getTargets(creep: Creep) {
     var target = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
     if (target) {
         creep.memory.dropTarget = target.id;

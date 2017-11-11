@@ -8,7 +8,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/205990342-StructureSpawn}
  */
-export type StructureSpawn = {
+export type StructureSpawn = OwnedStructure & {
     /**
      * The amount of energy containing in the spawn.
      *

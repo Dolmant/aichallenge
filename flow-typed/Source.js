@@ -7,7 +7,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/203079211-Source}
  */
-export type Source = {
+export type Source = RoomObject & {
     /**
      * The remaining amount of energy.
      *

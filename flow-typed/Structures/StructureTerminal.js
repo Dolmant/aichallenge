@@ -12,7 +12,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/207713399-StructureTerminal}
  */
-export type StructureTerminal = {
+export type StructureTerminal = OwnedStructure & {
     /**
      * An object with the storage contents.
      * Each object key is one of the RESOURCE_* constants, values are resources amounts.

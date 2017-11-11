@@ -1,6 +1,6 @@
 // @flow
 const actDeposit = {
-    run: function(creep, isMule) {
+    run: function(creep: Creep, isMule: boolean) {
         //if I'm carrying something that is not energy
         var currentEnergy = creep.carry.energy;
         if (_.sum(creep.carry) != currentEnergy) {
@@ -38,7 +38,7 @@ const actDeposit = {
         // important to remove the depositTarget so a new one can be fetched
         delete creep.memory.depositTarget;
     },
-    lazydeposit: function(creep) {
+    lazydeposit: function(creep: Creep) {
         if (creep.memory.lazyContainer) {
             const lazyContainer = Game.getObjectById(creep.memory.lazyContainer);
             if (lazyContainer) {

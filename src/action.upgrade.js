@@ -1,6 +1,6 @@
 // @flow
 var actUpgrade = {
-    run: function(creep) {
+    run: function(creep: Creep) {
         if( creep.memory.MyController == undefined){
             creep.memory.MyController = creep.room.controller && creep.room.controller.id;
         }

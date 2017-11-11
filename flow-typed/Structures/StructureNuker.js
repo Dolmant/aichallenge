@@ -9,7 +9,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/208488255-StructureNuker}
  */
-export type StructureNuker = {
+export type StructureNuker = OwnedStructure & {
     /**
      * The amount of energy containing in this structure.
      *

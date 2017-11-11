@@ -8,7 +8,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/203016362-Resource}
  */
-export type Resource = {
+export type Resource = RoomObject & {
     /**
      * The amount of resource units containing.
      *

@@ -1,6 +1,6 @@
 // @flow
 const actHarvest = {
-    run: function(creep) {
+    run: function(creep: Creep) {
         if (!creep.memory.sourceMap && !creep.memory.tempSourceMap) {
             getSource(creep);
         }
@@ -23,7 +23,7 @@ const actHarvest = {
             }
         }
     },
-    runMinerals: function(creep) {
+    runMinerals: function(creep: Creep) {
         if (!creep.memory.sourceMap) {
             var nearestSource = creep.pos.findClosestByPath(FIND_MINERALS);
             creep.memory.sourceMap = nearestSource && nearestSource.id;

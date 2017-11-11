@@ -1,6 +1,6 @@
 // @flow
 const util = {
-    goToTarget(creep) {
+    goToTarget(creep: Creep) {
         var err = 0;
         if (creep.pos.x == 0) {
             err = creep.move(RIGHT);
@@ -41,7 +41,7 @@ const util = {
             creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.goToTarget)), {'maxRooms': 1})
         }
     },
-    moveToTarget(creep) {
+    moveToTarget(creep: Creep) {
         if (creep.pos.getRangeTo(creep.memory.moveToTargetx, creep.memory.moveToTargety) <= creep.memory.moveToTargetrange) {
             delete creep.memory.myTask;
         } else {

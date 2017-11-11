@@ -9,7 +9,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/208437105-StructureTower}
  */
-export type StructureTower = {
+export type StructureTower = OwnedStructure & {
     /**
      *
      * @see {@link http://support.screeps.com/hc/en-us/articles/208437105-StructureTower#energy}

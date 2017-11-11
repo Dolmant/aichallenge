@@ -2,7 +2,7 @@
 import util from './util';
 
 const roleClaimer = {
-    run: function(creep) {
+    run: function(creep: Creep) {
 		if (creep.fatigue != 0){
 			return;
         }

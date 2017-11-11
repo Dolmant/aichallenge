@@ -9,7 +9,6 @@ import roleClaimer from './role.claimer';
 import roleThief from './role.thief';
 import roleThiefMule from './role.thiefmule';
 import roleOffensive from './role.offensive';
-import type {Creep} from './../flow-typed/Creep';
 
 import spawner from './spawner';
 
@@ -23,8 +22,8 @@ profiler.registerObject(roleClaimer, 'claimer');
 profiler.registerObject(roleThief, 'thief');
 profiler.registerObject(roleOffensive, 'run');
 
-const Room = {
-    run: function(myRoom) {
+const RoomController = {
+    run: function(myRoom: Room) {
         if(myRoom.memory.timer == undefined)
         {
             initializeRoomConsts(myRoom);
@@ -63,6 +62,7 @@ const Room = {
             'toughCount': 0,
             'blockerCount': 0,
         };
+
         var totalCreeps = 0;
         myCreeps.forEach(creep => {
             totalCreeps += 1;
@@ -354,4 +354,4 @@ function updateRoomConsts(myRoom, mySpawns) {
     }
 }
 
-export default Room;
+export default RoomController;

@@ -10,7 +10,7 @@ import actOffensive from './action.offensive';
 import util from './util';
 
 const taskManager = {
-    run: function(creep, mySpawns) {
+    run: function(creep: Creep, mySpawns: Array<StructureSpawn>) {
         switch(creep.memory.myTask){
             case 'claim':
                 actClaim.run(creep);

@@ -8,7 +8,7 @@
  * @class
  * @extends {RoomObject}
  */
-export type Flag = {
+export type Flag = RoomObject & {
     /**
      * Flag primary color. One of the COLOR_* constants.
      *

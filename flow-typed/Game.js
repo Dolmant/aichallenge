@@ -66,7 +66,7 @@ declare var Game: {
      * }
      */
     creeps: {
-        [key: String]: Creep,
+        [key: string]: Creep,
     },
 
     /**
@@ -77,7 +77,7 @@ declare var Game: {
      * @example
      * creep.moveTo(Game.flags.Flag1);
      */
-    flags: {},
+    flags: {[key: string]: Flag},
 
     /**
      * Your Global Control Level
@@ -147,7 +147,7 @@ declare var Game: {
          *
          * @see {@link http://support.screeps.com/hc/en-us/articles/203079191-Map#findExit}
          */
-        findExit: (fromRoom: string, toRoom: string, opts: {}) => {},
+        findExit: (fromRoom: string, toRoom: string, opts: ?{}) => {},
 
         /**
          * Find route from the given room to another room.
@@ -167,7 +167,7 @@ declare var Game: {
                 { exit: FIND_EXIT_BOTTOM, room: 'arena22' }
             ]
          */
-        findRoute: (fromRoom: string, toRoom: string, opts: {}) => [],
+        findRoute: (fromRoom: string, toRoom: string, opts: ?{}) => [],
 
         /**
          * Get the linear distance (in rooms) between two rooms.
@@ -468,25 +468,25 @@ declare var Game: {
      *
      * @type {Array<string, Room>}
      */
-    rooms: {},
+    rooms: {
+        [string]: Room
+    },
 
     /**
      * A hash containing all your spawns with spawn names as hash keys.
      *
      * @see {@link http://support.screeps.com/hc/en-us/articles/203016382-Game#spawns}
-     *
-     * @type {Array<string, StructureSpawn>}
      */
-    spawns: {},
+    spawns: {
+        [string]: StructureSpawn
+    },
 
     /**
      * A hash containing all your structures with structure id as hash keys.
      *
      * @see {@link http://support.screeps.com/hc/en-us/articles/203016382-Game#structures}
-     *
-     * @type {Array<string, Structure>}
      */
-    structures: {},
+    structures: {[string]: Structure},
 
     /**
      * System game tick counter. It is automatically incremented on every tick.
@@ -510,7 +510,7 @@ declare var Game: {
      *
      * @return {object|null}
      */
-    getObjectById: (id: string) => {},
+    getObjectById: (id: string) => ConstructionSite | Structure | StructureStorage | StructureContainer | StructureSpawn | StructureExtension,
 
     /**
      * Send a custom message at your profile email.

@@ -1,0 +1,59 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js global add flow-typed
+
+PATH: 
+  C:\Users\Dolmant\Downloads\cmder\bin;C:\Users\Dolmant\Downloads\cmder\vendor\conemu-maximus5\ConEmu\Scripts;C:\Users\Dolmant\Downloads\cmder\bin;C:\Users\Dolmant\Downloads\cmder\vendor\conemu-maximus5\ConEmu\Scripts;C:\Users\Dolmant\Downloads\cmder\vendor\conemu-maximus5;C:\Users\Dolmant\Downloads\cmder\vendor\conemu-maximus5\ConEmu;C:\Python27\;C:\Python27\Scripts;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files (x86)\Universal Extractor;C:\Program Files (x86)\Universal Extractor\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\Yarn\bin;C:\Program Files (x86)\Skype\Phone\;C:\Go\bin;C:\Ruby24-x64\bin;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Users\Dolmant\AppData\Roaming\npm;C:\Program Files\Microsoft VS Code\bin;C:\Users\Dolmant\AppData\Local\Yarn\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\share\vim\vim74;C:\Users\Dolmant\Downloads\cmder\;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\share\vim\vim74;C:\Users\Dolmant\Downloads\cmder\
+
+Yarn version: 
+  1.0.2
+
+Node version: 
+  6.11.4
+
+Platform: 
+  win32 x64
+
+npm manifest: 
+  {
+    "name": "aichallenge",
+    "version": "1.0.0",
+    "description": "my screeps",
+    "main": "src/main.js",
+    "scripts": {
+      "build": "webpack",
+      "watch": "webpack --watch",
+      "flow": "flow"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/Dolmant/aichallenge.git"
+    },
+    "author": "Dylan Simmer",
+    "license": "ISC",
+    "bugs": {
+      "url": "https://github.com/Dolmant/aichallenge/issues"
+    },
+    "homepage": "https://github.com/Dolmant/aichallenge#readme",
+    "devDependencies": {
+      "babel-core": "^6.26.0",
+      "babel-loader": "^7.1.2",
+      "babel-plugin-transform-flow-strip-types": "^6.22.0",
+      "flow-bin": "^0.57.3",
+      "lodash": "^4.17.4",
+      "webpack": "^3.8.1"
+    },
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  SyntaxError: E:\DOS\aichallenge\package.json: Unexpected token } in JSON at position 710
+      at Object.parse (native)
+      at C:\Program Files (x86)\Yarn\lib\cli.js:797:57
+      at next (native)
+      at step (C:\Program Files (x86)\Yarn\lib\cli.js:92:30)
+      at C:\Program Files (x86)\Yarn\lib\cli.js:103:13

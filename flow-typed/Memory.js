@@ -2,4 +2,75 @@
  * Memory - Used to store arbitrary memory entries in arbitrary keys.
  * @type {Object<string, any>}
  */
-declare var Memory: {};
+
+ export type RoomMemory = {
+    marshalDisrupter: boolean,
+    spawnClaimer: number,
+    marshalForce: boolean,
+    timer: number,
+    structures: {},
+    links: {},
+    sources: {},
+    energyRation: number,
+    runUpdate: boolean,
+    hasStorage: boolean,
+    hasContainers: boolean,
+    hasLinks: boolean,
+    hasExtractor: boolean,
+    hasMules: number,
+    owner: boolean,
+    myCreepCount: myCreepCountType,
+};
+
+declare var Memory: {
+    creeps: {
+        [string]: Creep,
+    },
+    muleFlag: number,
+    stealFlag: number,
+    attackers: {
+        attacking: boolean,
+        forceSize: number,
+        forceInAction: {
+            healer: number,
+            ranged: number,
+            thief: number,
+            melee: number,
+        },
+        forceInActionCount:{
+            healer: number,
+            ranged: number,
+            thief: number,
+            melee: number,
+        }
+    },
+    methods: {
+        createRemoteWorkers: number,
+    },
+    misc: {
+        requests: Array<CreepMemory>,
+        globalCreepsTemp: {
+            healer: number,
+            ranged: number,
+            thief: number,
+            melee: number,
+            thiefmule: number,
+            claimer: number,
+            tough: number,
+            blocker: number,
+        },
+        globalCreeps: {
+            healer: number,
+            ranged: number,
+            thief: number,
+            melee: number,
+            thiefmule: number,
+            claimer: number,
+            tough: number,
+            blocker: number,
+        },
+    },
+    rooms: {
+        [string]: RoomMemory,
+    }
+};

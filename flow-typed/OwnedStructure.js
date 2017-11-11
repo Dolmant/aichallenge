@@ -7,7 +7,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/207710979-OwnedStructure}
  */
-export type OwnedStructure = {
+export type OwnedStructure = Structure & {
     /**
      * Whether this is your own structure.
      *

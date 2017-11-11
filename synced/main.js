@@ -784,7 +784,6 @@ function loop() {
 
 
 
-
 __WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_1__role_upgrader__["a" /* default */], 'upgrader');
 __WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_2__role_harvester__["a" /* default */], 'harvester');
 __WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_3__role_mule__["a" /* default */], 'mule');
@@ -793,7 +792,7 @@ __WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPO
 __WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_6__role_thief__["a" /* default */], 'thief');
 __WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_8__role_offensive__["a" /* default */], 'run');
 
-const Room = {
+const RoomController = {
     run: function (myRoom) {
         if (myRoom.memory.timer == undefined) {
             initializeRoomConsts(myRoom);
@@ -830,6 +829,7 @@ const Room = {
             'toughCount': 0,
             'blockerCount': 0
         };
+
         var totalCreeps = 0;
         myCreeps.forEach(creep => {
             totalCreeps += 1;
@@ -1115,7 +1115,7 @@ function updateRoomConsts(myRoom, mySpawns) {
     }
 }
 
-/* harmony default export */ __webpack_exports__["a"] = (Room);
+/* harmony default export */ __webpack_exports__["a"] = (RoomController);
 
 /***/ }),
 /* 6 */
@@ -1253,7 +1253,7 @@ const roleThief = {
     run: function (creep) {
         if (!creep.memory.stealTarget) {
             // TODO fix !!!!
-            const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51'];
+            const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51', 'W46N53'];
 
             // const exits = Game.map.describeExits(creep.room.name)
             // for (name in exits) {
@@ -1298,8 +1298,8 @@ const roleThiefMule = {
         }
 
         if (!creep.memory.stealTarget) {
-            const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51'];
-            const homeArray = ['W43N53', 'W41N51', 'W41N51', 'W43N53', 'W43N53', 'W41N51', 'W45N53', 'W45N53'];
+            const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51', 'W46N53'];
+            const homeArray = ['W43N53', 'W41N51', 'W41N51', 'W43N53', 'W43N53', 'W41N51', 'W45N53', 'W45N53', 'W45N53'];
 
             if (possibleTargets.length <= Memory.muleFlag) {
                 Memory.muleFlag = 1;
@@ -1419,7 +1419,8 @@ const spawner = {
             'melee': 70,
             'ranged': 70,
             'healer': 10,
-            'blocker': 2 //not used current
+            'blocker': 2, //not used current
+            'tough': 1
         };
         var MaxHarvesterCount = myRoom.memory.hasLinks || myRoom.memory.hasContainers ? 2 : 4;
         var MaxHarvesterExtractorCount = myRoom.memory.hasContainers && myRoom.memory.hasExtractor ? 1 : 0;
@@ -1429,7 +1430,7 @@ const spawner = {
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         MaxMuleCount = myRoom.memory.hasExtractor ? 3 : MaxMuleCount;
         var MaxUpgraderCount = myRoom.memory.hasLinks ? 0 : 0;
-        var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 7;
+        var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 8;
         var MaxThiefMuleCount = MaxThiefCount * 2;
         var MaxMeleeCount = myRoom.memory.marshalForce ? Memory.attackers.forceSize - 3 : 0;
         var MaxRangedCount = myRoom.memory.marshalForce ? 2 : 0;
@@ -1630,7 +1631,7 @@ const spawner = {
 function completeOutstandingRequests(myRoom, Spawn) {
     if (Memory.misc.requests.length) {
         var newName = Memory.misc.requests[0].role + Game.time;
-        Spawn.spawnCreep(getBody(myRoom), newName, {
+        Spawn.spawnCreep(getBody(myRoom, 10), newName, {
             memory: Memory.misc.requests[0]
         });
         Memory.misc.requests.splice(0, 1);
@@ -2089,7 +2090,7 @@ const actResupply = {
         if (!creep.memory.fetchTarget && !creep.memory.dropTarget) {
             getTargets(creep);
         }
-        var target = 0;
+        var target;
         if (creep.memory.dropTarget) {
             target = Game.getObjectById(creep.memory.dropTarget);
             var err = target && creep.pickup(target);
@@ -2257,7 +2258,7 @@ const actBuild = {
                     findBuildTarget(creep);
                 }
             } else if (creep.memory.myRepairTarget) {
-                var target = Game.getObjectById(creep.memory.myRepairTarget);
+                target: Structure = Game.getObjectById(creep.memory.myRepairTarget);
                 if (creep.repair(target) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target, { 'maxRooms': 1 });
                 }

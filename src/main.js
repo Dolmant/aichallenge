@@ -1,5 +1,5 @@
 // @flow
-import roomControl from './room';
+import RoomController from './room';
 import * as profiler from './screeps-profiler';
 // docs:
 /*
@@ -44,7 +44,7 @@ export function loop() {
 
 		for (let roomName in Game.rooms) {
 			let Room = Game.rooms[roomName]
-			roomControl.run(Room)
+			RoomController.run(Room)
 		}
 		Memory.misc.globalCreeps = {
 			'healer': Memory.misc.globalCreepsTemp.healer,

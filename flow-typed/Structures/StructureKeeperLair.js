@@ -8,7 +8,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/207712119-StructureKeeperLair}
  */
-export type StructureKeeperLair = {
+export type StructureKeeperLair = OwnedStructure & {
     /**
      * Time to spawning of the next Source Keeper.
      *

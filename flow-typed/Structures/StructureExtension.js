@@ -7,7 +7,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/207711949-StructureExtension}
  */
-export type StructureExtension = {
+export type StructureExtension = OwnedStructure & {
     /**
      * The amount of energy containing in the extension.
      *

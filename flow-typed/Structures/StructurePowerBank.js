@@ -8,7 +8,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/207712729-StructurePowerBank}
  */
-export type StructurePowerBank = {
+export type StructurePowerBank = OwnedStructure & {
     /**
      * The amount of power containing.
      *

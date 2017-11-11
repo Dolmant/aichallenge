@@ -2,7 +2,7 @@
 import util from './util';
 
 const actClaim = {
-    run: function(creep) {
+    run: function(creep: Creep) {
         if (creep.room.name == Game.flags['Claim'].pos.roomName) {
             let err = creep.claimController(creep.room.controller);
             if (err == ERR_INVALID_TARGET) {

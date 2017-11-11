@@ -5,7 +5,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/203079221-Structure}
  */
-export type Structure = {
+export type Structure = RoomObject & {
     /**
      * The current amount of hit points of the structure.
      *

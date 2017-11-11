@@ -5,6 +5,51 @@
  *
  * see {link http://support.screeps.com/hc/en-us/articles/203013212-Creep}
  */
+
+ export type CreepMemory = {
+     role: string,
+     myTask?: string,
+     goToTarget?: string,
+     moveToTarget?: string,
+     moveToTargetx?: number,
+     moveToTargety?: number,
+     moveToTargetrange: number,
+     depositTarget?: string,
+     fetchTarget?: string,
+     attackTarget?: string,
+     healTarget?: string,
+ }
+
+ 
+export type myCreepCountType = {
+    'sourceMap': {},
+    'harvesterParts': 0,
+    'harvesterExtractorParts': 0,
+    'upgraderParts': 0,
+    'workerParts': 0,
+    'muleParts': 0,
+    'claimParts': 0,
+    'thiefParts': 0,
+    'meleeParts': 0,
+    'rangedParts': 0,
+    'healerParts': 0,
+    'toughParts': 0,
+    'blockerParts': 0,
+    'harvesterCount': 0,
+    'harvesterExtractorCount': 0,
+    'upgraderCount': 0,
+    'workerCount': 0,
+    'muleCount': 0,
+    'claimCount': 0,
+    'thiefCount': 0,
+    'meleeCount': 0,
+    'rangedCount': 0,
+    'healerCount': 0,
+    'toughCount': 0,
+    'blockerCount': 0,
+};
+
+
 export type Creep = {
     /**
      * An array describing the creep’s body
@@ -65,7 +110,7 @@ export type Creep = {
      *
      * @type {number}
      */
-    hitsMax: 0,
+    hitsMax: number,
 
     /**
      * A unique object identificator.
@@ -85,7 +130,7 @@ export type Creep = {
      *
      * @type {*}
      */
-    memory: {},
+    memory: CreepMemory,
 
     /**
      * Whether it is your creep or foe.
@@ -347,7 +392,7 @@ export type Creep = {
      *
      * @return {number|OK|ERR_NOT_OWNER|ERR_BUSY|ERR_TIRED|ERR_NO_BODYPART|ERR_INVALID_TARGET|ERR_NO_PATH}
      */
-    moveTo: (x: number, y: number, opts: {}) => number,
+    moveTo: (x: number, y: number, opts: ?{}) => number,
 
     /**
      * Toggle auto notification when the creep is under attack.

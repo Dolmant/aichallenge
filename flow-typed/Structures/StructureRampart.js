@@ -6,7 +6,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/207712959-StructureRampart}
  */
-export type StructureRampart = {
+export type StructureRampart = OwnedStructure & {
     /**
      * The amount of game ticks when this rampart will lose some hit points.
      *

@@ -1,6 +1,6 @@
 // @flow
 const roleHarvester = {
-    run: function(creep) {
+    run: function(creep: Creep) {
 		if (creep.fatigue != 0){
 			return;
 		}
@@ -13,7 +13,7 @@ const roleHarvester = {
 			creep.memory.myTask = 'deposit';
 		}
 	},
-    runExtractor: function(creep) {
+    runExtractor: function(creep: Creep) {
 		if (creep.fatigue != 0){
 			return;
 		}

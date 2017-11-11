@@ -8,7 +8,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/207711889-StructureController}
  */
-export type StructureController = {
+export type StructureController = OwnedStructure & {
 
     /**
      * Ticks left before another safeMode can be used

@@ -1,7 +1,7 @@
 // @flow
 
 const roleMule = {
-    run: function(creep) {
+    run: function(creep: Creep) {
         if (creep.fatigue != 0){
             return;
         }

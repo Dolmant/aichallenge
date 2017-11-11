@@ -7,7 +7,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/208488525-Nuke}
  */
-export type Nuke = {
+export type Nuke = RoomObject & {
     /**
      * A unique object identificator.
      * You can use Game.getObjectById method to retrieve an object instance by its id.

@@ -34,7 +34,7 @@ export type PathFinder = {
      *
      * @return {{path:Array<RoomPosition>,opts:number}} An object containing: path - An array of RoomPosition objects; ops - Total number of operations performed before this path was calculated.
      */
-    search: (origin: RoomPosition, goal: [] & {}, opts: {}) => {},
+    search: (origin: RoomPosition, goal: [] & {}, opts: ?{}) => {},
 
     /**
      * Specify whether to use this new experimental pathfinder in game objects methods.

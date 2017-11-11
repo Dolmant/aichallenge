@@ -8,7 +8,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/208647345-StructurePortal}
  */
-export type StructurePortal = {
+export type StructurePortal = Structure & {
     /**
      * The position object in the destination room.
      *

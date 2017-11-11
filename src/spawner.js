@@ -1,7 +1,7 @@
 
 // @flow
 const spawner = {
-    run: function(myRoom, mySpawns, myCreepCount, totalCreeps, convert) {
+    run: function(myRoom: Room, mySpawns: Array<StructureSpawn>, myCreepCount: myCreepCountType, totalCreeps: number, convert: Creep) {
         var MaxParts = {
             'harvester': 6, // definitely
             'harvesterExtractor': 6,
@@ -13,6 +13,7 @@ const spawner = {
             'ranged': 70,
             'healer': 10,
             'blocker': 2, //not used current
+            'tough': 1,
         }
         var MaxHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 2 : 4;
         var MaxHarvesterExtractorCount = (myRoom.memory.hasContainers && myRoom.memory.hasExtractor) ? 1 : 0;
@@ -22,7 +23,7 @@ const spawner = {
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         MaxMuleCount = myRoom.memory.hasExtractor ? 3 : MaxMuleCount;
         var MaxUpgraderCount = myRoom.memory.hasLinks ? 0 : 0;
-        var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 7;
+        var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 8;
         var MaxThiefMuleCount = MaxThiefCount * 2;
         var MaxMeleeCount = myRoom.memory.marshalForce ? Memory.attackers.forceSize - 3 : 0;
         var MaxRangedCount = myRoom.memory.marshalForce ? 2 : 0;
@@ -237,7 +238,7 @@ const spawner = {
 function completeOutstandingRequests(myRoom, Spawn) {
     if (Memory.misc.requests.length) {
         var newName = Memory.misc.requests[0].role + Game.time;
-        Spawn.spawnCreep(getBody(myRoom), newName, {
+        Spawn.spawnCreep(getBody(myRoom, 10), newName, {
             memory: Memory.misc.requests[0],
         });
         Memory.misc.requests.splice(0, 1);
@@ -245,7 +246,18 @@ function completeOutstandingRequests(myRoom, Spawn) {
     }
 }
 
-function getBody(myRoom, MaxParts, options = {}) {
+type getBodyoptions = {
+    harvester?: boolean,
+    carryOnly?: boolean,
+    tough?: boolean,
+    blocker?: boolean,
+    melee?: boolean,
+    healer?: boolean,
+    ranged?: boolean,
+    worker?: boolean,
+}
+
+function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
     var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
     var referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
     var partArray = [];

@@ -3,7 +3,7 @@ import util from './util';
 import actOffensive from './action.offensive';
 
 const roleOffensive = {
-    run(creep, mySpawns) {
+    run(creep: Creep, mySpawns: Array<StructureSpawn>) {
         if (Memory.attackers.attacking) {//&& !attackFlag.room.controller.safeMode) {
             // move to and attack
             if (!Game.flags['Attack']) {

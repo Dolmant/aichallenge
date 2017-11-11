@@ -8,7 +8,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/203016342-ConstructionSite}
  */
-export type ConstructionSite = {
+export type ConstructionSite = RoomObject & {
     /**
      * A unique object identificator.
      * You can use Game.getObjectById method to retrieve an object instance by its id.

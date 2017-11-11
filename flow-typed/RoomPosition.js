@@ -89,7 +89,7 @@ export type RoomPosition = {
 
      * @return {object|null} The closest object if found, null otherwise.
      */
-    findClosestByPath: (type: number, opts: {}) => {},
+    findClosestByPath: (type: number, opts: ?{}) => {},
 
     /**
      * Find an object with the shortest linear distance from the given position.
@@ -107,7 +107,7 @@ export type RoomPosition = {
      *
      * @return {object|null} The closest object if found, null otherwise.
      */
-    findClosestByRange: (type: number, opts: {}) => {},
+    findClosestByRange: (type: number, opts: ?{}) => {},
 
     /**
      * Find all objects in the specified linear range.
@@ -125,7 +125,7 @@ export type RoomPosition = {
      *
      * @return {array} An array with the objects found.
      */
-    findInRange: (type: number, range: number, opts: {}) => [],
+    findInRange: (type: number, range: number, opts: ?{}) => [],
 
     /**
      * Find an optimal path to the specified position using A* search algorithm.
@@ -151,7 +151,7 @@ export type RoomPosition = {
                              ...
                          ]
      */
-    findPathTo: (x: number, y: number, opts: {}) => {},
+    findPathTo: (x: number, y: number, opts: ?{}) => {},
 
     /**
      * Get linear direction to the specified position.

@@ -6,7 +6,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/208436365-StructureObserver}
  */
-export type StructureObserver = {
+export type StructureObserver = OwnedStructure & {
     /**
      * Provide visibility into a distant room from your script.
      * The target room object will be available on the next tick.

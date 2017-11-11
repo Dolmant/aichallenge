@@ -7,7 +7,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/207218579-Mineral}
  */
-export type Mineral = {
+export type Mineral = RoomObject & {
     /**
      * The remaining amount of resources.
      *

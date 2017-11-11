@@ -7,7 +7,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/208436805-StructureStorage}
  */
-export type StructureStorage = {
+export type StructureStorage = OwnedStructure & {
     /**
      * An object with the storage contents.
      * Each object key is one of the RESOURCE_* constants, values are resources amounts.
@@ -17,7 +17,9 @@ export type StructureStorage = {
      *
      * @type {Array<string, number>}
      */
-    store: {},
+    store: {
+        [string]: number,
+    },
 
     /**
      * The total amount of resources the storage can contain.

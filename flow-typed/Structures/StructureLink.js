@@ -6,7 +6,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/208436275-StructureLink}
  */
-export type StructureLink = {
+export type StructureLink = OwnedStructure & {
     /**
      * The amount of game ticks the link has to wait until the next transfer is possible.
      *

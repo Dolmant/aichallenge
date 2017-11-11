@@ -5,7 +5,7 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/208436195-StructureLab}
  */
-export type StructureLab = {
+export type StructureLab = OwnedStructure & {
     /**
      * The amount of game ticks the lab has to wait until the next reaction is possible.
      *

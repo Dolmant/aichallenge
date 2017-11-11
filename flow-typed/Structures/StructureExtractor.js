@@ -6,6 +6,6 @@
  *
  * @see {@link http://support.screeps.com/hc/en-us/articles/207715739-StructureExtractor}
  */
-export type StructureExtractor = {
+export type StructureExtractor = OwnedStructure & {
 
 };

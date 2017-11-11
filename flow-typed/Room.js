@@ -68,7 +68,7 @@ export type Room = {
      *
      * @type {*}
      */
-    memory: {},
+    memory: RoomMemory,
 
     /**
      * The mode of the room
@@ -165,7 +165,7 @@ export type Room = {
      *
      * @return {Array} An array with the objects found.
      */
-    find: (type: number, opts: {}) => [],
+    find: (type: number, opts: ?{}) => Array<any>,
 
     /**
      * Find the exit direction en route to another room.
@@ -210,7 +210,7 @@ export type Room = {
                          ]
 
      */
-    findPath: (fromPos: RoomPosition, toPos: RoomPosition, opts: {}) => [],
+    findPath: (fromPos: RoomPosition, toPos: RoomPosition, opts: ?{}) => Array<any>,
 
     /**
      * Creates a RoomPosition object at the specified location.
@@ -247,7 +247,7 @@ export type Room = {
                              { type: 'terrain', terrain: 'swamp' }
                          ]
      */
-    lookAt: (x: number, y: number) => [],
+    lookAt: (x: number, y: number) => Array<any>,
 
     /**
      * Get the list of objects at the specified room area.
@@ -329,7 +329,7 @@ export type Room = {
                             }
                         }
      */
-    lookAtArea: (top: number, left: number, bottom: number, right: number, asArray: []) => {},
+    lookAtArea: (top: number, left: number, bottom: number, right: number, asArray: Array<any>) => {},
 
     /**
      * Get an object with the given type at the specified room position.
@@ -347,7 +347,7 @@ export type Room = {
      *
      * @return {Array} An array of objects of the given type at the specified position if found.
      */
-    lookForAt: (type: string, x: number, y: number) => [],
+    lookForAt: (type: string, x: number, y: number) => Array<any>,
 
     /**
      * Get the list of objects with the given type at the specified room area.
