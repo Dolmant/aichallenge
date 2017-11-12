@@ -6,7 +6,9 @@ const roleWorker = {
         }
 
         if(creep.memory.myTask == 'repair' || creep.memory.myTask == 'build' || creep.memory.myTask == 'upgrade') {
-            if (creep.memory.myBuildTarget) {
+            if (creep.memory.carry.energy == 0) {
+                creep.memory.myTask = 'resupply';
+            } else if (creep.memory.myBuildTarget) {
                 creep.memory.myTask = 'resupply';
             } else {
                 creep.memory.myTask = 'upgrade';
