@@ -9,6 +9,10 @@ const actDeposit = {
         else if (!creep.memory.depositTarget) {
             deposit_target(creep, isMule);
         }
+        if (_.sum(creep.carry) == 0) {
+            delete creep.memory.depositTarget;
+            return true;
+        }
         var target = Game.getObjectById(creep.memory.depositTarget);
         if (target) {
             var err = creep.transfer(target, RESOURCE_ENERGY)

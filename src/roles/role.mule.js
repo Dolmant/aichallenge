@@ -5,7 +5,7 @@ const roleMule = {
         if (creep.fatigue != 0){
             return;
         }
-        if(_.sum(creep.carry) == 0) {
+        if(_.sum(creep.carry) < creep.carryCapacit) {
             creep.memory.myTask = 'fetch';
             creep.memory.depositTarget = 0;
         } else if (_.sum(creep.carry) == creep.carryCapacity) {

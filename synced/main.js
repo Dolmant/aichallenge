@@ -1346,7 +1346,7 @@ const roleMule = {
         if (creep.fatigue != 0) {
             return;
         }
-        if (_.sum(creep.carry) == 0) {
+        if (_.sum(creep.carry) < creep.carryCapacit) {
             creep.memory.myTask = 'fetch';
             creep.memory.depositTarget = 0;
         } else if (_.sum(creep.carry) == creep.carryCapacity) {
@@ -1931,6 +1931,10 @@ const actDeposit = {
             deposit_resource(creep, isMule);
         } else if (!creep.memory.depositTarget) {
             deposit_target(creep, isMule);
+        }
+        if (_.sum(creep.carry) == 0) {
+            delete creep.memory.depositTarget;
+            return true;
         }
         var target = Game.getObjectById(creep.memory.depositTarget);
         if (target) {
