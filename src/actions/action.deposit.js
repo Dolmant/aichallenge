@@ -56,8 +56,11 @@ const actDeposit = {
                     var err = creep.transfer(lazyContainer, RESOURCE_ENERGY);
                     if (err == ERR_FULL || err == ERR_INVALID_ARGS || err == ERR_NOT_ENOUGH_RESOURCES) {
                         creep.drop(RESOURCE_ENERGY);
+                        return true
                     } else if (err == ERR_NOT_IN_RANGE) {
                         creep.moveTo(lazyContainer.pos, {'maxRooms': 1});
+                    } else if (err == OK) {
+                        return true;
                     }
                 }
             } else {
