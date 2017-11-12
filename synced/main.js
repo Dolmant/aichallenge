@@ -61,7 +61,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -473,6 +473,91 @@ module.exports = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+const roleThief = {
+    run(creep) {
+        if (creep.memory.myTask == 'lazydeposit' && creep.memory.myBuildTarget) {
+            creep.memory.myTask = 'build';
+        }
+
+        if (creep.room.name == creep.memory.stealTarget) {
+            if (creep.carry.energy < creep.carryCapacity) {
+                creep.memory.myTask = 'harvest';
+            } else if (creep.carry.energy == creep.carryCapacity) {
+                creep.memory.myTask = 'lazydeposit';
+            }
+        } else {
+            creep.memory.goToTarget = creep.memory.stealTarget;
+            creep.memory.myTask = 'goToTarget';
+        }
+    },
+    generateStealTarget() {
+        // TODO fix !!!!
+        const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51', 'W46N53'];
+
+        // const exits = Game.map.describeExits(creep.room.name)
+        // for (name in exits) {
+        //     // This is still breaking
+        //     if (Game.map.isRoomAvailable(exits[name]) && !(Memory.rooms[name] && !Memory.rooms[name].owner)) {
+        //         possibleTargets.push(exits[name])
+        //     }
+        // }
+        if (possibleTargets.length <= Memory.stealFlag) {
+            Memory.stealFlag = 1;
+        } else {
+            Memory.stealFlag += 1;
+        }
+        return possibleTargets[Memory.stealFlag - 1];
+    }
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (roleThief);
+
+/***/ }),
+/* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const roleThiefMule = {
+    run(creep) {
+        if (creep.fatigue != 0) {
+            return;
+        }
+
+        if (_.sum(creep.carry) == 0 && creep.room.name == creep.memory.stealTarget) {
+            creep.memory.myTask = 'fetch';
+        }
+        if (creep.carryCapacity == _.sum(creep.carry) && creep.room.name != creep.memory.home) {
+            creep.memory.myTask = 'goToTarget';
+            creep.memory.goToTarget = creep.memory.home;
+        }
+        if (_.sum(creep.carry) == 0 && creep.room.name != creep.memory.stealTarget) {
+            creep.memory.myTask = 'goToTarget';
+            creep.memory.goToTarget = creep.memory.stealTarget;
+        }
+        if (creep.carryCapacity == _.sum(creep.carry) && creep.room.name == creep.memory.home) {
+            creep.memory.myTask = 'deposit';
+        }
+    },
+    generateHaulTargets() {
+        const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51', 'W46N53'];
+        const homeArray = ['W43N53', 'W41N51', 'W41N51', 'W43N53', 'W43N53', 'W41N51', 'W45N53', 'W45N53', 'W45N53'];
+
+        if (possibleTargets.length <= Memory.muleFlag) {
+            Memory.muleFlag = 1;
+        } else {
+            Memory.muleFlag += 1;
+        }
+        return [possibleTargets[Memory.muleFlag - 1], homeArray[Memory.muleFlag - 1]];
+    }
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (roleThiefMule);
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 
 var actOffensive = {
     heal: function (creep) {
@@ -629,7 +714,7 @@ function findAttackTarget(creep) {
 /* harmony default export */ __webpack_exports__["a"] = (actOffensive);
 
 /***/ }),
-/* 3 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -701,13 +786,13 @@ function getSource(creep) {
 /* harmony default export */ __webpack_exports__["a"] = (actHarvest);
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["loop"] = loop;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__room__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__room__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__screeps_profiler__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__screeps_profiler___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__screeps_profiler__);
 
@@ -726,62 +811,113 @@ You can claim by placing a Claim flag setting myRoom.memory.spawnClaimer to the 
 __WEBPACK_IMPORTED_MODULE_1__screeps_profiler__["enable"]();
 
 function loop() {
-	__WEBPACK_IMPORTED_MODULE_1__screeps_profiler__["wrap"](function () {
-		for (let name in Memory.creeps) {
-			if (Game.creeps[name] == undefined) {
-				delete Memory.creeps[name];
-			}
-		}
-		Memory.misc.globalCreepsTemp = {
-			'healer': 0,
-			'melee': 0,
-			'ranged': 0,
-			'thief': 0,
-			'thiefmule': 0,
-			'claimer': 0,
-			'tough': 0,
-			'blocker': 0
-		};
-		// Lets keep this around just in case?
-		// for(let name in Memory.rooms)
-		// {
-		// 	if(Game.rooms[name]==undefined)
-		// 	{
-		// 		delete Memory.rooms[name];
-		// 	}
-		// }
+    __WEBPACK_IMPORTED_MODULE_1__screeps_profiler__["wrap"](function () {
+        for (let name in Memory.creeps) {
+            if (Game.creeps[name] == undefined) {
+                delete Memory.creeps[name];
+            }
+        }
+        Memory.misc.globalCreepsTemp = {
+            'healer': 0,
+            'melee': 0,
+            'ranged': 0,
+            'thief': 0,
+            'thiefmule': 0,
+            'claimer': 0,
+            'tough': 0,
+            'blocker': 0
+        };
+        // Lets keep this around just in case?
+        // for(let name in Memory.rooms)
+        // {
+        // 	if(Game.rooms[name]==undefined)
+        // 	{
+        // 		delete Memory.rooms[name];
+        // 	}
+        // }
 
-		for (let roomName in Game.rooms) {
-			let Room = Game.rooms[roomName];
-			__WEBPACK_IMPORTED_MODULE_0__room__["a" /* default */].run(Room);
-		}
-		Memory.misc.globalCreeps = {
-			'healer': Memory.misc.globalCreepsTemp.healer,
-			'ranged': Memory.misc.globalCreepsTemp.ranged,
-			'melee': Memory.misc.globalCreepsTemp.melee,
-			'thief': Memory.misc.globalCreepsTemp.thief,
-			'thiefmule': Memory.misc.globalCreepsTemp.thiefmule,
-			'claimer': Memory.misc.globalCreepsTemp.claimer,
-			'tough': Memory.misc.globalCreepsTemp.tough,
-			'blocker': Memory.misc.globalCreepsTemp.blocker
-		};
-	});
+        // for dashboard
+        if (Memory.stats == undefined) {
+            Memory.stats = {};
+        }
+
+        var rooms = Game.rooms;
+        var spawns = Game.spawns;
+        for (let roomKey in rooms) {
+            let room = Game.rooms[roomKey];
+            var isMyRoom = room.controller ? room.controller.my : 0;
+            if (isMyRoom) {
+                Memory.stats['room.' + room.name + '.myRoom'] = 1;
+                Memory.stats['room.' + room.name + '.energyAvailable'] = room.energyAvailable;
+                Memory.stats['room.' + room.name + '.energyCapacityAvailable'] = room.energyCapacityAvailable;
+                Memory.stats['room.' + room.name + '.controllerProgress'] = room.controller.progress;
+                Memory.stats['room.' + room.name + '.controllerProgressTotal'] = room.controller.progressTotal;
+                var stored = 0;
+                var storedTotal = 0;
+
+                if (room.storage) {
+                    stored = room.storage.store[RESOURCE_ENERGY];
+                    storedTotal = room.storage.storeCapacity[RESOURCE_ENERGY];
+                } else {
+                    stored = 0;
+                    storedTotal = 0;
+                }
+                Memory.stats['room.' + room.name + '.storedEnergy'] = stored;
+            } else {
+                Memory.stats['room.' + room.name + '.myRoom'] = undefined;
+            }
+        }
+        Memory.stats['gcl.progress'] = Game.gcl.progress;
+        Memory.stats['gcl.progressTotal'] = Game.gcl.progressTotal;
+        Memory.stats['gcl.level'] = Game.gcl.level;
+        for (let spawnKey in spawns) {
+            let spawn = Game.spawns[spawnKey];
+            Memory.stats['spawn.' + spawn.name + '.defenderIndex'] = spawn.memory['defenderIndex'];
+        }
+
+        Memory.stats['cpu.CreepManagers'] = creepManagement;
+        Memory.stats['cpu.Towers'] = towersRunning;
+        Memory.stats['cpu.Links'] = linksRunning;
+        Memory.stats['cpu.SetupRoles'] = roleSetup;
+        Memory.stats['cpu.Creeps'] = functionsExecutedFromCreeps;
+        Memory.stats['cpu.SumProfiling'] = sumOfProfiller;
+        Memory.stats['cpu.Start'] = startOfMain;
+        Memory.stats['cpu.bucket'] = Game.cpu.bucket;
+        Memory.stats['cpu.limit'] = Game.cpu.limit;
+        Memory.stats['cpu.stats'] = Game.cpu.getUsed() - lastTick;
+        Memory.stats['cpu.getUsed'] = Game.cpu.getUsed();
+
+        for (let roomName in Game.rooms) {
+            let Room = Game.rooms[roomName];
+            __WEBPACK_IMPORTED_MODULE_0__room__["a" /* default */].run(Room);
+        }
+        Memory.misc.globalCreeps = {
+            'healer': Memory.misc.globalCreepsTemp.healer,
+            'ranged': Memory.misc.globalCreepsTemp.ranged,
+            'melee': Memory.misc.globalCreepsTemp.melee,
+            'thief': Memory.misc.globalCreepsTemp.thief,
+            'thiefmule': Memory.misc.globalCreepsTemp.thiefmule,
+            'claimer': Memory.misc.globalCreepsTemp.claimer,
+            'tough': Memory.misc.globalCreepsTemp.tough,
+            'blocker': Memory.misc.globalCreepsTemp.blocker
+        };
+    });
 }
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__screeps_profiler__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__screeps_profiler___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__roles_role_upgrader__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__roles_role_harvester__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__roles_role_mule__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__roles_role_worker__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__roles_role_claimer__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__roles_role_thief__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__roles_role_thiefmule__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__roles_role_upgrader__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__roles_role_harvester__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__roles_role_mule__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__roles_role_worker__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__roles_role_claimer__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__roles_role_thief__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__roles_role_thiefmule__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__roles_role_offensive__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__spawner__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__task_manager__ = __webpack_require__(15);
@@ -1085,14 +1221,10 @@ function updateRoomConsts(myRoom, mySpawns) {
         });
     }
     if (myRoom.memory.timer % 300 == 0 || myRoom.memory.runUpdate) {
-        // TODO Make this equal to the amount of energy in the room, not hardcoded
+        // TODO REMVOE THIS MECHANIC
         // TODO this isnt triggering. hardcode trigger in spawn? WHY DOESNT THIS SET
-        console.log('ration time: ' + String(myRoom.memory.timer));
-        console.log('ration room: ' + String(myRoom.name));
-        console.log('ration update: ' + String(myRoom.memory.energyRation));
         myRoom.memory.energyRation = 5000;
         myRoom.memory.structures = {};
-        console.log('ration update: ' + String(myRoom.memory.energyRation));
     }
     if (myRoom.memory.timer % 1000 == 0 || myRoom.memory.runUpdate) {
         myRoom.memory.runUpdate = false;
@@ -1148,7 +1280,7 @@ function updateRoomConsts(myRoom, mySpawns) {
 /* harmony default export */ __webpack_exports__["a"] = (RoomController);
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1170,7 +1302,7 @@ const roleUpgrader = {
 /* harmony default export */ __webpack_exports__["a"] = (roleUpgrader);
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1205,7 +1337,7 @@ const roleHarvester = {
 /* harmony default export */ __webpack_exports__["a"] = (roleHarvester);
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1228,7 +1360,7 @@ const roleMule = {
 /* harmony default export */ __webpack_exports__["a"] = (roleMule);
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1254,7 +1386,7 @@ const roleWorker = {
 /* harmony default export */ __webpack_exports__["a"] = (roleWorker);
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1280,97 +1412,12 @@ const roleClaimer = {
 /* harmony default export */ __webpack_exports__["a"] = (roleClaimer);
 
 /***/ }),
-/* 11 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-const roleThief = {
-    run(creep) {
-        if (creep.memory.myTask == 'lazydeposit' && creep.memory.myBuildTarget) {
-            creep.memory.myTask = 'build';
-        }
-
-        if (creep.room.name == creep.memory.stealTarget) {
-            if (creep.carry.energy < creep.carryCapacity) {
-                creep.memory.myTask = 'harvest';
-            } else if (creep.carry.energy == creep.carryCapacity) {
-                creep.memory.myTask = 'lazydeposit';
-            }
-        } else {
-            creep.memory.goToTarget = creep.memory.stealTarget;
-            creep.memory.myTask = 'goToTarget';
-        }
-    },
-    generateStealTarget() {
-        // TODO fix !!!!
-        const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51', 'W46N53'];
-
-        // const exits = Game.map.describeExits(creep.room.name)
-        // for (name in exits) {
-        //     // This is still breaking
-        //     if (Game.map.isRoomAvailable(exits[name]) && !(Memory.rooms[name] && !Memory.rooms[name].owner)) {
-        //         possibleTargets.push(exits[name])
-        //     }
-        // }
-        if (possibleTargets.length <= Memory.stealFlag) {
-            Memory.stealFlag = 1;
-        } else {
-            Memory.stealFlag += 1;
-        }
-        return possibleTargets[Memory.stealFlag - 1];
-    }
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (roleThief);
-
-/***/ }),
-/* 12 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-const roleThiefMule = {
-    run(creep) {
-        if (creep.fatigue != 0) {
-            return;
-        }
-
-        if (_.sum(creep.carry) == 0 && creep.room.name == creep.memory.stealTarget) {
-            creep.memory.myTask = 'fetch';
-        }
-        if (creep.carryCapacity == _.sum(creep.carry) && creep.room.name != creep.memory.home) {
-            creep.memory.myTask = 'goToTarget';
-            creep.memory.goToTarget = creep.memory.home;
-        }
-        if (_.sum(creep.carry) == 0 && creep.room.name != creep.memory.stealTarget) {
-            creep.memory.myTask = 'goToTarget';
-            creep.memory.goToTarget = creep.memory.stealTarget;
-        }
-        if (creep.carryCapacity == _.sum(creep.carry) && creep.room.name == creep.memory.home) {
-            creep.memory.myTask = 'deposit';
-        }
-    },
-    generateHaulTargets() {
-        const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51', 'W46N53'];
-        const homeArray = ['W43N53', 'W41N51', 'W41N51', 'W43N53', 'W43N53', 'W41N51', 'W45N53', 'W45N53', 'W45N53'];
-
-        if (possibleTargets.length <= Memory.muleFlag) {
-            Memory.muleFlag = 1;
-        } else {
-            Memory.muleFlag += 1;
-        }
-        return [possibleTargets[Memory.muleFlag - 1], homeArray[Memory.muleFlag - 1]];
-    }
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (roleThiefMule);
-
-/***/ }),
 /* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__ = __webpack_require__(4);
 
 
 
@@ -1441,8 +1488,8 @@ const roleOffensive = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__roles_role_thief__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__roles_role_thiefmule__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__roles_role_thief__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__roles_role_thiefmule__ = __webpack_require__(3);
 
 
 
@@ -1805,10 +1852,10 @@ function getBody(myRoom, MaxParts, options = {}) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__actions_action_deposit__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_resupply__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__actions_action_claim__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__actions_action_harvest__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__actions_action_harvest__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__actions_action_upgrade__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__actions_action_build__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__util__ = __webpack_require__(0);
 
 
@@ -2098,7 +2145,7 @@ function deposit_resource(creep, isMule) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__action_harvest__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__action_harvest__ = __webpack_require__(5);
 
 
 const actResupply = {

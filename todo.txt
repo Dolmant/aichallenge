@@ -1,15 +1,18 @@
 Need to do:
 add eslint rules I am dying
 
-tomorrow:
-better state machine - once the task is done, return TRUE. If return TRUE, run the roles switch.
-Tasks should be run first, then role logic
-thiefs should more efficiently go to sources.
 graphana
+
+tomorrow:
+thiefs should more efficiently go to sources.
 recycle creeps experiment
 fix resupply bug due to link going empty for one tick
+deploy autoscaling for go
+
 
 profiling
+console log to externally push commands
+better state machine? first pass done
 make labs do something
 make sure moves are more efficient inside of room
 auto build roads when over certasin threshold
