@@ -7,7 +7,11 @@ const roleThief = {
 
         if (creep.room.name == creep.memory.stealTarget) {
             if (creep.carry.energy < creep.carryCapacity) {
-                creep.memory.myTask = 'harvest';
+                if (creep.memory.myTask == 'harvest') {
+                    creep.memory.myTask = 'moveToTarget';
+                } else {
+                    creep.memory.myTask = 'harvest';
+                }
             } else if (creep.carry.energy == creep.carryCapacity) {
                 creep.memory.myTask = 'lazydeposit';
             }

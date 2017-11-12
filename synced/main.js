@@ -481,7 +481,11 @@ const roleThief = {
 
         if (creep.room.name == creep.memory.stealTarget) {
             if (creep.carry.energy < creep.carryCapacity) {
-                creep.memory.myTask = 'harvest';
+                if (creep.memory.myTask == 'harvest') {
+                    creep.memory.myTask = 'moveToTarget';
+                } else {
+                    creep.memory.myTask = 'harvest';
+                }
             } else if (creep.carry.energy == creep.carryCapacity) {
                 creep.memory.myTask = 'lazydeposit';
             }
@@ -1371,7 +1375,7 @@ const roleWorker = {
         }
 
         if (creep.memory.myTask == 'repair' || creep.memory.myTask == 'build' || creep.memory.myTask == 'upgrade') {
-            if (creep.memory.carry.energy == 0) {
+            if (creep.carry.energy == 0) {
                 creep.memory.myTask = 'resupply';
             } else if (creep.memory.myBuildTarget) {
                 creep.memory.myTask = 'resupply';
