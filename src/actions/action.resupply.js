@@ -69,6 +69,9 @@ const actResupply = {
                 getTargets(creep);
             }
         }
+        if (!target) {
+            return true;
+        }
     }
 };
 

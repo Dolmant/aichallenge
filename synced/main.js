@@ -477,9 +477,7 @@ const roleThief = {
     run(creep) {
         if (creep.memory.myTask == 'lazydeposit' && creep.memory.myBuildTarget) {
             creep.memory.myTask = 'build';
-        }
-
-        if (creep.room.name == creep.memory.stealTarget) {
+        } else if (creep.room.name == creep.memory.stealTarget) {
             if (creep.carry.energy < creep.carryCapacity) {
                 if (creep.memory.myTask == 'harvest') {
                     creep.memory.myTask = 'moveToTarget';
@@ -525,6 +523,16 @@ const roleThiefMule = {
     run(creep) {
         if (creep.fatigue != 0) {
             return;
+        }
+
+        if (creep.memory.myTask == 'fetch' && _.sum(creep.carry) == 0) {
+            creep.memory.myTask = 'moveToTarget';
+            var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+                filter: structure => structure.structureType == STRUCTURE_CONTAINER
+            }) || { pos: { x: 25, y: 25 } };
+            creep.memory.moveToTargetx = target.pos.x;
+            creep.memory.moveToTargety = target.pos.y;
+            creep.memory.moveToTargetrange = 1;
         }
 
         if (_.sum(creep.carry) == 0 && creep.room.name == creep.memory.stealTarget) {
@@ -1115,10 +1123,10 @@ const RoomController = {
             }
         });
 
-        if (myRoom.find(FIND_HOSTILE_CREEPS).length > 0 && !myRoom.controller.safeMode && !myRoom.controller.safeModeCooldown && myRoom.controller.safeModeAvailable) {
-            // myRoom.controller.activateSafeMode();
-            // dont waste these!!
-        }
+        // if (myRoom.find(FIND_HOSTILE_CREEPS).length > 0 && !myRoom.controller.safeMode && !myRoom.controller.safeModeCooldown && myRoom.controller.safeModeAvailable) {
+        //     // myRoom.controller.activateSafeMode();
+        //     // dont waste these!!
+        // }
 
         var myTowers = myRoom.find(FIND_MY_STRUCTURES).filter(structure => structure.structureType == STRUCTURE_TOWER);
 
@@ -2213,6 +2221,9 @@ const actResupply = {
             } else {
                 getTargets(creep);
             }
+        }
+        if (!target) {
+            return true;
         }
     }
 };

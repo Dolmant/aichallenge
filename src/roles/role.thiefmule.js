@@ -5,6 +5,16 @@ const roleThiefMule = {
 			return;
         }
 
+        if (creep.memory.myTask == 'fetch' && _.sum(creep.carry) == 0) {
+            creep.memory.myTask = 'moveToTarget';
+            var target = creep.pos.findClosestByPath(FIND_STRUCTURES,{
+                filter: structure => structure.structureType == STRUCTURE_CONTAINER
+            }) || {pos: {x: 25, y: 25}};
+            creep.memory.moveToTargetx = target.pos.x;
+            creep.memory.moveToTargety = target.pos.y;
+            creep.memory.moveToTargetrange = 1;
+        }
+
         if (_.sum(creep.carry) == 0 && creep.room.name == creep.memory.stealTarget) {
             creep.memory.myTask = 'fetch';
         }
