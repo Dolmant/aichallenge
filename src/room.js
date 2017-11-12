@@ -192,18 +192,6 @@ const RoomController = {
             }
         });
 
-        if (!myRoom.controller || (myRoom.controller && !myRoom.controller.my)) {
-            myRoom.memory.owner = myRoom.controller && !!myRoom.controller.owner;
-
-            myCreeps.forEach(creep => {
-                if(creep.memory.role == 'thief') {
-                    roleThief.run(creep);
-                }
-            });
-
-            return false;
-        }
-
         if (myRoom.find(FIND_HOSTILE_CREEPS).length > 0 && !myRoom.controller.safeMode && !myRoom.controller.safeModeCooldown && myRoom.controller.safeModeAvailable) {
             // myRoom.controller.activateSafeMode();
             // dont waste these!!

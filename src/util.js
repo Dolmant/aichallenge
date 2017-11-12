@@ -42,7 +42,7 @@ const util = {
         }
     },
     moveToTarget(creep: Creep) {
-        if (creep.pos.getRangeTo(creep.memory.moveToTargetx, creep.memory.moveToTargety) <= creep.memory.moveToTargetrange) {
+        if (creep.pos.getRangeTo(creep.memory.moveToTargetx, creep.memory.moveToTargety) <= creep.memory.moveToTargetrange || !creep.memory.moveToTargetx) {
             delete creep.memory.moveToTargetx;
             delete creep.memory.moveToTargety;
             delete creep.memory.moveToTargetrange;

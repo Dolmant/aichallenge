@@ -112,7 +112,7 @@ const util = {
         }
     },
     moveToTarget(creep) {
-        if (creep.pos.getRangeTo(creep.memory.moveToTargetx, creep.memory.moveToTargety) <= creep.memory.moveToTargetrange) {
+        if (creep.pos.getRangeTo(creep.memory.moveToTargetx, creep.memory.moveToTargety) <= creep.memory.moveToTargetrange || !creep.memory.moveToTargetx) {
             delete creep.memory.moveToTargetx;
             delete creep.memory.moveToTargety;
             delete creep.memory.moveToTargetrange;
@@ -1114,18 +1114,6 @@ const RoomController = {
                 }
             }
         });
-
-        if (!myRoom.controller || myRoom.controller && !myRoom.controller.my) {
-            myRoom.memory.owner = myRoom.controller && !!myRoom.controller.owner;
-
-            myCreeps.forEach(creep => {
-                if (creep.memory.role == 'thief') {
-                    __WEBPACK_IMPORTED_MODULE_6__roles_role_thief__["a" /* default */].run(creep);
-                }
-            });
-
-            return false;
-        }
 
         if (myRoom.find(FIND_HOSTILE_CREEPS).length > 0 && !myRoom.controller.safeMode && !myRoom.controller.safeModeCooldown && myRoom.controller.safeModeAvailable) {
             // myRoom.controller.activateSafeMode();
