@@ -1346,7 +1346,7 @@ const roleMule = {
         if (creep.fatigue != 0) {
             return;
         }
-        if (_.sum(creep.carry) < creep.carryCapacit) {
+        if (_.sum(creep.carry) < creep.carryCapacity) {
             creep.memory.myTask = 'fetch';
             creep.memory.depositTarget = 0;
         } else if (_.sum(creep.carry) == creep.carryCapacity) {
@@ -1939,7 +1939,7 @@ const actDeposit = {
         var target = Game.getObjectById(creep.memory.depositTarget);
         if (target) {
             var err = creep.transfer(target, RESOURCE_ENERGY);
-            if (err = ERR_INVALID_ARGS) {
+            if (err == ERR_INVALID_ARGS) {
                 var err = creep.transfer(target, RESOURCE_ENERGY, target.energyCapacity - target.energy || target.storeCapacity && target.storeCapacity - target.store.energy);
             } else if (err == ERR_NOT_IN_RANGE) {
                 creep.moveTo(target, { 'maxRooms': 1 });
