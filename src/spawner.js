@@ -185,6 +185,7 @@ const spawner = {
                             'role': 'thiefmule',
                             'myTask': 'goToTarget',
                             'goToTarget': target_room,
+                            'stealTarget': target_room,
                             'home': home,
                         },
                     });
