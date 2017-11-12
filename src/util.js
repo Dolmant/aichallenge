@@ -34,7 +34,7 @@ const util = {
             if (err != OK) {
                 err = creep.move(TOP_LEFT);
             }
-        } else if (creep.room.name == creep.memory.goToTarget) {
+        } else if (creep.room.name == creep.memory.goToTarget || !creep.memory.goToTarget) {
             delete creep.memory.goToTarget;
             return true;
         } else {
