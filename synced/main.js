@@ -1972,17 +1972,28 @@ const actDeposit = {
     lazydeposit: function (creep) {
         if (creep.memory.lazyContainer) {
             const lazyContainer = Game.getObjectById(creep.memory.lazyContainer);
+            if (creep.carry.energy == 0) {
+                return true;
+            }
             if (lazyContainer) {
+                var err;
                 if (lazyContainer.hits < lazyContainer.hitsMax / 2) {
-                    creep.repair(lazyContainer);
+                    err = creep.repair(lazyContainer);
+                    if (err == ERR_NOT_ENOUGH_RESOURCES) {
+                        return true;
+                    } else if (err == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(lazyContainer.pos, { 'maxRooms': 1 });
+                    } else {
+                        return true;
+                    }
                 } else {
-                    var err = creep.transfer(lazyContainer, RESOURCE_ENERGY);
+                    err = creep.transfer(lazyContainer, RESOURCE_ENERGY);
                     if (err == ERR_FULL || err == ERR_INVALID_ARGS || err == ERR_NOT_ENOUGH_RESOURCES) {
                         creep.drop(RESOURCE_ENERGY);
                         return true;
                     } else if (err == ERR_NOT_IN_RANGE) {
                         creep.moveTo(lazyContainer.pos, { 'maxRooms': 1 });
-                    } else if (err == OK) {
+                    } else {
                         return true;
                     }
                 }
