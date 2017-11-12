@@ -11,6 +11,7 @@ deploy autoscaling for go
 
 
 profiling
+better typing (import one of the screeps type systems)
 console log to externally push commands
 better state machine? first pass done
 make labs do something
