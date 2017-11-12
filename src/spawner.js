@@ -19,7 +19,7 @@ const spawner = {
             'tough': 1,
         }
         var MaxHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 2 : 4;
-        var MaxHarvesterExtractorCount = (myRoom.memory.hasContainers && myRoom.memory.hasExtractor) ? 1 : 0;
+        var MaxHarvesterExtractorCount = (myRoom.memory.hasContainers && myRoom.memory.hasExtractor) ? 0 : 0;
         // implement levels
         // var MinHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 5;
         var MaxWorkerCount = myRoom.memory.marshalForce ? 1 : 2;

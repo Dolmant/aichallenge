@@ -1,4 +1,8 @@
 // @flow
+import actHarvest from './../actions/action.harvest';
+import actDeposit from './../actions/action.deposit';
+
+
 const roleHarvester = {
     run: function(creep: Creep) {
 		if (creep.fatigue != 0){
@@ -8,9 +12,11 @@ const roleHarvester = {
         if (creep.memory.moveToTargetx) {
             creep.memory.myTask =  "moveToTarget";
         } else if (creep.carry.energy < creep.carryCapacity) {
-			creep.memory.myTask = 'harvest';
+            creep.memory.myTask = 'harvest';
+            actHarvest.run(creep);
 		} else if (creep.carryCapacity == creep.carry.energy) {
-			creep.memory.myTask = 'deposit';
+            creep.memory.myTask = 'deposit';
+            actDeposit.run(creep, false)
 		}
 	},
     runExtractor: function(creep: Creep) {

@@ -1301,32 +1301,39 @@ const roleUpgrader = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-const roleHarvester = {
-	run: function (creep) {
-		if (creep.fatigue != 0) {
-			return;
-		}
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__actions_action_harvest__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_deposit__ = __webpack_require__(16);
 
-		if (creep.memory.moveToTargetx) {
-			creep.memory.myTask = "moveToTarget";
-		} else if (creep.carry.energy < creep.carryCapacity) {
-			creep.memory.myTask = 'harvest';
-		} else if (creep.carryCapacity == creep.carry.energy) {
-			creep.memory.myTask = 'deposit';
-		}
-	},
-	runExtractor: function (creep) {
-		if (creep.fatigue != 0) {
-			return;
-		}
-		if (creep.memory.moveToTargetx) {
-			creep.memory.myTask = "moveToTarget";
-		} else if (_.sum(creep.carry) < creep.carryCapacity) {
-			creep.memory.myTask = 'harvestMinerals';
-		} else if (creep.carryCapacity == _.sum(creep.carry)) {
-			creep.memory.myTask = 'deposit';
-		}
-	}
+
+
+const roleHarvester = {
+  run: function (creep) {
+    if (creep.fatigue != 0) {
+      return;
+    }
+
+    if (creep.memory.moveToTargetx) {
+      creep.memory.myTask = "moveToTarget";
+    } else if (creep.carry.energy < creep.carryCapacity) {
+      creep.memory.myTask = 'harvest';
+      __WEBPACK_IMPORTED_MODULE_0__actions_action_harvest__["a" /* default */].run(creep);
+    } else if (creep.carryCapacity == creep.carry.energy) {
+      creep.memory.myTask = 'deposit';
+      __WEBPACK_IMPORTED_MODULE_1__actions_action_deposit__["a" /* default */].run(creep, false);
+    }
+  },
+  runExtractor: function (creep) {
+    if (creep.fatigue != 0) {
+      return;
+    }
+    if (creep.memory.moveToTargetx) {
+      creep.memory.myTask = "moveToTarget";
+    } else if (_.sum(creep.carry) < creep.carryCapacity) {
+      creep.memory.myTask = 'harvestMinerals';
+    } else if (creep.carryCapacity == _.sum(creep.carry)) {
+      creep.memory.myTask = 'deposit';
+    }
+  }
 };
 
 /* harmony default export */ __webpack_exports__["a"] = (roleHarvester);
@@ -1506,7 +1513,7 @@ const spawner = {
             'tough': 1
         };
         var MaxHarvesterCount = myRoom.memory.hasLinks || myRoom.memory.hasContainers ? 2 : 4;
-        var MaxHarvesterExtractorCount = myRoom.memory.hasContainers && myRoom.memory.hasExtractor ? 1 : 0;
+        var MaxHarvesterExtractorCount = myRoom.memory.hasContainers && myRoom.memory.hasExtractor ? 0 : 0;
         // implement levels
         // var MinHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 5;
         var MaxWorkerCount = myRoom.memory.marshalForce ? 1 : 2;
