@@ -1481,7 +1481,7 @@ function updateRoomConsts(myRoom, mySpawns) {
         Memory.misc.requests.push({
             'role': 'worker',
             'myTask': 'goToTarget',
-            'goToTarget': 'W41N51'
+            'goToTarget': 'W46N52'
         });
     }
     if (myRoom.memory.timer % 300 == 0 || myRoom.memory.runUpdate) {
@@ -1642,7 +1642,7 @@ const roleWorker = {
             return;
         }
 
-        if (creep.memory.myTask == 'repair' || creep.memory.myTask == 'build' || creep.memory.myTask == 'upgrade') {
+        if (creep.memory.myTask != 'resupply') {
             if (creep.carry.energy == 0) {
                 creep.memory.myTask = 'resupply';
             } else if (creep.memory.myBuildTarget) {

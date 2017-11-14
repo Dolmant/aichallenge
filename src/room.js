@@ -295,7 +295,7 @@ function updateRoomConsts(myRoom, mySpawns) {
         Memory.misc.requests.push({
             'role': 'worker',
             'myTask': 'goToTarget',
-            'goToTarget': 'W41N51'
+            'goToTarget': 'W46N52'
         });
     }
     if ((myRoom.memory.timer % 300) == 0 || myRoom.memory.runUpdate) {
