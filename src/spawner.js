@@ -173,6 +173,7 @@ const spawner = {
                         },
                     });
                     Memory.misc.globalCreeps.thief += 1;
+                    Memory.thieving_spots[target] = newName;
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
