@@ -101,7 +101,7 @@ var actOffensive = {
     },
     renew: function(creep: Creep, mySpawns: Array<StructureSpawn>) {
         var inRange = creep.pos.getRangeTo(mySpawns[0].pos) <= 1;
-        if (creep.ticksToLive > 1400) {
+        if (creep.ticksToLive > 1400 || Memory.attackers.attacking) {
             return true;
         }
         if (!mySpawns[0].memory.renewTarget && inRange) {

@@ -8,7 +8,7 @@ const roleThiefMule = {
         if (creep.memory.myTask == 'fetch' && _.sum(creep.carry) == 0) {
             creep.memory.myTask = 'moveToTarget';
             var target = creep.pos.findClosestByPath(FIND_STRUCTURES,{
-                filter: structure => structure.structureType == STRUCTURE_CONTAINER
+                filter: structure => (structure.structureType == STRUCTURE_CONTAINER && structure.store.energy > 200)
             }) || {pos: {x: 25, y: 25}};
             creep.memory.moveToTargetx = target.pos.x;
             creep.memory.moveToTargety = target.pos.y;

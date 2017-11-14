@@ -23,7 +23,8 @@ export function loop() {
 			{
                 delete Memory.creeps[name];
 			}
-		}
+        }
+        cronJobs.run();
 		Memory.misc.globalCreepsTemp = {
 			'healer': 0,
 			'melee': 0,
@@ -108,6 +109,5 @@ export function loop() {
 			'tough': Memory.misc.globalCreepsTemp.tough,
 			'blocker': Memory.misc.globalCreepsTemp.blocker,
         };
-        cronJobs.run();
 	});
 }

@@ -183,14 +183,17 @@ const util = {
             creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.goToTarget)), { 'maxRooms': 1 });
         }
     },
-    moveToTarget(creep) {
+    moveToTarget(creep, maxRooms) {
+        if (!maxRooms) {
+            maxRooms = 1;
+        }
         if (creep.pos.getRangeTo(creep.memory.moveToTargetx, creep.memory.moveToTargety) <= creep.memory.moveToTargetrange || !creep.memory.moveToTargetx) {
             delete creep.memory.moveToTargetx;
             delete creep.memory.moveToTargety;
             delete creep.memory.moveToTargetrange;
             return true;
         } else {
-            var err = creep.moveTo(creep.memory.moveToTargetx, creep.memory.moveToTargety, { 'maxRooms': 1 });
+            var err = creep.moveTo(creep.memory.moveToTargetx, creep.memory.moveToTargety, { 'maxRooms': maxRooms });
             if (err == ERR_NO_PATH || err == ERR_INVALID_TARGET) {
                 delete creep.memory.moveToTargetx;
                 delete creep.memory.moveToTargety;
@@ -806,21 +809,18 @@ const roleThief = {
     },
     generateStealTarget() {
         // TODO fix !!!!
-        const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51', 'W46N53'];
-
-        // const exits = Game.map.describeExits(creep.room.name)
-        // for (name in exits) {
-        //     // This is still breaking
-        //     if (Game.map.isRoomAvailable(exits[name]) && !(Memory.rooms[name] && !Memory.rooms[name].owner)) {
-        //         possibleTargets.push(exits[name])
-        //     }
-        // }
-        if (possibleTargets.length <= Memory.stealFlag) {
-            Memory.stealFlag = 1;
+        let target;
+        if (global.thieving_spots) {
+            const targets = Object.keys(global.thieving_spots);
+            for (var i = 0; i < targets.length; i += 1) {
+                if (global.thieving_spots[targets[i]] == 0) {
+                    return targets[i];
+                }
+            }
         } else {
-            Memory.stealFlag += 1;
+            console.log('no thief object, failed');
+            return '59bbc4262052a716c3ce7711';
         }
-        return possibleTargets[Memory.stealFlag - 1];
     }
 };
 
@@ -840,7 +840,7 @@ const roleThiefMule = {
         if (creep.memory.myTask == 'fetch' && _.sum(creep.carry) == 0) {
             creep.memory.myTask = 'moveToTarget';
             var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                filter: structure => structure.structureType == STRUCTURE_CONTAINER
+                filter: structure => structure.structureType == STRUCTURE_CONTAINER && structure.store.energy > 200
             }) || { pos: { x: 25, y: 25 } };
             creep.memory.moveToTargetx = target.pos.x;
             creep.memory.moveToTargety = target.pos.y;
@@ -979,7 +979,7 @@ var actOffensive = {
     },
     renew: function (creep, mySpawns) {
         var inRange = creep.pos.getRangeTo(mySpawns[0].pos) <= 1;
-        if (creep.ticksToLive > 1400) {
+        if (creep.ticksToLive > 1400 || Memory.attackers.attacking) {
             return true;
         }
         if (!mySpawns[0].memory.renewTarget && inRange) {
@@ -1079,6 +1079,7 @@ function loop() {
                 delete Memory.creeps[name];
             }
         }
+        __WEBPACK_IMPORTED_MODULE_1__cron__["a" /* default */].run();
         Memory.misc.globalCreepsTemp = {
             'healer': 0,
             'melee': 0,
@@ -1163,7 +1164,6 @@ function loop() {
             'tough': Memory.misc.globalCreepsTemp.tough,
             'blocker': Memory.misc.globalCreepsTemp.blocker
         };
-        __WEBPACK_IMPORTED_MODULE_1__cron__["a" /* default */].run();
     });
 }
 
@@ -1280,6 +1280,9 @@ const RoomController = {
                 case 'thief':
                     myCreepCount.thiefParts += creep_size;
                     Memory.misc.globalCreepsTemp.thief += 1;
+                    if (global.register_thieves) {
+                        global.thieving_spots[creep.memory.sourceMap || creep.memory.tempSourceMap] = creep.name;
+                    }
                     break;
                 case 'thiefmule':
                     Memory.misc.globalCreepsTemp.thiefmule += 1;
@@ -1902,13 +1905,12 @@ const spawner = {
                 }
                 if (myCreepCount.thiefParts < MaxParts.thief * MaxThiefCount && Memory.misc.globalCreeps.thief < MaxThiefCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Thief' + Game.time;
-                    var target_room = __WEBPACK_IMPORTED_MODULE_0__roles_role_thief__["a" /* default */].generateStealTarget();
+                    var target = __WEBPACK_IMPORTED_MODULE_0__roles_role_thief__["a" /* default */].generateStealTarget();
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.thief), newName, {
                         memory: {
                             'role': 'thief',
-                            'goToTarget': target_room,
-                            'stealTarget': target_room,
-                            'myTask': 'goToTarget'
+                            'sourceMap': target,
+                            'myTask': 'moveToTarget'
                         }
                     });
                     console.log('Spawning: ' + newName);
@@ -2440,26 +2442,56 @@ function findRepairTarget(creep) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-global.thieving_spots = {
-    active: false
-    // location: creep
-};
-
 const cronJobs = {
     run() {
-        if (global.thieving_spots && global.thieving_spots.active) {} else {
-            global.thieving_spots.active = true;
+        if (!Memory.cronCount) {
+            Memory.cronCount = 0;
+        }
+        Memory.cronCount += 1;
+        if (global.thieving_spots) {
+            global.register_thieves = false;
+            if (Memory.cronCount > 10) {
+                Memory.cronCount -= 10;
+                cronJobs.run10();
+            }
+        } else {
             cronJobs.init();
         }
     },
     run10() {
         const checker = 4;
+        Object.keys(global.thieving_spots).forEach(key => {
+            if (global.thieving_spots[key] && !Game.creeps[global.thieving_spots[key]]) {
+                global.thieving_spots[key] = 0;
+            }
+        });
     },
     init() {
         global.thieving_spots = {
-            active: true
-            // location: creep
+            // location: W46N53
+            '59bbc4262052a716c3ce7711': 0,
+            '59bbc4262052a716c3ce7712': 0,
+            // location: W45N52
+            '59bbc4282052a716c3ce7771': 0,
+            '59bbc4282052a716c3ce7772': 0,
+            // location: W46N51
+            '59bbc4282052a716c3ce7776': 0,
+            '59bbc4282052a716c3ce7777': 0,
+            // location: W44N53
+            '59bbc42a2052a716c3ce77ce': 0,
+            // location: W44N52
+            '59bbc42b2052a716c3ce77d0': 0,
+            // location: W44N51
+            '59bbc42b2052a716c3ce77d3': 0,
+            // location: W43N52
+            '59bbc42d2052a716c3ce7822': 0,
+            // location: W43N51
+            '59bbc42d2052a716c3ce7824': 0,
+            '59bbc42d2052a716c3ce7825': 0,
+            // location: W42N51
+            '59bbc4302052a716c3ce7862': 0
         };
+        global.register_thieves = true;
     }
 };
 

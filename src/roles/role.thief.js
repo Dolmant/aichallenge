@@ -20,21 +20,18 @@ const roleThief = {
     },
     generateStealTarget() {
         // TODO fix !!!!
-        const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51', 'W46N53'];
-        
-        // const exits = Game.map.describeExits(creep.room.name)
-        // for (name in exits) {
-        //     // This is still breaking
-        //     if (Game.map.isRoomAvailable(exits[name]) && !(Memory.rooms[name] && !Memory.rooms[name].owner)) {
-        //         possibleTargets.push(exits[name])
-        //     }
-        // }
-        if (possibleTargets.length <= Memory.stealFlag) {
-            Memory.stealFlag = 1;
+        let target;
+        if (global.thieving_spots) {
+            const targets = Object.keys(global.thieving_spots)
+            for (var i = 0; i < targets.length; i += 1) {
+                if (global.thieving_spots[targets[i]] == 0) {
+                    return targets[i];
+                }
+            }
         } else {
-            Memory.stealFlag += 1;
+            console.log('no thief object, failed');
+            return '59bbc4262052a716c3ce7711';
         }
-        return possibleTargets[Memory.stealFlag - 1];
     },
 };
 

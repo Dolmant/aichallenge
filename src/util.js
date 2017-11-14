@@ -41,14 +41,17 @@ const util = {
             creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.goToTarget)), {'maxRooms': 1})
         }
     },
-    moveToTarget(creep: Creep) {
+    moveToTarget(creep: Creep, maxRooms: number) {
+        if (!maxRooms) {
+            maxRooms = 1;
+        }
         if (creep.pos.getRangeTo(creep.memory.moveToTargetx, creep.memory.moveToTargety) <= creep.memory.moveToTargetrange || !creep.memory.moveToTargetx) {
             delete creep.memory.moveToTargetx;
             delete creep.memory.moveToTargety;
             delete creep.memory.moveToTargetrange;
             return true;
         } else {
-            var err = creep.moveTo(creep.memory.moveToTargetx, creep.memory.moveToTargety,{'maxRooms': 1});
+            var err = creep.moveTo(creep.memory.moveToTargetx, creep.memory.moveToTargety,{'maxRooms': maxRooms});
             if (err == ERR_NO_PATH || err == ERR_INVALID_TARGET) {
                 delete creep.memory.moveToTargetx;
                 delete creep.memory.moveToTargety;
