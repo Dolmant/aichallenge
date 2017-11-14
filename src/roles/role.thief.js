@@ -3,19 +3,14 @@ const roleThief = {
     run(creep: Creep) {
         if (creep.memory.myTask == 'lazydeposit' && creep.memory.myBuildTarget) {
             creep.memory.myTask = 'build';
-        } else if (creep.room.name == creep.memory.stealTarget) {
-            if (creep.carry.energy < creep.carryCapacity) {
-                if (creep.memory.myTask == 'harvest') {
-                    creep.memory.myTask = 'moveToTarget';
-                } else {
-                    creep.memory.myTask = 'harvest';
-                }
-            } else if (creep.carry.energy == creep.carryCapacity) {
-                creep.memory.myTask = 'lazydeposit';
+        } else if (creep.carry.energy < creep.carryCapacity) {
+            if (creep.memory.myTask == 'harvest') {
+                creep.memory.myTask = 'moveToTarget';
+            } else {
+                creep.memory.myTask = 'harvest';
             }
-        } else {
-			creep.memory.goToTarget = creep.memory.stealTarget;
-			creep.memory.myTask = 'goToTarget';
+        } else if (creep.carry.energy == creep.carryCapacity) {
+            creep.memory.myTask = 'lazydeposit';
         }
     },
     generateStealTarget() {

@@ -168,6 +168,8 @@ const spawner = {
                             'role': 'thief',
                             'sourceMap': target,
                             'myTask': 'moveToObject',
+                            'moveToObject': target,
+                            'moveToObjectRange': 1,
                         },
                     });
                     console.log('Spawning: '+ newName);

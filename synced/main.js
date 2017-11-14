@@ -200,6 +200,9 @@ const util = {
         }
     },
     moveToObject(creep) {
+        if (!Game.getObjectById(creep.memory.moveToObject)) {
+            return true;
+        }
         if (creep.pos.getRangeTo(Game.getObjectById(creep.memory.moveToObject).pos) <= creep.memory.moveToObjectRange) {
             delete creep.memory.moveToObject;
             delete creep.memory.moveToObjectRange;
@@ -803,19 +806,14 @@ const roleThief = {
     run(creep) {
         if (creep.memory.myTask == 'lazydeposit' && creep.memory.myBuildTarget) {
             creep.memory.myTask = 'build';
-        } else if (creep.room.name == creep.memory.stealTarget) {
-            if (creep.carry.energy < creep.carryCapacity) {
-                if (creep.memory.myTask == 'harvest') {
-                    creep.memory.myTask = 'moveToTarget';
-                } else {
-                    creep.memory.myTask = 'harvest';
-                }
-            } else if (creep.carry.energy == creep.carryCapacity) {
-                creep.memory.myTask = 'lazydeposit';
+        } else if (creep.carry.energy < creep.carryCapacity) {
+            if (creep.memory.myTask == 'harvest') {
+                creep.memory.myTask = 'moveToTarget';
+            } else {
+                creep.memory.myTask = 'harvest';
             }
-        } else {
-            creep.memory.goToTarget = creep.memory.stealTarget;
-            creep.memory.myTask = 'goToTarget';
+        } else if (creep.carry.energy == creep.carryCapacity) {
+            creep.memory.myTask = 'lazydeposit';
         }
     },
     generateStealTarget() {
@@ -1921,7 +1919,9 @@ const spawner = {
                         memory: {
                             'role': 'thief',
                             'sourceMap': target,
-                            'myTask': 'moveToObject'
+                            'myTask': 'moveToObject',
+                            'moveToObject': target,
+                            'moveToObjectRange': 1
                         }
                     });
                     console.log('Spawning: ' + newName);

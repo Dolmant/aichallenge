@@ -58,6 +58,9 @@ const util = {
         }
     },
     moveToObject(creep: Creep) {
+        if (!Game.getObjectById(creep.memory.moveToObject)) {
+            return true;
+        }
         if (creep.pos.getRangeTo(Game.getObjectById(creep.memory.moveToObject).pos) <= creep.memory.moveToObjectRange) {
             delete creep.memory.moveToObject;
             delete creep.memory.moveToObjectRange;
