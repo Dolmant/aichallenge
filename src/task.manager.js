@@ -52,6 +52,8 @@ const taskManager = {
             case 'renew':
                 return actOffensive.renew(creep, mySpawns);
             default:
+                console.log(creep.name)
+                console.log(creep.memory.role)
                 console.log('State machine failed, investigate');
                 return true;
         }

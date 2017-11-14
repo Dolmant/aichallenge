@@ -2166,6 +2166,8 @@ const taskManager = {
             case 'renew':
                 return __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__["a" /* default */].renew(creep, mySpawns);
             default:
+                console.log(creep.name);
+                console.log(creep.memory.role);
                 console.log('State machine failed, investigate');
                 return true;
         }
