@@ -970,7 +970,11 @@ var actOffensive = {
             creep.moveTo(Game.flags['Attack'].pos);
             return true;
         } else {
-            creep.moveTo(Game.flags['Marshal'].pos);
+            if (creep.pos.getRangeTo(Game.flags['Marshal'].pos) <= 2) {
+                return true;
+            } else {
+                creep.moveTo(Game.flags['Marshal'].pos);
+            }
         }
     },
     renew: function (creep, mySpawns) {
