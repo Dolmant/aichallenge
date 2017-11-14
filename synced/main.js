@@ -74,7 +74,7 @@ const actHarvest = {
         if (!creep.memory.sourceMap && !creep.memory.tempSourceMap) {
             getSource(creep);
         }
-        if (creep.carryCapacity && creep.carry.energy == creep.carryCapacity) {
+        if (!creep.carryCapacity || creep.carry.energy == creep.carryCapacity) {
             // expect state change to deposit
             return true;
         }
@@ -1576,34 +1576,27 @@ const roleUpgrader = {
 
 
 const roleHarvester = {
-  run: function (creep) {
-    if (creep.fatigue != 0) {
-      return;
+    run: function (creep) {
+        // TODO FIX THIS BS OR ASSUME YOU WILL ALWAYS BE CALLED AFTER
+        if (creep.memory.moveToTargetx) {
+            creep.memory.myTask = "moveToTarget";
+        } else if (!creep.carryCapacity || creep.carry.energy < creep.carryCapacity) {
+            creep.memory.myTask = 'harvest';
+            __WEBPACK_IMPORTED_MODULE_0__actions_action_harvest__["a" /* default */].run(creep);
+        } else if (creep.carryCapacity == creep.carry.energy) {
+            creep.memory.myTask = 'deposit';
+            __WEBPACK_IMPORTED_MODULE_1__actions_action_deposit__["a" /* default */].run(creep, false);
+        }
+    },
+    runExtractor: function (creep) {
+        if (creep.memory.moveToTargetx) {
+            creep.memory.myTask = "moveToTarget";
+        } else if (!creep.carryCapacity || _.sum(creep.carry) < creep.carryCapacity) {
+            creep.memory.myTask = 'harvestMinerals';
+        } else if (creep.carryCapacity == _.sum(creep.carry)) {
+            creep.memory.myTask = 'deposit';
+        }
     }
-
-    // TODO FIX THIS BS OR ASSUME YOU WILL ALWAYS BE CALLED AFTER
-    if (creep.memory.moveToTargetx) {
-      creep.memory.myTask = "moveToTarget";
-    } else if (creep.carryCapacity && creep.carry.energy < creep.carryCapacity) {
-      creep.memory.myTask = 'harvest';
-      __WEBPACK_IMPORTED_MODULE_0__actions_action_harvest__["a" /* default */].run(creep);
-    } else if (creep.carryCapacity == creep.carry.energy) {
-      creep.memory.myTask = 'deposit';
-      __WEBPACK_IMPORTED_MODULE_1__actions_action_deposit__["a" /* default */].run(creep, false);
-    }
-  },
-  runExtractor: function (creep) {
-    if (creep.fatigue != 0) {
-      return;
-    }
-    if (creep.memory.moveToTargetx) {
-      creep.memory.myTask = "moveToTarget";
-    } else if (_.sum(creep.carry) < creep.carryCapacity) {
-      creep.memory.myTask = 'harvestMinerals';
-    } else if (creep.carryCapacity == _.sum(creep.carry)) {
-      creep.memory.myTask = 'deposit';
-    }
-  }
 };
 
 /* harmony default export */ __webpack_exports__["a"] = (roleHarvester);
