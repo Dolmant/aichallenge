@@ -1584,7 +1584,7 @@ const roleHarvester = {
     // TODO FIX THIS BS OR ASSUME YOU WILL ALWAYS BE CALLED AFTER
     if (creep.memory.moveToTargetx) {
       creep.memory.myTask = "moveToTarget";
-    } else if (creep.carry.energy < creep.carryCapacity) {
+    } else if (creep.carryCapacity && creep.carry.energy < creep.carryCapacity) {
       creep.memory.myTask = 'harvest';
       __WEBPACK_IMPORTED_MODULE_0__actions_action_harvest__["a" /* default */].run(creep);
     } else if (creep.carryCapacity == creep.carry.energy) {
