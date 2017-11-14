@@ -89,9 +89,10 @@ var actOffensive = {
     },
     gather: function(creep: Creep) {
         if (Memory.attackers.attacking) {
-            creep.moveTo(Game.flags['Attack'].pos, {ignoreCreeps: true});
+            creep.moveTo(Game.flags['Attack'].pos);
+            return true;
         } else {
-            creep.moveTo(Game.flags['Marshal'].pos, {ignoreCreeps: true});
+            creep.moveTo(Game.flags['Marshal'].pos);
         }
     },
     renew: function(creep: Creep, mySpawns: Array<StructureSpawn>) {

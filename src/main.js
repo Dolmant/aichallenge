@@ -1,5 +1,6 @@
 // @flow
 import RoomController from './room';
+import cronJobs from './cron';
 import * as profiler from './screeps-profiler';
 // docs:
 /*
@@ -21,9 +22,6 @@ export function loop() {
 			if(Game.creeps[name]==undefined)
 			{
                 delete Memory.creeps[name];
-                // if (Memory.thieves[name]) {
-
-                // }
 			}
 		}
 		Memory.misc.globalCreepsTemp = {
@@ -109,6 +107,7 @@ export function loop() {
 			'claimer': Memory.misc.globalCreepsTemp.claimer,
 			'tough': Memory.misc.globalCreepsTemp.tough,
 			'blocker': Memory.misc.globalCreepsTemp.blocker,
-		};
+        };
+        cronJobs.run();
 	});
 }

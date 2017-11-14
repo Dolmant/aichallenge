@@ -967,9 +967,10 @@ var actOffensive = {
     },
     gather: function (creep) {
         if (Memory.attackers.attacking) {
-            creep.moveTo(Game.flags['Attack'].pos, { ignoreCreeps: true });
+            creep.moveTo(Game.flags['Attack'].pos);
+            return true;
         } else {
-            creep.moveTo(Game.flags['Marshal'].pos, { ignoreCreeps: true });
+            creep.moveTo(Game.flags['Marshal'].pos);
         }
     },
     renew: function (creep, mySpawns) {
@@ -1045,8 +1046,10 @@ function findAttackTarget(creep) {
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["loop"] = loop;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__room__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__screeps_profiler__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__screeps_profiler___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__screeps_profiler__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cron__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__screeps_profiler__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__screeps_profiler___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__screeps_profiler__);
+
 
 
 // docs:
@@ -1060,16 +1063,13 @@ You can send a worker to another room by specifying the roomname on goToTarget a
 You can claim by placing a Claim flag setting myRoom.memory.spawnClaimer to the number of claimers you want
 */
 
-__WEBPACK_IMPORTED_MODULE_1__screeps_profiler__["enable"]();
+__WEBPACK_IMPORTED_MODULE_2__screeps_profiler__["enable"]();
 
 function loop() {
-    __WEBPACK_IMPORTED_MODULE_1__screeps_profiler__["wrap"](function () {
+    __WEBPACK_IMPORTED_MODULE_2__screeps_profiler__["wrap"](function () {
         for (let name in Memory.creeps) {
             if (Game.creeps[name] == undefined) {
                 delete Memory.creeps[name];
-                // if (Memory.thieves[name]) {
-
-                // }
             }
         }
         Memory.misc.globalCreepsTemp = {
@@ -1156,6 +1156,7 @@ function loop() {
             'tough': Memory.misc.globalCreepsTemp.tough,
             'blocker': Memory.misc.globalCreepsTemp.blocker
         };
+        __WEBPACK_IMPORTED_MODULE_1__cron__["a" /* default */].run();
     });
 }
 
@@ -1930,7 +1931,8 @@ const spawner = {
                     var newName = 'Melee' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.melee, { 'melee': true }), newName, {
                         memory: {
-                            'role': 'melee'
+                            'role': 'melee',
+                            'myTask': 'gather'
                         }
                     });
                     console.log('Spawning: ' + newName);
@@ -2428,6 +2430,36 @@ function findRepairTarget(creep) {
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (actBuild);
+
+/***/ }),
+/* 21 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+global.thieving_spots = {
+    active: false
+    // location: creep
+};
+
+const cronJobs = {
+    run() {
+        if (global.thieving_spots && global.thieving_spots.active) {} else {
+            global.thieving_spots.active = true;
+            cronJobs.init();
+        }
+    },
+    run10() {
+        const checker = 4;
+    },
+    init() {
+        global.thieving_spots = {
+            active: true
+            // location: creep
+        };
+    }
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (cronJobs);
 
 /***/ })
 /******/ ]);
