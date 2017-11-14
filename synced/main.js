@@ -806,7 +806,15 @@ const roleThief = {
     run(creep) {
         if (creep.memory.myTask == 'lazydeposit' && creep.memory.myBuildTarget) {
             creep.memory.myTask = 'build';
-        } else if (creep.carry.energy < creep.carryCapacity) {
+        } else if (!creep.carryCapacity || creep.carry.energy < creep.carryCapacity) {
+            if (creep.memory.myTask == 'moveToObject' && creep.memory.moveToObject) {
+                if (global.rooms && global.rooms[creep.memory.moveToObject]) {
+                    creep.memory.goToTarget = global.rooms[creep.memory.moveToObject];
+                    creep.memory.myTask = 'goToTarget';
+                } else {
+                    creep.memory.myTask = 'moveToObject';
+                }
+            }
             if (creep.memory.myTask == 'harvest') {
                 //harvest appends these details
                 creep.memory.myTask = 'moveToTarget';
@@ -1064,6 +1072,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["loop"] = loop;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__room__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cron__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cron___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__cron__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__screeps_profiler__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__screeps_profiler___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__screeps_profiler__);
 
@@ -1089,7 +1098,7 @@ function loop() {
                 delete Memory.creeps[name];
             }
         }
-        __WEBPACK_IMPORTED_MODULE_1__cron__["a" /* default */].run();
+        __WEBPACK_IMPORTED_MODULE_1__cron__["default"].run();
         Memory.misc.globalCreepsTemp = {
             'healer': 0,
             'melee': 0,
@@ -2463,63 +2472,10 @@ function findRepairTarget(creep) {
 
 /***/ }),
 /* 21 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, __webpack_exports__) {
 
 "use strict";
-const cronJobs = {
-    run() {
-        if (!Memory.cronCount) {
-            Memory.cronCount = 0;
-        }
-        Memory.cronCount += 1;
-        if (global.thieving_spots) {
-            global.register_thieves = false;
-            if (Memory.cronCount > 10) {
-                Memory.cronCount -= 10;
-                cronJobs.run10();
-            }
-        } else {
-            cronJobs.init();
-        }
-    },
-    run10() {
-        const checker = 4;
-        Object.keys(global.thieving_spots).forEach(key => {
-            if (global.thieving_spots[key] && !Game.creeps[global.thieving_spots[key]]) {
-                global.thieving_spots[key] = 0;
-            }
-        });
-    },
-    init() {
-        global.thieving_spots = {
-            // location: W46N53
-            '59bbc4262052a716c3ce7711': 0,
-            '59bbc4262052a716c3ce7712': 0,
-            // location: W45N52
-            '59bbc4282052a716c3ce7771': 0,
-            '59bbc4282052a716c3ce7772': 0,
-            // location: W46N51
-            '59bbc4282052a716c3ce7776': 0,
-            '59bbc4282052a716c3ce7777': 0,
-            // location: W44N53
-            '59bbc42a2052a716c3ce77ce': 0,
-            // location: W44N52
-            '59bbc42b2052a716c3ce77d0': 0,
-            // location: W44N51
-            '59bbc42b2052a716c3ce77d3': 0,
-            // location: W43N52
-            '59bbc42d2052a716c3ce7822': 0,
-            // location: W43N51
-            '59bbc42d2052a716c3ce7824': 0,
-            '59bbc42d2052a716c3ce7825': 0,
-            // location: W42N51
-            '59bbc4302052a716c3ce7862': 0
-        };
-        global.register_thieves = true;
-    }
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (cronJobs);
+throw new Error("Module build failed: SyntaxError: E:/DOS/aichallenge/src/cron.js: Unexpected token, expected , (52:4)\n\n\u001b[0m \u001b[90m 50 | \u001b[39m        global\u001b[33m.\u001b[39mregister_thieves \u001b[33m=\u001b[39m \u001b[36mtrue\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 51 | \u001b[39m    }\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 52 | \u001b[39m    global\u001b[33m.\u001b[39mrooms \u001b[33m=\u001b[39m {\n \u001b[90m    | \u001b[39m    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 53 | \u001b[39m        \u001b[90m// location: W46N53\u001b[39m\n \u001b[90m 54 | \u001b[39m        \u001b[32m'59bbc4262052a716c3ce7711'\u001b[39m\u001b[33m:\u001b[39m \u001b[32m'W46N53'\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 55 | \u001b[39m        \u001b[32m'59bbc4262052a716c3ce7712'\u001b[39m\u001b[33m:\u001b[39m \u001b[32m'W46N53'\u001b[39m\u001b[33m,\u001b[39m\u001b[0m\n");
 
 /***/ })
 /******/ ]);

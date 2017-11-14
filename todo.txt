@@ -4,6 +4,7 @@ add eslint rules I am dying
 graphana
 
 tomorrow:
+defend from neutral creeps
 Rather than spawning based on each room, create a spawn dispatcher to more easily figure out where things should spawn.
 implement emergeny safe modes (on something breaking, trigger it) 
 implement claims for thievery rooms
