@@ -5,8 +5,8 @@ const roleThief = {
             creep.memory.myTask = 'build';
         } else if (!creep.carryCapacity || creep.carry.energy < creep.carryCapacity) {
             if (creep.memory.myTask == 'moveToObject' && creep.memory.moveToObject) {
-                if (global.rooms && global.rooms[creep.memory.moveToObject]) {
-                    creep.memory.goToTarget = global.rooms[creep.memory.moveToObject];
+                if (Memory.rooms && Memory.rooms[creep.memory.moveToObject]) {
+                    creep.memory.goToTarget = Memory.rooms[creep.memory.moveToObject];
                     creep.memory.myTask = 'goToTarget';
                 } else {
                     creep.memory.myTask = 'moveToObject';
@@ -25,10 +25,10 @@ const roleThief = {
     generateStealTarget() {
         // TODO fix !!!!
         let target;
-        if (global.thieving_spots) {
-            const targets = Object.keys(global.thieving_spots)
+        if (Memory.thieving_spots) {
+            const targets = Object.keys(Memory.thieving_spots)
             for (var i = 0; i < targets.length; i += 1) {
-                if (global.thieving_spots[targets[i]] == 0) {
+                if (Memory.thieving_spots[targets[i]] == 0) {
                     return targets[i];
                 }
             }

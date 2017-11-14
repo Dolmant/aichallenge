@@ -808,8 +808,8 @@ const roleThief = {
             creep.memory.myTask = 'build';
         } else if (!creep.carryCapacity || creep.carry.energy < creep.carryCapacity) {
             if (creep.memory.myTask == 'moveToObject' && creep.memory.moveToObject) {
-                if (global.rooms && global.rooms[creep.memory.moveToObject]) {
-                    creep.memory.goToTarget = global.rooms[creep.memory.moveToObject];
+                if (Memory.rooms && Memory.rooms[creep.memory.moveToObject]) {
+                    creep.memory.goToTarget = Memory.rooms[creep.memory.moveToObject];
                     creep.memory.myTask = 'goToTarget';
                 } else {
                     creep.memory.myTask = 'moveToObject';
@@ -828,10 +828,10 @@ const roleThief = {
     generateStealTarget() {
         // TODO fix !!!!
         let target;
-        if (global.thieving_spots) {
-            const targets = Object.keys(global.thieving_spots);
+        if (Memory.thieving_spots) {
+            const targets = Object.keys(Memory.thieving_spots);
             for (var i = 0; i < targets.length; i += 1) {
-                if (global.thieving_spots[targets[i]] == 0) {
+                if (Memory.thieving_spots[targets[i]] == 0) {
                     return targets[i];
                 }
             }
@@ -1298,8 +1298,8 @@ const RoomController = {
                 case 'thief':
                     myCreepCount.thiefParts += creep_size;
                     Memory.misc.globalCreepsTemp.thief += 1;
-                    if (global.register_thieves) {
-                        global.thieving_spots[creep.memory.sourceMap || creep.memory.tempSourceMap] = creep.name;
+                    if (Memory.register_thieves) {
+                        Memory.thieving_spots[creep.memory.sourceMap || creep.memory.tempSourceMap] = creep.name;
                     }
                     break;
                 case 'thiefmule':
@@ -2480,8 +2480,8 @@ const cronJobs = {
             Memory.cronCount = 0;
         }
         Memory.cronCount += 1;
-        if (global.thieving_spots) {
-            global.register_thieves = false;
+        if (Memory.thieving_spots) {
+            Memory.register_thieves = false;
             if (Memory.cronCount > 10) {
                 Memory.cronCount -= 10;
                 cronJobs.run10();
@@ -2492,14 +2492,14 @@ const cronJobs = {
     },
     run10() {
         const checker = 4;
-        Object.keys(global.thieving_spots).forEach(key => {
-            if (global.thieving_spots[key] && !Game.creeps[global.thieving_spots[key]]) {
-                global.thieving_spots[key] = 0;
+        Object.keys(Memory.thieving_spots).forEach(key => {
+            if (Memory.thieving_spots[key] && !Game.creeps[Memory.thieving_spots[key]]) {
+                Memory.thieving_spots[key] = 0;
             }
         });
     },
     init() {
-        global.thieving_spots = {
+        Memory.thieving_spots = {
             // location: W46N53
             '59bbc4262052a716c3ce7711': 0,
             '59bbc4262052a716c3ce7712': 0,
@@ -2523,8 +2523,8 @@ const cronJobs = {
             // location: W42N51
             '59bbc4302052a716c3ce7862': 0
         };
-        global.register_thieves = true;
-        global.rooms = {
+        Memory.register_thieves = true;
+        Memory.rooms = {
             // location: W46N53
             '59bbc4262052a716c3ce7711': 'W46N53',
             '59bbc4262052a716c3ce7712': 'W46N53',
@@ -2548,7 +2548,6 @@ const cronJobs = {
             // location: W42N51
             '59bbc4302052a716c3ce7862': 'W42N51'
         };
-        global.register_thieves = true;
     }
 };
 
