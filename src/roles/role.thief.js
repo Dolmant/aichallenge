@@ -4,6 +4,12 @@ import cronJobs from './../cron';
 
 const roleThief = {
     run(creep: Creep) {
+        if (!creep.memory.sourceMap) {
+            var target = roleThief.generateStealTarget();
+            creep.memory.myTask = 'moveToObject';
+            creep.memory.moveToObject = target;
+            creep.memory.sourceMap = target;
+        }
         if (creep.memory.myTask == 'lazydeposit' && creep.memory.myBuildTarget) {
             creep.memory.myTask = 'build';
         } else if (!creep.carryCapacity || creep.carry.energy < creep.carryCapacity) {

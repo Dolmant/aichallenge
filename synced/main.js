@@ -819,6 +819,12 @@ function deposit_resource(creep, isMule) {
 
 const roleThief = {
     run(creep) {
+        if (!creep.memory.sourceMap) {
+            var target = roleThief.generateStealTarget();
+            creep.memory.myTask = 'moveToObject';
+            creep.memory.moveToObject = target;
+            creep.memory.sourceMap = target;
+        }
         if (creep.memory.myTask == 'lazydeposit' && creep.memory.myBuildTarget) {
             creep.memory.myTask = 'build';
         } else if (!creep.carryCapacity || creep.carry.energy < creep.carryCapacity) {
