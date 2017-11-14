@@ -8,7 +8,7 @@ thiefs should more efficiently go to sources.
 recycle creeps experiment
 fix resupply bug due to link going empty for one tick
 deploy autoscaling for go
-
+FIX TODO BS
 
 profiling
 better typing (import one of the screeps type systems)

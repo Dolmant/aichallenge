@@ -133,7 +133,12 @@ function findAttackTarget(creep: Creep) {
     }
     if (!target) {
         target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
-            filter: structure => structure.structureType != STRUCTURE_CONTROLLER,
+            filter: structure => structure.structureType == STRUCTURE_SPAWN,
+        });
+    }
+    if (!target) {
+        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
+            filter: structure => structure.structureType == STRUCTURE_STORAGE,
         });
     }
     if (!target) {

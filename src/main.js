@@ -20,7 +20,10 @@ export function loop() {
 		{
 			if(Game.creeps[name]==undefined)
 			{
-				delete Memory.creeps[name];
+                delete Memory.creeps[name];
+                // if (Memory.thieves[name]) {
+
+                // }
 			}
 		}
 		Memory.misc.globalCreepsTemp = {
