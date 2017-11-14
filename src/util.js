@@ -41,21 +41,32 @@ const util = {
             creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.goToTarget)), {'maxRooms': 1})
         }
     },
-    moveToTarget(creep: Creep, maxRooms: number) {
-        if (!maxRooms) {
-            maxRooms = 1;
-        }
+    moveToTarget(creep: Creep) {
         if (creep.pos.getRangeTo(creep.memory.moveToTargetx, creep.memory.moveToTargety) <= creep.memory.moveToTargetrange || !creep.memory.moveToTargetx) {
             delete creep.memory.moveToTargetx;
             delete creep.memory.moveToTargety;
             delete creep.memory.moveToTargetrange;
             return true;
         } else {
-            var err = creep.moveTo(creep.memory.moveToTargetx, creep.memory.moveToTargety,{'maxRooms': maxRooms});
+            var err = creep.moveTo(creep.memory.moveToTargetx, creep.memory.moveToTargety,{'maxRooms': 1});
             if (err == ERR_NO_PATH || err == ERR_INVALID_TARGET) {
                 delete creep.memory.moveToTargetx;
                 delete creep.memory.moveToTargety;
                 delete creep.memory.moveToTargetrange;
+                return true;
+            }
+        }
+    },
+    moveToObject(creep: Creep) {
+        if (creep.pos.getRangeTo(Game.getObjectById(creep.memory.moveToObject).pos) <= creep.memory.moveToObjectRange) {
+            delete creep.memory.moveToObject;
+            delete creep.memory.moveToObjectRange;
+            return true;
+        } else {
+            var err = creep.moveTo(Game.getObjectById(creep.memory.moveToObject));
+            if (err == ERR_NO_PATH || err == ERR_INVALID_TARGET) {
+                delete creep.memory.moveToObject;
+                delete creep.memory.moveToObjectRange;
                 return true;
             }
         }

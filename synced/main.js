@@ -183,21 +183,32 @@ const util = {
             creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.goToTarget)), { 'maxRooms': 1 });
         }
     },
-    moveToTarget(creep, maxRooms) {
-        if (!maxRooms) {
-            maxRooms = 1;
-        }
+    moveToTarget(creep) {
         if (creep.pos.getRangeTo(creep.memory.moveToTargetx, creep.memory.moveToTargety) <= creep.memory.moveToTargetrange || !creep.memory.moveToTargetx) {
             delete creep.memory.moveToTargetx;
             delete creep.memory.moveToTargety;
             delete creep.memory.moveToTargetrange;
             return true;
         } else {
-            var err = creep.moveTo(creep.memory.moveToTargetx, creep.memory.moveToTargety, { 'maxRooms': maxRooms });
+            var err = creep.moveTo(creep.memory.moveToTargetx, creep.memory.moveToTargety, { 'maxRooms': 1 });
             if (err == ERR_NO_PATH || err == ERR_INVALID_TARGET) {
                 delete creep.memory.moveToTargetx;
                 delete creep.memory.moveToTargety;
                 delete creep.memory.moveToTargetrange;
+                return true;
+            }
+        }
+    },
+    moveToObject(creep) {
+        if (creep.pos.getRangeTo(Game.getObjectById(creep.memory.moveToObject).pos) <= creep.memory.moveToObjectRange) {
+            delete creep.memory.moveToObject;
+            delete creep.memory.moveToObjectRange;
+            return true;
+        } else {
+            var err = creep.moveTo(Game.getObjectById(creep.memory.moveToObject));
+            if (err == ERR_NO_PATH || err == ERR_INVALID_TARGET) {
+                delete creep.memory.moveToObject;
+                delete creep.memory.moveToObjectRange;
                 return true;
             }
         }
@@ -1910,7 +1921,7 @@ const spawner = {
                         memory: {
                             'role': 'thief',
                             'sourceMap': target,
-                            'myTask': 'moveToTarget'
+                            'myTask': 'moveToObject'
                         }
                     });
                     console.log('Spawning: ' + newName);
@@ -2152,6 +2163,8 @@ const taskManager = {
                 return __WEBPACK_IMPORTED_MODULE_3__actions_action_harvest__["a" /* default */].runMinerals(creep);
             case 'moveToTarget':
                 return __WEBPACK_IMPORTED_MODULE_7__util__["a" /* default */].moveToTarget(creep);
+            case 'moveToObject':
+                return __WEBPACK_IMPORTED_MODULE_7__util__["a" /* default */].moveToObject(creep);
             case 'goToTarget':
                 return __WEBPACK_IMPORTED_MODULE_7__util__["a" /* default */].goToTarget(creep);
             case 'upgrade':

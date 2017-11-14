@@ -30,6 +30,8 @@ const taskManager = {
                 return actHarvest.runMinerals(creep);
             case 'moveToTarget':
                 return util.moveToTarget(creep);
+            case 'moveToObject':
+                return util.moveToObject(creep);
             case 'goToTarget':
                 return util.goToTarget(creep);
             case 'upgrade':

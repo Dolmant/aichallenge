@@ -167,7 +167,7 @@ const spawner = {
                         memory: {
                             'role': 'thief',
                             'sourceMap': target,
-                            'myTask': 'moveToTarget',
+                            'myTask': 'moveToObject',
                         },
                     });
                     console.log('Spawning: '+ newName);
