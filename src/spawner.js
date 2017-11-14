@@ -53,12 +53,15 @@ const spawner = {
 
                 if(myCreepCount.harvesterCount < 1 && myCreepCount.harvesterLowCount < 1)//just in case, if there are no harvesters spawn a harvester
                 {
-                    Spawn.spawnCreep([WORK, CARRY, MOVE], 'HarvesterLow' + Game.time, {
+                    var newName = 'HarvesterLow' + Game.time;
+                    Spawn.spawnCreep([WORK, CARRY, MOVE], newName, {
                         memory: {
                             'role': 'harvesterLow',
                             'sourceMap': sourceMap,
                         },
                     });
+                    console.log('Spawning: '+ newName);
+                    canSpawn = false;
                 }
 
                 if (Spawn.memory.renewTarget) {
