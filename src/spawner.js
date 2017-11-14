@@ -27,7 +27,7 @@ const spawner = {
         MaxMuleCount = myRoom.memory.hasExtractor ? 3 : MaxMuleCount;
         var MaxUpgraderCount = myRoom.memory.hasLinks ? 0 : 0;
         var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 13;
-        var MaxThiefMuleCount = MaxThiefCount * 2;
+        var MaxThiefMuleCount = 9;
         var MaxMeleeCount = myRoom.memory.marshalForce ? Memory.attackers.forceSize - 3 : 0;
         var MaxRangedCount = myRoom.memory.marshalForce ? 2 : 0;
         var MaxHealerCount = myRoom.memory.marshalForce ? 1 : 0;
@@ -123,7 +123,7 @@ const spawner = {
                     convert.memory.sourceMap = sourceMap;
                     canSpawn = false;
                 }
-                if(myCreepCount.muleParts < MaxParts.mule * MaxMuleCount && myCreepCount.muleCount < MaxMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if (myCreepCount.muleParts < MaxParts.mule * MaxMuleCount && myCreepCount.muleCount < MaxMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Mule' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, {'carryOnly': true}), newName, {
@@ -135,7 +135,7 @@ const spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if(myCreepCount.upgraderParts < MaxUpgraderCount && myCreepCount.upgraderCount < MaxUpgraderCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if (myCreepCount.upgraderParts < MaxUpgraderCount && myCreepCount.upgraderCount < MaxUpgraderCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Upgrader' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.upgrader), newName, {
@@ -147,7 +147,7 @@ const spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if(myCreepCount.harvesterExtractorParts < MaxParts.harvesterExtractor * MaxHarvesterExtractorCount && myCreepCount.harvesterExtractorCount < MaxHarvesterExtractorCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if (myCreepCount.harvesterExtractorParts < MaxParts.harvesterExtractor * MaxHarvesterExtractorCount && myCreepCount.harvesterExtractorCount < MaxHarvesterExtractorCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'HarvesterExtractor' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.harvesterExtractor, {'harvester': true}), newName, {
@@ -159,7 +159,7 @@ const spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if(myCreepCount.thiefParts < MaxParts.thief * MaxThiefCount && Memory.misc.globalCreeps.thief < MaxThiefCount && Memory.misc.globalCreeps.thiefmule > Memory.misc.globalCreeps.thief && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if (myCreepCount.thiefParts < MaxParts.thief * MaxThiefCount && Memory.misc.globalCreeps.thief < MaxThiefCount && (Memory.misc.globalCreeps.thiefmule > (Memory.misc.globalCreeps.thief / 2)) && myRoom.energyAvailable >= referenceEnergy && canSpawn)
                 {
                     var newName = 'Thief' + Game.time;
                     var target = roleThief.generateStealTarget();
@@ -175,7 +175,7 @@ const spawner = {
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
-                if(Memory.misc.globalCreeps.thiefmule < MaxThiefMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
+                if (Memory.misc.globalCreeps.thiefmule < MaxThiefMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'ThiefMule' + Game.time;
                     var targets = roleThiefMule.generateHaulTargets();
                     var target_room = targets[0];
