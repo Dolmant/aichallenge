@@ -35,10 +35,9 @@ const spawner = {
         var MaxToughCount = myRoom.memory.marshalForce ? 5 : 0;
         var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
         var referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
-
+        let canSpawn = true;
         mySpawns.forEach(Spawn => {
-            if (!Spawn.spawning)
-            {
+            if (!Spawn.spawning && canSpawn) {
                 var sourceMapNumber = 99;
                 var sourceMap = 0;
 
@@ -51,7 +50,7 @@ const spawner = {
                         sourceMap = source;
                     }
                 });
-                let canSpawn = true;
+
                 if(myCreepCount.harvesterCount < 1 && myCreepCount.harvesterLowCount < 1)//just in case, if there are no harvesters spawn a harvester
                 {
                     Spawn.spawnCreep([WORK, CARRY, MOVE], 'HarvesterLow' + Game.time, {
