@@ -61,7 +61,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -665,6 +665,18 @@ const actDeposit = {
 function deposit_target(creep, isMule) {
     // Mule is the only one which will refuse to drop to a container
     var economy = creep.room.memory.myCreepCount.muleCount && creep.room.memory.myCreepCount.harvesterCount > 0;
+    // We can use local links and containers and rely on mules for transport
+    var target = creep.pos.findInRange(FIND_STRUCTURES, 2, {
+        'filter': structure => {
+            // since links and stores have different energy checking methods, need this long filter to check both
+            return structure.structureType == STRUCTURE_LINK && (structure.energy < structure.energyCapacity || structure.storeCapacity && structure.store.energy < structure.storeCapacity);
+        },
+        'algorithm': 'dijkstra'
+    });
+    if (target > 0) {
+        creep.memory.depositTarget = target[0].id;
+        return true;
+    }
     if (creep.room.memory.hasContainers && economy && !isMule) {
         // We can use local links and containers and rely on mules for transport
         var target = creep.pos.findInRange(FIND_STRUCTURES, 1, {
@@ -802,6 +814,9 @@ function deposit_resource(creep, isMule) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__cron__ = __webpack_require__(5);
+
+
 const roleThief = {
     run(creep) {
         if (creep.memory.myTask == 'lazydeposit' && creep.memory.myBuildTarget) {
@@ -829,6 +844,7 @@ const roleThief = {
         let target;
         if (Memory.thieving_spots) {
             const targets = Object.keys(Memory.thieving_spots);
+            __WEBPACK_IMPORTED_MODULE_0__cron__["a" /* default */].run10();
             for (var i = 0; i < targets.length; i += 1) {
                 if (Memory.thieving_spots[targets[i]] == 0) {
                     return targets[i];
@@ -845,6 +861,90 @@ const roleThief = {
 
 /***/ }),
 /* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const cronJobs = {
+    run() {
+        if (!Memory.cronCount) {
+            Memory.cronCount = 0;
+        }
+        Memory.cronCount += 1;
+        if (Memory.thieving_spots) {
+            Memory.register_thieves = false;
+            if (Memory.cronCount > 10) {
+                Memory.cronCount -= 10;
+                cronJobs.run10();
+            }
+        } else {
+            cronJobs.init();
+        }
+    },
+    run10() {
+        const checker = 4;
+        Object.keys(Memory.thieving_spots).forEach(key => {
+            if (Memory.thieving_spots[key] && !Game.creeps[Memory.thieving_spots[key]]) {
+                Memory.thieving_spots[key] = 0;
+            }
+        });
+    },
+    init() {
+        Memory.thieving_spots = {
+            // location: W46N53
+            '59bbc4262052a716c3ce7711': 0,
+            '59bbc4262052a716c3ce7712': 0,
+            // location: W45N52
+            '59bbc4282052a716c3ce7771': 0,
+            '59bbc4282052a716c3ce7772': 0,
+            // location: W46N51
+            '59bbc4282052a716c3ce7776': 0,
+            '59bbc4282052a716c3ce7777': 0,
+            // location: W44N53
+            '59bbc42a2052a716c3ce77ce': 0,
+            // location: W44N52
+            '59bbc42b2052a716c3ce77d0': 0,
+            // location: W44N51
+            '59bbc42b2052a716c3ce77d3': 0,
+            // location: W43N52
+            '59bbc42d2052a716c3ce7822': 0,
+            // location: W43N51
+            '59bbc42d2052a716c3ce7824': 0,
+            '59bbc42d2052a716c3ce7825': 0,
+            // location: W42N51
+            '59bbc4302052a716c3ce7862': 0
+        };
+        Memory.register_thieves = true;
+        Memory.rooms = {
+            // location: W46N53
+            '59bbc4262052a716c3ce7711': 'W46N53',
+            '59bbc4262052a716c3ce7712': 'W46N53',
+            // location: W45N52
+            '59bbc4282052a716c3ce7771': 'W45N52',
+            '59bbc4282052a716c3ce7772': 'W45N52',
+            // location: W46N51
+            '59bbc4282052a716c3ce7776': 'W46N51',
+            '59bbc4282052a716c3ce7777': 'W46N51',
+            // location: W44N53
+            '59bbc42a2052a716c3ce77ce': 'W44N53',
+            // location: W44N52
+            '59bbc42b2052a716c3ce77d0': 'W44N52',
+            // location: W44N51
+            '59bbc42b2052a716c3ce77d3': 'W44N51',
+            // location: W43N52
+            '59bbc42d2052a716c3ce7822': 'W43N52',
+            // location: W43N51
+            '59bbc42d2052a716c3ce7824': 'W43N51',
+            '59bbc42d2052a716c3ce7825': 'W43N51',
+            // location: W42N51
+            '59bbc4302052a716c3ce7862': 'W42N51'
+        };
+    }
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (cronJobs);
+
+/***/ }),
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -890,7 +990,7 @@ const roleThiefMule = {
 /* harmony default export */ __webpack_exports__["a"] = (roleThiefMule);
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1063,14 +1163,14 @@ function findAttackTarget(creep) {
 /* harmony default export */ __webpack_exports__["a"] = (actOffensive);
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["loop"] = loop;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__room__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cron__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__room__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cron__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__screeps_profiler__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__screeps_profiler___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__screeps_profiler__);
 
@@ -1185,22 +1285,22 @@ function loop() {
 }
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__screeps_profiler__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__screeps_profiler___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__roles_role_upgrader__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__roles_role_harvester__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__roles_role_mule__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__roles_role_worker__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__roles_role_claimer__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__roles_role_upgrader__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__roles_role_harvester__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__roles_role_mule__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__roles_role_worker__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__roles_role_claimer__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__roles_role_thief__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__roles_role_thiefmule__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__roles_role_offensive__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__spawner__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__task_manager__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__roles_role_thiefmule__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__roles_role_offensive__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__spawner__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__task_manager__ = __webpack_require__(17);
 
 
 
@@ -1551,7 +1651,7 @@ function updateRoomConsts(myRoom, mySpawns) {
 /* harmony default export */ __webpack_exports__["a"] = (RoomController);
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1573,7 +1673,7 @@ const roleUpgrader = {
 /* harmony default export */ __webpack_exports__["a"] = (roleUpgrader);
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1609,7 +1709,7 @@ const roleHarvester = {
 /* harmony default export */ __webpack_exports__["a"] = (roleHarvester);
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1632,7 +1732,7 @@ const roleMule = {
 /* harmony default export */ __webpack_exports__["a"] = (roleMule);
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1660,7 +1760,7 @@ const roleWorker = {
 /* harmony default export */ __webpack_exports__["a"] = (roleWorker);
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1686,12 +1786,12 @@ const roleClaimer = {
 /* harmony default export */ __webpack_exports__["a"] = (roleClaimer);
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__ = __webpack_require__(7);
 
 
 
@@ -1755,12 +1855,12 @@ const roleOffensive = {
 /* harmony default export */ __webpack_exports__["a"] = (roleOffensive);
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__roles_role_thief__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__roles_role_thiefmule__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__roles_role_thiefmule__ = __webpack_require__(6);
 
 
 
@@ -2063,6 +2163,8 @@ function getBody(myRoom, MaxParts, options = {}) {
     }
     let workCount = 0;
     if (options.harvester && myRoom.memory.hasMules && myRoom.memory.hasLinks && myRoom.memory.hasContainers) {
+        totalEnergy -= 1;
+        partArray.push(CARRY);
         while (totalEnergy >= 3 && workCount < MaxParts) {
             partArray.push(WORK);
             partArray.push(MOVE);
@@ -2078,11 +2180,8 @@ function getBody(myRoom, MaxParts, options = {}) {
         return partArray;
     }
     if (options.thief) {
-        partArray.push(WORK);
-        partArray.push(MOVE);
         partArray.push(CARRY);
-        totalEnergy -= 4;
-        workCount += 1;
+        totalEnergy -= 1;
         while (totalEnergy >= 3 && workCount < MaxParts) {
             partArray.push(WORK);
             partArray.push(MOVE);
@@ -2139,17 +2238,17 @@ function getBody(myRoom, MaxParts, options = {}) {
 /* harmony default export */ __webpack_exports__["a"] = (spawner);
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__actions_action_deposit__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_resupply__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__actions_action_claim__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_resupply__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__actions_action_claim__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__actions_action_harvest__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__actions_action_upgrade__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__actions_action_build__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__actions_action_upgrade__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__actions_action_build__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__util__ = __webpack_require__(1);
 
 
@@ -2217,7 +2316,7 @@ const taskManager = {
 /* harmony default export */ __webpack_exports__["a"] = (taskManager);
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2350,7 +2449,7 @@ function getResupplyTarget(creep) {
 /* harmony default export */ __webpack_exports__["a"] = (actResupply);
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2382,7 +2481,7 @@ const actClaim = {
 /* harmony default export */ __webpack_exports__["a"] = (actClaim);
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2405,7 +2504,7 @@ var actUpgrade = {
 /* harmony default export */ __webpack_exports__["a"] = (actUpgrade);
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2468,90 +2567,6 @@ function findRepairTarget(creep) {
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (actBuild);
-
-/***/ }),
-/* 21 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-const cronJobs = {
-    run() {
-        if (!Memory.cronCount) {
-            Memory.cronCount = 0;
-        }
-        Memory.cronCount += 1;
-        if (Memory.thieving_spots) {
-            Memory.register_thieves = false;
-            if (Memory.cronCount > 10) {
-                Memory.cronCount -= 10;
-                cronJobs.run10();
-            }
-        } else {
-            cronJobs.init();
-        }
-    },
-    run10() {
-        const checker = 4;
-        Object.keys(Memory.thieving_spots).forEach(key => {
-            if (Memory.thieving_spots[key] && !Game.creeps[Memory.thieving_spots[key]]) {
-                Memory.thieving_spots[key] = 0;
-            }
-        });
-    },
-    init() {
-        Memory.thieving_spots = {
-            // location: W46N53
-            '59bbc4262052a716c3ce7711': 0,
-            '59bbc4262052a716c3ce7712': 0,
-            // location: W45N52
-            '59bbc4282052a716c3ce7771': 0,
-            '59bbc4282052a716c3ce7772': 0,
-            // location: W46N51
-            '59bbc4282052a716c3ce7776': 0,
-            '59bbc4282052a716c3ce7777': 0,
-            // location: W44N53
-            '59bbc42a2052a716c3ce77ce': 0,
-            // location: W44N52
-            '59bbc42b2052a716c3ce77d0': 0,
-            // location: W44N51
-            '59bbc42b2052a716c3ce77d3': 0,
-            // location: W43N52
-            '59bbc42d2052a716c3ce7822': 0,
-            // location: W43N51
-            '59bbc42d2052a716c3ce7824': 0,
-            '59bbc42d2052a716c3ce7825': 0,
-            // location: W42N51
-            '59bbc4302052a716c3ce7862': 0
-        };
-        Memory.register_thieves = true;
-        Memory.rooms = {
-            // location: W46N53
-            '59bbc4262052a716c3ce7711': 'W46N53',
-            '59bbc4262052a716c3ce7712': 'W46N53',
-            // location: W45N52
-            '59bbc4282052a716c3ce7771': 'W45N52',
-            '59bbc4282052a716c3ce7772': 'W45N52',
-            // location: W46N51
-            '59bbc4282052a716c3ce7776': 'W46N51',
-            '59bbc4282052a716c3ce7777': 'W46N51',
-            // location: W44N53
-            '59bbc42a2052a716c3ce77ce': 'W44N53',
-            // location: W44N52
-            '59bbc42b2052a716c3ce77d0': 'W44N52',
-            // location: W44N51
-            '59bbc42b2052a716c3ce77d3': 'W44N51',
-            // location: W43N52
-            '59bbc42d2052a716c3ce7822': 'W43N52',
-            // location: W43N51
-            '59bbc42d2052a716c3ce7824': 'W43N51',
-            '59bbc42d2052a716c3ce7825': 'W43N51',
-            // location: W42N51
-            '59bbc4302052a716c3ce7862': 'W42N51'
-        };
-    }
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (cronJobs);
 
 /***/ })
 /******/ ]);

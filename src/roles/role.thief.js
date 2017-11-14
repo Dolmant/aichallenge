@@ -1,4 +1,7 @@
 // @flow
+
+import cronJobs from './../cron';
+
 const roleThief = {
     run(creep: Creep) {
         if (creep.memory.myTask == 'lazydeposit' && creep.memory.myBuildTarget) {
@@ -26,11 +29,13 @@ const roleThief = {
         let target;
         if (Memory.thieving_spots) {
             const targets = Object.keys(Memory.thieving_spots)
+            cronJobs.run10();
             for (var i = 0; i < targets.length; i += 1) {
                 if (Memory.thieving_spots[targets[i]] == 0) {
                     return targets[i];
                 }
             }
+
         } else {
             console.log('no thief object, failed');
             return '59bbc4262052a716c3ce7711';

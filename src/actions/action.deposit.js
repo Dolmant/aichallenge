@@ -101,6 +101,18 @@ const actDeposit = {
 function deposit_target(creep, isMule) {
     // Mule is the only one which will refuse to drop to a container
     var economy = creep.room.memory.myCreepCount.muleCount && (creep.room.memory.myCreepCount.harvesterCount > 0)
+    // We can use local links and containers and rely on mules for transport
+    var target = creep.pos.findInRange(FIND_STRUCTURES, 2, {
+        'filter': (structure) => {
+            // since links and stores have different energy checking methods, need this long filter to check both
+            return ((structure.structureType == STRUCTURE_LINK) && (structure.energy < structure.energyCapacity || (structure.storeCapacity && structure.store.energy < structure.storeCapacity)));
+        },
+        'algorithm': 'dijkstra',
+    });
+    if (target > 0) {
+        creep.memory.depositTarget = target[0].id;
+        return true;
+    }
     if ((creep.room.memory.hasContainers) && economy && !isMule) {
         // We can use local links and containers and rely on mules for transport
         var target = creep.pos.findInRange(FIND_STRUCTURES, 1, {
