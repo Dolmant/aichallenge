@@ -3,15 +3,15 @@ const actDeposit = {
     run: function(creep: Creep, isMule: boolean) {
         //if I'm carrying something that is not energy
         var currentEnergy = creep.carry.energy;
+        if (_.sum(creep.carry) == 0) {
+            delete creep.memory.depositTarget;
+            return true;
+        }
         if (_.sum(creep.carry) != currentEnergy) {
             deposit_resource(creep, isMule);
         }
         else if (!creep.memory.depositTarget) {
             deposit_target(creep, isMule);
-        }
-        if (_.sum(creep.carry) == 0) {
-            delete creep.memory.depositTarget;
-            return true;
         }
         var target = Game.getObjectById(creep.memory.depositTarget);
         if (target) {

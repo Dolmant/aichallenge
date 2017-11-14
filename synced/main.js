@@ -74,7 +74,7 @@ const actHarvest = {
         if (!creep.memory.sourceMap && !creep.memory.tempSourceMap) {
             getSource(creep);
         }
-        if (creep.carry.energy == creep.carryCapacity) {
+        if (creep.carryCapacity && creep.carry.energy == creep.carryCapacity) {
             // expect state change to deposit
             return true;
         }
@@ -103,7 +103,7 @@ const actHarvest = {
             var nearestSource = creep.pos.findClosestByPath(FIND_MINERALS);
             creep.memory.sourceMap = nearestSource && nearestSource.id;
         }
-        if (_.sum(creep.carry) == creep.carryCapacity) {
+        if (creep.carryCapacity && _.sum(creep.carry) == creep.carryCapacity) {
             // expect state change to deposit
             return true;
         }
@@ -566,14 +566,14 @@ const actDeposit = {
     run: function (creep, isMule) {
         //if I'm carrying something that is not energy
         var currentEnergy = creep.carry.energy;
+        if (_.sum(creep.carry) == 0) {
+            delete creep.memory.depositTarget;
+            return true;
+        }
         if (_.sum(creep.carry) != currentEnergy) {
             deposit_resource(creep, isMule);
         } else if (!creep.memory.depositTarget) {
             deposit_target(creep, isMule);
-        }
-        if (_.sum(creep.carry) == 0) {
-            delete creep.memory.depositTarget;
-            return true;
         }
         var target = Game.getObjectById(creep.memory.depositTarget);
         if (target) {
