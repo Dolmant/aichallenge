@@ -11,7 +11,7 @@ const roleClaimer = {
             console.log('Please define the claim flag target');
             creep.memory.myTask = '';
         } else {
-            creep.memory.goToTarget = Game.flags['Claim'].room.name;
+            creep.memory.goToTarget = Game.flags['Claim'].pos.roomName;
             creep.memory.myTask = 'goToTarget';
         }
 	}
