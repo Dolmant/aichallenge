@@ -980,7 +980,7 @@ var actOffensive = {
     renew: function (creep, mySpawns) {
         var inRange = creep.pos.getRangeTo(mySpawns[0].pos) <= 1;
         if (creep.ticksToLive > 1400) {
-            return;
+            return true;
         }
         if (!mySpawns[0].memory.renewTarget && inRange) {
             mySpawns[0].memory.renewTarget = creep.id;
