@@ -1355,6 +1355,7 @@ const RoomController = {
             'toughParts': 0,
             'blockerParts': 0,
             'harvesterCount': 0,
+            'harvesterLowCount': 0,
             'harvesterExtractorCount': 0,
             'upgraderCount': 0,
             'workerCount': 0,
@@ -1376,6 +1377,9 @@ const RoomController = {
             myCreepCount.sourceMap[creep.memory.sourceMap] = 1 + (myCreepCount.sourceMap[creep.memory.sourceMap] || 0);
             switch (creep.memory.role) {
                 default:
+                case 'harvesterLow':
+                    myCreepCount.harvesterLowCount += 1;
+                    break;
                 case 'harvester':
                     myCreepCount.harvesterParts += creep_size;
                     myCreepCount.harvesterCount += 1;
@@ -1462,6 +1466,7 @@ const RoomController = {
             if (__WEBPACK_IMPORTED_MODULE_10__task_manager__["a" /* default */].run(creep, mySpawns)) {
                 switch (creep.memory.role) {
                     default:
+                    case 'harvesterLow':
                     case 'harvester':
                         __WEBPACK_IMPORTED_MODULE_2__roles_role_harvester__["a" /* default */].run(creep);
                         break;
@@ -1918,11 +1923,11 @@ const spawner = {
                     }
                 });
                 let canSpawn = true;
-                if (myCreepCount.harvesterCount < 1) //just in case, if there are no harvesters spawn a harvester
+                if (myCreepCount.harvesterCount < 1 && myCreepCount.harvesterLowCount < 1) //just in case, if there are no harvesters spawn a harvester
                     {
                         Spawn.spawnCreep([WORK, CARRY, MOVE], 'HarvesterLow' + Game.time, {
                             memory: {
-                                'role': 'harvester',
+                                'role': 'harvesterLow',
                                 'sourceMap': sourceMap
                             }
                         });

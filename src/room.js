@@ -50,6 +50,7 @@ const RoomController = {
             'toughParts': 0,
             'blockerParts': 0,
             'harvesterCount': 0,
+            'harvesterLowCount': 0,
             'harvesterExtractorCount': 0,
             'upgraderCount': 0,
             'workerCount': 0,
@@ -71,6 +72,9 @@ const RoomController = {
             myCreepCount.sourceMap[creep.memory.sourceMap] = 1 + (myCreepCount.sourceMap[creep.memory.sourceMap] || 0);
             switch(creep.memory.role){
                 default:
+                case 'harvesterLow':
+                    myCreepCount.harvesterLowCount += 1;
+                    break;
                 case 'harvester':
                     myCreepCount.harvesterParts += creep_size;
                     myCreepCount.harvesterCount += 1;
@@ -157,6 +161,7 @@ const RoomController = {
             if (taskManager.run(creep, mySpawns)) {
                 switch(creep.memory.role){
                     default:
+                    case 'harvesterLow':
                     case 'harvester':
                         roleHarvester.run(creep);
                         break;

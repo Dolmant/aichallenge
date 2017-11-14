@@ -52,11 +52,11 @@ const spawner = {
                     }
                 });
                 let canSpawn = true;
-                if(myCreepCount.harvesterCount < 1)//just in case, if there are no harvesters spawn a harvester
+                if(myCreepCount.harvesterCount < 1 && myCreepCount.harvesterLowCount < 1)//just in case, if there are no harvesters spawn a harvester
                 {
                     Spawn.spawnCreep([WORK, CARRY, MOVE], 'HarvesterLow' + Game.time, {
                         memory: {
-                            'role': 'harvester',
+                            'role': 'harvesterLow',
                             'sourceMap': sourceMap,
                         },
                     });
