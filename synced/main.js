@@ -979,6 +979,9 @@ var actOffensive = {
     },
     renew: function (creep, mySpawns) {
         var inRange = creep.pos.getRangeTo(mySpawns[0].pos) <= 1;
+        if (creep.ticksToLive > 1400) {
+            return;
+        }
         if (!mySpawns[0].memory.renewTarget && inRange) {
             mySpawns[0].memory.renewTarget = creep.id;
         } else if (!inRange) {
@@ -1723,10 +1726,7 @@ const roleOffensive = {
             }
             var marshalFlag = Game.flags['Marshal'];
             if (creep.room.name == marshalFlag.pos.roomName) {
-                if (creep.memory.myTask == 'renew' && creep.ticksToLive > 1400) {
-                    creep.memory.myTask = 'gather';
-                }
-                if (creep.ticksToLive < 1000 || creep.memory.myTask == 'renew') {
+                if (creep.ticksToLive < 1000) {
                     creep.memory.myTask = 'renew';
                 } else {
                     creep.memory.myTask = 'gather';

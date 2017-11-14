@@ -45,10 +45,7 @@ const roleOffensive = {
             }
             var marshalFlag = Game.flags['Marshal'];
             if (creep.room.name == marshalFlag.pos.roomName) {
-                if (creep.memory.myTask == 'renew' && creep.ticksToLive > 1400) {
-                    creep.memory.myTask = 'gather';
-                }
-                if (creep.ticksToLive < 1000 || creep.memory.myTask == 'renew') {
+                if (creep.ticksToLive < 1000) {
                     creep.memory.myTask = 'renew';
                 } else {
                     creep.memory.myTask = 'gather';
