@@ -808,6 +808,7 @@ const roleThief = {
             creep.memory.myTask = 'build';
         } else if (creep.carry.energy < creep.carryCapacity) {
             if (creep.memory.myTask == 'harvest') {
+                //harvest appends these details
                 creep.memory.myTask = 'moveToTarget';
             } else {
                 creep.memory.myTask = 'harvest';
@@ -1915,7 +1916,7 @@ const spawner = {
                 if (myCreepCount.thiefParts < MaxParts.thief * MaxThiefCount && Memory.misc.globalCreeps.thief < MaxThiefCount && Memory.misc.globalCreeps.thiefmule > Memory.misc.globalCreeps.thief / 2 && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Thief' + Game.time;
                     var target = __WEBPACK_IMPORTED_MODULE_0__roles_role_thief__["a" /* default */].generateStealTarget();
-                    Spawn.spawnCreep(getBody(myRoom, MaxParts.thief), newName, {
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.thief, { 'thief': true }), newName, {
                         memory: {
                             'role': 'thief',
                             'sourceMap': target,
@@ -2058,16 +2059,11 @@ function getBody(myRoom, MaxParts, options = {}) {
         return partArray;
     }
     let workCount = 0;
-    if (options.harvester && myRoom.memory.hasMules && myRoom.memory.hasLinks && myRoom.memory.hasContainers) {
-        partArray.push(WORK);
-        partArray.push(MOVE);
-        partArray.push(CARRY);
-        totalEnergy -= 4;
-        workCount = 1;
-        while (totalEnergy >= 4 && workCount < MaxParts) {
+    if (options.harvester && myRoom.memory.hasMules && myRoom.memory.hasLinks && myRoom.memory.hasContainers || options.thief) {
+        while (totalEnergy >= 3 && workCount < MaxParts) {
             partArray.push(WORK);
             partArray.push(MOVE);
-            totalEnergy -= 4;
+            totalEnergy -= 3;
             workCount += 1;
             if (totalEnergy >= 4 && workCount < MaxParts) {
                 partArray.push(WORK);

@@ -5,6 +5,7 @@ const roleThief = {
             creep.memory.myTask = 'build';
         } else if (creep.carry.energy < creep.carryCapacity) {
             if (creep.memory.myTask == 'harvest') {
+                //harvest appends these details
                 creep.memory.myTask = 'moveToTarget';
             } else {
                 creep.memory.myTask = 'harvest';
