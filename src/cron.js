@@ -48,33 +48,32 @@ const cronJobs = {
             '59bbc4302052a716c3ce7862': 0,
         }
         global.register_thieves = true;
-    }
-    global.rooms = {
-        // location: W46N53
-        '59bbc4262052a716c3ce7711': 'W46N53',
-        '59bbc4262052a716c3ce7712': 'W46N53',
-        // location: W45N52
-        '59bbc4282052a716c3ce7771': 'W45N52',
-        '59bbc4282052a716c3ce7772': 'W45N52',
-        // location: W46N51
-        '59bbc4282052a716c3ce7776': 'W46N51',
-        '59bbc4282052a716c3ce7777': 'W46N51',
-        // location: W44N53
-        '59bbc42a2052a716c3ce77ce': 'W44N53',
-        // location: W44N52
-        '59bbc42b2052a716c3ce77d0': 'W44N52',
-        // location: W44N51
-        '59bbc42b2052a716c3ce77d3': 'W44N51',
-        // location: W43N52
-        '59bbc42d2052a716c3ce7822': 'W43N52',
-        // location: W43N51
-        '59bbc42d2052a716c3ce7824': 'W43N51',
-        '59bbc42d2052a716c3ce7825': 'W43N51',
-        // location: W42N51
-        '59bbc4302052a716c3ce7862': 'W42N51',
-    }
-    global.register_thieves = true;
-}
+        global.rooms = {
+            // location: W46N53
+            '59bbc4262052a716c3ce7711': 'W46N53',
+            '59bbc4262052a716c3ce7712': 'W46N53',
+            // location: W45N52
+            '59bbc4282052a716c3ce7771': 'W45N52',
+            '59bbc4282052a716c3ce7772': 'W45N52',
+            // location: W46N51
+            '59bbc4282052a716c3ce7776': 'W46N51',
+            '59bbc4282052a716c3ce7777': 'W46N51',
+            // location: W44N53
+            '59bbc42a2052a716c3ce77ce': 'W44N53',
+            // location: W44N52
+            '59bbc42b2052a716c3ce77d0': 'W44N52',
+            // location: W44N51
+            '59bbc42b2052a716c3ce77d3': 'W44N51',
+            // location: W43N52
+            '59bbc42d2052a716c3ce7822': 'W43N52',
+            // location: W43N51
+            '59bbc42d2052a716c3ce7824': 'W43N51',
+            '59bbc42d2052a716c3ce7825': 'W43N51',
+            // location: W42N51
+            '59bbc4302052a716c3ce7862': 'W42N51',
+        }
+        global.register_thieves = true;
+    },
 }
 
 export default cronJobs;
