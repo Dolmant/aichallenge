@@ -1786,7 +1786,7 @@ const spawner = {
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         MaxMuleCount = myRoom.memory.hasExtractor ? 3 : MaxMuleCount;
         var MaxUpgraderCount = myRoom.memory.hasLinks ? 0 : 0;
-        var MaxThiefCount = myRoom.memory.marshalForce ? 8 : 8;
+        var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 13;
         var MaxThiefMuleCount = MaxThiefCount * 2;
         var MaxMeleeCount = myRoom.memory.marshalForce ? Memory.attackers.forceSize - 3 : 0;
         var MaxRangedCount = myRoom.memory.marshalForce ? 2 : 0;
@@ -1912,7 +1912,7 @@ const spawner = {
                     console.log('Spawning: ' + newName);
                     canSpawn = false;
                 }
-                if (myCreepCount.thiefParts < MaxParts.thief * MaxThiefCount && Memory.misc.globalCreeps.thief < MaxThiefCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
+                if (myCreepCount.thiefParts < MaxParts.thief * MaxThiefCount && Memory.misc.globalCreeps.thief < MaxThiefCount && Memory.misc.globalCreeps.thiefmule > Memory.misc.globalCreeps.thief && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Thief' + Game.time;
                     var target = __WEBPACK_IMPORTED_MODULE_0__roles_role_thief__["a" /* default */].generateStealTarget();
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.thief), newName, {
