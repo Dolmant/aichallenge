@@ -11,8 +11,7 @@ const roleThief = {
                 } else {
                     creep.memory.myTask = 'moveToObject';
                 }
-            }
-            if (creep.memory.myTask == 'harvest') {
+            } else if (creep.memory.myTask == 'harvest') {
                 //harvest appends these details
                 creep.memory.myTask = 'moveToTarget';
             } else {
