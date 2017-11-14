@@ -74,7 +74,7 @@ const actHarvest = {
         if (!creep.memory.sourceMap && !creep.memory.tempSourceMap) {
             getSource(creep);
         }
-        if (!creep.carryCapacity || creep.carry.energy == creep.carryCapacity) {
+        if (creep.carryCapacity && creep.carry.energy == creep.carryCapacity) {
             // expect state change to deposit
             return true;
         }
