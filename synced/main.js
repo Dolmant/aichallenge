@@ -1407,7 +1407,7 @@ const RoomController = {
 
 function runTowers(myTowers) {
     myTowers.forEach(tower => {
-        var minRepair = 20000;
+        var minRepair = 100000;
         var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if (closestHostile) {
             tower.attack(closestHostile);
