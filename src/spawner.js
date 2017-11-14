@@ -172,6 +172,7 @@ const spawner = {
                             'moveToObjectRange': 1,
                         },
                     });
+                    Memory.misc.globalCreeps.thief += 1;
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
@@ -189,6 +190,7 @@ const spawner = {
                             'home': home,
                         },
                     });
+                    Memory.misc.globalCreeps.thiefmule += 1;
                     console.log('Spawning: '+ newName);
                     canSpawn = false;
                 }
