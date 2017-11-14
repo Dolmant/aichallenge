@@ -613,7 +613,7 @@ const actDeposit = {
     lazydeposit: function (creep) {
         if (creep.memory.lazyContainer) {
             const lazyContainer = Game.getObjectById(creep.memory.lazyContainer);
-            if (creep.carry.energy == 0) {
+            if (!creep.carryCapacity || creep.carry.energy == 0) {
                 return true;
             }
             if (lazyContainer) {
