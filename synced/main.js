@@ -1063,7 +1063,7 @@ const RoomController = {
                 case 'thief':
                     myCreepCount.thiefParts += creep_size;
                     Memory.misc.globalCreepsTemp.thief += 1;
-                    if (Memory.register_thieves) {
+                    if (Memory.register_thieves && (creep.memory.sourceMap || creep.memory.tempSourceMap)) {
                         Memory.thieving_spots[creep.memory.sourceMap || creep.memory.tempSourceMap] = creep.name;
                     }
                     break;
