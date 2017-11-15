@@ -1907,29 +1907,31 @@ const spawner = {
         var MaxToughCount = myRoom.memory.marshalForce ? 5 : 0;
         var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
         var referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
+
         let canSpawn = true;
+
+        var sourceMapNumber = 99;
+        var sourceMap = 0;
+
+        // TODO kill this as this is just a safetycheck
+        // if (!myRoom.memory.sources) {myRoom.memory.sources = myRoom.find(FIND_SOURCES).map(source => source.id);}
+
+        myRoom.memory.sources.forEach(source => {
+            if ((myCreepCount.sourceMap[source] || 0) < sourceMapNumber) {
+                sourceMapNumber = myCreepCount.sourceMap[source] || 0;
+                sourceMap = source;
+            }
+        });
+
         mySpawns.forEach(Spawn => {
             if (!Spawn.spawning && canSpawn) {
-                var sourceMapNumber = 99;
-                var sourceMap = 0;
-
-                // TODO kill this as this is just a safetycheck
-                // if (!myRoom.memory.sources) {myRoom.memory.sources = myRoom.find(FIND_SOURCES).map(source => source.id);}
-
-                myRoom.memory.sources.forEach(source => {
-                    if ((myCreepCount.sourceMap[source] || 0) < sourceMapNumber) {
-                        sourceMapNumber = myCreepCount.sourceMap[source] || 0;
-                        sourceMap = source;
-                    }
-                });
-
                 if (myCreepCount.harvesterCount < 1 && myCreepCount.harvesterLowCount < 1) //just in case, if there are no harvesters spawn a harvester
                     {
                         var newName = 'HarvesterLow' + Game.time;
                         Spawn.spawnCreep([WORK, CARRY, MOVE], newName, {
                             memory: {
                                 'role': 'harvesterLow',
-                                'sourceMap': sourceMap
+                                'tempSourceMap': sourceMap
                             }
                         });
                         console.log('Spawning: ' + newName);
@@ -1978,7 +1980,7 @@ const spawner = {
                     myRoom.memory.spawnClaimer -= 1;
                     canSpawn = false;
                 }
-                if (myCreepCount.workerParts < MaxParts.worker * MaxWorkerCount && myCreepCount.workerCount < MaxWorkerCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
+                if (myCreepCount.workerParts < MaxParts.worker * MaxWorkerCount && myCreepCount.workerCount < MaxWorkerCount && myCreepCount.muleCount >= MaxMuleCount / 2 && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                     var newName = 'Worker' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.worker, { 'worker': true }), newName, {
                         memory: {
