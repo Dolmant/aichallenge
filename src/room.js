@@ -159,8 +159,8 @@ const RoomController = {
         // break;
         myRoom.memory.myCreepCount = myCreepCount;
 
-        Memory.stats['cpu.' + myRoom.name + '.taskManager'] = 0;
-        Memory.stats['cpu.' + myRoom.name + '.roles'] = 0;
+        Memory.stats['rooms.' + myRoom.name + '.cpu.taskManager'] = 0;
+        Memory.stats['rooms.' + myRoom.name + '.cpu.roles'] = 0;
         let rolesCpu = 0;
         
         let convert = null;
@@ -205,7 +205,7 @@ const RoomController = {
                         roleOffensive.run(creep, mySpawns);
                         break;
                 }
-                Memory.stats['cpu.' + myRoom.name + '.roles'] += Game.cpu.getUsed() - rolesCpu;
+                Memory.stats['rooms.' + myRoom.name + '.cpu.roles'] += Game.cpu.getUsed() - rolesCpu;
             }
         });
 
@@ -231,9 +231,9 @@ const RoomController = {
 
 
 
-        Memory.stats['cpu.' + myRoom.name + '.spawner'] = Game.cpu.getUsed();
+        Memory.stats['rooms.' + myRoom.name + '.cpu.spawner'] = Game.cpu.getUsed();
         spawner.run(myRoom, mySpawns, myCreepCount, totalCreeps, convert);
-        Memory.stats['cpu.' + myRoom.name + '.spawner'] = Game.cpu.getUsed() - Memory.stats['cpu.' + myRoom.name + '.spawner'];
+        Memory.stats['rooms.' + myRoom.name + '.cpu.spawner'] = Game.cpu.getUsed() - Memory.stats['rooms.' + myRoom.name + '.cpu.spawner'];
 	}
 }
 
