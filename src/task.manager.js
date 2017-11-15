@@ -60,7 +60,7 @@ const taskManager = {
                 console.log('State machine failed, investigate');
                 return true;
         }
-        Memory.stats['rooms.' + creep.room.name + '.cpu.taskManager'] += Game.cpu.getUsed() - cpu;
+        Memory.stats['room.' + creep.room.name + '.cpu.taskManager'] += Game.cpu.getUsed() - cpu;
     }
 }
 
