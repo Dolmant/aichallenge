@@ -1924,8 +1924,8 @@ const spawner = {
         });
 
         // mySpawns.forEach(Spawn => {
-        const Spawn = mySpawns[0];
-        if (!Spawn.spawning && canSpawn) {
+        const Spawn = mySpawns && mySpawns[0];
+        if (Spawn && !Spawn.spawning && canSpawn) {
             if (myCreepCount.harvesterCount < 1 && myCreepCount.harvesterLowCount < 1) //just in case, if there are no harvesters spawn a harvester
                 {
                     var newName = 'HarvesterLow' + Game.time;
