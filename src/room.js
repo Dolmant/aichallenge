@@ -165,7 +165,9 @@ const RoomController = {
         
         let convert = null;
         myCreeps.forEach(creep => {
+            let cpu = Game.cpu.getUsed();
             if (taskManager.run(creep, mySpawns)) {
+                Memory.stats['room.' + myRoom.name + '.cpu.taskManager'] += Game.cpu.getUsed() - cpu;
                 rolesCpu = Game.cpu.getUsed();
                 switch(creep.memory.role){
                     default:
@@ -206,6 +208,8 @@ const RoomController = {
                         break;
                 }
                 Memory.stats['room.' + myRoom.name + '.cpu.roles'] += Game.cpu.getUsed() - rolesCpu;
+            } else {
+                Memory.stats['room.' + myRoom.name + '.cpu.taskManager'] += Game.cpu.getUsed() - cpu;
             }
         });
 

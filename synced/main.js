@@ -1122,7 +1122,9 @@ const RoomController = {
 
         let convert = null;
         myCreeps.forEach(creep => {
+            let cpu = Game.cpu.getUsed();
             if (__WEBPACK_IMPORTED_MODULE_9__task_manager__["a" /* default */].run(creep, mySpawns)) {
+                Memory.stats['room.' + myRoom.name + '.cpu.taskManager'] += Game.cpu.getUsed() - cpu;
                 rolesCpu = Game.cpu.getUsed();
                 switch (creep.memory.role) {
                     default:
@@ -1163,6 +1165,8 @@ const RoomController = {
                         break;
                 }
                 Memory.stats['room.' + myRoom.name + '.cpu.roles'] += Game.cpu.getUsed() - rolesCpu;
+            } else {
+                Memory.stats['room.' + myRoom.name + '.cpu.taskManager'] += Game.cpu.getUsed() - cpu;
             }
         });
 
@@ -1951,7 +1955,6 @@ function getBody(myRoom, MaxParts, options = {}) {
 
 const taskManager = {
     run: function (creep, mySpawns) {
-        let cpu = Game.cpu.getUsed();
         switch (creep.memory.myTask) {
             case 'claim':
                 return __WEBPACK_IMPORTED_MODULE_2__actions_action_claim__["a" /* default */].run(creep);
@@ -1996,7 +1999,6 @@ const taskManager = {
                 console.log('State machine failed, investigate');
                 return true;
         }
-        Memory.stats['room.' + creep.room.name + '.cpu.taskManager'] += Game.cpu.getUsed() - cpu;
     }
 };
 
