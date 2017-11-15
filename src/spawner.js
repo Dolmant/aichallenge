@@ -83,7 +83,7 @@ const spawner = {
                         delete Spawn.memory.renewTarget;
                     }
                 }
-                if(myCreepCount.harvesterParts < MaxParts.harvester * MaxHarvesterCount && myCreepCount.harvesterCount < MaxHarvesterCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.harvesterParts < MaxParts.harvester * MaxHarvesterCount && myCreepCount.harvesterCount < MaxHarvesterCount && (myRoom.energyAvailable >= referenceEnergy || myRoom.energyAvailable >= 1200)  && canSpawn)
                 {
                     var newName = 'Harvester' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.harvester, {'harvester': true}), newName, {
@@ -111,7 +111,7 @@ const spawner = {
                     myRoom.memory.spawnClaimer -= 1;
                     canSpawn = false;
                 }
-                if(myCreepCount.workerParts < MaxParts.worker * MaxWorkerCount && myCreepCount.workerCount < MaxWorkerCount && myCreepCount.muleCount >= MaxMuleCount/2 && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if(myCreepCount.workerParts < MaxParts.worker * MaxWorkerCount && myCreepCount.workerCount < MaxWorkerCount && myCreepCount.muleCount >= MaxMuleCount/2 && (myRoom.energyAvailable >= referenceEnergy || myRoom.energyAvailable >= 2000) && canSpawn)
                 {
                     var newName = 'Worker' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.worker, {'worker': true}), newName, {
@@ -128,7 +128,7 @@ const spawner = {
                     convert.memory.sourceMap = sourceMap;
                     canSpawn = false;
                 }
-                if (myCreepCount.muleParts < MaxParts.mule * MaxMuleCount && myCreepCount.muleCount < MaxMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                if (myCreepCount.muleParts < MaxParts.mule * MaxMuleCount && myCreepCount.muleCount < MaxMuleCount && (myRoom.energyAvailable >= referenceEnergy || myRoom.energyAvailable >= 1500)  && canSpawn)
                 {
                     var newName = 'Mule' + Game.time;
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, {'carryOnly': true}), newName, {
