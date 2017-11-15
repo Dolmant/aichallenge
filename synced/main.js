@@ -1116,8 +1116,8 @@ const RoomController = {
         // break;
         myRoom.memory.myCreepCount = myCreepCount;
 
-        Memory.stats['cpu.' + myRoom.name + 'taskManager'] = 0;
-        Memory.stats['cpu.' + myRoom.name + 'roles'] = 0;
+        Memory.stats['cpu.' + myRoom.name + '.taskManager'] = 0;
+        Memory.stats['cpu.' + myRoom.name + '.roles'] = 0;
         let rolesCpu = 0;
 
         let convert = null;
@@ -1162,7 +1162,7 @@ const RoomController = {
                         __WEBPACK_IMPORTED_MODULE_7__roles_role_offensive__["a" /* default */].run(creep, mySpawns);
                         break;
                 }
-                Memory.stats['cpu.' + myRoom.name + 'roles'] += Game.cpu.getUsed() - rolesCpu;
+                Memory.stats['cpu.' + myRoom.name + '.roles'] += Game.cpu.getUsed() - rolesCpu;
             }
         });
 
@@ -1996,7 +1996,7 @@ const taskManager = {
                 console.log('State machine failed, investigate');
                 return true;
         }
-        Memory.stats['cpu.' + creep.room.name + 'taskManager'] += Game.cpu.getUsed() - cpu;
+        Memory.stats['cpu.' + creep.room.name + '.taskManager'] += Game.cpu.getUsed() - cpu;
     }
 };
 
