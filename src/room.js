@@ -24,16 +24,13 @@ import taskManager from './task.manager';
 
 const RoomController = {
     run: function(myRoom: Room) {
-        Memory.stats['cpu.roomInit'] = Game.cpu.getUsed();
-        if(myRoom.memory.timer == undefined)
-        {
+        const SroomInit = Game.cpu.getUsed();
+        if(myRoom.memory.timer == undefined) {
             initializeRoomConsts(myRoom);
         }
-        else
-        {
+        else {
             myRoom.memory.timer++;
         }
-        Memory.stats['cpu.roomInit'] = Game.cpu.getUsed() - Memory.stats['cpu.roomInit'];
 
         var myCreeps: Creep = myRoom.find(FIND_MY_CREEPS);
         var mySpawns = myRoom.find(FIND_MY_SPAWNS);
@@ -144,6 +141,8 @@ const RoomController = {
                     break;
             }
         });
+
+        Memory.stats['cpu.roomInit'] += Game.cpu.getUsed() - SroomInit;
         // switch(creep.memory.role) {
         //     case 'worker':
         //         creep.memory.myTask = 'resupply';

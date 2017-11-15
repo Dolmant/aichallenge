@@ -863,6 +863,7 @@ function loop() {
     Memory.stats['cpu.links'] = 0;
     Memory.stats['cpu.runTowers'] = 0;
     Memory.stats['cpu.roomUpdateConsts'] = 0;
+    Memory.stats['cpu.roomInit'] = 0;
 
     Memory.stats['cpu.cron'] = Game.cpu.getUsed();
     __WEBPACK_IMPORTED_MODULE_1__cron__["a" /* default */].run();
@@ -985,13 +986,12 @@ function loop() {
 
 const RoomController = {
     run: function (myRoom) {
-        Memory.stats['cpu.roomInit'] = Game.cpu.getUsed();
+        const SroomInit = Game.cpu.getUsed();
         if (myRoom.memory.timer == undefined) {
             initializeRoomConsts(myRoom);
         } else {
             myRoom.memory.timer++;
         }
-        Memory.stats['cpu.roomInit'] = Game.cpu.getUsed() - Memory.stats['cpu.roomInit'];
 
         var myCreeps = myRoom.find(FIND_MY_CREEPS);
         var mySpawns = myRoom.find(FIND_MY_SPAWNS);
@@ -1102,6 +1102,8 @@ const RoomController = {
                     break;
             }
         });
+
+        Memory.stats['cpu.roomInit'] += Game.cpu.getUsed() - SroomInit;
         // switch(creep.memory.role) {
         //     case 'worker':
         //         creep.memory.myTask = 'resupply';

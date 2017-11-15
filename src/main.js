@@ -25,6 +25,7 @@ export function loop() {
     Memory.stats['cpu.links'] = 0;
     Memory.stats['cpu.runTowers'] = 0;
     Memory.stats['cpu.roomUpdateConsts'] = 0;
+    Memory.stats['cpu.roomInit']  = 0;
 
     Memory.stats['cpu.cron'] = Game.cpu.getUsed();
     cronJobs.run();
