@@ -859,6 +859,11 @@ function loop() {
             delete Memory.creeps[name];
         }
     }
+
+    Memory.stats['cpu.links'] = 0;
+    Memory.stats['cpu.runTowers'] = 0;
+    Memory.stats['cpu.roomUpdateConsts'] = 0;
+
     Memory.stats['cpu.cron'] = Game.cpu.getUsed();
     __WEBPACK_IMPORTED_MODULE_1__cron__["a" /* default */].run();
     Memory.stats['cpu.cron'] = Game.cpu.getUsed() - Memory.stats['cpu.cron'];
@@ -921,6 +926,7 @@ function loop() {
         __WEBPACK_IMPORTED_MODULE_0__room__["a" /* default */].run(Room);
     }
     Memory.stats['cpu.roomController'] = Game.cpu.getUsed() - Memory.stats['cpu.roomController'];
+
     Memory.misc.globalCreeps = {
         'healer': Memory.misc.globalCreepsTemp.healer,
         'ranged': Memory.misc.globalCreepsTemp.ranged,
@@ -1166,20 +1172,20 @@ const RoomController = {
         // }
 
         var myTowers = myRoom.find(FIND_MY_STRUCTURES).filter(structure => structure.structureType == STRUCTURE_TOWER);
-
-        Memory.stats['cpu.' + myRoom.name + '.updateConsts'] = Game.cpu.getUsed();
-        updateRoomConsts(myRoom);
-        Memory.stats['cpu.' + myRoom.name + '.updateConsts'] = Game.cpu.getUsed() - Memory.stats['cpu.' + myRoom.name + '.updateConsts'];
-
-        Memory.stats['cpu.' + myRoom.name + '.runTowers'] = Game.cpu.getUsed();
-        runTowers(myTowers);
-        Memory.stats['cpu.' + myRoom.name + '.runTowers'] = Game.cpu.getUsed() - Memory.stats['cpu.' + myRoom.name + '.runTowers'];
-
-        Memory.stats['cpu.' + myRoom.name + '.links'] = Game.cpu.getUsed();
-        transferLinks(myRoom.memory.links);
-        Memory.stats['cpu.' + myRoom.name + '.links'] = Game.cpu.getUsed() - Memory.stats['cpu.' + myRoom.name + '.links'];
-
         myRoom.memory.hasMules = myCreepCount.muleCount;
+
+        const SroomUpdateConsts = Game.cpu.getUsed();
+        updateRoomConsts(myRoom);
+        Memory.stats['cpu.roomUpdateConsts'] += Game.cpu.getUsed() - SroomUpdateConsts;
+
+        const SrunTowers = Game.cpu.getUsed();
+        runTowers(myTowers);
+        Memory.stats['cpu.runTowers'] += Game.cpu.getUsed() - SrunTowers;
+
+        const Slinks = Game.cpu.getUsed();
+        transferLinks(myRoom.memory.links);
+        Memory.stats['cpu.links'] += Game.cpu.getUsed() - Slinks;
+
         Memory.stats['cpu.' + myRoom.name + '.spawner'] = Game.cpu.getUsed();
         __WEBPACK_IMPORTED_MODULE_8__spawner__["a" /* default */].run(myRoom, mySpawns, myCreepCount, totalCreeps, convert);
         Memory.stats['cpu.' + myRoom.name + '.spawner'] = Game.cpu.getUsed() - Memory.stats['cpu.' + myRoom.name + '.spawner'];

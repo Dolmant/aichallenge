@@ -21,6 +21,11 @@ export function loop() {
             delete Memory.creeps[name];
         }
     }
+
+    Memory.stats['cpu.links'] = 0;
+    Memory.stats['cpu.runTowers'] = 0;
+    Memory.stats['cpu.roomUpdateConsts'] = 0;
+
     Memory.stats['cpu.cron'] = Game.cpu.getUsed();
     cronJobs.run();
     Memory.stats['cpu.cron'] = Game.cpu.getUsed() - Memory.stats['cpu.cron'];
@@ -83,6 +88,7 @@ export function loop() {
         RoomController.run(Room)
     }
     Memory.stats['cpu.roomController'] = Game.cpu.getUsed() - Memory.stats['cpu.roomController'];
+
     Memory.misc.globalCreeps = {
         'healer': Memory.misc.globalCreepsTemp.healer,
         'ranged': Memory.misc.globalCreepsTemp.ranged,

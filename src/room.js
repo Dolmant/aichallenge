@@ -215,20 +215,22 @@ const RoomController = {
 		// }
 
         var myTowers = myRoom.find(FIND_MY_STRUCTURES).filter(structure => structure.structureType == STRUCTURE_TOWER);
-
-        Memory.stats['cpu.' + myRoom.name + '.updateConsts'] = Game.cpu.getUsed();
-        updateRoomConsts(myRoom);
-        Memory.stats['cpu.' + myRoom.name + '.updateConsts'] = Game.cpu.getUsed() - Memory.stats['cpu.' + myRoom.name + '.updateConsts'];
-
-        Memory.stats['cpu.' + myRoom.name + '.runTowers'] = Game.cpu.getUsed();
-        runTowers(myTowers);
-        Memory.stats['cpu.' + myRoom.name + '.runTowers'] = Game.cpu.getUsed() - Memory.stats['cpu.' + myRoom.name + '.runTowers'];
-
-        Memory.stats['cpu.' + myRoom.name + '.links'] = Game.cpu.getUsed() ;
-        transferLinks(myRoom.memory.links);
-        Memory.stats['cpu.' + myRoom.name + '.links'] = Game.cpu.getUsed() - Memory.stats['cpu.' + myRoom.name + '.links'];
-
         myRoom.memory.hasMules = myCreepCount.muleCount;
+
+        const SroomUpdateConsts = Game.cpu.getUsed();
+        updateRoomConsts(myRoom);
+        Memory.stats['cpu.roomUpdateConsts'] += Game.cpu.getUsed() - SroomUpdateConsts;
+
+        const SrunTowers = Game.cpu.getUsed();
+        runTowers(myTowers);
+        Memory.stats['cpu.runTowers'] += Game.cpu.getUsed() - SrunTowers;
+
+        const Slinks  = Game.cpu.getUsed() ;
+        transferLinks(myRoom.memory.links);
+        Memory.stats['cpu.links'] += Game.cpu.getUsed() - Slinks;
+
+
+
         Memory.stats['cpu.' + myRoom.name + '.spawner'] = Game.cpu.getUsed();
         spawner.run(myRoom, mySpawns, myCreepCount, totalCreeps, convert);
         Memory.stats['cpu.' + myRoom.name + '.spawner'] = Game.cpu.getUsed() - Memory.stats['cpu.' + myRoom.name + '.spawner'];
