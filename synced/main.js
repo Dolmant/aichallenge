@@ -899,6 +899,7 @@ function loop() {
             Memory.stats['room.' + room.name + '.myRoom'] = 1;
             Memory.stats['room.' + room.name + '.energyAvailable'] = room.energyAvailable;
             Memory.stats['room.' + room.name + '.energyCapacityAvailable'] = room.energyCapacityAvailable;
+            Memory.stats['room.' + room.name + '.controllerSpeed'] = room.controller.progress - Memory.stats['room.' + room.name + '.controllerProgress'];
             Memory.stats['room.' + room.name + '.controllerProgress'] = room.controller.progress;
             Memory.stats['room.' + room.name + '.controllerProgressTotal'] = room.controller.progressTotal;
             var stored = 0;

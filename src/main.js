@@ -59,10 +59,11 @@ export function loop() {
         var isMyRoom = (room.controller ? room.controller.my : 0)
         if (isMyRoom) {
             Memory.stats['room.' + room.name + '.myRoom'] = 1
-            Memory.stats['room.' + room.name + '.energyAvailable'] = room.energyAvailable
-            Memory.stats['room.' + room.name + '.energyCapacityAvailable'] = room.energyCapacityAvailable
-            Memory.stats['room.' + room.name + '.controllerProgress'] = room.controller.progress
-            Memory.stats['room.' + room.name + '.controllerProgressTotal'] = room.controller.progressTotal
+            Memory.stats['room.' + room.name + '.energyAvailable'] = room.energyAvailable;
+            Memory.stats['room.' + room.name + '.energyCapacityAvailable'] = room.energyCapacityAvailable;
+            Memory.stats['room.' + room.name + '.controllerSpeed'] = room.controller.progress - Memory.stats['room.' + room.name + '.controllerProgress'];
+            Memory.stats['room.' + room.name + '.controllerProgress'] = room.controller.progress;
+            Memory.stats['room.' + room.name + '.controllerProgressTotal'] = room.controller.progressTotal;
             var stored = 0
             var storedTotal = 0
         
