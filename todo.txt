@@ -5,13 +5,16 @@ graphana
 
 tomorrow:
 defend from neutral creeps
+implement automatic creep production vs enemies
+
+create global controller that can dispatch actions - run regular ones, then process controller
 Rather than spawning based on each room, create a spawn dispatcher to more easily figure out where things should spawn.
 implement emergeny safe modes (on something breaking, trigger it) 
 implement claims for thievery rooms
-implement automatic creep production vs enemies
-recycle creeps experiment
+
 fix resupply bug due to link going empty for one tick
 FIX TODO BS
+
 
 thiefmules should more efficiently go to sources.
 simultaneous actions
@@ -25,6 +28,7 @@ auto build roads when over certasin threshold
 global caches
 Fix spawner to be more module
 make tiers for different levels
+recycle dead creeps
 
 document all my objects (room, creep etc)
 count parts per energy
