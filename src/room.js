@@ -1,5 +1,5 @@
 // @flow
-import * as profiler from './screeps-profiler';
+// import * as profiler from './screeps-profiler';
 
 import roleUpgrader from './roles/role.upgrader';
 import roleHarvester from './roles/role.harvester';
@@ -14,13 +14,13 @@ import spawner from './spawner';
 
 import taskManager from './task.manager';
 
-profiler.registerObject(roleUpgrader, 'upgrader');
-profiler.registerObject(roleHarvester, 'harvester');
-profiler.registerObject(roleMule, 'mule');
-profiler.registerObject(roleWorker, 'worker');
-profiler.registerObject(roleClaimer, 'claimer');
-profiler.registerObject(roleThief, 'thief');
-profiler.registerObject(roleOffensive, 'run');
+// profiler.registerObject(roleUpgrader, 'upgrader');
+// profiler.registerObject(roleHarvester, 'harvester');
+// profiler.registerObject(roleMule, 'mule');
+// profiler.registerObject(roleWorker, 'worker');
+// profiler.registerObject(roleClaimer, 'claimer');
+// profiler.registerObject(roleThief, 'thief');
+// profiler.registerObject(roleOffensive, 'run');
 
 const RoomController = {
     run: function(myRoom: Room) {

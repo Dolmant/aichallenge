@@ -61,7 +61,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -222,12 +222,6 @@ const util = {
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports) {
-
-throw new Error("Module build failed: Error: ENOENT: no such file or directory, open 'E:\\DOS\\aichallenge\\src\\screeps-profiler.js'\n    at Error (native)");
-
-/***/ }),
-/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -479,11 +473,11 @@ function deposit_resource(creep, isMule) {
 /* harmony default export */ __webpack_exports__["a"] = (actDeposit);
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__cron__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__cron__ = __webpack_require__(4);
 
 
 const roleThief = {
@@ -535,7 +529,7 @@ const roleThief = {
 /* harmony default export */ __webpack_exports__["a"] = (roleThief);
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -619,7 +613,7 @@ const cronJobs = {
 /* harmony default export */ __webpack_exports__["a"] = (cronJobs);
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -665,7 +659,7 @@ const roleThiefMule = {
 /* harmony default export */ __webpack_exports__["a"] = (roleThiefMule);
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -838,14 +832,14 @@ function findAttackTarget(creep) {
 /* harmony default export */ __webpack_exports__["a"] = (actOffensive);
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["loop"] = loop;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__room__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cron__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__room__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cron__ = __webpack_require__(4);
 
 
 // docs:
@@ -944,22 +938,22 @@ function loop() {
 }
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__screeps_profiler__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__screeps_profiler___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__roles_role_upgrader__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__roles_role_harvester__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__roles_role_mule__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__roles_role_worker__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__roles_role_claimer__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__roles_role_thief__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__roles_role_thiefmule__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__roles_role_offensive__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__spawner__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__task_manager__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__roles_role_upgrader__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__roles_role_harvester__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__roles_role_mule__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__roles_role_worker__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__roles_role_claimer__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__roles_role_thief__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__roles_role_thiefmule__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__roles_role_offensive__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__spawner__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__task_manager__ = __webpack_require__(16);
+
+// import * as profiler from './screeps-profiler';
 
 
 
@@ -974,14 +968,13 @@ function loop() {
 
 
 
-
-__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_1__roles_role_upgrader__["a" /* default */], 'upgrader');
-__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_2__roles_role_harvester__["a" /* default */], 'harvester');
-__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_3__roles_role_mule__["a" /* default */], 'mule');
-__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_4__roles_role_worker__["a" /* default */], 'worker');
-__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_5__roles_role_claimer__["a" /* default */], 'claimer');
-__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_6__roles_role_thief__["a" /* default */], 'thief');
-__WEBPACK_IMPORTED_MODULE_0__screeps_profiler__["registerObject"](__WEBPACK_IMPORTED_MODULE_8__roles_role_offensive__["a" /* default */], 'run');
+// profiler.registerObject(roleUpgrader, 'upgrader');
+// profiler.registerObject(roleHarvester, 'harvester');
+// profiler.registerObject(roleMule, 'mule');
+// profiler.registerObject(roleWorker, 'worker');
+// profiler.registerObject(roleClaimer, 'claimer');
+// profiler.registerObject(roleThief, 'thief');
+// profiler.registerObject(roleOffensive, 'run');
 
 const RoomController = {
     run: function (myRoom) {
@@ -1123,44 +1116,44 @@ const RoomController = {
 
         let convert = null;
         myCreeps.forEach(creep => {
-            if (__WEBPACK_IMPORTED_MODULE_10__task_manager__["a" /* default */].run(creep, mySpawns)) {
+            if (__WEBPACK_IMPORTED_MODULE_9__task_manager__["a" /* default */].run(creep, mySpawns)) {
                 rolesCpu = Game.cpu.getUsed();
                 switch (creep.memory.role) {
                     default:
                     case 'harvesterLow':
                     case 'harvester':
-                        __WEBPACK_IMPORTED_MODULE_2__roles_role_harvester__["a" /* default */].run(creep);
+                        __WEBPACK_IMPORTED_MODULE_1__roles_role_harvester__["a" /* default */].run(creep);
                         break;
                     case 'harvesterExtractor':
-                        __WEBPACK_IMPORTED_MODULE_2__roles_role_harvester__["a" /* default */].runExtractor(creep);
+                        __WEBPACK_IMPORTED_MODULE_1__roles_role_harvester__["a" /* default */].runExtractor(creep);
                         break;
                     case 'upgrader':
-                        __WEBPACK_IMPORTED_MODULE_1__roles_role_upgrader__["a" /* default */].run(creep);
+                        __WEBPACK_IMPORTED_MODULE_0__roles_role_upgrader__["a" /* default */].run(creep);
                         break;
                     case 'worker':
                         if (myCreepCount.harvesterCount < 2) {
                             convert = creep;
                         }
-                        __WEBPACK_IMPORTED_MODULE_4__roles_role_worker__["a" /* default */].run(creep);
+                        __WEBPACK_IMPORTED_MODULE_3__roles_role_worker__["a" /* default */].run(creep);
                         break;
                     case 'mule':
-                        __WEBPACK_IMPORTED_MODULE_3__roles_role_mule__["a" /* default */].run(creep);
+                        __WEBPACK_IMPORTED_MODULE_2__roles_role_mule__["a" /* default */].run(creep);
                         break;
                     case 'claimer':
-                        __WEBPACK_IMPORTED_MODULE_5__roles_role_claimer__["a" /* default */].run(creep);
+                        __WEBPACK_IMPORTED_MODULE_4__roles_role_claimer__["a" /* default */].run(creep);
                         break;
                     case 'thief':
-                        __WEBPACK_IMPORTED_MODULE_6__roles_role_thief__["a" /* default */].run(creep);
+                        __WEBPACK_IMPORTED_MODULE_5__roles_role_thief__["a" /* default */].run(creep);
                         break;
                     case 'thiefmule':
-                        __WEBPACK_IMPORTED_MODULE_7__roles_role_thiefmule__["a" /* default */].run(creep);
+                        __WEBPACK_IMPORTED_MODULE_6__roles_role_thiefmule__["a" /* default */].run(creep);
                         break;
                     case 'melee':
                     case 'ranged':
                     case 'healer':
                     case 'blocker':
                     case 'tough':
-                        __WEBPACK_IMPORTED_MODULE_8__roles_role_offensive__["a" /* default */].run(creep, mySpawns);
+                        __WEBPACK_IMPORTED_MODULE_7__roles_role_offensive__["a" /* default */].run(creep, mySpawns);
                         break;
                 }
                 Memory.stats['cpu.' + myRoom.name + 'roles'] += Game.cpu.getUsed() - rolesCpu;
@@ -1188,7 +1181,7 @@ const RoomController = {
 
         myRoom.memory.hasMules = myCreepCount.muleCount;
         Memory.stats['cpu.' + myRoom.name + '.spawner'] = Game.cpu.getUsed();
-        __WEBPACK_IMPORTED_MODULE_9__spawner__["a" /* default */].run(myRoom, mySpawns, myCreepCount, totalCreeps, convert);
+        __WEBPACK_IMPORTED_MODULE_8__spawner__["a" /* default */].run(myRoom, mySpawns, myCreepCount, totalCreeps, convert);
         Memory.stats['cpu.' + myRoom.name + '.spawner'] = Game.cpu.getUsed() - Memory.stats['cpu.' + myRoom.name + '.spawner'];
     }
 };
@@ -1332,7 +1325,7 @@ function updateRoomConsts(myRoom, mySpawns) {
 /* harmony default export */ __webpack_exports__["a"] = (RoomController);
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1354,12 +1347,12 @@ const roleUpgrader = {
 /* harmony default export */ __webpack_exports__["a"] = (roleUpgrader);
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__actions_action_harvest__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_deposit__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_deposit__ = __webpack_require__(2);
 
 
 
@@ -1390,7 +1383,7 @@ const roleHarvester = {
 /* harmony default export */ __webpack_exports__["a"] = (roleHarvester);
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1413,7 +1406,7 @@ const roleMule = {
 /* harmony default export */ __webpack_exports__["a"] = (roleMule);
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1441,7 +1434,7 @@ const roleWorker = {
 /* harmony default export */ __webpack_exports__["a"] = (roleWorker);
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1467,12 +1460,12 @@ const roleClaimer = {
 /* harmony default export */ __webpack_exports__["a"] = (roleClaimer);
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__ = __webpack_require__(6);
 
 
 
@@ -1536,12 +1529,12 @@ const roleOffensive = {
 /* harmony default export */ __webpack_exports__["a"] = (roleOffensive);
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__roles_role_thief__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__roles_role_thiefmule__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__roles_role_thief__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__roles_role_thiefmule__ = __webpack_require__(5);
 
 
 
@@ -1924,17 +1917,17 @@ function getBody(myRoom, MaxParts, options = {}) {
 /* harmony default export */ __webpack_exports__["a"] = (spawner);
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__actions_action_deposit__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_resupply__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__actions_action_claim__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__actions_action_deposit__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_resupply__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__actions_action_claim__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__actions_action_harvest__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__actions_action_upgrade__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__actions_action_build__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__actions_action_upgrade__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__actions_action_build__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__util__ = __webpack_require__(1);
 
 
@@ -2004,7 +1997,7 @@ const taskManager = {
 /* harmony default export */ __webpack_exports__["a"] = (taskManager);
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2137,7 +2130,7 @@ function getResupplyTarget(creep) {
 /* harmony default export */ __webpack_exports__["a"] = (actResupply);
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2169,7 +2162,7 @@ const actClaim = {
 /* harmony default export */ __webpack_exports__["a"] = (actClaim);
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2192,7 +2185,7 @@ var actUpgrade = {
 /* harmony default export */ __webpack_exports__["a"] = (actUpgrade);
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
