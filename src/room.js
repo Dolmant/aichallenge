@@ -24,6 +24,7 @@ profiler.registerObject(roleOffensive, 'run');
 
 const RoomController = {
     run: function(myRoom: Room) {
+        Memory.stats['cpu.roomInit'] = Game.cpu.getUsed();
         if(myRoom.memory.timer == undefined)
         {
             initializeRoomConsts(myRoom);
@@ -32,6 +33,8 @@ const RoomController = {
         {
             myRoom.memory.timer++;
         }
+        Memory.stats['cpu.roomInit'] = Game.cpu.getUsed() - Memory.stats['cpu.roomInit'];
+
         var myCreeps: Creep = myRoom.find(FIND_MY_CREEPS);
         var mySpawns = myRoom.find(FIND_MY_SPAWNS);
 
@@ -155,10 +158,15 @@ const RoomController = {
         // }
         // break;
         myRoom.memory.myCreepCount = myCreepCount;
+
+        Memory.stats['cpu.' + myRoom.name + 'taskManager'] = 0;
+        Memory.stats['cpu.' + myRoom.name + 'roles'] = 0;
+        let rolesCpu = 0;
         
         let convert = null;
         myCreeps.forEach(creep => {
             if (taskManager.run(creep, mySpawns)) {
+                rolesCpu = Game.cpu.getUsed();
                 switch(creep.memory.role){
                     default:
                     case 'harvesterLow':
@@ -197,6 +205,7 @@ const RoomController = {
                         roleOffensive.run(creep, mySpawns);
                         break;
                 }
+                Memory.stats['cpu.' + myRoom.name + 'roles'] += Game.cpu.getUsed() - rolesCpu;
             }
         });
 
@@ -207,14 +216,22 @@ const RoomController = {
 
         var myTowers = myRoom.find(FIND_MY_STRUCTURES).filter(structure => structure.structureType == STRUCTURE_TOWER);
 
+        Memory.stats['cpu.' + myRoom.name + '.updateConsts'] = Game.cpu.getUsed();
         updateRoomConsts(myRoom);
+        Memory.stats['cpu.' + myRoom.name + '.updateConsts'] = Game.cpu.getUsed() - Memory.stats['cpu.' + myRoom.name + '.updateConsts'];
 
+        Memory.stats['cpu.' + myRoom.name + '.runTowers'] = Game.cpu.getUsed();
         runTowers(myTowers);
+        Memory.stats['cpu.' + myRoom.name + '.runTowers'] = Game.cpu.getUsed() - Memory.stats['cpu.' + myRoom.name + '.runTowers'];
 
+        Memory.stats['cpu.' + myRoom.name + '.links'] = Game.cpu.getUsed() ;
         transferLinks(myRoom.memory.links);
+        Memory.stats['cpu.' + myRoom.name + '.links'] = Game.cpu.getUsed() - Memory.stats['cpu.' + myRoom.name + '.links'];
 
         myRoom.memory.hasMules = myCreepCount.muleCount;
+        Memory.stats['cpu.' + myRoom.name + '.spawner'] = Game.cpu.getUsed();
         spawner.run(myRoom, mySpawns, myCreepCount, totalCreeps, convert);
+        Memory.stats['cpu.' + myRoom.name + '.spawner'] = Game.cpu.getUsed() - Memory.stats['cpu.' + myRoom.name + '.spawner'];
 	}
 }
 

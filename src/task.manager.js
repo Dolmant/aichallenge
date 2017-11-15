@@ -15,6 +15,7 @@ import util from './util';
 
 const taskManager = {
     run: function(creep: Creep, mySpawns: Array<StructureSpawn>) {
+        let cpu = Game.cpu.getUsed();
         switch(creep.memory.myTask){
             case 'claim':
                 return actClaim.run(creep);
@@ -59,6 +60,7 @@ const taskManager = {
                 console.log('State machine failed, investigate');
                 return true;
         }
+        Memory.stats['cpu.' + creep.room.name + 'taskManager'] += Game.cpu.getUsed() - cpu;
     }
 }
 
