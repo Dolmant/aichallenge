@@ -1026,6 +1026,7 @@ const RoomController = {
             'blockerCount': 0
         };
 
+        var totalCreeps = 0;
         myCreeps.forEach(creep => {
             totalCreeps += 1;
             //TODO fix this count
