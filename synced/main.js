@@ -519,6 +519,8 @@ const roleThief = {
                     return targets[i];
                 }
             }
+            console.log('no spare thief found, queried: ' + targets.length + ' times');
+            return '59bbc4262052a716c3ce7711';
         } else {
             console.log('no thief object, failed');
             return '59bbc4262052a716c3ce7711';
