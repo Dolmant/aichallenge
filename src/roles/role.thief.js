@@ -14,8 +14,8 @@ const roleThief = {
             creep.memory.myTask = 'build';
         } else if (!creep.carryCapacity || creep.carry.energy < creep.carryCapacity) {
             if (creep.memory.myTask == 'moveToObject' && creep.memory.moveToObject) {
-                if (Memory.rooms && Memory.rooms[creep.memory.moveToObject]) {
-                    creep.memory.goToTarget = Memory.rooms[creep.memory.moveToObject];
+                if (Memory.roomMap && Memory.roomMap[creep.memory.moveToObject]) {
+                    creep.memory.goToTarget = Memory.roomMap[creep.memory.moveToObject];
                     creep.memory.myTask = 'goToTarget';
                 } else {
                     creep.memory.myTask = 'moveToObject';

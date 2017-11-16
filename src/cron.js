@@ -48,16 +48,16 @@ const cronJobs = {
             '59bbc4302052a716c3ce7862': 0,
         }
         Memory.register_thieves = true;
-        Memory.rooms = {
+        Memory.roomMap = {
             // location: W46N53
             '59bbc4262052a716c3ce7711': 'W46N53',
             '59bbc4262052a716c3ce7712': 'W46N53',
             // location: W45N52
             '59bbc4282052a716c3ce7771': 'W45N52',
             '59bbc4282052a716c3ce7772': 'W45N52',
-            // location: W46N51
-            '59bbc4282052a716c3ce7776': 'W46N51',
-            '59bbc4282052a716c3ce7777': 'W46N51',
+            // location: W45N51
+            '59bbc4282052a716c3ce7776': 'W45N51',
+            '59bbc4282052a716c3ce7777': 'W45N51',
             // location: W44N53
             '59bbc42a2052a716c3ce77ce': 'W44N53',
             // location: W44N52

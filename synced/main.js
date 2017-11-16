@@ -492,8 +492,8 @@ const roleThief = {
             creep.memory.myTask = 'build';
         } else if (!creep.carryCapacity || creep.carry.energy < creep.carryCapacity) {
             if (creep.memory.myTask == 'moveToObject' && creep.memory.moveToObject) {
-                if (Memory.rooms && Memory.rooms[creep.memory.moveToObject]) {
-                    creep.memory.goToTarget = Memory.rooms[creep.memory.moveToObject];
+                if (Memory.roomMap && Memory.roomMap[creep.memory.moveToObject]) {
+                    creep.memory.goToTarget = Memory.roomMap[creep.memory.moveToObject];
                     creep.memory.myTask = 'goToTarget';
                 } else {
                     creep.memory.myTask = 'moveToObject';
@@ -583,16 +583,16 @@ const cronJobs = {
             '59bbc4302052a716c3ce7862': 0
         };
         Memory.register_thieves = true;
-        Memory.rooms = {
+        Memory.roomMap = {
             // location: W46N53
             '59bbc4262052a716c3ce7711': 'W46N53',
             '59bbc4262052a716c3ce7712': 'W46N53',
             // location: W45N52
             '59bbc4282052a716c3ce7771': 'W45N52',
             '59bbc4282052a716c3ce7772': 'W45N52',
-            // location: W46N51
-            '59bbc4282052a716c3ce7776': 'W46N51',
-            '59bbc4282052a716c3ce7777': 'W46N51',
+            // location: W45N51
+            '59bbc4282052a716c3ce7776': 'W45N51',
+            '59bbc4282052a716c3ce7777': 'W45N51',
             // location: W44N53
             '59bbc42a2052a716c3ce77ce': 'W44N53',
             // location: W44N52
@@ -1572,7 +1572,7 @@ const spawner = {
         // var MinHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 5;
         var MaxWorkerCount = myRoom.memory.marshalForce ? 1 : 2;
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
-        MaxMuleCount = myRoom.memory.hasExtractor ? 3 : MaxMuleCount;
+        MaxMuleCount = myRoom.memory.hasExtractor ? 2 : MaxMuleCount;
         var MaxUpgraderCount = myRoom.memory.hasLinks ? 0 : 0;
         var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 13;
         var MaxThiefMuleCount = 9;
