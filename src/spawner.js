@@ -55,7 +55,7 @@ const spawner = {
         // mySpawns.forEach(Spawn => {
         const Spawn = mySpawns && mySpawns[0];
         if (Spawn && Spawn.spawning) {
-            switch(Game.creeps[Spawn.spawning].memory.role) {
+            switch(Game.creeps[Spawn.spawning.name].memory.role) {
                 case 'claimer':
                     Memory.misc.globalCreepsTemp.claimer += 1;
                     break;
