@@ -5,10 +5,7 @@ import cronJobs from './../cron';
 const roleThief = {
     run(creep: Creep) {
         if (!creep.memory.sourceMap) {
-            var target = roleThief.generateStealTarget();
-            creep.memory.myTask = 'moveToObject';
-            creep.memory.moveToObject = target;
-            creep.memory.sourceMap = target;
+            console.log('thief genned without map')
         }
         if (creep.memory.myTask == 'lazydeposit' && creep.memory.myBuildTarget) {
             creep.memory.myTask = 'build';
@@ -41,6 +38,9 @@ const roleThief = {
                     return targets[i];
                 }
             }
+            Object.keys(Memory.thieving_spots).forEach(key => {
+                console.log(Game.creeps[Memory.thieving_spots[key]].room)
+            });
             console.log('no spare thief found, queried: ' + targets.length + ' times');
             return '59bbc4262052a716c3ce7711';
         } else {
