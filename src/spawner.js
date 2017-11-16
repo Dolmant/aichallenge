@@ -54,6 +54,37 @@ const spawner = {
 
         // mySpawns.forEach(Spawn => {
         const Spawn = mySpawns && mySpawns[0];
+        if (Spawn && Spawn.spawning) {
+            switch(Game.creeps[Spawn.spawning].memory.role) {
+                case 'claimer':
+                    Memory.misc.globalCreepsTemp.claimer += 1;
+                    break;
+                case 'thief':
+                    Memory.misc.globalCreepsTemp.thief += 1;
+                    if (Memory.register_thieves && (creep.memory.sourceMap || creep.memory.tempSourceMap)) {
+                        Memory.thieving_spots[creep.memory.sourceMap || creep.memory.tempSourceMap] = creep.name;
+                    }
+                    break;
+                case 'thiefmule':
+                    Memory.misc.globalCreepsTemp.thiefmule += 1;
+                    break;
+                case 'melee':
+                    Memory.misc.globalCreepsTemp.melee += 1;
+                    break;
+                case 'ranged':
+                    Memory.misc.globalCreepsTemp.ranged += 1;
+                    break;
+                case 'healer':
+                    Memory.misc.globalCreepsTemp.healer += 1;
+                    break;
+                case 'blocker':
+                    Memory.misc.globalCreepsTemp.blocker += 1;
+                    break;
+                case 'tough':
+                    Memory.misc.globalCreepsTemp.tough += 1;
+                    break;
+            }
+        }
         if (Spawn && !Spawn.spawning && canSpawn) {
             if (Spawn.memory.renewTarget) {
                 canSpawn = false;
