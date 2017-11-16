@@ -310,6 +310,7 @@ function initializeRoomConsts(myRoom) {
     myRoom.memory.timer = 0;
     myRoom.memory.structures = {};
     myRoom.memory.links = [];
+    myRoom.memory.requests = [];
     myRoom.memory.marshalForce = false;
     myRoom.memory.runUpdate = false;
     myRoom.memory.spawnClaimer = 0;
@@ -319,7 +320,7 @@ function initializeRoomConsts(myRoom) {
 function updateRoomConsts(myRoom, mySpawns) {
     if (Memory.methods.createRemoteWorkers) {
         Memory.methods.createRemoteWorkers -= 1;
-        Memory.misc.requests.push({
+        myRoom.memory.requests.push({
             'role': 'worker',
             'myTask': 'goToTarget',
             'goToTarget': 'W46N52'

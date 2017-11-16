@@ -15,7 +15,6 @@ const cronJobs = {
         }
     },
     run10() {
-        const checker = 4;
         Object.keys(Memory.thieving_spots).forEach(key => {
             if (Memory.thieving_spots[key] && !Game.creeps[Memory.thieving_spots[key]]) {
                 Memory.thieving_spots[key] = 0;

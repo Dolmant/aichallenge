@@ -512,8 +512,8 @@ const roleThief = {
         // TODO fix !!!!
         let target;
         if (Memory.thieving_spots) {
-            const targets = Object.keys(Memory.thieving_spots);
             __WEBPACK_IMPORTED_MODULE_0__cron__["a" /* default */].run10();
+            const targets = Object.keys(Memory.thieving_spots);
             for (var i = 0; i < targets.length; i += 1) {
                 if (Memory.thieving_spots[targets[i]] == 0) {
                     return targets[i];
@@ -552,7 +552,6 @@ const cronJobs = {
         }
     },
     run10() {
-        const checker = 4;
         Object.keys(Memory.thieving_spots).forEach(key => {
             if (Memory.thieving_spots[key] && !Game.creeps[Memory.thieving_spots[key]]) {
                 Memory.thieving_spots[key] = 0;
@@ -1265,6 +1264,7 @@ function initializeRoomConsts(myRoom) {
     myRoom.memory.timer = 0;
     myRoom.memory.structures = {};
     myRoom.memory.links = [];
+    myRoom.memory.requests = [];
     myRoom.memory.marshalForce = false;
     myRoom.memory.runUpdate = false;
     myRoom.memory.spawnClaimer = 0;
@@ -1274,7 +1274,7 @@ function initializeRoomConsts(myRoom) {
 function updateRoomConsts(myRoom, mySpawns) {
     if (Memory.methods.createRemoteWorkers) {
         Memory.methods.createRemoteWorkers -= 1;
-        Memory.misc.requests.push({
+        myRoom.memory.requests.push({
             'role': 'worker',
             'myTask': 'goToTarget',
             'goToTarget': 'W46N52'
@@ -1604,19 +1604,6 @@ const spawner = {
         // mySpawns.forEach(Spawn => {
         const Spawn = mySpawns && mySpawns[0];
         if (Spawn && !Spawn.spawning && canSpawn) {
-            if (myCreepCount.harvesterCount < 1 && myCreepCount.harvesterLowCount < 1) //just in case, if there are no harvesters spawn a harvester
-                {
-                    var newName = 'HarvesterLow' + Game.time;
-                    Spawn.spawnCreep([WORK, CARRY, MOVE], newName, {
-                        memory: {
-                            'role': 'harvesterLow',
-                            'tempSourceMap': sourceMap
-                        }
-                    });
-                    console.log('Spawning: ' + newName);
-                    canSpawn = false;
-                }
-
             if (Spawn.memory.renewTarget) {
                 canSpawn = false;
                 var target = Game.getObjectById(Spawn.memory.renewTarget);
@@ -1645,7 +1632,19 @@ const spawner = {
                 console.log('Spawning: ' + newName);
                 canSpawn = false;
             }
-
+            if (myCreepCount.harvesterCount < 1 && myCreepCount.harvesterLowCount < 1) //just in case, if there are no harvesters spawn a harvester
+                {
+                    var newName = 'HarvesterLow' + Game.time;
+                    Spawn.spawnCreep([WORK, CARRY, MOVE], newName, {
+                        memory: {
+                            'role': 'harvesterLow',
+                            'myTask': 'harvest',
+                            'tempSourceMap': sourceMap
+                        }
+                    });
+                    console.log('Spawning: ' + newName);
+                    canSpawn = false;
+                }
             // to kickstart a claimer, set room.memory.spawnClaimer and the target ID as room.memory.claimTarget
             if (myRoom.memory.spawnClaimer > 0 && myRoom.energyAvailable >= 700 && canSpawn) {
                 var newName = 'Claimer' + Game.time;
@@ -1721,6 +1720,7 @@ const spawner = {
                     }
                 });
                 Memory.misc.globalCreeps.thief += 1;
+                Memory.misc.globalCreepsTemp.thief += 1;
                 Memory.thieving_spots[target] = newName;
                 console.log('Spawning: ' + newName);
                 canSpawn = false;
@@ -1802,7 +1802,7 @@ const spawner = {
 };
 
 function completeOutstandingRequests(myRoom, Spawn) {
-    if (Memory.misc.requests.length) {
+    if (myRoom.memory.requests && myRoom.memory.requests.length) {
         var newName = Memory.misc.requests[0].role + Game.time;
         Spawn.spawnCreep(getBody(myRoom, 10), newName, {
             memory: Memory.misc.requests[0]

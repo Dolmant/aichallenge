@@ -34,8 +34,8 @@ const roleThief = {
         // TODO fix !!!!
         let target;
         if (Memory.thieving_spots) {
-            const targets = Object.keys(Memory.thieving_spots)
             cronJobs.run10();
+            const targets = Object.keys(Memory.thieving_spots)
             for (var i = 0; i < targets.length; i += 1) {
                 if (Memory.thieving_spots[targets[i]] == 0) {
                     return targets[i];
