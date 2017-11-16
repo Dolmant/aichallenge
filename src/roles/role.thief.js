@@ -38,9 +38,6 @@ const roleThief = {
                     return targets[i];
                 }
             }
-            Object.keys(Memory.thieving_spots).forEach(key => {
-                console.log(Game.creeps[Memory.thieving_spots[key]].room)
-            });
             console.log('no spare thief found, queried: ' + targets.length + ' times');
             return '59bbc4262052a716c3ce7711';
         } else {

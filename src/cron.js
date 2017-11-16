@@ -29,7 +29,7 @@ const cronJobs = {
             // location: W45N52
             '59bbc4282052a716c3ce7771': 0,
             '59bbc4282052a716c3ce7772': 0,
-            // location: W46N51
+            // location: W45N51
             '59bbc4282052a716c3ce7776': 0,
             '59bbc4282052a716c3ce7777': 0,
             // location: W44N53

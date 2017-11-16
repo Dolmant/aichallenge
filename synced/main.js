@@ -516,9 +516,6 @@ const roleThief = {
                     return targets[i];
                 }
             }
-            Object.keys(Memory.thieving_spots).forEach(key => {
-                console.log(Game.creeps[Memory.thieving_spots[key]].room);
-            });
             console.log('no spare thief found, queried: ' + targets.length + ' times');
             return '59bbc4262052a716c3ce7711';
         } else {
@@ -566,7 +563,7 @@ const cronJobs = {
             // location: W45N52
             '59bbc4282052a716c3ce7771': 0,
             '59bbc4282052a716c3ce7772': 0,
-            // location: W46N51
+            // location: W45N51
             '59bbc4282052a716c3ce7776': 0,
             '59bbc4282052a716c3ce7777': 0,
             // location: W44N53
