@@ -45,6 +45,12 @@ const cronJobs = {
             '59bbc42d2052a716c3ce7825': 0,
             // location: W42N51
             '59bbc4302052a716c3ce7862': 0,
+            // location: W46N51
+            '59bbc4262052a716c3ce7717': 0,
+            '59bbc4262052a716c3ce7718': 0,
+            // location: W47N52
+            '59bbc4242052a716c3ce76bf': 0,
+            '59bbc4242052a716c3ce76c1': 0,
         }
         Memory.register_thieves = true;
         Memory.roomMap = {
@@ -70,6 +76,12 @@ const cronJobs = {
             '59bbc42d2052a716c3ce7825': 'W43N51',
             // location: W42N51
             '59bbc4302052a716c3ce7862': 'W42N51',
+            // location: W46N51
+            '59bbc4262052a716c3ce7717': 'W46N51',
+            '59bbc4262052a716c3ce7718': 'W46N51',
+            // location: W47N52
+            '59bbc4242052a716c3ce76bf': 'W47N52',
+            '59bbc4242052a716c3ce76c1': 'W47N52',
         }
     },
 }

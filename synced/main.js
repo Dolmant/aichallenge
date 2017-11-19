@@ -578,7 +578,13 @@ const cronJobs = {
             '59bbc42d2052a716c3ce7824': 0,
             '59bbc42d2052a716c3ce7825': 0,
             // location: W42N51
-            '59bbc4302052a716c3ce7862': 0
+            '59bbc4302052a716c3ce7862': 0,
+            // location: W46N51
+            '59bbc4262052a716c3ce7717': 0,
+            '59bbc4262052a716c3ce7718': 0,
+            // location: W47N52
+            '59bbc4242052a716c3ce76bf': 0,
+            '59bbc4242052a716c3ce76c1': 0
         };
         Memory.register_thieves = true;
         Memory.roomMap = {
@@ -603,7 +609,13 @@ const cronJobs = {
             '59bbc42d2052a716c3ce7824': 'W43N51',
             '59bbc42d2052a716c3ce7825': 'W43N51',
             // location: W42N51
-            '59bbc4302052a716c3ce7862': 'W42N51'
+            '59bbc4302052a716c3ce7862': 'W42N51',
+            // location: W46N51
+            '59bbc4262052a716c3ce7717': 'W46N51',
+            '59bbc4262052a716c3ce7718': 'W46N51',
+            // location: W47N52
+            '59bbc4242052a716c3ce76bf': 'W47N52',
+            '59bbc4242052a716c3ce76c1': 'W47N52'
         };
     }
 };
@@ -642,8 +654,8 @@ const roleThiefMule = {
         }
     },
     generateHaulTargets() {
-        const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51', 'W46N53'];
-        const homeArray = ['W43N53', 'W41N51', 'W41N51', 'W43N53', 'W43N53', 'W41N51', 'W45N53', 'W45N53', 'W45N53'];
+        const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51', 'W46N53', 'W47N52', 'W46N51'];
+        const homeArray = ['W43N53', 'W41N51', 'W46N52', 'W43N53', 'W43N53', 'W41N51', 'W45N53', 'W46N52', 'W45N53', 'W46N52', 'W46N52'];
 
         if (possibleTargets.length <= Memory.muleFlag) {
             Memory.muleFlag = 1;
@@ -1436,8 +1448,7 @@ const roleWorker = {
             } else {
                 creep.memory.myTask = 'upgrade';
             }
-        }
-        if (creep.memory.myTask == 'resupply') {
+        } else {
             if (creep.carry.energy == creep.carryCapacity) {
                 creep.memory.myTask = 'build';
             } else {
@@ -1577,8 +1588,8 @@ const spawner = {
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         MaxMuleCount = myRoom.memory.hasExtractor ? 2 : MaxMuleCount;
         var MaxUpgraderCount = myRoom.memory.hasLinks ? 0 : 0;
-        var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 13;
-        var MaxThiefMuleCount = 9;
+        var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 17;
+        var MaxThiefMuleCount = 11;
         var MaxMeleeCount = myRoom.memory.marshalForce ? Memory.attackers.forceSize - 3 : 0;
         var MaxRangedCount = myRoom.memory.marshalForce ? 2 : 0;
         var MaxHealerCount = myRoom.memory.marshalForce ? 1 : 0;
