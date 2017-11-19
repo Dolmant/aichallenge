@@ -24,7 +24,7 @@ const actResupply = {
                 getResupplyTarget(creep);
             }
         } else {
-            actHarvest.run(creep);
+            return actHarvest.run(creep);
         }
     },
     getEnergy: function(creep: Creep) {

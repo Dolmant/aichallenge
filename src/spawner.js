@@ -115,7 +115,7 @@ const spawner = {
                 console.log('Spawning: '+ newName);
                 canSpawn = false;
             }
-            if(myCreepCount.harvesterCount < 1 && myCreepCount.harvesterLowCount < 1)//just in case, if there are no harvesters spawn a harvester
+            if(myCreepCount.harvesterCount < 1 && myCreepCount.harvesterLowCount < 1 && canSpawn)//just in case, if there are no harvesters spawn a harvester
             {
                 var newName = 'HarvesterLow' + Game.time;
                 Spawn.spawnCreep(myRoom, referenceEnergy / 200, {'harvester': true}, newName, {
@@ -295,11 +295,11 @@ const spawner = {
 
 function completeOutstandingRequests(myRoom, Spawn) {
     if (myRoom.memory.requests && myRoom.memory.requests.length) {
-        var newName = Memory.misc.requests[0].role + Game.time;
+        var newName = myRoom.memory.requests[0].role + Game.time;
         Spawn.spawnCreep(getBody(myRoom, 10), newName, {
-            memory: Memory.misc.requests[0],
+            memory: myRoom.memory.requests[0],
         });
-        Memory.misc.requests.splice(0, 1);
+        myRoom.memory.requests.splice(0, 1);
         console.log('Spawning: '+ newName);
     }
 }

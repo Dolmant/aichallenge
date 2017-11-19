@@ -6,7 +6,7 @@ const roleClaimer = {
 		if (creep.fatigue != 0){
 			return;
         }
-
+        // TODO FIX THIS, DONEST TRANSITION
         if (!Game.flags['Claim']) {
             console.log('Please define the claim flag target');
             creep.memory.myTask = '';

@@ -14,8 +14,12 @@ const roleWorker = {
                 creep.memory.myTask = 'upgrade';
             }
         }
-        if (creep.memory.myTask == 'resupply' && creep.carry.energy == creep.carryCapacity) {
-            creep.memory.myTask = 'build';
+        if (creep.memory.myTask == 'resupply') {
+            if (creep.carry.energy == creep.carryCapacity) {
+                creep.memory.myTask = 'build';
+            } else {
+                creep.memory.myTask = 'moveToTarget';
+            }
         }
     }
 };
