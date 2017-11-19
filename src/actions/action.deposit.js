@@ -54,7 +54,7 @@ const actDeposit = {
             }
             if (lazyContainer) {
                 var err;
-                if (lazyContainer.hits < lazyContainer.hitsMax / 2) {
+                if (lazyContainer.hits < lazyContainer.hitsMax / 1.05) {
                     err = creep.repair(lazyContainer);
                     if (err == ERR_NOT_ENOUGH_RESOURCES) {
                         return true
