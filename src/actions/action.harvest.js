@@ -15,7 +15,7 @@ const actHarvest = {
             var container = source.pos.findInRange(FIND_STRUCTURES, 1, {
                 filter: structure => structure.structureType == STRUCTURE_CONTAINER
             });
-            if (container.length > 0) {
+            if (container.length > 0 && container[0].pos.lookFor(LOOK_CREEPS).length == 0) {
                 creep.memory.moveToTargetx = container[0].pos.x;
                 creep.memory.moveToTargety = container[0].pos.y;
                 creep.memory.moveToTargetrange = 0;
