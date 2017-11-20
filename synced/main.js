@@ -760,7 +760,7 @@ const cronJobs = {
             Object.keys(Memory.pathCache[key]).forEach(subkey => {
                 if (Memory.pathCache[key][subkey].called < 2) {
                     delete Memory.pathCache[key][subkey];
-                } else {
+                } else if (Memory.pathCache[key][subkey].called) {
                     Memory.pathCache[key][subkey].called = 0;
                 }
             });
