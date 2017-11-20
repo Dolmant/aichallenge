@@ -38,7 +38,7 @@ const util = {
             delete creep.memory.goToTarget;
             return true;
         } else {
-            creep.moveTo(creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.goToTarget)), {'maxRooms': 1})
+            creep.moveToCacheTarget(new RoomPosition(25, 25, creep.memory.goToTarget));
         }
     },
     moveToTarget(creep: Creep) {
@@ -66,7 +66,7 @@ const util = {
             delete creep.memory.moveToObjectRange;
             return true;
         } else {
-            var err = creep.moveTo(Game.getObjectById(creep.memory.moveToObject));
+            var err = creep.moveToCacheTarget(Game.getObjectById(creep.memory.moveToObject).pos);
             if (err == ERR_NO_PATH || err == ERR_INVALID_TARGET) {
                 delete creep.memory.moveToObject;
                 delete creep.memory.moveToObjectRange;
