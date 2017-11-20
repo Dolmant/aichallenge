@@ -24,10 +24,10 @@ Creep.prototype.moveToCacheTarget = function(target) {
         Memory.pathCache[dest][from].called += 1;
     } else {
         const path = this.room.findPath(this.pos, target, {
-            // 'maxOps': 20,
-            // 'maxRooms': 10,
+            'maxOps': 20,
+            'maxRooms': 10,
             'ignoreCreeps': true,
-            // 'serialize': true,
+            'serialize': true,
         });
         console.log('test' + path)
         if (!path) {
