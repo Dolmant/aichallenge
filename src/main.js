@@ -52,7 +52,7 @@ Creep.prototype.moveToCacheTarget = function(target, options) {
         }
         const path = this.room.findPath(this.pos, target, moveopts);
         if (!path) {
-            Memory.stats['cpu.pathfinding_temp'] += checkCpu - Game.cpu.getUsed();
+            Memory.stats['cpu.pathfinding_temp'] += Game.cpu.getUsed() - checkCpu;
             return -5;
         }
         if (!Memory.pathCache[dest]) {
@@ -74,7 +74,7 @@ Creep.prototype.moveToCacheTarget = function(target, options) {
             delete Memory.pathCache[dest][from];
         }
     }
-    Memory.stats['cpu.pathfinding_temp'] += checkCpu - Game.cpu.getUsed();
+    Memory.stats['cpu.pathfinding_temp'] +=  Game.cpu.getUsed() - checkCpu;
     return err;
 }
 
