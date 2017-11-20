@@ -103,6 +103,9 @@ Creep.prototype.moveToCacheTarget = function (target, options) {
             delete this.memory.currentCache;
             delete this.memory.pathCache;
             delete this.memory.targetCache;
+            if (Memory.pathCache[dest] && Memory.pathCache[dest][from]) {
+                delete Memory.pathCache[dest][from];
+            }
             return this.moveToCacheTarget(target, { 'ignoreCreeps': false });
         }
         this.memory.currentCache = from;
