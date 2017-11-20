@@ -107,6 +107,7 @@ Creep.prototype.moveToCacheTarget = function (target, options) {
             if (Memory.pathCache[dest] && Memory.pathCache[dest][from]) {
                 delete Memory.pathCache[dest][from];
             }
+            Memory.stats['cpu.cache_miss_temp'] += 1;
             return this.moveToCacheTarget(target, { 'ignoreCreeps': false });
         }
         this.memory.currentCache = from;
@@ -756,10 +757,17 @@ const cronJobs = {
     },
     run2000() {
         Object.keys(Memory.pathCache).forEach(key => {
-            if (Memory.pathCache[key].called < 2) {
+            Object.keys(Memory.pathCache[key]).forEach(subkey => {
+                if (Memory.pathCache[key][subkey].called < 2) {
+                    delete Memory.pathCache[key][subkey];
+                } else {
+                    Memory.pathCache[key][subkey].called = 0;
+                }
+            });
+        });
+        Object.keys(Memory.pathCache).forEach(key => {
+            if (Object.keys(Memory.pathCache[key]).length < 1) {
                 delete Memory.pathCache[key];
-            } else {
-                Memory.pathCache[key].called = 0;
             }
         });
     },

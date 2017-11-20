@@ -26,10 +26,17 @@ const cronJobs = {
     },
     run2000() {
         Object.keys(Memory.pathCache).forEach(key => {
-            if (Memory.pathCache[key].called < 2) {
+            Object.keys(Memory.pathCache[key]).forEach(subkey => {
+                if (Memory.pathCache[key][subkey].called < 2) {
+                    delete Memory.pathCache[key][subkey];
+                } else {
+                    Memory.pathCache[key][subkey].called = 0;
+                }
+            });
+        });
+        Object.keys(Memory.pathCache).forEach(key => {
+            if (Object.keys(Memory.pathCache[key]).length < 1) {
                 delete Memory.pathCache[key];
-            } else {
-                Memory.pathCache[key].called = 0;
             }
         });
     },
