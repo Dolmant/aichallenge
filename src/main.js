@@ -42,7 +42,7 @@ Creep.prototype.moveToCacheTarget = function(target, options) {
         this.memory.targetCache = dest;
     } else {
         let moveopts = {
-            'maxRooms': 10,
+            'maxRooms': 1,
             'ignoreCreeps': true,
             'serialize': true,
         };
