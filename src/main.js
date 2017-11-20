@@ -22,13 +22,14 @@ Creep.prototype.moveToCacheTarget = function(target) {
     const from = this.pos.roomName + this.pos.x + this.pos.y
     if (Memory.pathCache[dest] && Memory.pathCache[dest][from]) {
         Memory.pathCache[dest][from].called += 1;
-        return this.moveByPath(Memory.pathCache[dest][from].path);
     } else {
-        const path = Room.serializePath(PathFinder.search(this.pos, target, {
+        const searchObject = PathFinder.search(this.pos, target, {
             'maxOps': 5,
             'maxRooms': 16,
             'ignoreCreeps': true,
-        }));
+        });
+        console.log('New path generated at the cost of: ' + searchObject.ops + ' CPU');
+        const path = Room.serializePath(searchObject.path);
         if (!Memory.pathCache[dest]) {
             Memory.pathCache[dest] = {};
         }
@@ -37,6 +38,7 @@ Creep.prototype.moveToCacheTarget = function(target) {
             called: 0,
         };
     }
+    return this.moveByPath(Memory.pathCache[dest][from].path);
 }
 
 
