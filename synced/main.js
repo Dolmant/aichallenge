@@ -103,6 +103,9 @@ Creep.prototype.moveToCacheTarget = function (target) {
             'ignoreCreeps': true,
             'serialize': true
         });
+        if (!path) {
+            return -5;
+        }
         if (!Memory.pathCache[dest]) {
             Memory.pathCache[dest] = {};
         }
