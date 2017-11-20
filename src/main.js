@@ -14,7 +14,7 @@ You can claim by placing a Claim flag setting myRoom.memory.spawnClaimer to the 
 
 Creep.prototype.moveToCacheXY = function(x, y) {
     const dest = new RoomPosition(x, y, this.room.name);
-    this.moveToCacheTarget(dest)
+    return this.moveToCacheTarget(dest)
 }
 Creep.prototype.moveToCacheTarget = function(target) {
     // check cache
