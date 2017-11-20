@@ -97,15 +97,12 @@ Creep.prototype.moveToCacheTarget = function (target) {
     if (Memory.pathCache[dest] && Memory.pathCache[dest][from]) {
         Memory.pathCache[dest][from].called += 1;
     } else {
-        const searchObject = PathFinder.search(this.pos, target, {
+        const path = Room.findPath(this.pos, target, {
             'maxOps': 5,
             'maxRooms': 16,
-            'ignoreCreeps': true
+            'ignoreCreeps': true,
+            'serialize': true
         });
-        console.log(searchObject.path);
-        console.log('New path generated at the cost of: ' + searchObject.ops + ' CPU');
-        const path = Room.serializePath(searchObject.path);
-        console.log(path);
         if (!Memory.pathCache[dest]) {
             Memory.pathCache[dest] = {};
         }
