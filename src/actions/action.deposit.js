@@ -229,7 +229,7 @@ function deposit_resource(creep, isMule) {
         for (const resourceType in creep.carry) {
             err = creep.transfer(target, resourceType);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveToCacheTarget(target);
+                creep.moveToCacheTarget(target.pos);
             }
         }  
     }
