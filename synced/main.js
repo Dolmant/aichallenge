@@ -2130,7 +2130,7 @@ const actResupply = {
             if (err == OK || err == ERR_NOT_ENOUGH_RESOURCES) {
                 delete creep.memory.resupplyTarget;
             } else if (err == ERR_NOT_IN_RANGE) {
-                creep.moveToCacheTarget(resupplyTarget);
+                creep.moveToCacheTarget(resupplyTarget.pos);
             } else {
                 getResupplyTarget(creep);
             }
@@ -2152,7 +2152,7 @@ const actResupply = {
             target = Game.getObjectById(creep.memory.dropTarget);
             var err = target && creep.pickup(target);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveToCacheTarget(target);
+                creep.moveToCacheTarget(target.pos);
             } else if (err == OK) {
                 delete creep.memory.dropTarget;
             } else {
@@ -2162,7 +2162,7 @@ const actResupply = {
             target = Game.getObjectById(creep.memory.fetchTarget);
             var err = target && creep.withdraw(target, RESOURCE_ENERGY);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveToCacheTarget(target);
+                creep.moveToCacheTarget(target.pos);
             } else if (err == OK) {
                 creep.memory.fetchTarget = 0;
             } else if (err == ERR_NOT_ENOUGH_RESOURCES) {
@@ -2170,7 +2170,7 @@ const actResupply = {
                 // first one is usually energy due to alphbetical order TODO fix this to be error free
                 err = creep.withdraw(target, resources[1]);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.moveToCacheTarget(target);
+                    creep.moveToCacheTarget(target.pos);
                 } else if (err == OK) {
                     delete creep.memory.fetchTarget;
                 } else {
@@ -2285,7 +2285,7 @@ var actUpgrade = {
         }
         let myUpgrade = Game.getObjectById(creep.memory.MyController);
         if (creep.upgradeController(myUpgrade) == ERR_NOT_IN_RANGE) {
-            creep.moveToCacheTarget(myUpgrade);
+            creep.moveToCacheTarget(myUpgrade.pos);
         }
     }
 };

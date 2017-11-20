@@ -10,7 +10,7 @@ var actUpgrade = {
         }
         let myUpgrade = Game.getObjectById(creep.memory.MyController);
         if (creep.upgradeController(myUpgrade) == ERR_NOT_IN_RANGE) {
-            creep.moveToCacheTarget(myUpgrade);
+            creep.moveToCacheTarget(myUpgrade.pos);
         }
     }
 };
