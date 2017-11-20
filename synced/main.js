@@ -104,8 +104,8 @@ Creep.prototype.moveToCacheTarget = function (target) {
         });
         console.log(searchObject.path);
         console.log('New path generated at the cost of: ' + searchObject.ops + ' CPU');
-        const path = Room.serializePath(path);
-        console.log(searchObject.path);
+        const path = Room.serializePath(searchObject.path);
+        console.log(path);
         if (!Memory.pathCache[dest]) {
             Memory.pathCache[dest] = {};
         }
