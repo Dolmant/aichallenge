@@ -94,8 +94,13 @@ Creep.prototype.moveToCacheTarget = function (target) {
     // check cache
     const dest = target.roomName + target.x + target.y;
     const from = this.pos.roomName + this.pos.x + this.pos.y;
-    if (Memory.pathCache[dest] && Memory.pathCache[dest][from]) {
+
+    if (this.memory.pathCache && this.memory.targetCache === dest) {
+        return this.moveByPath(this.memory.pathCache);
+    } else if (Memory.pathCache[dest] && Memory.pathCache[dest][from]) {
         Memory.pathCache[dest][from].called += 1;
+        this.memory.pathCache = Memory.pathCache[dest][from].path;
+        this.memory.targetCache = dest;
     } else {
         const path = this.room.findPath(this.pos, target, {
             'maxOps': 20,
@@ -103,7 +108,6 @@ Creep.prototype.moveToCacheTarget = function (target) {
             'ignoreCreeps': true,
             'serialize': true
         });
-        console.log('test' + path);
         if (!path) {
             return -5;
         }
@@ -114,8 +118,10 @@ Creep.prototype.moveToCacheTarget = function (target) {
             path,
             called: 0
         };
+        this.memory.pathCache = Memory.pathCache[dest][from].path;
+        this.memory.targetCache = dest;
     }
-    return this.moveByPath(Memory.pathCache[dest][from].path);
+    return this.moveByPath(this.memory.pathCache);
 };
 
 function loop() {
