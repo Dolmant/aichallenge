@@ -92,6 +92,7 @@ Creep.prototype.moveToCacheXY = function (x, y, options) {
 };
 Creep.prototype.moveToCacheTarget = function (target, options) {
     // check cache
+    const checkCpu = Game.cpu.getUsed();
     const dest = target.roomName + target.x + target.y;
     const from = this.pos.roomName + this.pos.x + this.pos.y;
     if (this.fatigue > 0) {
@@ -114,6 +115,7 @@ Creep.prototype.moveToCacheTarget = function (target, options) {
         this.memory.pathCache = Memory.pathCache[dest][from].path;
         this.memory.targetCache = dest;
     } else {
+        Memory.stats['cpu.cache_miss_temp'] += 1;
         let moveopts = {
             'maxRooms': 1,
             'ignoreCreeps': true,
@@ -124,6 +126,7 @@ Creep.prototype.moveToCacheTarget = function (target, options) {
         }
         const path = this.room.findPath(this.pos, target, moveopts);
         if (!path) {
+            Memory.stats['cpu.pathfinding_temp'] += checkCpu;
             return -5;
         }
         if (!Memory.pathCache[dest]) {
@@ -145,6 +148,7 @@ Creep.prototype.moveToCacheTarget = function (target, options) {
             delete Memory.pathCache[dest][from];
         }
     }
+    Memory.stats['cpu.pathfinding_temp'] += checkCpu;
     return err;
 };
 
@@ -155,14 +159,16 @@ function loop() {
         }
     }
 
-    Memory.stats['cpu.links'] = 0;
-    Memory.stats['cpu.runTowers'] = 0;
-    Memory.stats['cpu.roomUpdateConsts'] = 0;
-    Memory.stats['cpu.roomInit'] = 0;
+    Memory.stats['cpu.pathfinding_temp'] = 0;
+    Memory.stats['cpu.cache_miss_temp'] = 0;
+    Memory.stats['cpu.links_temp'] = 0;
+    Memory.stats['cpu.runTowers_temp'] = 0;
+    Memory.stats['cpu.roomUpdateConsts_temp'] = 0;
+    Memory.stats['cpu.roomInit_temp'] = 0;
 
-    Memory.stats['cpu.cron'] = Game.cpu.getUsed();
+    Memory.stats['cpu.cron_temp'] = Game.cpu.getUsed();
     __WEBPACK_IMPORTED_MODULE_1__cron__["a" /* default */].run();
-    Memory.stats['cpu.cron'] = Game.cpu.getUsed() - Memory.stats['cpu.cron'];
+    Memory.stats['cpu.cron'] = Game.cpu.getUsed() - Memory.stats['cpu.cron_temp'];
     Memory.misc.globalCreepsTemp = {
         'healer': 0,
         'melee': 0,
@@ -217,12 +223,12 @@ function loop() {
     Memory.stats['gcl.progressTotal'] = Game.gcl.progressTotal;
     Memory.stats['gcl.level'] = Game.gcl.level;
 
-    Memory.stats['cpu.roomController'] = Game.cpu.getUsed();
+    Memory.stats['cpu.roomController_temp'] = Game.cpu.getUsed();
     for (let roomName in Game.rooms) {
         let Room = Game.rooms[roomName];
         __WEBPACK_IMPORTED_MODULE_0__room__["a" /* default */].run(Room);
     }
-    Memory.stats['cpu.roomController'] = Game.cpu.getUsed() - Memory.stats['cpu.roomController'];
+    Memory.stats['cpu.roomController'] = Game.cpu.getUsed() - Memory.stats['cpu.roomController_temp'];
 
     Memory.misc.globalCreeps = {
         'healer': Memory.misc.globalCreepsTemp.healer,
@@ -235,9 +241,15 @@ function loop() {
         'blocker': Memory.misc.globalCreepsTemp.blocker
     };
 
+    Memory.stats['cpu.pathfinding'] = Memory.stats['cpu.pathfinding_temp'];
+    Memory.stats['cpu.cache_miss'] = Memory.stats['cpu.cache_miss_temp'];
     Memory.stats['cpu.getUsed'] = Game.cpu.getUsed();
     Memory.stats['cpu.bucket'] = Game.cpu.bucket;
     Memory.stats['cpu.limit'] = Game.cpu.limit;
+    Memory.stats['cpu.links'] = Memory.stats['cpu.links_temp'];
+    Memory.stats['cpu.runTowers'] = Memory.stats['cpu.runTowers_temp'];
+    Memory.stats['cpu.roomUpdateConsts'] = Memory.stats['cpu.roomUpdateConsts_temp'];
+    Memory.stats['cpu.roomInit'] = Memory.stats['cpu.roomInit_temp'];
 }
 
 /***/ }),
@@ -356,7 +368,15 @@ const util = {
             delete creep.memory.goToTarget;
             return true;
         } else {
-            creep.moveToCacheTarget(new RoomPosition(25, 25, creep.memory.goToTarget, { 'maxRooms': 10 }));
+            if (!creep.memory.exitCache || creep.memory.exitCache.roomName != creep.pos.roomName) {
+                const exit = creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.goToTarget));
+                creep.memory.exitCache = {
+                    'roomName': exit.roomName,
+                    'x': exit.x,
+                    'y': exit.y
+                };
+            }
+            creep.moveToCacheTarget(new RoomPosition(creep.memory.exitCache.x, creep.memory.exitCache.y, creep.memory.exitCache.roomName), { 'maxRooms': 1 });
         }
     },
     moveToTarget(creep) {
@@ -385,7 +405,7 @@ const util = {
             return true;
         } else {
             var err = creep.moveToCacheTarget(Game.getObjectById(creep.memory.moveToObject).pos, { 'maxRooms': 10 });
-            if (err == ERR_NO_PATH || err == ERR_INVALID_TARGET) {
+            if (err == ERR_NO_PATH || err == ERR_INVALID_TARGET || err == ERR_NOT_FOUND) {
                 delete creep.memory.moveToObject;
                 delete creep.memory.moveToObjectRange;
                 return true;
@@ -1187,7 +1207,7 @@ const RoomController = {
             }
         });
 
-        Memory.stats['cpu.roomInit'] += Game.cpu.getUsed() - SroomInit;
+        Memory.stats['cpu.roomInit_temp'] += Game.cpu.getUsed() - SroomInit;
         // switch(creep.memory.role) {
         //     case 'worker':
         //         creep.memory.myTask = 'resupply';
@@ -1203,15 +1223,15 @@ const RoomController = {
         // break;
         myRoom.memory.myCreepCount = myCreepCount;
 
-        Memory.stats['room.' + myRoom.name + '.cpu.taskManager'] = 0;
-        Memory.stats['room.' + myRoom.name + '.cpu.roles'] = 0;
+        Memory.stats['room.' + myRoom.name + '.cpu.taskManager_temp'] = 0;
+        Memory.stats['room.' + myRoom.name + '.cpu.roles_temp'] = 0;
         let rolesCpu = 0;
 
         let convert = null;
         myCreeps.forEach(creep => {
             let cpu = Game.cpu.getUsed();
             if (__WEBPACK_IMPORTED_MODULE_9__task_manager__["a" /* default */].run(creep, mySpawns)) {
-                Memory.stats['room.' + myRoom.name + '.cpu.taskManager'] += Game.cpu.getUsed() - cpu;
+                Memory.stats['room.' + myRoom.name + '.cpu.taskManager_temp'] += Game.cpu.getUsed() - cpu;
                 rolesCpu = Game.cpu.getUsed();
                 switch (creep.memory.role) {
                     case 'harvesterLow':
@@ -1250,11 +1270,13 @@ const RoomController = {
                         __WEBPACK_IMPORTED_MODULE_7__roles_role_offensive__["a" /* default */].run(creep, mySpawns);
                         break;
                 }
-                Memory.stats['room.' + myRoom.name + '.cpu.roles'] += Game.cpu.getUsed() - rolesCpu;
+                Memory.stats['room.' + myRoom.name + '.cpu.roles_temp'] += Game.cpu.getUsed() - rolesCpu;
             } else {
-                Memory.stats['room.' + myRoom.name + '.cpu.taskManager'] += Game.cpu.getUsed() - cpu;
+                Memory.stats['room.' + myRoom.name + '.cpu.taskManager_temp'] += Game.cpu.getUsed() - cpu;
             }
         });
+        Memory.stats['room.' + myRoom.name + '.cpu.taskManager'] = Memory.stats['room.' + myRoom.name + '.cpu.taskManager_temp'];
+        Memory.stats['room.' + myRoom.name + '.cpu.roles'] = Memory.stats['room.' + myRoom.name + '.cpu.roles_temp'];
 
         // if (myRoom.find(FIND_HOSTILE_CREEPS).length > 0 && !myRoom.controller.safeMode && !myRoom.controller.safeModeCooldown && myRoom.controller.safeModeAvailable) {
         //     // myRoom.controller.activateSafeMode();
@@ -1266,19 +1288,19 @@ const RoomController = {
 
         const SroomUpdateConsts = Game.cpu.getUsed();
         updateRoomConsts(myRoom);
-        Memory.stats['cpu.roomUpdateConsts'] += Game.cpu.getUsed() - SroomUpdateConsts;
+        Memory.stats['cpu.roomUpdateConsts_temp'] += Game.cpu.getUsed() - SroomUpdateConsts;
 
         const SrunTowers = Game.cpu.getUsed();
         runTowers(myTowers);
-        Memory.stats['cpu.runTowers'] += Game.cpu.getUsed() - SrunTowers;
+        Memory.stats['cpu.runTowers_temp'] += Game.cpu.getUsed() - SrunTowers;
 
         const Slinks = Game.cpu.getUsed();
         transferLinks(myRoom.memory.links);
-        Memory.stats['cpu.links'] += Game.cpu.getUsed() - Slinks;
+        Memory.stats['cpu.links_temp'] += Game.cpu.getUsed() - Slinks;
 
-        Memory.stats['room.' + myRoom.name + '.cpu.spawner'] = Game.cpu.getUsed();
+        Memory.stats['room.' + myRoom.name + '.cpu.spawner_temp'] = Game.cpu.getUsed();
         __WEBPACK_IMPORTED_MODULE_8__spawner__["a" /* default */].run(myRoom, mySpawns, myCreepCount, totalCreeps, convert);
-        Memory.stats['room.' + myRoom.name + '.cpu.spawner'] = Game.cpu.getUsed() - Memory.stats['room.' + myRoom.name + '.cpu.spawner'];
+        Memory.stats['room.' + myRoom.name + '.cpu.spawner'] = Game.cpu.getUsed() - Memory.stats['room.' + myRoom.name + '.cpu.spawner_temp'];
     }
 };
 

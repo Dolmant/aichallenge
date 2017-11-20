@@ -142,7 +142,7 @@ const RoomController = {
             }
         });
 
-        Memory.stats['cpu.roomInit'] += Game.cpu.getUsed() - SroomInit;
+        Memory.stats['cpu.roomInit_temp'] += Game.cpu.getUsed() - SroomInit;
         // switch(creep.memory.role) {
         //     case 'worker':
         //         creep.memory.myTask = 'resupply';
@@ -158,15 +158,15 @@ const RoomController = {
         // break;
         myRoom.memory.myCreepCount = myCreepCount;
 
-        Memory.stats['room.' + myRoom.name + '.cpu.taskManager'] = 0;
-        Memory.stats['room.' + myRoom.name + '.cpu.roles'] = 0;
+        Memory.stats['room.' + myRoom.name + '.cpu.taskManager_temp'] = 0;
+        Memory.stats['room.' + myRoom.name + '.cpu.roles_temp'] = 0;
         let rolesCpu = 0;
         
         let convert = null;
         myCreeps.forEach(creep => {
             let cpu = Game.cpu.getUsed();
             if (taskManager.run(creep, mySpawns)) {
-                Memory.stats['room.' + myRoom.name + '.cpu.taskManager'] += Game.cpu.getUsed() - cpu;
+                Memory.stats['room.' + myRoom.name + '.cpu.taskManager_temp'] += Game.cpu.getUsed() - cpu;
                 rolesCpu = Game.cpu.getUsed();
                 switch(creep.memory.role){
                     case 'harvesterLow':
@@ -205,11 +205,13 @@ const RoomController = {
                         roleOffensive.run(creep, mySpawns);
                         break;
                 }
-                Memory.stats['room.' + myRoom.name + '.cpu.roles'] += Game.cpu.getUsed() - rolesCpu;
+                Memory.stats['room.' + myRoom.name + '.cpu.roles_temp'] += Game.cpu.getUsed() - rolesCpu;
             } else {
-                Memory.stats['room.' + myRoom.name + '.cpu.taskManager'] += Game.cpu.getUsed() - cpu;
+                Memory.stats['room.' + myRoom.name + '.cpu.taskManager_temp'] += Game.cpu.getUsed() - cpu;
             }
         });
+        Memory.stats['room.' + myRoom.name + '.cpu.taskManager'] = Memory.stats['room.' + myRoom.name + '.cpu.taskManager_temp'];
+        Memory.stats['room.' + myRoom.name + '.cpu.roles'] = Memory.stats['room.' + myRoom.name + '.cpu.roles_temp'];
 
         // if (myRoom.find(FIND_HOSTILE_CREEPS).length > 0 && !myRoom.controller.safeMode && !myRoom.controller.safeModeCooldown && myRoom.controller.safeModeAvailable) {
         //     // myRoom.controller.activateSafeMode();
@@ -221,21 +223,21 @@ const RoomController = {
 
         const SroomUpdateConsts = Game.cpu.getUsed();
         updateRoomConsts(myRoom);
-        Memory.stats['cpu.roomUpdateConsts'] += Game.cpu.getUsed() - SroomUpdateConsts;
+        Memory.stats['cpu.roomUpdateConsts_temp'] += Game.cpu.getUsed() - SroomUpdateConsts;
 
         const SrunTowers = Game.cpu.getUsed();
         runTowers(myTowers);
-        Memory.stats['cpu.runTowers'] += Game.cpu.getUsed() - SrunTowers;
+        Memory.stats['cpu.runTowers_temp'] += Game.cpu.getUsed() - SrunTowers;
 
         const Slinks  = Game.cpu.getUsed() ;
         transferLinks(myRoom.memory.links);
-        Memory.stats['cpu.links'] += Game.cpu.getUsed() - Slinks;
+        Memory.stats['cpu.links_temp'] += Game.cpu.getUsed() - Slinks;
 
 
 
-        Memory.stats['room.' + myRoom.name + '.cpu.spawner'] = Game.cpu.getUsed();
+        Memory.stats['room.' + myRoom.name + '.cpu.spawner_temp'] = Game.cpu.getUsed();
         spawner.run(myRoom, mySpawns, myCreepCount, totalCreeps, convert);
-        Memory.stats['room.' + myRoom.name + '.cpu.spawner'] = Game.cpu.getUsed() - Memory.stats['room.' + myRoom.name + '.cpu.spawner'];
+        Memory.stats['room.' + myRoom.name + '.cpu.spawner'] = Game.cpu.getUsed() - Memory.stats['room.' + myRoom.name + '.cpu.spawner_temp'];
 	}
 }
 

@@ -18,6 +18,7 @@ Creep.prototype.moveToCacheXY = function(x, y, options) {
 }
 Creep.prototype.moveToCacheTarget = function(target, options) {
     // check cache
+    const checkCpu = Game.cpu.getUsed();
     const dest = target.roomName + target.x + target.y;
     const from = this.pos.roomName + this.pos.x + this.pos.y
     if (this.fatigue > 0) {
@@ -40,6 +41,7 @@ Creep.prototype.moveToCacheTarget = function(target, options) {
         this.memory.pathCache = Memory.pathCache[dest][from].path;
         this.memory.targetCache = dest;
     } else {
+        Memory.stats['cpu.cache_miss_temp'] += 1;
         let moveopts = {
             'maxRooms': 1,
             'ignoreCreeps': true,
@@ -50,6 +52,7 @@ Creep.prototype.moveToCacheTarget = function(target, options) {
         }
         const path = this.room.findPath(this.pos, target, moveopts);
         if (!path) {
+            Memory.stats['cpu.pathfinding_temp'] += checkCpu;
             return -5;
         }
         if (!Memory.pathCache[dest]) {
@@ -71,6 +74,7 @@ Creep.prototype.moveToCacheTarget = function(target, options) {
             delete Memory.pathCache[dest][from];
         }
     }
+    Memory.stats['cpu.pathfinding_temp'] += checkCpu;
     return err;
 }
 
@@ -84,14 +88,16 @@ export function loop() {
         }
     }
 
-    Memory.stats['cpu.links'] = 0;
-    Memory.stats['cpu.runTowers'] = 0;
-    Memory.stats['cpu.roomUpdateConsts'] = 0;
-    Memory.stats['cpu.roomInit']  = 0;
+    Memory.stats['cpu.pathfinding_temp'] = 0;
+    Memory.stats['cpu.cache_miss_temp'] = 0;
+    Memory.stats['cpu.links_temp'] = 0;
+    Memory.stats['cpu.runTowers_temp'] = 0;
+    Memory.stats['cpu.roomUpdateConsts_temp'] = 0;
+    Memory.stats['cpu.roomInit_temp']  = 0;
 
-    Memory.stats['cpu.cron'] = Game.cpu.getUsed();
+    Memory.stats['cpu.cron_temp'] = Game.cpu.getUsed();
     cronJobs.run();
-    Memory.stats['cpu.cron'] = Game.cpu.getUsed() - Memory.stats['cpu.cron'];
+    Memory.stats['cpu.cron'] = Game.cpu.getUsed() - Memory.stats['cpu.cron_temp'];
     Memory.misc.globalCreepsTemp = {
         'healer': 0,
         'melee': 0,
@@ -146,12 +152,12 @@ export function loop() {
     Memory.stats['gcl.progressTotal'] = Game.gcl.progressTotal;
     Memory.stats['gcl.level'] = Game.gcl.level;
 
-    Memory.stats['cpu.roomController'] =Game.cpu.getUsed();
+    Memory.stats['cpu.roomController_temp'] = Game.cpu.getUsed();
     for (let roomName in Game.rooms) {
         let Room = Game.rooms[roomName]
         RoomController.run(Room)
     }
-    Memory.stats['cpu.roomController'] = Game.cpu.getUsed() - Memory.stats['cpu.roomController'];
+    Memory.stats['cpu.roomController'] = Game.cpu.getUsed() - Memory.stats['cpu.roomController_temp'];
 
     Memory.misc.globalCreeps = {
         'healer': Memory.misc.globalCreepsTemp.healer,
@@ -164,7 +170,13 @@ export function loop() {
         'blocker': Memory.misc.globalCreepsTemp.blocker,
     };
 
+    Memory.stats['cpu.pathfinding'] = Memory.stats['cpu.pathfinding_temp'];
+    Memory.stats['cpu.cache_miss'] = Memory.stats['cpu.cache_miss_temp'];
     Memory.stats['cpu.getUsed'] = Game.cpu.getUsed();
     Memory.stats['cpu.bucket'] = Game.cpu.bucket;
     Memory.stats['cpu.limit'] = Game.cpu.limit;
+    Memory.stats['cpu.links'] = Memory.stats['cpu.links_temp'];
+    Memory.stats['cpu.runTowers'] = Memory.stats['cpu.runTowers_temp'];
+    Memory.stats['cpu.roomUpdateConsts'] = Memory.stats['cpu.roomUpdateConsts_temp'];
+    Memory.stats['cpu.roomInit']  = Memory.stats['cpu.roomInit_temp'];
 }
