@@ -19,7 +19,7 @@ const actDeposit = {
             if (err == ERR_INVALID_ARGS) {
                 var err = creep.transfer(target, RESOURCE_ENERGY, (target.energyCapacity - target.energy) || (target.storeCapacity && (target.storeCapacity - target.store.energy)))
             } else if (err == ERR_NOT_IN_RANGE) {
-                creep.moveToCacheTarget(target);
+                creep.moveToCacheTarget(target.pos);
                 // Return early to prevent deletion of the deposit target
                 return false;
             } else if (err == OK) {

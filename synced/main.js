@@ -395,7 +395,7 @@ const actDeposit = {
             if (err == ERR_INVALID_ARGS) {
                 var err = creep.transfer(target, RESOURCE_ENERGY, target.energyCapacity - target.energy || target.storeCapacity && target.storeCapacity - target.store.energy);
             } else if (err == ERR_NOT_IN_RANGE) {
-                creep.moveToCacheTarget(target);
+                creep.moveToCacheTarget(target.pos);
                 // Return early to prevent deletion of the deposit target
                 return false;
             } else if (err == OK) {
@@ -2312,7 +2312,7 @@ const actBuild = {
                 var target = Game.getObjectById(creep.memory.myBuildTarget);
                 var err = creep.build(target);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.moveToCacheTarget(target);
+                    creep.moveToCacheTarget(target.pos);
                 } else if (err == ERR_NOT_ENOUGH_RESOURCES) {
                     // expect state change to resupply
                     return true;
@@ -2324,7 +2324,7 @@ const actBuild = {
                 target: Structure = Game.getObjectById(creep.memory.myRepairTarget);
                 var err = creep.repair(target);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.moveToCacheTarget(target);
+                    creep.moveToCacheTarget(target.pos);
                 } else if (err == ERR_NOT_ENOUGH_RESOURCES) {
                     //expect state change to resupply
                     return true;
