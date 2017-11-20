@@ -92,7 +92,7 @@ Creep.prototype.moveToCacheXY = function (x, y) {
 };
 Creep.prototype.moveToCacheTarget = function (target) {
     // check cache
-    const dest = target.room.name + target.x + target.y;
+    const dest = target.roomName + target.x + target.y;
     const from = this.pos.roomName + this.pos.x + this.pos.y;
     if (Memory.pathCache[dest] && Memory.pathCache[dest][from]) {
         Memory.pathCache[dest][from].called += 1;
