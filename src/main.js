@@ -27,8 +27,9 @@ Creep.prototype.moveToCacheTarget = function(target) {
             'maxOps': 10,
             'maxRooms': 10,
             'ignoreCreeps': true,
-            'serialize': true,
+            // 'serialize': true,
         });
+        console.log(path)
         if (!path) {
             return -5;
         }
