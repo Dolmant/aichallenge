@@ -20,8 +20,18 @@ Creep.prototype.moveToCacheTarget = function(target, options) {
     // check cache
     const dest = target.roomName + target.x + target.y;
     const from = this.pos.roomName + this.pos.x + this.pos.y
+    if (this.fatigue > 0) {
+        return -11;
+    }
 
     if (this.memory.pathCache && this.memory.targetCache === dest) {
+        if (this.memory.currentCache === from) {
+            delete this.memory.currentCache;
+            delete this.memory.pathCache;
+            delete this.memory.targetCache;
+            return this.moveToCacheTarget(target, {'ignoreCreeps': false})
+        }
+        this.memory.currentCache = from;
         return this.moveByPath(this.memory.pathCache);
     } else if (Memory.pathCache[dest] && Memory.pathCache[dest][from]) {
         Memory.pathCache[dest][from].called += 1;
