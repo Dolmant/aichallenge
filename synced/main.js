@@ -109,7 +109,6 @@ Creep.prototype.moveToCacheTarget = function (target, options) {
             return this.moveToCacheTarget(target, { 'ignoreCreeps': false });
         }
         this.memory.currentCache = from;
-        return this.moveByPath(this.memory.pathCache);
     } else if (Memory.pathCache[dest] && Memory.pathCache[dest][from]) {
         Memory.pathCache[dest][from].called += 1;
         this.memory.pathCache = Memory.pathCache[dest][from].path;
@@ -137,7 +136,16 @@ Creep.prototype.moveToCacheTarget = function (target, options) {
         this.memory.pathCache = Memory.pathCache[dest][from].path;
         this.memory.targetCache = dest;
     }
-    return this.moveByPath(this.memory.pathCache);
+    var err = this.moveByPath(this.memory.pathCache);
+    if (err == ERR_NOT_FOUND) {
+        delete this.memory.currentCache;
+        delete this.memory.pathCache;
+        delete this.memory.targetCache;
+        if (Memory.pathCache[dest] && Memory.pathCache[dest][from]) {
+            delete Memory.pathCache[dest][from];
+        }
+    }
+    return err;
 };
 
 function loop() {
@@ -2027,7 +2035,7 @@ function getBody(myRoom, MaxParts, options = {}) {
         if (!options.carryOnly) {
             partArray.push(WORK);
             partArray.push(CARRY);
-            totalEnergy -= 1;
+            totalEnergy -= 3;
         }
         partArray.push(MOVE);
         partArray.push(CARRY);
