@@ -6,9 +6,12 @@ const cronJobs = {
         Memory.cronCount += 1;
         if (Memory.thieving_spots) {
             Memory.register_thieves = false;
-            if (Memory.cronCount > 10) {
-                Memory.cronCount -= 10;
+            if (Memory.cronCount % 10 === 0) {
                 cronJobs.run10();
+            }
+            if (Memory.cronCount > 1000) {
+                Memory.cronCount -= 1000;
+                cronJobs.run1000();
             }
         } else {
             cronJobs.init();
@@ -18,6 +21,13 @@ const cronJobs = {
         Object.keys(Memory.thieving_spots).forEach(key => {
             if (Memory.thieving_spots[key] && !Game.creeps[Memory.thieving_spots[key]]) {
                 Memory.thieving_spots[key] = 0;
+            }
+        });
+    },
+    run1000() {
+        Object.keys(Memory.pathCache).forEach(key => {
+            if (Memory.pathCache[key].called < 5) {
+                delete Memory.pathCache[key];
             }
         });
     },

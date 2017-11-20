@@ -12,6 +12,33 @@ You can send a worker to another room by specifying the roomname on goToTarget a
 You can claim by placing a Claim flag setting myRoom.memory.spawnClaimer to the number of claimers you want
 */
 
+Creep.prototype.moveToCacheXY = function(x, y) {
+    const dest = new RoomPosition(x, y, this.room.name);
+    this.moveToCacheTarget(dest)
+}
+Creep.prototype.moveToCacheTarget = function(target) {
+    // check cache
+    const dest = target.room.name + target.x + target.y;
+    const from = this.pos.roomName + this.pos.x + this.pos.y
+    if (Memory.pathCache[dest] && Memory.pathCache[dest][from]) {
+        Memory.pathCache[dest][from].called += 1;
+        return this.moveByPath(Memory.pathCache[dest][from].path);
+    } else {
+        const path = this.room.serializePath(PathFinder.search(this.pos, target, {
+            'maxOps': 5,
+            'maxRooms': 16,
+            'ignoreCreeps': true,
+        }));
+        if (!Memory.pathCache[dest]) {
+            Memory.pathCache[dest] = {};
+        }
+        Memory.pathCache[dest][from] = {
+            path,
+            called: 0,
+        };
+    }
+}
+
 
 export function loop() {
     for(let name in Memory.creeps)

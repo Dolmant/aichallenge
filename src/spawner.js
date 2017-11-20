@@ -118,7 +118,7 @@ const spawner = {
             if(myCreepCount.harvesterCount < 1 && myCreepCount.harvesterLowCount < 1 && canSpawn)//just in case, if there are no harvesters spawn a harvester
             {
                 var newName = 'HarvesterLow' + Game.time;
-                Spawn.spawnCreep(myRoom, referenceEnergy / 200, {'harvester': true}, newName, {
+                Spawn.spawnCreep(myRoom, Math.floor(myRoom.energyAvailable / 200), {'harvester': true}, newName, {
                     memory: {
                         'role': 'harvesterLow',
                         'myTask': 'harvest',
