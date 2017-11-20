@@ -103,7 +103,7 @@ Creep.prototype.moveToCacheTarget = function (target) {
             'ignoreCreeps': true
             // 'serialize': true,
         });
-        console.log(path);
+        console.log('test' + path);
         if (!path) {
             return -5;
         }
