@@ -20,7 +20,7 @@ const actBuild = {
                 var target: ConstructionSite = Game.getObjectById(creep.memory.myBuildTarget);
                 var err = creep.build(target);
                 if(err == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, {'maxRooms': 1});
+                    creep.moveToCacheTarget(target);
                 } else if (err == ERR_NOT_ENOUGH_RESOURCES) {
                     // expect state change to resupply
                     return true;
@@ -32,7 +32,7 @@ const actBuild = {
                 target: Structure = Game.getObjectById(creep.memory.myRepairTarget);
                 var err = creep.repair(target);
                 if(err == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, {'maxRooms': 1});
+                    creep.moveToCacheTarget(target);
                 } else if (err == ERR_NOT_ENOUGH_RESOURCES) {
                     //expect state change to resupply
                     return true;

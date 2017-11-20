@@ -19,7 +19,7 @@ const actDeposit = {
             if (err == ERR_INVALID_ARGS) {
                 var err = creep.transfer(target, RESOURCE_ENERGY, (target.energyCapacity - target.energy) || (target.storeCapacity && (target.storeCapacity - target.store.energy)))
             } else if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target, {'maxRooms': 1});
+                creep.moveToCacheTarget(target);
                 // Return early to prevent deletion of the deposit target
                 return false;
             } else if (err == OK) {
@@ -59,7 +59,7 @@ const actDeposit = {
                     if (err == ERR_NOT_ENOUGH_RESOURCES) {
                         return true
                     } else if (err == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(lazyContainer.pos, {'maxRooms': 1});
+                        creep.moveToCacheTarget(lazyContainer.pos);
                     } else {
                         return true;
                     }
@@ -69,7 +69,7 @@ const actDeposit = {
                         creep.drop(RESOURCE_ENERGY);
                         return true
                     } else if (err == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(lazyContainer.pos, {'maxRooms': 1});
+                        creep.moveToCacheTarget(lazyContainer.pos);
                     } else {
                         return true;
                     }
@@ -229,7 +229,7 @@ function deposit_resource(creep, isMule) {
         for (const resourceType in creep.carry) {
             err = creep.transfer(target, resourceType);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target, {'maxRooms': 1});
+                creep.moveToCacheTarget(target);
             }
         }  
     }

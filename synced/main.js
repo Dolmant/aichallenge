@@ -395,7 +395,7 @@ const actDeposit = {
             if (err == ERR_INVALID_ARGS) {
                 var err = creep.transfer(target, RESOURCE_ENERGY, target.energyCapacity - target.energy || target.storeCapacity && target.storeCapacity - target.store.energy);
             } else if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target, { 'maxRooms': 1 });
+                creep.moveToCacheTarget(target);
                 // Return early to prevent deletion of the deposit target
                 return false;
             } else if (err == OK) {
@@ -437,7 +437,7 @@ const actDeposit = {
                     if (err == ERR_NOT_ENOUGH_RESOURCES) {
                         return true;
                     } else if (err == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(lazyContainer.pos, { 'maxRooms': 1 });
+                        creep.moveToCacheTarget(lazyContainer.pos);
                     } else {
                         return true;
                     }
@@ -447,7 +447,7 @@ const actDeposit = {
                         creep.drop(RESOURCE_ENERGY);
                         return true;
                     } else if (err == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(lazyContainer.pos, { 'maxRooms': 1 });
+                        creep.moveToCacheTarget(lazyContainer.pos);
                     } else {
                         return true;
                     }
@@ -615,7 +615,7 @@ function deposit_resource(creep, isMule) {
         for (const resourceType in creep.carry) {
             err = creep.transfer(target, resourceType);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target, { 'maxRooms': 1 });
+                creep.moveToCacheTarget(target);
             }
         }
     }
@@ -2248,11 +2248,11 @@ const actClaim = {
                 return true;
             }
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(Game.flags['Claim'].pos, { 'maxRooms': 1 });
+                creep.moveToCacheTarget(Game.flags['Claim'].pos);
             }
             if (err == ERR_GCL_NOT_ENOUGH) {
                 creep.reserveController(creep.room.controller);
-                creep.moveTo(Game.flags['Claim'].pos, { 'maxRooms': 1 });
+                creep.moveToCacheTarget(Game.flags['Claim'].pos);
             }
         } else {
             creep.memory.goToTarget = Game.flags['Claim'].pos.roomName;
@@ -2310,7 +2310,7 @@ const actBuild = {
                 var target = Game.getObjectById(creep.memory.myBuildTarget);
                 var err = creep.build(target);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, { 'maxRooms': 1 });
+                    creep.moveToCacheTarget(target);
                 } else if (err == ERR_NOT_ENOUGH_RESOURCES) {
                     // expect state change to resupply
                     return true;
@@ -2322,7 +2322,7 @@ const actBuild = {
                 target: Structure = Game.getObjectById(creep.memory.myRepairTarget);
                 var err = creep.repair(target);
                 if (err == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, { 'maxRooms': 1 });
+                    creep.moveToCacheTarget(target);
                 } else if (err == ERR_NOT_ENOUGH_RESOURCES) {
                     //expect state change to resupply
                     return true;

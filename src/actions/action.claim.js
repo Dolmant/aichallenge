@@ -11,11 +11,11 @@ const actClaim = {
                 return true;
             }
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveTo(Game.flags['Claim'].pos, {'maxRooms': 1});
+                creep.moveToCacheTarget(Game.flags['Claim'].pos);
             }
             if (err == ERR_GCL_NOT_ENOUGH) {
                 creep.reserveController(creep.room.controller);
-                creep.moveTo(Game.flags['Claim'].pos, {'maxRooms': 1});
+                creep.moveToCacheTarget(Game.flags['Claim'].pos);
             }
         } else {
             creep.memory.goToTarget = Game.flags['Claim'].pos.roomName;
