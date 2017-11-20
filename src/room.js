@@ -169,7 +169,6 @@ const RoomController = {
                 Memory.stats['room.' + myRoom.name + '.cpu.taskManager'] += Game.cpu.getUsed() - cpu;
                 rolesCpu = Game.cpu.getUsed();
                 switch(creep.memory.role){
-                    default:
                     case 'harvesterLow':
                     case 'harvester':
                         roleHarvester.run(creep);

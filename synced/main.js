@@ -695,9 +695,9 @@ const cronJobs = {
             if (Memory.cronCount % 10 === 0) {
                 cronJobs.run10();
             }
-            if (Memory.cronCount > 1000) {
-                Memory.cronCount -= 1000;
-                cronJobs.run1000();
+            if (Memory.cronCount > 2000) {
+                Memory.cronCount -= 2000;
+                cronJobs.run2000();
             }
         } else {
             cronJobs.init();
@@ -710,9 +710,9 @@ const cronJobs = {
             }
         });
     },
-    run1000() {
+    run2000() {
         Object.keys(Memory.pathCache).forEach(key => {
-            if (Memory.pathCache[key].called < 5) {
+            if (Memory.pathCache[key].called < 2) {
                 delete Memory.pathCache[key];
             }
         });
@@ -1188,7 +1188,6 @@ const RoomController = {
                 Memory.stats['room.' + myRoom.name + '.cpu.taskManager'] += Game.cpu.getUsed() - cpu;
                 rolesCpu = Game.cpu.getUsed();
                 switch (creep.memory.role) {
-                    default:
                     case 'harvesterLow':
                     case 'harvester':
                         __WEBPACK_IMPORTED_MODULE_1__roles_role_harvester__["a" /* default */].run(creep);

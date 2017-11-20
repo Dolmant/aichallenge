@@ -9,9 +9,9 @@ const cronJobs = {
             if (Memory.cronCount % 10 === 0) {
                 cronJobs.run10();
             }
-            if (Memory.cronCount > 1000) {
-                Memory.cronCount -= 1000;
-                cronJobs.run1000();
+            if (Memory.cronCount > 2000) {
+                Memory.cronCount -= 2000;
+                cronJobs.run2000();
             }
         } else {
             cronJobs.init();
@@ -24,9 +24,9 @@ const cronJobs = {
             }
         });
     },
-    run1000() {
+    run2000() {
         Object.keys(Memory.pathCache).forEach(key => {
-            if (Memory.pathCache[key].called < 5) {
+            if (Memory.pathCache[key].called < 2) {
                 delete Memory.pathCache[key];
             }
         });
