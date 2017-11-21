@@ -61,200 +61,11 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["loop"] = loop;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__room__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cron__ = __webpack_require__(5);
-
-
-// docs:
-/*
-place a flag names 'Attack' to designate the attack room and location
-place a flag names 'Marshal' to designate a staging area.
-To specify size, change forceSize on the Memory.attackers object
-To tell a room to marshal a force, change the room flag 'marshalForce' to true
-You can send a worker to another room by specifying the roomname on goToTarget and change their task name to goToTarget (make this global)
-
-You can claim by placing a Claim flag setting myRoom.memory.spawnClaimer to the number of claimers you want
-*/
-
-Creep.prototype.moveToCacheXY = function (x, y, options) {
-    const dest = new RoomPosition(x, y, this.room.name);
-    return this.moveToCacheTarget(dest, options);
-};
-Creep.prototype.moveToCacheTarget = function (target, options) {
-    // check cache
-    const checkCpu = Game.cpu.getUsed();
-    const dest = target.roomName + target.x + target.y;
-    const from = this.pos.roomName + this.pos.x + this.pos.y;
-    if (this.fatigue > 0) {
-        return -11;
-    }
-
-    if (this.memory.pathCache && this.memory.targetCache === dest) {
-        if (this.memory.currentCache === from) {
-            delete this.memory.currentCache;
-            delete this.memory.pathCache;
-            delete this.memory.targetCache;
-            if (Memory.pathCache[dest] && Memory.pathCache[dest][from]) {
-                delete Memory.pathCache[dest][from];
-            }
-            Memory.stats['cpu.cache_miss_temp'] += 1;
-            return this.moveToCacheTarget(target, { 'ignoreCreeps': false });
-        }
-        this.memory.currentCache = from;
-    } else if (Memory.pathCache[dest] && Memory.pathCache[dest][from]) {
-        Memory.pathCache[dest][from].called += 1;
-        this.memory.pathCache = Memory.pathCache[dest][from].path;
-        this.memory.targetCache = dest;
-    } else {
-        Memory.stats['cpu.cache_miss_temp'] += 1;
-        let moveopts = {
-            'maxRooms': 1,
-            'ignoreCreeps': true,
-            'serialize': true
-        };
-        if (options) {
-            moveopts = Object.assign(moveopts, options);
-        }
-        const path = this.room.findPath(this.pos, target, moveopts);
-        if (!path) {
-            Memory.stats['cpu.pathfinding_temp'] += Game.cpu.getUsed() - checkCpu;
-            return -5;
-        }
-        if (!Memory.pathCache[dest]) {
-            Memory.pathCache[dest] = {};
-        }
-        Memory.pathCache[dest][from] = {
-            path,
-            called: 0
-        };
-        this.memory.pathCache = Memory.pathCache[dest][from].path;
-        this.memory.targetCache = dest;
-    }
-    var err = this.moveByPath(this.memory.pathCache);
-    if (err == ERR_NOT_FOUND) {
-        delete this.memory.currentCache;
-        delete this.memory.pathCache;
-        delete this.memory.targetCache;
-        if (Memory.pathCache[dest] && Memory.pathCache[dest][from]) {
-            delete Memory.pathCache[dest][from];
-        }
-    }
-    Memory.stats['cpu.pathfinding_temp'] += Game.cpu.getUsed() - checkCpu;
-    return err;
-};
-
-function loop() {
-    for (let name in Memory.creeps) {
-        if (Game.creeps[name] == undefined) {
-            delete Memory.creeps[name];
-        }
-    }
-
-    Memory.stats['cpu.pathfinding_temp'] = 0;
-    Memory.stats['cpu.cache_miss_temp'] = 0;
-    Memory.stats['cpu.links_temp'] = 0;
-    Memory.stats['cpu.runTowers_temp'] = 0;
-    Memory.stats['cpu.roomUpdateConsts_temp'] = 0;
-    Memory.stats['cpu.roomInit_temp'] = 0;
-
-    Memory.stats['cpu.cron_temp'] = Game.cpu.getUsed();
-    __WEBPACK_IMPORTED_MODULE_1__cron__["a" /* default */].run();
-    Memory.stats['cpu.cron'] = Game.cpu.getUsed() - Memory.stats['cpu.cron_temp'];
-    Memory.misc.globalCreepsTemp = {
-        'healer': 0,
-        'melee': 0,
-        'ranged': 0,
-        'thief': 0,
-        'thiefmule': 0,
-        'claimer': 0,
-        'tough': 0,
-        'blocker': 0
-    };
-    // Lets keep this around just in case?
-    // for(let name in Memory.rooms)
-    // {
-    // 	if(Game.rooms[name]==undefined)
-    // 	{
-    // 		delete Memory.rooms[name];
-    // 	}
-    // }
-
-    // for dashboard
-    if (Memory.stats == undefined) {
-        Memory.stats = {};
-    }
-
-    var rooms = Game.rooms;
-    for (let roomKey in rooms) {
-        let room = Game.rooms[roomKey];
-        var isMyRoom = room.controller ? room.controller.my : 0;
-        if (isMyRoom) {
-            Memory.stats['room.' + room.name + '.myRoom'] = 1;
-            Memory.stats['room.' + room.name + '.energyAvailable'] = room.energyAvailable;
-            Memory.stats['room.' + room.name + '.energyCapacityAvailable'] = room.energyCapacityAvailable;
-            Memory.stats['room.' + room.name + '.controllerSpeed'] = room.controller.progress - Memory.stats['room.' + room.name + '.controllerProgress'];
-            Memory.stats['room.' + room.name + '.controllerProgress'] = room.controller.progress;
-            Memory.stats['room.' + room.name + '.controllerProgressTotal'] = room.controller.progressTotal;
-            var stored = 0;
-            var storedTotal = 0;
-
-            if (room.storage) {
-                stored = room.storage.store[RESOURCE_ENERGY];
-                storedTotal = room.storage.storeCapacity[RESOURCE_ENERGY];
-            } else {
-                stored = 0;
-                storedTotal = 0;
-            }
-            Memory.stats['room.' + room.name + '.storedEnergy'] = stored;
-        } else {
-            Memory.stats['room.' + room.name + '.myRoom'] = undefined;
-        }
-    }
-    Memory.stats['gcl.progress'] = Game.gcl.progress;
-    Memory.stats['gcl.progressTotal'] = Game.gcl.progressTotal;
-    Memory.stats['gcl.level'] = Game.gcl.level;
-
-    Memory.stats['cpu.roomController_temp'] = Game.cpu.getUsed();
-    for (let roomName in Game.rooms) {
-        let Room = Game.rooms[roomName];
-        __WEBPACK_IMPORTED_MODULE_0__room__["a" /* default */].run(Room);
-    }
-    Memory.stats['cpu.roomController'] = Game.cpu.getUsed() - Memory.stats['cpu.roomController_temp'];
-
-    Memory.misc.globalCreeps = {
-        'healer': Memory.misc.globalCreepsTemp.healer,
-        'ranged': Memory.misc.globalCreepsTemp.ranged,
-        'melee': Memory.misc.globalCreepsTemp.melee,
-        'thief': Memory.misc.globalCreepsTemp.thief,
-        'thiefmule': Memory.misc.globalCreepsTemp.thiefmule,
-        'claimer': Memory.misc.globalCreepsTemp.claimer,
-        'tough': Memory.misc.globalCreepsTemp.tough,
-        'blocker': Memory.misc.globalCreepsTemp.blocker
-    };
-
-    Memory.stats['cpu.pathfinding'] = Memory.stats['cpu.pathfinding_temp'];
-    Memory.stats['cpu.cache_miss'] = Memory.stats['cpu.cache_miss_temp'];
-    Memory.stats['cpu.getUsed'] = Game.cpu.getUsed();
-    Memory.stats['cpu.bucket'] = Game.cpu.bucket;
-    Memory.stats['cpu.limit'] = Game.cpu.limit;
-    Memory.stats['cpu.links'] = Memory.stats['cpu.links_temp'];
-    Memory.stats['cpu.runTowers'] = Memory.stats['cpu.runTowers_temp'];
-    Memory.stats['cpu.roomUpdateConsts'] = Memory.stats['cpu.roomUpdateConsts_temp'];
-    Memory.stats['cpu.roomInit'] = Memory.stats['cpu.roomInit_temp'];
-}
-
-/***/ }),
-/* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -326,7 +137,7 @@ function getSource(creep) {
 /* harmony default export */ __webpack_exports__["a"] = (actHarvest);
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -418,7 +229,7 @@ const util = {
 /* harmony default export */ __webpack_exports__["a"] = (util);
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -670,11 +481,11 @@ function deposit_resource(creep, isMule) {
 /* harmony default export */ __webpack_exports__["a"] = (actDeposit);
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__cron__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__cron__ = __webpack_require__(4);
 
 
 const roleThief = {
@@ -725,7 +536,7 @@ const roleThief = {
 /* harmony default export */ __webpack_exports__["a"] = (roleThief);
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -839,7 +650,7 @@ const cronJobs = {
 /* harmony default export */ __webpack_exports__["a"] = (cronJobs);
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -885,7 +696,7 @@ const roleThiefMule = {
 /* harmony default export */ __webpack_exports__["a"] = (roleThiefMule);
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1058,6 +869,201 @@ function findAttackTarget(creep) {
 /* harmony default export */ __webpack_exports__["a"] = (actOffensive);
 
 /***/ }),
+/* 7 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (immutable) */ __webpack_exports__["loop"] = loop;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__room__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cron__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__brains__ = __webpack_require__(21);
+
+
+
+// docs:
+/*
+place a flag names 'Attack' to designate the attack room and location
+place a flag names 'Marshal' to designate a staging area.
+To specify size, change forceSize on the Memory.attackers object
+To tell a room to marshal a force, change the room flag 'marshalForce' to true
+You can send a worker to another room by specifying the roomname on goToTarget and change their task name to goToTarget (make this global)
+
+You can claim by placing a Claim flag setting myRoom.memory.spawnClaimer to the number of claimers you want
+*/
+
+Creep.prototype.moveToCacheXY = function (x, y, options) {
+    const dest = new RoomPosition(x, y, this.room.name);
+    return this.moveToCacheTarget(dest, options);
+};
+Creep.prototype.moveToCacheTarget = function (target, options) {
+    // check cache
+    const checkCpu = Game.cpu.getUsed();
+    const dest = target.roomName + target.x + target.y;
+    const from = this.pos.roomName + this.pos.x + this.pos.y;
+    if (this.fatigue > 0) {
+        return -11;
+    }
+
+    if (this.memory.pathCache && this.memory.targetCache === dest) {
+        if (this.memory.currentCache === from) {
+            delete this.memory.currentCache;
+            delete this.memory.pathCache;
+            delete this.memory.targetCache;
+            if (Memory.pathCache[dest] && Memory.pathCache[dest][from]) {
+                delete Memory.pathCache[dest][from];
+            }
+            Memory.stats['cpu.cache_miss_temp'] += 1;
+            return this.moveToCacheTarget(target, { 'ignoreCreeps': false });
+        }
+        this.memory.currentCache = from;
+    } else if (Memory.pathCache[dest] && Memory.pathCache[dest][from]) {
+        Memory.pathCache[dest][from].called += 1;
+        this.memory.pathCache = Memory.pathCache[dest][from].path;
+        this.memory.targetCache = dest;
+    } else {
+        Memory.stats['cpu.cache_miss_temp'] += 1;
+        let moveopts = {
+            'maxRooms': 1,
+            'ignoreCreeps': true,
+            'serialize': true
+        };
+        if (options) {
+            moveopts = Object.assign(moveopts, options);
+        }
+        const path = this.room.findPath(this.pos, target, moveopts);
+        if (!path) {
+            Memory.stats['cpu.pathfinding_temp'] += Game.cpu.getUsed() - checkCpu;
+            return -5;
+        }
+        if (!Memory.pathCache[dest]) {
+            Memory.pathCache[dest] = {};
+        }
+        Memory.pathCache[dest][from] = {
+            path,
+            called: 0
+        };
+        this.memory.pathCache = Memory.pathCache[dest][from].path;
+        this.memory.targetCache = dest;
+    }
+    var err = this.moveByPath(this.memory.pathCache);
+    if (err == ERR_NOT_FOUND) {
+        delete this.memory.currentCache;
+        delete this.memory.pathCache;
+        delete this.memory.targetCache;
+        if (Memory.pathCache[dest] && Memory.pathCache[dest][from]) {
+            delete Memory.pathCache[dest][from];
+        }
+    }
+    Memory.stats['cpu.pathfinding_temp'] += Game.cpu.getUsed() - checkCpu;
+    return err;
+};
+
+function loop() {
+    for (let name in Memory.creeps) {
+        if (Game.creeps[name] == undefined) {
+            delete Memory.creeps[name];
+        }
+    }
+
+    Memory.stats['cpu.zeroed'] = Game.cpu.getUsed();
+    Memory.stats['cpu.pathfinding_temp'] = 0;
+    Memory.stats['cpu.cache_miss_temp'] = 0;
+    Memory.stats['cpu.links_temp'] = 0;
+    Memory.stats['cpu.runTowers_temp'] = 0;
+    Memory.stats['cpu.roomUpdateConsts_temp'] = 0;
+    Memory.stats['cpu.roomInit_temp'] = 0;
+
+    Memory.stats['cpu.cron_temp'] = Game.cpu.getUsed();
+    __WEBPACK_IMPORTED_MODULE_1__cron__["a" /* default */].run();
+    Memory.stats['cpu.cron'] = Game.cpu.getUsed() - Memory.stats['cpu.cron_temp'];
+    Memory.misc.globalCreepsTemp = {
+        'healer': 0,
+        'melee': 0,
+        'ranged': 0,
+        'thief': 0,
+        'thiefmule': 0,
+        'claimer': 0,
+        'tough': 0,
+        'blocker': 0
+    };
+    // Lets keep this around just in case?
+    // for(let name in Memory.rooms)
+    // {
+    // 	if(Game.rooms[name]==undefined)
+    // 	{
+    // 		delete Memory.rooms[name];
+    // 	}
+    // }
+
+    // for dashboard
+    if (Memory.stats == undefined) {
+        Memory.stats = {};
+    }
+
+    var rooms = Game.rooms;
+    for (let roomKey in rooms) {
+        let room = Game.rooms[roomKey];
+        var isMyRoom = room.controller ? room.controller.my : 0;
+        if (isMyRoom) {
+            Memory.stats['room.' + room.name + '.myRoom'] = 1;
+            Memory.stats['room.' + room.name + '.energyAvailable'] = room.energyAvailable;
+            Memory.stats['room.' + room.name + '.energyCapacityAvailable'] = room.energyCapacityAvailable;
+            Memory.stats['room.' + room.name + '.controllerSpeed'] = room.controller.progress - Memory.stats['room.' + room.name + '.controllerProgress'];
+            Memory.stats['room.' + room.name + '.controllerProgress'] = room.controller.progress;
+            Memory.stats['room.' + room.name + '.controllerProgressTotal'] = room.controller.progressTotal;
+            var stored = 0;
+            var storedTotal = 0;
+
+            if (room.storage) {
+                stored = room.storage.store[RESOURCE_ENERGY];
+                storedTotal = room.storage.storeCapacity[RESOURCE_ENERGY];
+            } else {
+                stored = 0;
+                storedTotal = 0;
+            }
+            Memory.stats['room.' + room.name + '.storedEnergy'] = stored;
+        } else {
+            Memory.stats['room.' + room.name + '.myRoom'] = undefined;
+        }
+    }
+    Memory.stats['gcl.progress'] = Game.gcl.progress;
+    Memory.stats['gcl.progressTotal'] = Game.gcl.progressTotal;
+    Memory.stats['gcl.level'] = Game.gcl.level;
+
+    Memory.stats['cpu.roomController_temp'] = Game.cpu.getUsed();
+
+    __WEBPACK_IMPORTED_MODULE_2__brains__["a" /* default */].run();
+
+    for (let roomName in Game.rooms) {
+        let Room = Game.rooms[roomName];
+        __WEBPACK_IMPORTED_MODULE_0__room__["a" /* default */].run(Room);
+    }
+    Memory.stats['cpu.roomController'] = Game.cpu.getUsed() - Memory.stats['cpu.roomController_temp'];
+
+    Memory.misc.globalCreeps = {
+        'healer': Memory.misc.globalCreepsTemp.healer,
+        'ranged': Memory.misc.globalCreepsTemp.ranged,
+        'melee': Memory.misc.globalCreepsTemp.melee,
+        'thief': Memory.misc.globalCreepsTemp.thief,
+        'thiefmule': Memory.misc.globalCreepsTemp.thiefmule,
+        'claimer': Memory.misc.globalCreepsTemp.claimer,
+        'tough': Memory.misc.globalCreepsTemp.tough,
+        'blocker': Memory.misc.globalCreepsTemp.blocker
+    };
+
+    Memory.stats['cpu.pathfinding'] = Memory.stats['cpu.pathfinding_temp'];
+    Memory.stats['cpu.cache_miss'] = Memory.stats['cpu.cache_miss_temp'];
+    Memory.stats['cpu.getUsed'] = Game.cpu.getUsed();
+    Memory.stats['cpu.bucket'] = Game.cpu.bucket;
+    Memory.stats['cpu.limit'] = Game.cpu.limit;
+    Memory.stats['cpu.links'] = Memory.stats['cpu.links_temp'];
+    Memory.stats['cpu.runTowers'] = Memory.stats['cpu.runTowers_temp'];
+    Memory.stats['cpu.roomUpdateConsts'] = Memory.stats['cpu.roomUpdateConsts_temp'];
+    Memory.stats['cpu.roomInit'] = Memory.stats['cpu.roomInit_temp'];
+}
+
+/***/ }),
 /* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1067,8 +1073,8 @@ function findAttackTarget(creep) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__roles_role_mule__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__roles_role_worker__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__roles_role_claimer__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__roles_role_thief__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__roles_role_thiefmule__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__roles_role_thief__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__roles_role_thiefmule__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__roles_role_offensive__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__spawner__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__task_manager__ = __webpack_require__(16);
@@ -1277,6 +1283,9 @@ const RoomController = {
                     case 'tough':
                         __WEBPACK_IMPORTED_MODULE_7__roles_role_offensive__["a" /* default */].run(creep, mySpawns);
                         break;
+                    case 'brains':
+                        Memory.processedQueue.push(creep.id);
+                        break;
                 }
                 Memory.stats['room.' + myRoom.name + '.cpu.roles_temp'] += Game.cpu.getUsed() - rolesCpu;
             } else {
@@ -1478,8 +1487,8 @@ const roleUpgrader = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__actions_action_harvest__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_deposit__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__actions_action_harvest__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_deposit__ = __webpack_require__(2);
 
 
 
@@ -1568,7 +1577,7 @@ const roleWorker = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__(1);
 
 
 const roleClaimer = {
@@ -1594,8 +1603,8 @@ const roleClaimer = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__ = __webpack_require__(6);
 
 
 
@@ -1663,8 +1672,8 @@ const roleOffensive = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__roles_role_thief__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__roles_role_thiefmule__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__roles_role_thief__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__roles_role_thiefmule__ = __webpack_require__(5);
 
 
 
@@ -1684,15 +1693,15 @@ const spawner = {
             'tough': 1
         };
         var MaxHarvesterCount = myRoom.memory.hasLinks || myRoom.memory.hasContainers ? 2 : 4;
-        var MaxHarvesterExtractorCount = myRoom.memory.hasContainers && myRoom.memory.hasExtractor ? 1 : 0;
+        var MaxHarvesterExtractorCount = myRoom.memory.hasContainers && myRoom.memory.hasExtractor ? 0 : 0; //1 : 0;
         // implement levels
         // var MinHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 5;
-        var MaxWorkerCount = myRoom.memory.marshalForce ? 1 : 2;
+        var MaxWorkerCount = myRoom.memory.marshalForce ? 1 : 1; //2;
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         MaxMuleCount = myRoom.memory.hasExtractor ? 2 : MaxMuleCount;
         var MaxUpgraderCount = myRoom.memory.hasLinks ? 0 : 0;
-        var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 17;
-        var MaxThiefMuleCount = 11;
+        var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 0; //17;
+        var MaxThiefMuleCount = 0; // 11;
         var MaxMeleeCount = myRoom.memory.marshalForce ? Memory.attackers.forceSize - 3 : 0;
         var MaxRangedCount = myRoom.memory.marshalForce ? 2 : 0;
         var MaxHealerCount = myRoom.memory.marshalForce ? 1 : 0;
@@ -2082,14 +2091,14 @@ function getBody(myRoom, MaxParts, options = {}) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__actions_action_deposit__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__actions_action_deposit__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_resupply__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__actions_action_claim__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__actions_action_harvest__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__actions_action_harvest__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__actions_action_upgrade__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__actions_action_build__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__util__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__util__ = __webpack_require__(1);
 
 
 
@@ -2160,7 +2169,7 @@ const taskManager = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__action_harvest__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__action_harvest__ = __webpack_require__(0);
 
 
 const actResupply = {
@@ -2407,6 +2416,19 @@ function findRepairTarget(creep) {
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (actBuild);
+
+/***/ }),
+/* 21 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const brains = {
+    run() {
+        //
+    }
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (brains);
 
 /***/ })
 /******/ ]);

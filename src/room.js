@@ -204,6 +204,9 @@ const RoomController = {
                     case 'tough':
                         roleOffensive.run(creep, mySpawns);
                         break;
+                    case 'brains':
+                        Memory.processedQueue.push(creep.id);
+                        break;
                 }
                 Memory.stats['room.' + myRoom.name + '.cpu.roles_temp'] += Game.cpu.getUsed() - rolesCpu;
             } else {

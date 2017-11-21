@@ -1,6 +1,7 @@
 // @flow
 import RoomController from './room';
 import cronJobs from './cron';
+import brains from './brains';
 // docs:
 /*
 place a flag names 'Attack' to designate the attack room and location
@@ -89,6 +90,7 @@ export function loop() {
         }
     }
 
+    Memory.stats['cpu.zeroed'] = Game.cpu.getUsed();
     Memory.stats['cpu.pathfinding_temp'] = 0;
     Memory.stats['cpu.cache_miss_temp'] = 0;
     Memory.stats['cpu.links_temp'] = 0;
@@ -154,6 +156,9 @@ export function loop() {
     Memory.stats['gcl.level'] = Game.gcl.level;
 
     Memory.stats['cpu.roomController_temp'] = Game.cpu.getUsed();
+
+    brains.run();
+
     for (let roomName in Game.rooms) {
         let Room = Game.rooms[roomName]
         RoomController.run(Room)

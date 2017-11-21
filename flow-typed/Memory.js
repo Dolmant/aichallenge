@@ -20,6 +20,7 @@
     hasMules: number,
     owner: boolean,
     myCreepCount: myCreepCountType,
+    requests: Array<{[string]: string}>
 };
 
 declare var Memory: {
@@ -72,5 +73,19 @@ declare var Memory: {
     },
     rooms: {
         [string]: RoomMemory,
-    }
+    },
+    processedQueue: Array<string>,
+    squads: {
+        [string]: {
+            roomTarget: string,
+            stagingTarget: {
+                x: number,
+                y: number,
+                roomName: string,
+            },
+            myTask: string,
+            composition: any,
+        }
+    },
+    stats: any
 };
