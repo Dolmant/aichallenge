@@ -23,6 +23,18 @@ const cronJobs = {
                 Memory.thieving_spots[key] = 0;
             }
         });
+        for (let roomName in Game.rooms) {
+            let myRoom = Game.rooms[roomName]
+            var enemyCreeps: Creep = myRoom.find(FIND_HOSTILE_CREEPS);
+            myRoom.memory.defcon = enemyCreeps.length;
+            if (Memory.squads[roomName + 'defcon')]) {
+                if (Memory.squads[roomName + 'defcon'].size != enemyCreeps.length) {
+                    brain.updateSquadSize(roomName + 'defcon');
+                }
+            } else if (enemyCreeps.length > 0) {
+                brain.createSquad(roomName + 'defcon', roomName, enemyCreeps.length, 'defcon');
+            }
+        }
     },
     run2000() {
         Object.keys(Memory.pathCache).forEach(key => {

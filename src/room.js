@@ -33,6 +33,7 @@ const RoomController = {
         }
 
         var myCreeps: Creep = myRoom.find(FIND_MY_CREEPS);
+
         var mySpawns = myRoom.find(FIND_MY_SPAWNS);
 
         var myCreepCount = {

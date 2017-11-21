@@ -486,6 +486,7 @@ function deposit_resource(creep, isMule) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__cron__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__cron___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__cron__);
 
 
 const roleThief = {
@@ -517,7 +518,7 @@ const roleThief = {
         // TODO fix !!!!
         let target;
         if (Memory.thieving_spots) {
-            __WEBPACK_IMPORTED_MODULE_0__cron__["a" /* default */].run10();
+            __WEBPACK_IMPORTED_MODULE_0__cron__["default"].run10();
             const targets = Object.keys(Memory.thieving_spots);
             for (var i = 0; i < targets.length; i += 1) {
                 if (Memory.thieving_spots[targets[i]] == 0) {
@@ -537,117 +538,10 @@ const roleThief = {
 
 /***/ }),
 /* 4 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, __webpack_exports__) {
 
 "use strict";
-const cronJobs = {
-    run() {
-        if (!Memory.cronCount) {
-            Memory.cronCount = 0;
-        }
-        Memory.cronCount += 1;
-        if (Memory.thieving_spots) {
-            Memory.register_thieves = false;
-            if (Memory.cronCount % 10 === 0) {
-                cronJobs.run10();
-            }
-            if (Memory.cronCount > 2000) {
-                Memory.cronCount -= 2000;
-                cronJobs.run2000();
-            }
-        } else {
-            cronJobs.init();
-        }
-    },
-    run10() {
-        Object.keys(Memory.thieving_spots).forEach(key => {
-            if (Memory.thieving_spots[key] && !Game.creeps[Memory.thieving_spots[key]]) {
-                Memory.thieving_spots[key] = 0;
-            }
-        });
-    },
-    run2000() {
-        Object.keys(Memory.pathCache).forEach(key => {
-            Object.keys(Memory.pathCache[key]).forEach(subkey => {
-                if (Memory.pathCache[key][subkey].called < 2) {
-                    delete Memory.pathCache[key][subkey];
-                } else if (Memory.pathCache[key][subkey].called) {
-                    Memory.pathCache[key][subkey].called = 0;
-                }
-            });
-        });
-        Object.keys(Memory.pathCache).forEach(key => {
-            if (Object.keys(Memory.pathCache[key]).length < 1) {
-                delete Memory.pathCache[key];
-            }
-        });
-    },
-    init() {
-        Memory.thieving_spots = {
-            // location: W46N53
-            '59bbc4262052a716c3ce7711': 0,
-            '59bbc4262052a716c3ce7712': 0,
-            // location: W45N52
-            '59bbc4282052a716c3ce7771': 0,
-            '59bbc4282052a716c3ce7772': 0,
-            // location: W45N51
-            '59bbc4282052a716c3ce7776': 0,
-            '59bbc4282052a716c3ce7777': 0,
-            // location: W44N53
-            '59bbc42a2052a716c3ce77ce': 0,
-            // location: W44N52
-            '59bbc42b2052a716c3ce77d0': 0,
-            // location: W44N51
-            '59bbc42b2052a716c3ce77d3': 0,
-            // location: W43N52
-            '59bbc42d2052a716c3ce7822': 0,
-            // location: W43N51
-            '59bbc42d2052a716c3ce7824': 0,
-            '59bbc42d2052a716c3ce7825': 0,
-            // location: W42N51
-            '59bbc4302052a716c3ce7862': 0,
-            // location: W46N51
-            '59bbc4262052a716c3ce7717': 0,
-            '59bbc4262052a716c3ce7718': 0,
-            // location: W47N52
-            '59bbc4242052a716c3ce76bf': 0,
-            '59bbc4242052a716c3ce76c1': 0
-        };
-        Memory.register_thieves = true;
-        Memory.roomMap = {
-            // location: W46N53
-            '59bbc4262052a716c3ce7711': 'W46N53',
-            '59bbc4262052a716c3ce7712': 'W46N53',
-            // location: W45N52
-            '59bbc4282052a716c3ce7771': 'W45N52',
-            '59bbc4282052a716c3ce7772': 'W45N52',
-            // location: W45N51
-            '59bbc4282052a716c3ce7776': 'W45N51',
-            '59bbc4282052a716c3ce7777': 'W45N51',
-            // location: W44N53
-            '59bbc42a2052a716c3ce77ce': 'W44N53',
-            // location: W44N52
-            '59bbc42b2052a716c3ce77d0': 'W44N52',
-            // location: W44N51
-            '59bbc42b2052a716c3ce77d3': 'W44N51',
-            // location: W43N52
-            '59bbc42d2052a716c3ce7822': 'W43N52',
-            // location: W43N51
-            '59bbc42d2052a716c3ce7824': 'W43N51',
-            '59bbc42d2052a716c3ce7825': 'W43N51',
-            // location: W42N51
-            '59bbc4302052a716c3ce7862': 'W42N51',
-            // location: W46N51
-            '59bbc4262052a716c3ce7717': 'W46N51',
-            '59bbc4262052a716c3ce7718': 'W46N51',
-            // location: W47N52
-            '59bbc4242052a716c3ce76bf': 'W47N52',
-            '59bbc4242052a716c3ce76c1': 'W47N52'
-        };
-    }
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (cronJobs);
+throw new Error("Module build failed: SyntaxError: E:/DOS/aichallenge/src/cron.js: Unexpected token, expected ] (30:49)\n\n\u001b[0m \u001b[90m 28 | \u001b[39m            \u001b[36mvar\u001b[39m enemyCreeps\u001b[33m:\u001b[39m \u001b[33mCreep\u001b[39m \u001b[33m=\u001b[39m myRoom\u001b[33m.\u001b[39mfind(\u001b[33mFIND_HOSTILE_CREEPS\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 29 | \u001b[39m            myRoom\u001b[33m.\u001b[39mmemory\u001b[33m.\u001b[39mdefcon \u001b[33m=\u001b[39m enemyCreeps\u001b[33m.\u001b[39mlength\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 30 | \u001b[39m            \u001b[36mif\u001b[39m (\u001b[33mMemory\u001b[39m\u001b[33m.\u001b[39msquads[roomName \u001b[33m+\u001b[39m \u001b[32m'defcon'\u001b[39m)]) {\n \u001b[90m    | \u001b[39m                                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 31 | \u001b[39m                \u001b[36mif\u001b[39m (\u001b[33mMemory\u001b[39m\u001b[33m.\u001b[39msquads[roomName \u001b[33m+\u001b[39m \u001b[32m'defcon'\u001b[39m]\u001b[33m.\u001b[39msize \u001b[33m!=\u001b[39m enemyCreeps\u001b[33m.\u001b[39mlength) {\n \u001b[90m 32 | \u001b[39m                    brain\u001b[33m.\u001b[39mupdateSquadSize(roomName \u001b[33m+\u001b[39m \u001b[32m'defcon'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 33 | \u001b[39m                }\u001b[0m\n");
 
 /***/ }),
 /* 5 */
@@ -877,6 +771,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["loop"] = loop;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__room__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cron__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cron___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__cron__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__brains__ = __webpack_require__(21);
 
 
@@ -975,7 +870,7 @@ function loop() {
     Memory.stats['cpu.roomInit_temp'] = 0;
 
     Memory.stats['cpu.cron_temp'] = Game.cpu.getUsed();
-    __WEBPACK_IMPORTED_MODULE_1__cron__["a" /* default */].run();
+    __WEBPACK_IMPORTED_MODULE_1__cron__["default"].run();
     Memory.stats['cpu.cron'] = Game.cpu.getUsed() - Memory.stats['cpu.cron_temp'];
     Memory.misc.globalCreepsTemp = {
         'healer': 0,
@@ -1112,6 +1007,7 @@ const RoomController = {
         }
 
         var myCreeps = myRoom.find(FIND_MY_CREEPS);
+
         var mySpawns = myRoom.find(FIND_MY_SPAWNS);
 
         var myCreepCount = {
@@ -2423,7 +2319,11 @@ function findRepairTarget(creep) {
 
 "use strict";
 const brains = {
-    run() {
+    run() {},
+    updateSquadSize(squadID) {
+        // Corrects the squad against its new composition
+    },
+    createSquad(id, roomTarget, size, task) {
         //
     }
 };
