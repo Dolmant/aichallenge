@@ -540,7 +540,7 @@ const roleThief = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-throw new Error("Cannot find module \"./brain\"");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__brains__ = __webpack_require__(21);
 
 
 const cronJobs = {
@@ -574,10 +574,10 @@ const cronJobs = {
             myRoom.memory.defcon = enemyCreeps.length;
             if (Memory.squads[roomName + 'defcon']) {
                 if (Memory.squads[roomName + 'defcon'].size != enemyCreeps.length) {
-                    __WEBPACK_IMPORTED_MODULE_0__brain___default.a.updateSquadSize(roomName + 'defcon');
+                    brain.updateSquadSize(roomName + 'defcon');
                 }
             } else if (enemyCreeps.length > 0) {
-                __WEBPACK_IMPORTED_MODULE_0__brain___default.a.createSquad(roomName + 'defcon', roomName, enemyCreeps.length, 'defcon');
+                brain.createSquad(roomName + 'defcon', roomName, enemyCreeps.length, 'defcon');
             }
         }
     },

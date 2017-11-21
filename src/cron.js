@@ -1,4 +1,4 @@
-import brain from './brain';
+import brains from './brains';
 
 const cronJobs = {
     run() {
