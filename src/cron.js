@@ -36,7 +36,7 @@ const cronJobs = {
                 myRoom.memory.defcon = enemyCreeps.length;
                 if (Memory.squads[roomName + 'defcon']) {
                     if (Memory.squads[roomName + 'defcon'].size != enemyCreeps.length) {
-                        brains.updateSquadSize(roomName + 'defcon');
+                        brains.updateSquadSize(roomName + 'defcon', enemyCreeps.length);
                     }
                 } else if (enemyCreeps.length > 0) {
                     brains.createSquad(roomName + 'defcon', roomName, enemyCreeps.length, 'defcon');

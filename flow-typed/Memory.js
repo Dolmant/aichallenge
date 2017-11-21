@@ -83,8 +83,14 @@ declare var Memory: {
                 y: number,
                 roomName: string,
             },
+            stagingTarget: {
+                x: number,
+                y: number,
+                roomName: string,
+            },
             myTask: string,
             composition: any,
+            size: number,
         }
     },
     stats: any

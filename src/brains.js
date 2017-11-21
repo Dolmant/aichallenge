@@ -13,6 +13,9 @@ const brains = {
                         case 'retired':
                             roleOffensive.run(creep);
                             break;
+                        case 'farm':
+                            roleOffensive.run(creep);
+                            break;
                         case 'defcon':
                             roleOffensive.run(creep);
                             break;
@@ -27,16 +30,70 @@ const brains = {
             });
         }
     },
-    updateSquadSize(squad: string) {
-        // Corrects the squad against its new composition
+    buildRequest(destination: any, number: number, options: any) {
+        const closestSpawn = new RoomPosition(25, 25, destination).findClosestbyRange(FIND_MY_SPAWNS);
+        if (closestSpawn) {
+            let i;
+            for (i = 0; i < number; number += 1) {
+                closestSpawn.room.memory.requests.push(options);
+            }
+            return closestSpawn.room.name;
+        } else {
+            console.log('PANIC CANT FIND A SPAWN TO USE');
+        }
     },
-    createSquad(squad: string, roomTarget: string, size: number, task: string) {
+    updateSquadSize(squad: string, size: number) {
+        // Corrects the squad against its new size
+        // update creeparray to be big enough
+        // update comp to be big enough
+        const options = {
+            'role': 'brains',
+            'myTask': task,
+            'squad': squad,
+        };
+        buildRequest(Memory.squads[squad].roomTarget, size, options);
+    },
+    createSquad(squadName: string, roomTarget: string, size: number, task: string) {
         //check for any reusable dead squads
         // if so, repurpose and resize them
         // else fire off builds
+        let requiredSize = size;
+        Memory.retiredSquads.forEach((squad, index) => {
+            // TODO join retired squads together
+            if (Memory.squads[squad].size >= requiredSize) {
+                Memory.squads[squadName] = Memory.squads[squad];
+                delete Memory.squads[squad];
+
+                Memory.retiredSquads.splice(index, index + 1) // always removing elements
+                requiredSize = 0;
+            }
+        });
+        if (requiredSize > 0) {
+            const options = {
+                'role': 'brains',
+                'myTask': task,
+                'squad': squadName,
+            };
+            Memory.squads[squadName] = {};
+            Memory.squads[squadName].roomTarget = roomTarget;
+            Memory.squads[squadName].size = size;
+            Memory.squads[squadName].task = task;
+            const stagingRoomname = buildRequest(roomTarget, size, options);
+            Memory.squads[squadName].stagingTarget = {
+                roomName: stagingRoomname,
+                x: 25,
+                y: 25,
+            };
+        }
     },
-    retireSquad(squad: string, roomTarget: string, size: number, task: string) {
-        // mark task as retired, turn off renewal and replace.
+    joinSquads(squad1: string, squad2: string) {
+        Memory.squads[squad1].creeps = Memory.squads[squad1].creeps.concat(Memory.squads[squad2].creeps);
+        brains.updateSquadSize(squad1, Memory.squads[squad1].size + Memory.squads[squad2].size)
+    },
+    retireSquad(squad: string) {
+        // mark task as retired, turn off renewal and replace in the role.
+        Memory.squads[squad].role = 'retired';
+        Memory.retiredSquads.push(squad);
     },
     taskManager(creep: string) {
         switch(creep.memory.myTask){

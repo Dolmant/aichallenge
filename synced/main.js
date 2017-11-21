@@ -579,7 +579,7 @@ const cronJobs = {
                 myRoom.memory.defcon = enemyCreeps.length;
                 if (Memory.squads[roomName + 'defcon']) {
                     if (Memory.squads[roomName + 'defcon'].size != enemyCreeps.length) {
-                        __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].updateSquadSize(roomName + 'defcon');
+                        __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].updateSquadSize(roomName + 'defcon', enemyCreeps.length);
                     }
                 } else if (enemyCreeps.length > 0) {
                     __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].createSquad(roomName + 'defcon', roomName, enemyCreeps.length, 'defcon');
@@ -2459,6 +2459,9 @@ const brains = {
                         case 'retired':
                             roleOffensive.run(creep);
                             break;
+                        case 'farm':
+                            roleOffensive.run(creep);
+                            break;
                         case 'defcon':
                             roleOffensive.run(creep);
                             break;
@@ -2473,16 +2476,70 @@ const brains = {
             });
         }
     },
-    updateSquadSize(squad) {
-        // Corrects the squad against its new composition
+    buildRequest(destination, number, options) {
+        const closestSpawn = new RoomPosition(25, 25, destination).findClosestbyRange(FIND_MY_SPAWNS);
+        if (closestSpawn) {
+            let i;
+            for (i = 0; i < number; number += 1) {
+                closestSpawn.room.memory.requests.push(options);
+            }
+            return closestSpawn.room.name;
+        } else {
+            console.log('PANIC CANT FIND A SPAWN TO USE');
+        }
     },
-    createSquad(squad, roomTarget, size, task) {
+    updateSquadSize(squad, size) {
+        // Corrects the squad against its new size
+        // update creeparray to be big enough
+        // update comp to be big enough
+        const options = {
+            'role': 'brains',
+            'myTask': task,
+            'squad': squad
+        };
+        buildRequest(Memory.squads[squad].roomTarget, size, options);
+    },
+    createSquad(squadName, roomTarget, size, task) {
         //check for any reusable dead squads
         // if so, repurpose and resize them
         // else fire off builds
+        let requiredSize = size;
+        Memory.retiredSquads.forEach((squad, index) => {
+            // TODO join retired squads together
+            if (Memory.squads[squad].size >= requiredSize) {
+                Memory.squads[squadName] = Memory.squads[squad];
+                delete Memory.squads[squad];
+
+                Memory.retiredSquads.splice(index, index + 1); // always removing elements
+                requiredSize = 0;
+            }
+        });
+        if (requiredSize > 0) {
+            const options = {
+                'role': 'brains',
+                'myTask': task,
+                'squad': squadName
+            };
+            Memory.squads[squadName] = {};
+            Memory.squads[squadName].roomTarget = roomTarget;
+            Memory.squads[squadName].size = size;
+            Memory.squads[squadName].task = task;
+            const stagingRoomname = buildRequest(roomTarget, size, options);
+            Memory.squads[squadName].stagingTarget = {
+                roomName: stagingRoomname,
+                x: 25,
+                y: 25
+            };
+        }
     },
-    retireSquad(squad, roomTarget, size, task) {
-        // mark task as retired, turn off renewal and replace.
+    joinSquads(squad1, squad2) {
+        Memory.squads[squad1].creeps = Memory.squads[squad1].creeps.concat(Memory.squads[squad2].creeps);
+        brains.updateSquadSize(squad1, Memory.squads[squad1].size + Memory.squads[squad2].size);
+    },
+    retireSquad(squad) {
+        // mark task as retired, turn off renewal and replace in the role.
+        Memory.squads[squad].role = 'retired';
+        Memory.retiredSquads.push(squad);
     },
     taskManager(creep) {
         switch (creep.memory.myTask) {
