@@ -568,18 +568,22 @@ const cronJobs = {
                 Memory.thieving_spots[key] = 0;
             }
         });
-        for (let roomName in Game.rooms) {
+
+        const myRooms = ['W43N53', 'W45N53', 'W41N51', 'W46N52'];
+        Object.keys(Memory.roomMap).forEach(key => myRooms.push(Memory.roomMap[key]));
+
+        myRooms.forEach(roomName => {
             let myRoom = Game.rooms[roomName];
             var enemyCreeps = myRoom.find(FIND_HOSTILE_CREEPS);
             myRoom.memory.defcon = enemyCreeps.length;
             if (Memory.squads[roomName + 'defcon']) {
                 if (Memory.squads[roomName + 'defcon'].size != enemyCreeps.length) {
-                    brain.updateSquadSize(roomName + 'defcon');
+                    __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].updateSquadSize(roomName + 'defcon');
                 }
             } else if (enemyCreeps.length > 0) {
-                brain.createSquad(roomName + 'defcon', roomName, enemyCreeps.length, 'defcon');
+                __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].createSquad(roomName + 'defcon', roomName, enemyCreeps.length, 'defcon');
             }
-        }
+        });
     },
     run2000() {
         Object.keys(Memory.pathCache).forEach(key => {
@@ -2439,12 +2443,64 @@ function findRepairTarget(creep) {
 
 "use strict";
 const brains = {
-    run() {},
-    updateSquadSize(squadID) {
+    run() {
+        /*
+        For each creep in each squad
+        run offensive actions plus the 'task' role for the squad
+        */
+
+        for (let squadName in Memory.squads) {
+            Memory.squads[squadName].creeps.forEach(creepID => {
+                const creep = Game.getObjectById(creepID);
+                if (brains.taskManager(creep)) {
+                    switch (Memory.squads[squadName].role) {
+                        case 'defcon':
+                        case 'guard':
+                        case 'grinder':
+                            roleOffensive.run(creep);
+                            break;
+                    }
+                }
+            });
+        }
+    },
+    updateSquadSize(squad) {
         // Corrects the squad against its new composition
     },
-    createSquad(id, roomTarget, size, task) {
+    createSquad(squad, roomTarget, size, task) {
         //
+    },
+    taskManager(creep) {
+        switch (creep.memory.myTask) {
+            case 'claim':
+                return actClaim.run(creep);
+            case 'moveToTarget':
+                return util.moveToTarget(creep);
+            case 'moveToObject':
+                return util.moveToObject(creep);
+            case 'goToTarget':
+                return util.goToTarget(creep);
+            case 'repair':
+            case 'build':
+                return actBuild.run(creep);
+            case 'heal':
+                return actOffensive.heal(creep);
+            case 'attack':
+                return actOffensive.attack(creep);
+            case 'rangedAttack':
+                return actOffensive.rangedAttack(creep);
+            case 'block':
+                return actOffensive.block(creep);
+            case 'gather':
+                return actOffensive.gather(creep);
+            case 'renew':
+                return actOffensive.renew(creep, mySpawns);
+            default:
+                console.log(creep.name);
+                console.log(creep.memory.role);
+                console.log('State machine failed, investigate');
+                return true;
+        }
     }
 };
 

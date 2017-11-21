@@ -25,18 +25,22 @@ const cronJobs = {
                 Memory.thieving_spots[key] = 0;
             }
         });
-        for (let roomName in Game.rooms) {
+
+        const myRooms = ['W43N53', 'W45N53', 'W41N51', 'W46N52'];
+        Object.keys(Memory.roomMap).forEach(key => myRooms.push(Memory.roomMap[key]));
+
+        myRooms.forEach(roomName => {
             let myRoom = Game.rooms[roomName]
             var enemyCreeps: Creep = myRoom.find(FIND_HOSTILE_CREEPS);
             myRoom.memory.defcon = enemyCreeps.length;
             if (Memory.squads[roomName + 'defcon']) {
                 if (Memory.squads[roomName + 'defcon'].size != enemyCreeps.length) {
-                    brain.updateSquadSize(roomName + 'defcon');
+                    brains.updateSquadSize(roomName + 'defcon');
                 }
             } else if (enemyCreeps.length > 0) {
-                brain.createSquad(roomName + 'defcon', roomName, enemyCreeps.length, 'defcon');
+                brains.createSquad(roomName + 'defcon', roomName, enemyCreeps.length, 'defcon');
             }
-        }
+        });
     },
     run2000() {
         Object.keys(Memory.pathCache).forEach(key => {
