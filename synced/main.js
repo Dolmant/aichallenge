@@ -1632,55 +1632,55 @@ const roleClaimer = {
 
 const roleOffensive = {
     run(creep, mySpawns) {
-        if (Memory.attackers.attacking) {
+        if (Memory.squads[creep.memory.squad].attacking) {
             //&& !attackFlag.room.controller.safeMode) {
-            // move to and attack
-            if (!Game.flags['Attack']) {
-                console.log('Place Attack flag');
-                return null;
-            }
-            var attackFlag = Game.flags['Attack'];
-            if (creep.room.name == attackFlag.pos.roomName) {
-                if (creep.memory.myTask != 'heal' && creep.memory.myTask != 'attack' && creep.memory.myTask != 'block') {
-                    __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__["a" /* default */].findTarget(creep);
-                    if (creep.memory.healCreep) {
-                        creep.memory.myTask = 'heal';
-                    } else if (creep.memory.attackCreep) {
-                        switch (creep.memory.role) {
-                            case 'ranged':
-                                creep.memory.myTask = 'rangedAttack';
-                                break;
-                            case 'melee':
-                                creep.memory.myTask = 'attack';
-                                break;
-                            default:
-                                creep.memory.myTask = 'attack';
-                                break;
-                        }
-                    } else if (creep.memory.myTask == 'block') {
-                        return;
-                    } else {
-                        creep.memory.myTask = 'gather';
+            // // move to and attack
+            // if (!Game.flags['Attack']) {
+            //     console.log('Place Attack flag');
+            //     return null;
+            // }
+            // var attackFlag = Game.flags['Attack'];
+            // if (creep.room.name == attackFlag.pos.roomName) {
+            if (creep.memory.myTask != 'heal' && creep.memory.myTask != 'attack' && creep.memory.myTask != 'block') {
+                __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__["a" /* default */].findTarget(creep);
+                if (creep.memory.healCreep) {
+                    creep.memory.myTask = 'heal';
+                } else if (creep.memory.attackCreep) {
+                    switch (creep.memory.role) {
+                        case 'ranged':
+                            creep.memory.myTask = 'rangedAttack';
+                            break;
+                        case 'melee':
+                            creep.memory.myTask = 'attack';
+                            break;
+                        default:
+                            creep.memory.myTask = 'attack';
+                            break;
                     }
+                } else if (creep.memory.myTask == 'block') {
+                    return;
+                } else {
+                    creep.memory.myTask = 'gather';
                 }
             } else if (creep.memory.myTask != 'goToTarget') {
-                creep.memory.goToTarget = attackFlag.pos.roomName;
+                creep.memory.goToTarget = Memory.squads[creep.memory.squad].roomTarget;
                 creep.memory.myTask = 'goToTarget';
             }
         } else {
-            if (!Game.flags['Marshal']) {
-                console.log('Place Marshal flag');
-                return null;
-            }
-            var marshalFlag = Game.flags['Marshal'];
-            if (creep.room.name == marshalFlag.pos.roomName) {
+            // if (!Game.flags['Marshal']) {
+            //     console.log('Place Marshal flag');
+            //     return null;
+            // }
+            // var marshalFlag = Game.flags['Marshal'];
+            var stagingPos = new RoomPosition(Memory.squads[creep.memory.squad].staging.x, Memory.squads[creep.memory.squad].staging.y, Memory.squads[creep.memory.squad].staging.roomName);
+            if (creep.room.name == stagingPos.roomName) {
                 if (creep.ticksToLive < 1000) {
                     creep.memory.myTask = 'renew';
                 } else {
                     creep.memory.myTask = 'gather';
                 }
             } else if (creep.memory.myTask != 'goToTarget') {
-                creep.memory.goToTarget = marshalFlag.pos.roomName;
+                creep.memory.goToTarget = stagingPos.roomName;
                 creep.memory.myTask = 'goToTarget';
             }
         }
@@ -2456,6 +2456,17 @@ function findRepairTarget(creep) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_build__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__actions_action_claim__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__actions_action_offensive__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__util__ = __webpack_require__(1);
+
+
+
+
+
+
 const brains = {
     run() {
         /*
@@ -2469,19 +2480,19 @@ const brains = {
                 if (brains.taskManager(creep)) {
                     switch (Memory.squads[squadName].role) {
                         case 'retired':
-                            roleOffensive.run(creep);
+                            __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].run(creep);
                             break;
                         case 'farm':
-                            roleOffensive.run(creep);
+                            __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].run(creep);
                             break;
                         case 'defcon':
-                            roleOffensive.run(creep);
+                            __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].run(creep);
                             break;
                         case 'guard':
-                            roleOffensive.run(creep);
+                            __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].run(creep);
                             break;
                         case 'grinder':
-                            roleOffensive.run(creep);
+                            __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].run(creep);
                             break;
                     }
                 }
@@ -2556,28 +2567,28 @@ const brains = {
     taskManager(creep) {
         switch (creep.memory.myTask) {
             case 'claim':
-                return actClaim.run(creep);
+                return __WEBPACK_IMPORTED_MODULE_2__actions_action_claim__["a" /* default */].run(creep);
             case 'moveToTarget':
-                return util.moveToTarget(creep);
+                return __WEBPACK_IMPORTED_MODULE_4__util__["a" /* default */].moveToTarget(creep);
             case 'moveToObject':
-                return util.moveToObject(creep);
+                return __WEBPACK_IMPORTED_MODULE_4__util__["a" /* default */].moveToObject(creep);
             case 'goToTarget':
-                return util.goToTarget(creep);
+                return __WEBPACK_IMPORTED_MODULE_4__util__["a" /* default */].goToTarget(creep);
             case 'repair':
             case 'build':
-                return actBuild.run(creep);
+                return __WEBPACK_IMPORTED_MODULE_1__actions_action_build__["a" /* default */].run(creep);
             case 'heal':
-                return actOffensive.heal(creep);
+                return __WEBPACK_IMPORTED_MODULE_3__actions_action_offensive__["a" /* default */].heal(creep);
             case 'attack':
-                return actOffensive.attack(creep);
+                return __WEBPACK_IMPORTED_MODULE_3__actions_action_offensive__["a" /* default */].attack(creep);
             case 'rangedAttack':
-                return actOffensive.rangedAttack(creep);
+                return __WEBPACK_IMPORTED_MODULE_3__actions_action_offensive__["a" /* default */].rangedAttack(creep);
             case 'block':
-                return actOffensive.block(creep);
+                return __WEBPACK_IMPORTED_MODULE_3__actions_action_offensive__["a" /* default */].block(creep);
             case 'gather':
-                return actOffensive.gather(creep);
+                return __WEBPACK_IMPORTED_MODULE_3__actions_action_offensive__["a" /* default */].gather(creep);
             case 'renew':
-                return actOffensive.renew(creep, mySpawns);
+                return __WEBPACK_IMPORTED_MODULE_3__actions_action_offensive__["a" /* default */].renew(creep, mySpawns);
             default:
                 console.log(creep.name);
                 console.log(creep.memory.role);

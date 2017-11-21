@@ -1,3 +1,9 @@
+import roleOffensive from './roles/role.offensive'
+import actBuild from './actions/action.build'
+import actClaim from './actions/action.claim'
+import actOffensive from './actions/action.offensive'
+import util from './util'
+
 const brains = {
     run() {
         /*
