@@ -203,10 +203,6 @@ const RoomController = {
                     case 'healer':
                     case 'blocker':
                     case 'tough':
-                        roleOffensive.run(creep, mySpawns);
-                        break;
-                    case 'brains':
-                        Memory.processedQueue.push(creep.id);
                         break;
                 }
                 Memory.stats['room.' + myRoom.name + '.cpu.roles_temp'] += Game.cpu.getUsed() - rolesCpu;
@@ -237,8 +233,6 @@ const RoomController = {
         transferLinks(myRoom.memory.links);
         Memory.stats['cpu.links_temp'] += Game.cpu.getUsed() - Slinks;
 
-
-
         Memory.stats['room.' + myRoom.name + '.cpu.spawner_temp'] = Game.cpu.getUsed();
         spawner.run(myRoom, mySpawns, myCreepCount, totalCreeps, convert);
         Memory.stats['room.' + myRoom.name + '.cpu.spawner'] = Game.cpu.getUsed() - Memory.stats['room.' + myRoom.name + '.cpu.spawner_temp'];
@@ -250,7 +244,7 @@ function runTowers(myTowers)
     myTowers.forEach(tower => {
         var minRepair = 100000;
         var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        if (closestHostile) {
+        if (closestHostile && tower.pos.getRangeTo(closestHostile) <= 30) {
             tower.attack(closestHostile);
         }
         else if (tower.energy > tower.energyCapacity / 2) {

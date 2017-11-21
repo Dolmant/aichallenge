@@ -10,30 +10,34 @@ const brains = {
         For each creep in each squad
         run offensive actions plus the 'task' role for the squad
         */
-
         for (let squadName in Memory.squads) {
-            Memory.squads[squadName].creeps.forEach(creepID => {
-                const creep = Game.getObjectById(creepID)
-                if (brains.taskManager(creep)) {
-                    switch(Memory.squads[squadName].role){
-                        case 'retired':
-                            roleOffensive.run(creep);
-                            break;
-                        case 'farm':
-                            roleOffensive.run(creep);
-                            break;
-                        case 'defcon':
-                            roleOffensive.run(creep);
-                            break;
-                        case 'guard':
-                            roleOffensive.run(creep);
-                            break;
-                        case 'grinder':
-                            roleOffensive.run(creep);
-                            break;
-                    }
+            const creepArray = Memory.squads[squadName].creeps;
+            creepArray.forEach((creepID, index) => {
+                const creep = Game.getObjectById(creepID);
+                if (creep) {
+                    brains.taskManager(creep);
+                } else {
+                    Memory.squads[squadName].creeps.splice(index, index + 1);
                 }
             });
+            // Always run role to make sure we can control if we need to attack or not
+            switch(Memory.squads[squadName].role){
+                case 'retired':
+                    roleOffensive.run(creep);
+                    break;
+                case 'farm':
+                    roleOffensive.run(creep);
+                    break;
+                case 'defcon':
+                    roleOffensive.run(creep);
+                    break;
+                case 'guard':
+                    roleOffensive.run(creep);
+                    break;
+                case 'grinder':
+                    roleOffensive.run(creep);
+                    break;
+            }
         }
     },
     buildRequest(destination: any, number: number, options: any) {
@@ -53,7 +57,7 @@ const brains = {
         // update creeparray to be big enough
         // update comp to be big enough
         const options = {
-            'role': 'brains',
+            'role': 'ranged',
             'myTask': task,
             'squad': squad,
         };
@@ -102,6 +106,7 @@ const brains = {
         Memory.retiredSquads.push(squad);
     },
     taskManager(creep: string) {
+        // Add in guard mode,
         switch(creep.memory.myTask){
             case 'claim':
                 return actClaim.run(creep);

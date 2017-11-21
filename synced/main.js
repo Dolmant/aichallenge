@@ -579,10 +579,10 @@ const cronJobs = {
                 myRoom.memory.defcon = enemyCreeps.length;
                 if (Memory.squads[roomName + 'defcon']) {
                     if (Memory.squads[roomName + 'defcon'].size != enemyCreeps.length) {
-                        __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].updateSquadSize(roomName + 'defcon', enemyCreeps.length);
+                        // brains.updateSquadSize(roomName + 'defcon', enemyCreeps.length);
                     }
                 } else if (enemyCreeps.length > 0) {
-                    __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].createSquad(roomName + 'defcon', roomName, enemyCreeps.length, 'defcon');
+                    // brains.createSquad(roomName + 'defcon', roomName, enemyCreeps.length, 'defcon');
                 }
             }
         });
@@ -1303,10 +1303,6 @@ const RoomController = {
                     case 'healer':
                     case 'blocker':
                     case 'tough':
-                        __WEBPACK_IMPORTED_MODULE_7__roles_role_offensive__["a" /* default */].run(creep, mySpawns);
-                        break;
-                    case 'brains':
-                        Memory.processedQueue.push(creep.id);
                         break;
                 }
                 Memory.stats['room.' + myRoom.name + '.cpu.roles_temp'] += Game.cpu.getUsed() - rolesCpu;
@@ -1347,7 +1343,7 @@ function runTowers(myTowers) {
     myTowers.forEach(tower => {
         var minRepair = 100000;
         var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-        if (closestHostile) {
+        if (closestHostile && tower.pos.getRangeTo(closestHostile) <= 30) {
             tower.attack(closestHostile);
         } else if (tower.energy > tower.energyCapacity / 2) {
             var repairTarget = 0;
@@ -1657,10 +1653,9 @@ const roleOffensive = {
                             creep.memory.myTask = 'attack';
                             break;
                     }
-                } else if (creep.memory.myTask == 'block') {
-                    return;
                 } else {
-                    creep.memory.myTask = 'gather';
+                    creep.memory.goToTarget = Memory.squads[creep.memory.squad].roomTarget;
+                    creep.memory.myTask = 'goToTarget';
                 }
             } else if (creep.memory.myTask != 'goToTarget') {
                 creep.memory.goToTarget = Memory.squads[creep.memory.squad].roomTarget;
@@ -1986,6 +1981,9 @@ function completeOutstandingRequests(myRoom, Spawn) {
         Spawn.spawnCreep(getBody(myRoom, 50, options), newName, {
             memory: myRoom.memory.requests[0]
         });
+        if (myRoom.memory.requests[0].squad) {
+            Memory.squads[myRoom.memory.requests[0].squad].creeps.push(newName);
+        }
         myRoom.memory.requests.splice(0, 1);
         console.log('Spawning: ' + newName);
     }
@@ -2473,30 +2471,34 @@ const brains = {
         For each creep in each squad
         run offensive actions plus the 'task' role for the squad
         */
-
         for (let squadName in Memory.squads) {
-            Memory.squads[squadName].creeps.forEach(creepID => {
+            const creepArray = Memory.squads[squadName].creeps;
+            creepArray.forEach((creepID, index) => {
                 const creep = Game.getObjectById(creepID);
-                if (brains.taskManager(creep)) {
-                    switch (Memory.squads[squadName].role) {
-                        case 'retired':
-                            __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].run(creep);
-                            break;
-                        case 'farm':
-                            __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].run(creep);
-                            break;
-                        case 'defcon':
-                            __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].run(creep);
-                            break;
-                        case 'guard':
-                            __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].run(creep);
-                            break;
-                        case 'grinder':
-                            __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].run(creep);
-                            break;
-                    }
+                if (creep) {
+                    brains.taskManager(creep);
+                } else {
+                    Memory.squads[squadName].creeps.splice(index, index + 1);
                 }
             });
+            // Always run role to make sure we can control if we need to attack or not
+            switch (Memory.squads[squadName].role) {
+                case 'retired':
+                    __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].run(creep);
+                    break;
+                case 'farm':
+                    __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].run(creep);
+                    break;
+                case 'defcon':
+                    __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].run(creep);
+                    break;
+                case 'guard':
+                    __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].run(creep);
+                    break;
+                case 'grinder':
+                    __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].run(creep);
+                    break;
+            }
         }
     },
     buildRequest(destination, number, options) {
@@ -2516,7 +2518,7 @@ const brains = {
         // update creeparray to be big enough
         // update comp to be big enough
         const options = {
-            'role': 'brains',
+            'role': 'ranged',
             'myTask': task,
             'squad': squad
         };
@@ -2565,6 +2567,7 @@ const brains = {
         Memory.retiredSquads.push(squad);
     },
     taskManager(creep) {
+        // Add in guard mode,
         switch (creep.memory.myTask) {
             case 'claim':
                 return __WEBPACK_IMPORTED_MODULE_2__actions_action_claim__["a" /* default */].run(creep);

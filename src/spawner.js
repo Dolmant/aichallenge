@@ -301,6 +301,9 @@ function completeOutstandingRequests(myRoom, Spawn) {
         Spawn.spawnCreep(getBody(myRoom, 50, options), newName, {
             memory: myRoom.memory.requests[0],
         });
+        if (myRoom.memory.requests[0].squad) {
+            Memory.squads[myRoom.memory.requests[0].squad].creeps.push(newName);
+        }
         myRoom.memory.requests.splice(0, 1);
         console.log('Spawning: '+ newName);
     }

@@ -28,10 +28,9 @@ const roleOffensive = {
                             creep.memory.myTask = 'attack';
                             break;
                     }
-                } else if (creep.memory.myTask == 'block') {
-                    return;
                 } else {
-                    creep.memory.myTask = 'gather';
+                    creep.memory.goToTarget = Memory.squads[creep.memory.squad].roomTarget;
+                    creep.memory.myTask = 'goToTarget';
                 }
             } else if (creep.memory.myTask != 'goToTarget') {
                 creep.memory.goToTarget = Memory.squads[creep.memory.squad].roomTarget;

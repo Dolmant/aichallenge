@@ -74,7 +74,6 @@ declare var Memory: {
     rooms: {
         [string]: RoomMemory,
     },
-    processedQueue: Array<string>,
     squads: {
         [string]: {
             roomTarget: string,
