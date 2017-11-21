@@ -1317,7 +1317,7 @@ const RoomController = {
         Memory.stats['room.' + myRoom.name + '.cpu.taskManager'] = Memory.stats['room.' + myRoom.name + '.cpu.taskManager_temp'];
         Memory.stats['room.' + myRoom.name + '.cpu.roles'] = Memory.stats['room.' + myRoom.name + '.cpu.roles_temp'];
 
-        if (mySpawns.length > 0 && mySpawns[0].hits < mySpawns[0].hitsMax / 2 && myRoom.controller && !myRoom.controller.safeMode && !myRoom.controller.safeModeCooldown && myRoom.controller.safeModeAvailable) {
+        if (mySpawns && mySpawns.length > 0 && mySpawns[0].hits < mySpawns[0].hitsMax / 2 && myRoom.controller && !myRoom.controller.safeMode && !myRoom.controller.safeModeCooldown && myRoom.controller.safeModeAvailable) {
             myRoom.controller.activateSafeMode();
             // dont waste these!!
         }
