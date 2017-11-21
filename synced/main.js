@@ -570,18 +570,20 @@ const cronJobs = {
         });
 
         const myRooms = ['W43N53', 'W45N53', 'W41N51', 'W46N52'];
-        Object.keys(Memory.roomMap).forEach(key => myRooms.push(Memory.roomMap[key]));
+        myRooms.concat(Memory.possibleTargets);
 
         myRooms.forEach(roomName => {
             let myRoom = Game.rooms[roomName];
-            var enemyCreeps = myRoom.find(FIND_HOSTILE_CREEPS);
-            myRoom.memory.defcon = enemyCreeps.length;
-            if (Memory.squads[roomName + 'defcon']) {
-                if (Memory.squads[roomName + 'defcon'].size != enemyCreeps.length) {
-                    __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].updateSquadSize(roomName + 'defcon');
+            if (myRoom) {
+                var enemyCreeps = myRoom.find(FIND_HOSTILE_CREEPS);
+                myRoom.memory.defcon = enemyCreeps.length;
+                if (Memory.squads[roomName + 'defcon']) {
+                    if (Memory.squads[roomName + 'defcon'].size != enemyCreeps.length) {
+                        __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].updateSquadSize(roomName + 'defcon');
+                    }
+                } else if (enemyCreeps.length > 0) {
+                    __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].createSquad(roomName + 'defcon', roomName, enemyCreeps.length, 'defcon');
                 }
-            } else if (enemyCreeps.length > 0) {
-                __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].createSquad(roomName + 'defcon', roomName, enemyCreeps.length, 'defcon');
             }
         });
     },
@@ -700,15 +702,15 @@ const roleThiefMule = {
         }
     },
     generateHaulTargets() {
-        const possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51', 'W46N53', 'W47N52', 'W46N51'];
+        Memory.possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51', 'W46N53', 'W47N52', 'W46N51'];
         const homeArray = ['W43N53', 'W41N51', 'W46N52', 'W43N53', 'W43N53', 'W41N51', 'W45N53', 'W46N52', 'W45N53', 'W46N52', 'W46N52'];
 
-        if (possibleTargets.length <= Memory.muleFlag) {
+        if (Memory.possibleTargets.length <= Memory.muleFlag) {
             Memory.muleFlag = 1;
         } else {
             Memory.muleFlag += 1;
         }
-        return [possibleTargets[Memory.muleFlag - 1], homeArray[Memory.muleFlag - 1]];
+        return [Memory.possibleTargets[Memory.muleFlag - 1], homeArray[Memory.muleFlag - 1]];
     }
 };
 
