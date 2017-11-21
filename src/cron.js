@@ -1,3 +1,5 @@
+import brain from './brain';
+
 const cronJobs = {
     run() {
         if (!Memory.cronCount) {
@@ -27,7 +29,7 @@ const cronJobs = {
             let myRoom = Game.rooms[roomName]
             var enemyCreeps: Creep = myRoom.find(FIND_HOSTILE_CREEPS);
             myRoom.memory.defcon = enemyCreeps.length;
-            if (Memory.squads[roomName + 'defcon')]) {
+            if (Memory.squads[roomName + 'defcon']) {
                 if (Memory.squads[roomName + 'defcon'].size != enemyCreeps.length) {
                     brain.updateSquadSize(roomName + 'defcon');
                 }
