@@ -296,7 +296,9 @@ const spawner = {
 function completeOutstandingRequests(myRoom, Spawn) {
     if (myRoom.memory.requests && myRoom.memory.requests.length) {
         var newName = myRoom.memory.requests[0].role + Game.time;
-        Spawn.spawnCreep(getBody(myRoom, 10), newName, {
+        const options = {};
+        options[myRoom.memory.requests[0].role] = true;
+        Spawn.spawnCreep(getBody(myRoom, 50, options), newName, {
             memory: myRoom.memory.requests[0],
         });
         myRoom.memory.requests.splice(0, 1);
@@ -326,6 +328,16 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
         return partArray;
     }
     if (options.tough) {
+        for (var i = 0; (i < Math.floor((referenceEnergy - 130)/70) && i < MaxParts - 1); i += 1) {
+            partArray.push(TOUGH);
+            partArray.push(TOUGH);
+            partArray.push(MOVE);
+        }
+        partArray.push(MOVE);
+        partArray.push(ATTACK);
+        return partArray;
+    }
+    if (options.brains) {
         for (var i = 0; (i < Math.floor((referenceEnergy - 130)/70) && i < MaxParts - 1); i += 1) {
             partArray.push(TOUGH);
             partArray.push(TOUGH);
