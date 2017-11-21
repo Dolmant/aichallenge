@@ -10,8 +10,15 @@ const brains = {
                 const creep = Game.getObjectById(creepID)
                 if (brains.taskManager(creep)) {
                     switch(Memory.squads[squadName].role){
+                        case 'retired':
+                            roleOffensive.run(creep);
+                            break;
                         case 'defcon':
+                            roleOffensive.run(creep);
+                            break;
                         case 'guard':
+                            roleOffensive.run(creep);
+                            break;
                         case 'grinder':
                             roleOffensive.run(creep);
                             break;
@@ -24,7 +31,12 @@ const brains = {
         // Corrects the squad against its new composition
     },
     createSquad(squad: string, roomTarget: string, size: number, task: string) {
-        //
+        //check for any reusable dead squads
+        // if so, repurpose and resize them
+        // else fire off builds
+    },
+    retireSquad(squad: string, roomTarget: string, size: number, task: string) {
+        // mark task as retired, turn off renewal and replace.
     },
     taskManager(creep: string) {
         switch(creep.memory.myTask){

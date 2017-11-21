@@ -1317,10 +1317,10 @@ const RoomController = {
         Memory.stats['room.' + myRoom.name + '.cpu.taskManager'] = Memory.stats['room.' + myRoom.name + '.cpu.taskManager_temp'];
         Memory.stats['room.' + myRoom.name + '.cpu.roles'] = Memory.stats['room.' + myRoom.name + '.cpu.roles_temp'];
 
-        // if (myRoom.find(FIND_HOSTILE_CREEPS).length > 0 && !myRoom.controller.safeMode && !myRoom.controller.safeModeCooldown && myRoom.controller.safeModeAvailable) {
-        //     // myRoom.controller.activateSafeMode();
-        //     // dont waste these!!
-        // }
+        if (mySpawns.length > 0 && mySpawns[0].hits < mySpawns[0].hitsMax / 2 && myRoom.controller && !myRoom.controller.safeMode && !myRoom.controller.safeModeCooldown && myRoom.controller.safeModeAvailable) {
+            myRoom.controller.activateSafeMode();
+            // dont waste these!!
+        }
 
         var myTowers = myRoom.find(FIND_MY_STRUCTURES).filter(structure => structure.structureType == STRUCTURE_TOWER);
         myRoom.memory.hasMules = myCreepCount.muleCount;
@@ -2456,8 +2456,15 @@ const brains = {
                 const creep = Game.getObjectById(creepID);
                 if (brains.taskManager(creep)) {
                     switch (Memory.squads[squadName].role) {
+                        case 'retired':
+                            roleOffensive.run(creep);
+                            break;
                         case 'defcon':
+                            roleOffensive.run(creep);
+                            break;
                         case 'guard':
+                            roleOffensive.run(creep);
+                            break;
                         case 'grinder':
                             roleOffensive.run(creep);
                             break;
@@ -2470,7 +2477,12 @@ const brains = {
         // Corrects the squad against its new composition
     },
     createSquad(squad, roomTarget, size, task) {
-        //
+        //check for any reusable dead squads
+        // if so, repurpose and resize them
+        // else fire off builds
+    },
+    retireSquad(squad, roomTarget, size, task) {
+        // mark task as retired, turn off renewal and replace.
     },
     taskManager(creep) {
         switch (creep.memory.myTask) {
