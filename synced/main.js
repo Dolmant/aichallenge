@@ -925,7 +925,7 @@ const brains = {
         });
         if (target) {
             let i;
-            for (i = 0; i < number; number += 1) {
+            for (i = 0; i < number; i += 1) {
                 target.room.memory.requests.push(options);
             }
             return target.room.name;
