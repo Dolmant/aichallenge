@@ -31,7 +31,7 @@ const brains = {
                     roleOffensive.grinder(creep);
                     break;
             }
-            creepArray.forEach((creepID, index) => {
+            creepArray && creepArray.forEach((creepID, index) => {
                 const creep = Game.getObjectById(creepID);
                 if (creep) {
                     brains.taskManager(creep);

@@ -898,7 +898,7 @@ const brains = {
                     __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].grinder(creep);
                     break;
             }
-            creepArray.forEach((creepID, index) => {
+            creepArray && creepArray.forEach((creepID, index) => {
                 const creep = Game.getObjectById(creepID);
                 if (creep) {
                     brains.taskManager(creep);
