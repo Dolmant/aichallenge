@@ -913,6 +913,12 @@ const brains = {
                         }
                     }
                 } else {
+                    const options = {
+                        'role': Memory.squads[squadName].type,
+                        'myTask': Memory.squads[squadName].type,
+                        'squad': squadName
+                    };
+                    brains.buildRequest(Memory.squads[squadName].roomTarget, 1, options);
                     Memory.squads[squadName].creeps.splice(index, index + 1);
                 }
             });
@@ -971,7 +977,7 @@ const brains = {
         });
         if (requiredSize > 0) {
             const options = {
-                'role': Memory.squads[squad],
+                'role': type,
                 'myTask': type,
                 'squad': squadName
             };
@@ -2341,13 +2347,28 @@ function getBody(myRoom, MaxParts, options = {}) {
         partArray.push(ATTACK);
         return partArray;
     }
-    if (options.guard) {
+    if (options.grinder) {
         for (var i = 0; i < Math.floor((referenceEnergy - 1150) / 50) && i < MaxParts - 1 && i < 40; i += 1) {
             partArray.push(MOVE);
         }
         partArray.push(HEAL);
         partArray.push(HEAL);
         partArray.push(HEAL);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        return partArray;
+    }
+    if (options.guard) {
+        for (var i = 0; i < Math.floor((referenceEnergy - 640) / 80) && i < MaxParts - 1 && i < 40; i += 1) {
+            partArray.push(TOUGH);
+            partArray.push(MOVE);
+        }
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
         partArray.push(ATTACK);
         partArray.push(ATTACK);
         partArray.push(ATTACK);
