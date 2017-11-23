@@ -18,6 +18,18 @@ const cronJobs = {
         } else {
             cronJobs.init();
         }
+
+        if (Memory.squad_requests && Memory.squad_requests.length > 0) {
+            // requires
+            /*
+            name
+            roomName
+            size
+            type
+            */
+            brains.createSquad(Memory.squad_requests[0].name, Memory.squad_requests[0].roomName, Memory.squad_requests[0].size, Memory.squad_requests[0].type);
+            Memory.squad_requests.splice(0, 1);
+        }
     },
     run10() {
         Object.keys(Memory.thieving_spots).forEach(key => {
