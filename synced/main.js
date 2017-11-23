@@ -929,7 +929,7 @@ const brains = {
             'myTask': task,
             'squad': squad
         };
-        buildRequest(Memory.squads[squad].roomTarget, size, options);
+        brains.buildRequest(Memory.squads[squad].roomTarget, size, options);
     },
     createSquad(squadName, roomTarget, size, task) {
         //check for any reusable dead squads
@@ -956,7 +956,7 @@ const brains = {
             Memory.squads[squadName].roomTarget = roomTarget;
             Memory.squads[squadName].size = size;
             Memory.squads[squadName].task = task;
-            const stagingRoomname = buildRequest(roomTarget, size, options);
+            const stagingRoomname = brains.buildRequest(roomTarget, size, options);
             Memory.squads[squadName].stagingTarget = {
                 roomName: stagingRoomname,
                 x: 25,
