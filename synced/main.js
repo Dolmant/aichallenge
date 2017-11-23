@@ -2314,7 +2314,9 @@ function completeOutstandingRequests(myRoom, Spawn) {
             memory: myRoom.memory.requests[0]
         });
         if (err == OK) {
-            Memory.squads[myRoom.memory.requests[0].squad].creeps.push(newName);
+            if (myRoom.memory.requests[0].squad) {
+                Memory.squads[myRoom.memory.requests[0].squad].creeps.push(newName);
+            }
             myRoom.memory.requests.splice(0, 1);
             console.log('Spawning: ' + newName);
         } else {
