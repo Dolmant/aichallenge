@@ -427,12 +427,6 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
             partArray.push(MOVE);
             totalEnergy -= 3;
             workCount += 1;
-            if (totalEnergy >= 4 && workCount < MaxParts) {
-                partArray.push(WORK)
-                partArray.push(WORK)
-                workCount += 2;
-                totalEnergy -= 4;
-            }
         }
         return partArray;
     }
