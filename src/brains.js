@@ -72,7 +72,7 @@ const brains = {
         // update creeparray to be big enough
         // update comp to be big enough
         const options = {
-            'role': 'ranged',
+            'role': 'brains',
             'myTask': task,
             'squad': squad,
         };

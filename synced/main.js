@@ -939,7 +939,7 @@ const brains = {
         // update creeparray to be big enough
         // update comp to be big enough
         const options = {
-            'role': 'ranged',
+            'role': 'brains',
             'myTask': task,
             'squad': squad
         };
@@ -2343,6 +2343,8 @@ function completeOutstandingRequests(myRoom, Spawn) {
         } else {
             console.log(err);
             console.log(suggestedBody);
+            console.log(newName);
+            console.log({ memory: myRoom.memory.requests[0] });
             console.log("brains failed to spawn");
         }
     }
