@@ -770,10 +770,10 @@ const cronJobs = {
                 myRoom.memory.defcon = enemyCreeps.length;
                 if (Memory.squads[roomName + 'defcon']) {
                     if (Memory.squads[roomName + 'defcon'].size != enemyCreeps.length) {
-                        __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].updateSquadSize(roomName + 'defcon', enemyCreeps.length);
+                        // brains.updateSquadSize(roomName + 'defcon', enemyCreeps.length);
                     }
                 } else if (enemyCreeps.length > 0) {
-                    __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].createSquad(roomName + 'defcon', roomName, enemyCreeps.length, 'defcon');
+                    // brains.createSquad(roomName + 'defcon', roomName, enemyCreeps.length, 'defcon');
                 }
             }
         });
