@@ -42,9 +42,21 @@ const brains = {
         }
     },
     buildRequest(destination: any, number: number, options: any) {
-        const pos = new RoomPosition(25, 25, destination);
-        const closestSpawn = pos.findClosestByRange(FIND_MY_SPAWNS);
-        if (closestSpawn) {
+        let target;
+        let currentDistance = 99;
+        let origx = Number(destination.slice(1,3));
+        let origy = Number(destination.slice(4,6));
+        Object.keys(Game.spawns).forEach(spawnkey => {
+            const spawn = Game.spawns[spawnkey];
+            let x = Number(spawn.room.name.slice(1,2));
+            let y = Number(spawn.room.name.slice(4,2));
+            const distance = Math.abs(x - origx) + Math.abs(y - origy);
+            if (currentDistance > distance) {
+                currentDistance = distance;
+                target = spawn;
+            }
+        });
+        if (target) {
             let i;
             for (i = 0; i < number; number += 1) {
                 closestSpawn.room.memory.requests.push(options);

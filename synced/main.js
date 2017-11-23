@@ -743,7 +743,7 @@ const cronJobs = {
             size
             type
             */
-            __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].createSquad(Memory.squad_requests[0].name, Memory.squad_requests[0].roomName, Memory.squad_requests[0].size, Memory.squad_requests[0].type);
+            __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].createSquad(Memory.squad_requests[0].name, Memory.squad_requests[0].roomTarget, Memory.squad_requests[0].size, Memory.squad_requests[0].type);
             Memory.squad_requests.splice(0, 1);
         }
     },
@@ -909,9 +909,21 @@ const brains = {
         }
     },
     buildRequest(destination, number, options) {
-        const pos = new RoomPosition(25, 25, destination);
-        const closestSpawn = pos.findClosestByRange(FIND_MY_SPAWNS);
-        if (closestSpawn) {
+        let target;
+        let currentDistance = 99;
+        let origx = Number(destination.slice(1, 3));
+        let origy = Number(destination.slice(4, 6));
+        Object.keys(Game.spawns).forEach(spawnkey => {
+            const spawn = Game.spawns[spawnkey];
+            let x = Number(spawn.room.name.slice(1, 2));
+            let y = Number(spawn.room.name.slice(4, 2));
+            const distance = Math.abs(x - origx) + Math.abs(y - origy);
+            if (currentDistance > distance) {
+                currentDistance = distance;
+                target = spawn;
+            }
+        });
+        if (target) {
             let i;
             for (i = 0; i < number; number += 1) {
                 closestSpawn.room.memory.requests.push(options);
