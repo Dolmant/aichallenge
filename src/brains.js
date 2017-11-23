@@ -42,7 +42,8 @@ const brains = {
         }
     },
     buildRequest(destination: any, number: number, options: any) {
-        const closestSpawn = new RoomPosition(25, 25, destination).findClosestbyRange(FIND_MY_SPAWNS);
+        const pos = new RoomPosition(25, 25, destination);
+        const closestSpawn = pos.findClosestbyRange(FIND_MY_SPAWNS);
         if (closestSpawn) {
             let i;
             for (i = 0; i < number; number += 1) {
