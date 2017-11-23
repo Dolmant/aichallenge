@@ -298,14 +298,21 @@ function completeOutstandingRequests(myRoom, Spawn) {
         var newName = myRoom.memory.requests[0].role + Game.time;
         const options = {};
         options[myRoom.memory.requests[0].role] = true;
-        Spawn.spawnCreep(getBody(myRoom, 50, options), newName, {
+        const suggestedBody = getBody(myRoom, 50, options);
+        const err = Spawn.spawnCreep(suggestedBody, newName, {
             memory: myRoom.memory.requests[0],
         });
-        if (myRoom.memory.requests[0].squad) {
-            Memory.squads[myRoom.memory.requests[0].squad].creeps.push(newName);
+        if (err == OK) {
+            if (myRoom.memory.requests[0].squad) {
+                Memory.squads[myRoom.memory.requests[0].squad].creeps.push(newName);
+            }
+            myRoom.memory.requests.splice(0, 1);
+            console.log('Spawning: '+ newName);
+        } else {
+            console.log(err)
+            console.log(suggestedBody)
+            console.log("brains failed to spawn")
         }
-        myRoom.memory.requests.splice(0, 1);
-        console.log('Spawning: '+ newName);
     }
 }
 
