@@ -59,9 +59,9 @@ const brains = {
         if (target) {
             let i;
             for (i = 0; i < number; number += 1) {
-                closestSpawn.room.memory.requests.push(options);
+                target.room.memory.requests.push(options);
             }
-            return closestSpawn.room.name;
+            return target.room.name;
         } else {
             console.log('PANIC CANT FIND A SPAWN TO USE');
         }
