@@ -939,13 +939,12 @@ const brains = {
         // update creeparray to be big enough
         // update comp to be big enough
         const options = {
-            'role': 'brains',
-            'myTask': task,
+            'role': Memory.squads[squad].type,
             'squad': squad
         };
         brains.buildRequest(Memory.squads[squad].roomTarget, size, options);
     },
-    createSquad(squadName, roomTarget, size, task) {
+    createSquad(squadName, roomTarget, size, type) {
         //check for any reusable dead squads
         // if so, repurpose and resize them
         // else fire off builds
@@ -962,14 +961,14 @@ const brains = {
         });
         if (requiredSize > 0) {
             const options = {
-                'role': 'brains',
-                'myTask': task,
+                'role': Memory.squads[squad],
+                'myTask': type,
                 'squad': squadName
             };
             Memory.squads[squadName] = {};
             Memory.squads[squadName].roomTarget = roomTarget;
             Memory.squads[squadName].size = size;
-            Memory.squads[squadName].task = task;
+            Memory.squads[squadName].type = type;
             Memory.squads[squadName].creeps = [];
             const stagingRoomname = brains.buildRequest(roomTarget, size, options);
             Memory.squads[squadName].stagingTarget = {
@@ -2370,12 +2369,10 @@ function getBody(myRoom, MaxParts, options = {}) {
         partArray.push(ATTACK);
         return partArray;
     }
-    if (options.brains) {
-        for (var i = 0; i < Math.floor((referenceEnergy - 1650) / 50) && i < MaxParts - 1 && i < 40; i += 1) {
+    if (options.guard) {
+        for (var i = 0; i < Math.floor((referenceEnergy - 1150) / 50) && i < MaxParts - 1 && i < 40; i += 1) {
             partArray.push(MOVE);
         }
-        partArray.push(HEAL);
-        partArray.push(HEAL);
         partArray.push(HEAL);
         partArray.push(HEAL);
         partArray.push(HEAL);

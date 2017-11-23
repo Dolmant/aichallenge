@@ -72,13 +72,12 @@ const brains = {
         // update creeparray to be big enough
         // update comp to be big enough
         const options = {
-            'role': 'brains',
-            'myTask': task,
+            'role': Memory.squads[squad].type,
             'squad': squad,
         };
         brains.buildRequest(Memory.squads[squad].roomTarget, size, options);
     },
-    createSquad(squadName: string, roomTarget: string, size: number, task: string) {
+    createSquad(squadName: string, roomTarget: string, size: number, type: string) {
         //check for any reusable dead squads
         // if so, repurpose and resize them
         // else fire off builds
@@ -95,14 +94,14 @@ const brains = {
         });
         if (requiredSize > 0) {
             const options = {
-                'role': 'brains',
-                'myTask': task,
+                'role': Memory.squads[squad],
+                'myTask': type,
                 'squad': squadName,
             };
             Memory.squads[squadName] = {};
             Memory.squads[squadName].roomTarget = roomTarget;
             Memory.squads[squadName].size = size;
-            Memory.squads[squadName].task = task;
+            Memory.squads[squadName].type = type;
             Memory.squads[squadName].creeps = [];
             const stagingRoomname = brains.buildRequest(roomTarget, size, options);
             Memory.squads[squadName].stagingTarget = {
