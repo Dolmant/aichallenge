@@ -882,7 +882,7 @@ const brains = {
 
             // Always run role to make sure we can control if we need to attack or not
             creepArray && creepArray.forEach((creepID, index) => {
-                const creep = Game.getObjectById(creepID);
+                const creep = Game.creeps[creepID];
                 if (creep) {
                     switch (Memory.squads[squadName].type) {
                         case 'retired':
@@ -901,7 +901,11 @@ const brains = {
                             __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].grinder(creep);
                             break;
                     }
-                    brains.taskManager(creep);
+                    if (creep.memory.secondaryTask == 'healer') {
+                        if (creep.hits < creep.hitsMax) {
+                            creep.heal(creep);
+                        }
+                    }
                 } else {
                     Memory.squads[squadName].creeps.splice(index, index + 1);
                 }
@@ -986,44 +990,6 @@ const brains = {
         // mark task as retired, turn off renewal and replace in the role.
         Memory.squads[squad].role = 'retired';
         Memory.retiredSquads.push(squad);
-    },
-    taskManager(creep) {
-        // Add in new modes and fix this healer BS TODO
-        if (creep.memory.secondaryTask == 'healer') {
-            if (creep.hits < creep.hitsMax) {
-                creep.heal(creep);
-            }
-        }
-        switch (creep.memory.myTask) {
-            case 'claim':
-                return __WEBPACK_IMPORTED_MODULE_2__actions_action_claim__["a" /* default */].run(creep);
-            case 'moveToTarget':
-                return __WEBPACK_IMPORTED_MODULE_4__util__["a" /* default */].moveToTarget(creep);
-            case 'moveToObject':
-                return __WEBPACK_IMPORTED_MODULE_4__util__["a" /* default */].moveToObject(creep);
-            case 'goToTarget':
-                return __WEBPACK_IMPORTED_MODULE_4__util__["a" /* default */].goToTarget(creep);
-            case 'repair':
-            case 'build':
-                return __WEBPACK_IMPORTED_MODULE_1__actions_action_build__["a" /* default */].run(creep);
-            case 'heal':
-                return __WEBPACK_IMPORTED_MODULE_3__actions_action_offensive__["a" /* default */].heal(creep);
-            case 'attack':
-                return __WEBPACK_IMPORTED_MODULE_3__actions_action_offensive__["a" /* default */].attack(creep);
-            case 'rangedAttack':
-                return __WEBPACK_IMPORTED_MODULE_3__actions_action_offensive__["a" /* default */].rangedAttack(creep);
-            case 'block':
-                return __WEBPACK_IMPORTED_MODULE_3__actions_action_offensive__["a" /* default */].block(creep);
-            case 'gather':
-                return __WEBPACK_IMPORTED_MODULE_3__actions_action_offensive__["a" /* default */].gather(creep);
-            case 'renew':
-                return __WEBPACK_IMPORTED_MODULE_3__actions_action_offensive__["a" /* default */].renew(creep, mySpawns);
-            default:
-                console.log(creep.name);
-                console.log(creep.memory.role);
-                console.log('State machine failed, investigate');
-                return true;
-        }
     }
 };
 

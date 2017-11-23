@@ -15,7 +15,7 @@ const brains = {
 
             // Always run role to make sure we can control if we need to attack or not
             creepArray && creepArray.forEach((creepID, index) => {
-                const creep = Game.getObjectById(creepID);
+                const creep = Game.creeps[creepID];
                 if (creep) {
                     switch(Memory.squads[squadName].type){
                         case 'retired':
@@ -34,7 +34,11 @@ const brains = {
                             roleOffensive.grinder(creep);
                             break;
                     }
-                    brains.taskManager(creep);
+                    if (creep.memory.secondaryTask == 'healer') {
+                        if (creep.hits < creep.hitsMax) {
+                            creep.heal(creep);
+                        }
+                    }
                 } else {
                     Memory.squads[squadName].creeps.splice(index, index + 1);
                 }
@@ -119,44 +123,6 @@ const brains = {
         // mark task as retired, turn off renewal and replace in the role.
         Memory.squads[squad].role = 'retired';
         Memory.retiredSquads.push(squad);
-    },
-    taskManager(creep: string) {
-        // Add in new modes and fix this healer BS TODO
-        if (creep.memory.secondaryTask == 'healer') {
-            if (creep.hits < creep.hitsMax) {
-                creep.heal(creep);
-            }
-        }
-        switch(creep.memory.myTask){
-            case 'claim':
-                return actClaim.run(creep);
-            case 'moveToTarget':
-                return util.moveToTarget(creep);
-            case 'moveToObject':
-                return util.moveToObject(creep);
-            case 'goToTarget':
-                return util.goToTarget(creep);
-            case 'repair':
-            case 'build':
-                return actBuild.run(creep);
-            case 'heal':
-                return actOffensive.heal(creep);
-            case 'attack':
-                return actOffensive.attack(creep);
-            case 'rangedAttack':
-                return actOffensive.rangedAttack(creep);
-            case 'block':
-                return actOffensive.block(creep);
-            case 'gather':
-                return actOffensive.gather(creep);
-            case 'renew':
-                return actOffensive.renew(creep, mySpawns);
-            default:
-                console.log(creep.name)
-                console.log(creep.memory.role)
-                console.log('State machine failed, investigate');
-                return true;
-        }
     },
 }
 
