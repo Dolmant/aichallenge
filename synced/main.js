@@ -2371,12 +2371,18 @@ function getBody(myRoom, MaxParts, options = {}) {
         return partArray;
     }
     if (options.brains) {
-        for (var i = 0; i < Math.floor((referenceEnergy - 130) / 70) && i < MaxParts - 1; i += 1) {
-            partArray.push(TOUGH);
-            partArray.push(TOUGH);
+        for (var i = 0; i < Math.floor((referenceEnergy - 1400) / 50) && i < MaxParts - 1; i += 1) {
             partArray.push(MOVE);
         }
-        partArray.push(MOVE);
+        partArray.push(HEAL);
+        partArray.push(HEAL);
+        partArray.push(HEAL);
+        partArray.push(HEAL);
+        partArray.push(HEAL);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
         partArray.push(ATTACK);
         return partArray;
     }
