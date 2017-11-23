@@ -23,8 +23,8 @@ const roleOffensive = {
                 creep.memory.attackTarget = hostiles[0].id;
             } else {
                 if (Game.flags[mySquad]) {
-                    creep.memory.moveToTargetx = Game.flags[mySquad + creep.room.name].pos.x;
-                    creep.memory.moveToTargety = Game.flags[mySquad + creep.room.name].pos.y;
+                    creep.memory.moveToTargetx = Game.flags[mySquad].pos.x;
+                    creep.memory.moveToTargety = Game.flags[mySquad].pos.y;
                     creep.memory.moveToTargetrange = 0;
                 } else {
                     creep.memory.moveToTargetx = 25;
