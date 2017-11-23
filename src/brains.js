@@ -43,7 +43,7 @@ const brains = {
     },
     buildRequest(destination: any, number: number, options: any) {
         const pos = new RoomPosition(25, 25, destination);
-        const closestSpawn = pos.findClosestbyRange(FIND_MY_SPAWNS);
+        const closestSpawn = pos.findClosestByRange(FIND_MY_SPAWNS);
         if (closestSpawn) {
             let i;
             for (i = 0; i < number; number += 1) {
@@ -90,6 +90,7 @@ const brains = {
             Memory.squads[squadName].roomTarget = roomTarget;
             Memory.squads[squadName].size = size;
             Memory.squads[squadName].task = task;
+            Memory.squads[squadName].creeps = [];
             const stagingRoomname = brains.buildRequest(roomTarget, size, options);
             Memory.squads[squadName].stagingTarget = {
                 roomName: stagingRoomname,

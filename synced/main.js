@@ -910,7 +910,7 @@ const brains = {
     },
     buildRequest(destination, number, options) {
         const pos = new RoomPosition(25, 25, destination);
-        const closestSpawn = pos.findClosestbyRange(FIND_MY_SPAWNS);
+        const closestSpawn = pos.findClosestByRange(FIND_MY_SPAWNS);
         if (closestSpawn) {
             let i;
             for (i = 0; i < number; number += 1) {
@@ -957,6 +957,7 @@ const brains = {
             Memory.squads[squadName].roomTarget = roomTarget;
             Memory.squads[squadName].size = size;
             Memory.squads[squadName].task = task;
+            Memory.squads[squadName].creeps = [];
             const stagingRoomname = brains.buildRequest(roomTarget, size, options);
             Memory.squads[squadName].stagingTarget = {
                 roomName: stagingRoomname,
@@ -1458,7 +1459,7 @@ function loop() {
 
     Memory.stats['cpu.roomController_temp'] = Game.cpu.getUsed();
 
-    // brains.run();
+    __WEBPACK_IMPORTED_MODULE_2__brains__["a" /* default */].run();
 
     for (let roomName in Game.rooms) {
         let Room = Game.rooms[roomName];
