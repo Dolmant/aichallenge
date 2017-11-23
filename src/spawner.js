@@ -350,7 +350,7 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
         return partArray;
     }
     if (options.brains) {
-        for (var i = 0; (i < Math.floor((referenceEnergy - 1400)/50) && i < MaxParts - 1); i += 1) {
+        for (var i = 0; (i < Math.floor((referenceEnergy - 1400)/50) && i < MaxParts - 1 && i < 40); i += 1) {
             partArray.push(MOVE);
         }
         partArray.push(HEAL);
