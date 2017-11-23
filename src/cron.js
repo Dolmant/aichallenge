@@ -27,7 +27,7 @@ const cronJobs = {
             size
             type
             */
-            brains.createSquad(Memory.squad_requests[0].name, Memory.squad_requests[0].roomTarget, Memory.squad_requests[0].size, Memory.squad_requests[0].type);
+            brains.createSquad(Memory.squad_requests[0].squad, Memory.squad_requests[0].roomTarget, Memory.squad_requests[0].size, Memory.squad_requests[0].type);
             Memory.squad_requests.splice(0, 1);
         }
     },
