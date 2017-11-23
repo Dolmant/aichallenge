@@ -110,13 +110,11 @@ const util = {
         } else {
             if (!creep.memory.exitCache || creep.memory.exitCache.roomName != creep.pos.roomName) {
                 const exit = creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.goToTarget));
-                if (exit) {
-                    creep.memory.exitCache = {
-                        'roomName': exit.roomName,
-                        'x': exit.x,
-                        'y': exit.y
-                    };
-                }
+                creep.memory.exitCache = {
+                    'roomName': exit.roomName,
+                    'x': exit.x,
+                    'y': exit.y
+                };
             }
             creep.moveToCacheTarget(new RoomPosition(creep.memory.exitCache.x, creep.memory.exitCache.y, creep.memory.exitCache.roomName), { 'maxRooms': 1 });
         }
@@ -1033,7 +1031,7 @@ const roleOffensive = {
                 creep.memory.myTask = 'attack';
                 creep.memory.attackTarget = hostiles[0].id;
             } else {
-                if (Game.flags[mySquad + creep.room.name]) {
+                if (Game.flags[mySquad]) {
                     creep.memory.moveToTargetx = Game.flags[mySquad + creep.room.name].pos.x;
                     creep.memory.moveToTargety = Game.flags[mySquad + creep.room.name].pos.y;
                     creep.memory.moveToTargetrange = 0;
