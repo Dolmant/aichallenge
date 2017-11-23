@@ -1458,7 +1458,7 @@ function loop() {
 
     Memory.stats['cpu.roomController_temp'] = Game.cpu.getUsed();
 
-    __WEBPACK_IMPORTED_MODULE_2__brains__["a" /* default */].run();
+    // brains.run();
 
     for (let roomName in Game.rooms) {
         let Room = Game.rooms[roomName];

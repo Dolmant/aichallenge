@@ -157,7 +157,7 @@ export function loop() {
 
     Memory.stats['cpu.roomController_temp'] = Game.cpu.getUsed();
 
-    brains.run();
+    // brains.run();
 
     for (let roomName in Game.rooms) {
         let Room = Game.rooms[roomName]
