@@ -40,7 +40,7 @@ const brains = {
                         }
                     }
                 } else {
-                    if (Memory.squads[squadName].type != retired) {
+                    if (Memory.squads[squadName].type != 'retired') {
                         const options = {
                             'role': Memory.squads[squadName].type,
                             'myTask': Memory.squads[squadName].type,

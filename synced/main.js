@@ -913,7 +913,7 @@ const brains = {
                         }
                     }
                 } else {
-                    if (Memory.squads[squadName].type != retired) {
+                    if (Memory.squads[squadName].type != 'retired') {
                         const options = {
                             'role': Memory.squads[squadName].type,
                             'myTask': Memory.squads[squadName].type,
@@ -2314,9 +2314,7 @@ function completeOutstandingRequests(myRoom, Spawn) {
             memory: myRoom.memory.requests[0]
         });
         if (err == OK) {
-            if (myRoom.memory.requests[0].squad) {
-                Memory.squads[myRoom.memory.requests[0].squad].creeps.push(newName);
-            }
+            Memory.squads[myRoom.memory.requests[0].squad].creeps.push(newName);
             myRoom.memory.requests.splice(0, 1);
             console.log('Spawning: ' + newName);
         } else {
