@@ -915,8 +915,8 @@ const brains = {
         let origy = Number(destination.slice(4, 6));
         Object.keys(Game.spawns).forEach(spawnkey => {
             const spawn = Game.spawns[spawnkey];
-            let x = Number(spawn.room.name.slice(1, 2));
-            let y = Number(spawn.room.name.slice(4, 2));
+            let x = Number(spawn.room.name.slice(1, 3));
+            let y = Number(spawn.room.name.slice(4, 6));
             const distance = Math.abs(x - origx) + Math.abs(y - origy);
             if (currentDistance > distance) {
                 currentDistance = distance;
