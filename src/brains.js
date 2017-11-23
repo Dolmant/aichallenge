@@ -12,6 +12,25 @@ const brains = {
         */
         for (let squadName in Memory.squads) {
             const creepArray = Memory.squads[squadName].creeps;
+
+            // Always run role to make sure we can control if we need to attack or not
+            switch(Memory.squads[squadName].role){
+                case 'retired':
+                    roleOffensive.retired(creep);
+                    break;
+                case 'farm':
+                    roleOffensive.farm(creep);
+                    break;
+                case 'defcon':
+                    roleOffensive.defcon(creep);
+                    break;
+                case 'guard':
+                    roleOffensive.guard(creep);
+                    break;
+                case 'grinder':
+                    roleOffensive.grinder(creep);
+                    break;
+            }
             creepArray.forEach((creepID, index) => {
                 const creep = Game.getObjectById(creepID);
                 if (creep) {
@@ -20,24 +39,6 @@ const brains = {
                     Memory.squads[squadName].creeps.splice(index, index + 1);
                 }
             });
-            // Always run role to make sure we can control if we need to attack or not
-            switch(Memory.squads[squadName].role){
-                case 'retired':
-                    roleOffensive.run(creep);
-                    break;
-                case 'farm':
-                    roleOffensive.run(creep);
-                    break;
-                case 'defcon':
-                    roleOffensive.run(creep);
-                    break;
-                case 'guard':
-                    roleOffensive.run(creep);
-                    break;
-                case 'grinder':
-                    roleOffensive.run(creep);
-                    break;
-            }
         }
     },
     buildRequest(destination: any, number: number, options: any) {
@@ -106,7 +107,12 @@ const brains = {
         Memory.retiredSquads.push(squad);
     },
     taskManager(creep: string) {
-        // Add in guard mode,
+        // Add in new modes and fix this healer BS TODO
+        if (creep.memory.secondaryTask == 'healer') {
+            if (creep.hits < creep.hitsMax) {
+                creep.heal(creep);
+            }
+        }
         switch(creep.memory.myTask){
             case 'claim':
                 return actClaim.run(creep);
