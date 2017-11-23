@@ -110,11 +110,13 @@ const util = {
         } else {
             if (!creep.memory.exitCache || creep.memory.exitCache.roomName != creep.pos.roomName) {
                 const exit = creep.pos.findClosestByRange(creep.room.findExitTo(creep.memory.goToTarget));
-                creep.memory.exitCache = {
-                    'roomName': exit.roomName,
-                    'x': exit.x,
-                    'y': exit.y
-                };
+                if (exit) {
+                    creep.memory.exitCache = {
+                        'roomName': exit.roomName,
+                        'x': exit.x,
+                        'y': exit.y
+                    };
+                }
             }
             creep.moveToCacheTarget(new RoomPosition(creep.memory.exitCache.x, creep.memory.exitCache.y, creep.memory.exitCache.roomName), { 'maxRooms': 1 });
         }
