@@ -14,26 +14,26 @@ const brains = {
             const creepArray = Memory.squads[squadName].creeps;
 
             // Always run role to make sure we can control if we need to attack or not
-            switch(Memory.squads[squadName].role){
-                case 'retired':
-                    roleOffensive.retired(creep);
-                    break;
-                case 'farm':
-                    roleOffensive.farm(creep);
-                    break;
-                case 'defcon':
-                    roleOffensive.defcon(creep);
-                    break;
-                case 'guard':
-                    roleOffensive.guard(creep);
-                    break;
-                case 'grinder':
-                    roleOffensive.grinder(creep);
-                    break;
-            }
             creepArray && creepArray.forEach((creepID, index) => {
                 const creep = Game.getObjectById(creepID);
                 if (creep) {
+                    switch(Memory.squads[squadName].type){
+                        case 'retired':
+                            roleOffensive.retired(creep);
+                            break;
+                        case 'farm':
+                            roleOffensive.farm(creep);
+                            break;
+                        case 'defcon':
+                            roleOffensive.defcon(creep);
+                            break;
+                        case 'guard':
+                            roleOffensive.guard(creep);
+                            break;
+                        case 'grinder':
+                            roleOffensive.grinder(creep);
+                            break;
+                    }
                     brains.taskManager(creep);
                 } else {
                     Memory.squads[squadName].creeps.splice(index, index + 1);

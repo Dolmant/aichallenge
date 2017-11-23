@@ -881,26 +881,26 @@ const brains = {
             const creepArray = Memory.squads[squadName].creeps;
 
             // Always run role to make sure we can control if we need to attack or not
-            switch (Memory.squads[squadName].role) {
-                case 'retired':
-                    __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].retired(creep);
-                    break;
-                case 'farm':
-                    __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].farm(creep);
-                    break;
-                case 'defcon':
-                    __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].defcon(creep);
-                    break;
-                case 'guard':
-                    __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].guard(creep);
-                    break;
-                case 'grinder':
-                    __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].grinder(creep);
-                    break;
-            }
             creepArray && creepArray.forEach((creepID, index) => {
                 const creep = Game.getObjectById(creepID);
                 if (creep) {
+                    switch (Memory.squads[squadName].type) {
+                        case 'retired':
+                            __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].retired(creep);
+                            break;
+                        case 'farm':
+                            __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].farm(creep);
+                            break;
+                        case 'defcon':
+                            __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].defcon(creep);
+                            break;
+                        case 'guard':
+                            __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].guard(creep);
+                            break;
+                        case 'grinder':
+                            __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].grinder(creep);
+                            break;
+                    }
                     brains.taskManager(creep);
                 } else {
                     Memory.squads[squadName].creeps.splice(index, index + 1);
