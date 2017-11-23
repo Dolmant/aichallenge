@@ -66,19 +66,23 @@ const util = {
         }
     },
     moveToObject(creep: Creep) {
-        if (!Game.getObjectById(creep.memory.moveToObject)) {
+        const target = Game.getObjectById(creep.memory.moveToObject);
+        if (!target) {
             return true;
         }
-        if (creep.pos.getRangeTo(Game.getObjectById(creep.memory.moveToObject).pos) <= creep.memory.moveToObjectRange) {
+        if (creep.pos.getRangeTo(target.pos) <= creep.memory.moveToObjectRange) {
             delete creep.memory.moveToObject;
             delete creep.memory.moveToObjectRange;
             return true;
         } else {
-            var err = creep.moveToCacheTarget(Game.getObjectById(creep.memory.moveToObject).pos, {'maxRooms': 10});
-            if (err == ERR_NO_PATH || err == ERR_INVALID_TARGET || err == ERR_NOT_FOUND) {
-                delete creep.memory.moveToObject;
-                delete creep.memory.moveToObjectRange;
-                return true;
+            if (creep.pos.roomName == target.pos.roomName) {
+                creep.memory.moveToTargetx = target.pos.x;
+                creep.memory.moveToTargety = target.pos.y;
+                creep.memory.moveToTargetrange = creep.memory.moveToObjectRange;
+                util.moveToTarget(creep);
+            } else {
+                creep.memory.goToTarget = target.pos.roomName;
+                util.goToTarget(creep);
             }
         }
     }

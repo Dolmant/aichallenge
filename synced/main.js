@@ -136,19 +136,23 @@ const util = {
         }
     },
     moveToObject(creep) {
-        if (!Game.getObjectById(creep.memory.moveToObject)) {
+        const target = Game.getObjectById(creep.memory.moveToObject);
+        if (!target) {
             return true;
         }
-        if (creep.pos.getRangeTo(Game.getObjectById(creep.memory.moveToObject).pos) <= creep.memory.moveToObjectRange) {
+        if (creep.pos.getRangeTo(target.pos) <= creep.memory.moveToObjectRange) {
             delete creep.memory.moveToObject;
             delete creep.memory.moveToObjectRange;
             return true;
         } else {
-            var err = creep.moveToCacheTarget(Game.getObjectById(creep.memory.moveToObject).pos, { 'maxRooms': 10 });
-            if (err == ERR_NO_PATH || err == ERR_INVALID_TARGET || err == ERR_NOT_FOUND) {
-                delete creep.memory.moveToObject;
-                delete creep.memory.moveToObjectRange;
-                return true;
+            if (creep.pos.roomName == target.pos.roomName) {
+                creep.memory.moveToTargetx = target.pos.x;
+                creep.memory.moveToTargety = target.pos.y;
+                creep.memory.moveToTargetrange = creep.memory.moveToObjectRange;
+                util.moveToTarget(creep);
+            } else {
+                creep.memory.goToTarget = target.pos.roomName;
+                util.goToTarget(creep);
             }
         }
     }
@@ -1019,7 +1023,7 @@ const roleOffensive = {
                 head to roomnameguard flag
         */
         const mySquad = creep.memory.squad;
-        if (creep.ticksToLive < 1000 || creep.memory.myTask == 'renew') {
+        if (creep.ticksToLive < 300 || creep.memory.myTask == 'renew') {
             creep.memory.myTask = 'renew';
         } else if (creep.room.name == Memory.squads[mySquad].roomTarget) {
             var hostiles = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 5);

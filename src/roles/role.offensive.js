@@ -14,7 +14,7 @@ const roleOffensive = {
                 head to roomnameguard flag
         */
         const mySquad = creep.memory.squad;
-        if (creep.ticksToLive < 1000 || creep.memory.myTask == 'renew') {
+        if (creep.ticksToLive < 300 || creep.memory.myTask == 'renew') {
             creep.memory.myTask = 'renew';
         } else if (creep.room.name == Memory.squads[mySquad].roomTarget) {
             var hostiles = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 5);
