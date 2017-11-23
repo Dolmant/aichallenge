@@ -913,12 +913,14 @@ const brains = {
                         }
                     }
                 } else {
-                    const options = {
-                        'role': Memory.squads[squadName].type,
-                        'myTask': Memory.squads[squadName].type,
-                        'squad': squadName
-                    };
-                    brains.buildRequest(Memory.squads[squadName].roomTarget, 1, options);
+                    if (Memory.squads[squadName].type != retired) {
+                        const options = {
+                            'role': Memory.squads[squadName].type,
+                            'myTask': Memory.squads[squadName].type,
+                            'squad': squadName
+                        };
+                        brains.buildRequest(Memory.squads[squadName].roomTarget, 1, options);
+                    }
                     Memory.squads[squadName].creeps.splice(index, index + 1);
                 }
             });
