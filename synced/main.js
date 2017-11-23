@@ -2012,9 +2012,11 @@ const roleClaimer = {
         if (!Game.flags['Claim']) {
             console.log('Please define the claim flag target');
             creep.memory.myTask = '';
-        } else {
+        } else if (creep.room.name != Game.flags['Claim'].pos.roomName) {
             creep.memory.goToTarget = Game.flags['Claim'].pos.roomName;
             creep.memory.myTask = 'goToTarget';
+        } else {
+            creep.memory.myTask = 'claim';
         }
     }
 };
