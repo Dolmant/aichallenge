@@ -4,12 +4,15 @@ var actOffensive = {
     heal: function(creep: Creep) {
         var target = Game.getObjectById(creep.memory.healCreep);
         if (target) {
-            var err = creep.heal(target);
-            creep.moveToCacheTarget(target.pos);
-            if (err == ERR_INVALID_TARGET) {
-                delete creep.memory.healCreep;
-                return true;
+            if (creep.hits < creep.hitsMax * 0.9) {
+                var err = creep.heal(target);
+                if (err == ERR_INVALID_TARGET) {
+                    delete creep.memory.healCreep;
+                }
+            } else {
+                creep.heal(creep);
             }
+            creep.moveToCacheTarget(target.pos);
         } else {
             delete creep.memory.healCreep;
             return true;
