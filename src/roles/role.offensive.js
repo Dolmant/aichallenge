@@ -98,7 +98,7 @@ const roleOffensive = {
             }
         } else {
             creep.memory.myTask = 'goToTarget';
-            creep.memory.goToTarget = Memory.squads[mySquad].stagingTarget.roomName;
+            creep.memory.goToTarget = Memory.squads[mySquad].roomTarget;
         }
     },
     retired(creep: Creep) {
