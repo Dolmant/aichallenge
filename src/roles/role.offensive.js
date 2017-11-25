@@ -20,7 +20,7 @@ const roleOffensive = {
             var hostiles = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 5);
             if (hostiles.length > 0 ) {
                 creep.memory.myTask = 'attack';
-                creep.memory.attackTarget = hostiles[0].id;
+                creep.memory.attackCreep = hostiles[0].id;
             } else {
                 if (Game.flags[mySquad]) {
                     creep.memory.moveToTargetx = Game.flags[mySquad].pos.x;
@@ -53,6 +53,53 @@ const roleOffensive = {
                     if healer, heal me or buddy
                 
         */
+
+        const mySquad = creep.memory.squad;
+        let allSpawned = 0;
+        Memory.squads[mySquad].creeps.forEach(squadCreep => {
+            if (!Game.getObjectById(squadCreep).spawning) {
+                allSpawned += 1;
+            }
+        })
+        if (Memory.squads[mySquad].size > allSpawned) {
+            creep.memory.moveToTargetx = Memory.squads[mySquad].stagingTarget.x;
+            creep.memory.moveToTargety = Memory.squads[mySquad].stagingTarget.y;
+            creep.memory.moveToTargetrange = 0;
+            creep.memory.myTask = 'moveToTarget';
+        } else if (creep.room.name == Memory.squads[mySquad].roomTarget) {
+            if (!creep.memory.secondaryRole == 'heal') {
+                if (!creep.memory.attackCreep) {
+                    actOffensive.findAttackTarget(creep);
+                }
+                if (!creep.memory.attackCreep) {
+                    const NPCSpawns = creep.room.find(FIND_HOSTILE_SPAWNS);
+                    let cooldown = 999;
+                    let target;
+                    NPCSpawns.forEach(spawner => {
+                        if (spawner.ticksToSpawn < cooldown) {
+                            cooldown = spawner.ticksToSpawn;
+                            target = spawner;
+                        }
+                    })
+                    if (target) {
+                        creep.memory.moveToTargetx = target.pos.x;
+                        creep.memory.moveToTargety = target.pos.y;
+                        creep.memory.moveToTargetrange = 0;
+                        creep.memory.myTask = 'moveToTarget';
+                    }
+                } else {
+                    creep.memory.myTask = 'attack';
+                }
+            } else {
+                if (!creep.healCreep) {
+                    actOffensive.findHealingTarget(creep);
+                }
+                creep.memory.myTask = 'heal';
+            }
+        } else {
+            creep.memory.myTask = 'goToTarget';
+            creep.memory.goToTarget = Memory.squads[mySquad].stagingTarget.roomName;
+        }
     },
     retired(creep: Creep) {
         /*
@@ -97,18 +144,15 @@ const roleOffensive = {
                     target = creep.pos.findClosestByPath([hostiles, hostile_structures]);
                 }
                 creep.memory.myTask = 'attack';
-                creep.memory.attackTarget = target.id;
+                creep.memory.attackCreep = target.id;
             }
-        } else if (creep.room.name == Memory.squads[mySquad].stagingTarget.roomName) {
-            if (Game.flags[mySquad + creep.room.name]) {
-                creep.memory.moveToTargetx = Memory.squads[mySquad].stagingTarget.x;
-                creep.memory.moveToTargety = Memory.squads[mySquad].stagingTarget.y;
-                creep.memory.moveToTargetrange = 0;
-            }
-            creep.memory.myTask = 'moveToTarget';
         } else {
-            creep.memory.myTask = 'goToTarget';
-            creep.memory.goToTarget = Memory.squads[mySquad].stagingTarget.roomName;
+            if (creep.hits < creep.hitsMax) {
+                creep.heal(creep)
+            } else {
+                creep.memory.myTask = 'goToTarget';
+                creep.memory.goToTarget = Memory.squads[mySquad].roomTarget;
+            }
         }
     },
     defcon(creep: Creep) {
@@ -121,6 +165,22 @@ const roleOffensive = {
             else 
                 attack any hostiles in the room
         */
+
+        const mySquad = creep.memory.squad;
+        if (Memory.squads[mySquad].size > Memory.squads[mySquad].creeps.length) {
+            creep.memory.moveToTargetx = Memory.squads[mySquad].stagingTarget.x;
+            creep.memory.moveToTargety = Memory.squads[mySquad].stagingTarget.y;
+            creep.memory.moveToTargetrange = 0;
+            creep.memory.myTask = 'moveToTarget';
+        } else if (creep.room.name == Memory.squads[mySquad].roomTarget) {
+            if (!creep.memory.attackCreep) {
+                actOffensive.findTarget(creep);
+            }
+            creep.memory.myTask = 'attack';
+        } else {
+            creep.memory.myTask = 'goToTarget';
+            creep.memory.goToTarget = Memory.squads[mySquad].stagingTarget.roomName;
+        }
     },
 };
 

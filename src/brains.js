@@ -93,6 +93,31 @@ const brains = {
         //check for any reusable dead squads
         // if so, repurpose and resize them
         // else fire off builds
+        if (type == 'farm') {
+            const options1 = {
+                'role': type,
+                'myTask': type,
+                'squad': squadName,
+            };
+            const options2 = {
+                'role': type,
+                'secondaryRole': 'heal',
+                'myTask': type,
+                'squad': squadName,
+            };
+            Memory.squads[squadName] = {};
+            Memory.squads[squadName].roomTarget = roomTarget;
+            Memory.squads[squadName].size = size;
+            Memory.squads[squadName].type = type;
+            Memory.squads[squadName].creeps = [];
+            const stagingRoomname = brains.buildRequest(roomTarget, 1, options);
+            brains.buildRequest(roomTarget, 1, options);
+            Memory.squads[squadName].stagingTarget = {
+                roomName: stagingRoomname,
+                x: 25,
+                y: 25,
+            };
+        }
         let requiredSize = size;
         Memory.retiredSquads.forEach((squad, index) => {
             // TODO join retired squads together

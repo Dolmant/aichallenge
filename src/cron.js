@@ -33,25 +33,64 @@ const cronJobs = {
     },
     run10() {
         Object.keys(Memory.thieving_spots).forEach(key => {
-            if (Memory.thieving_spots[key] && !Game.creeps[Memory.thieving_spots[key]]) {
+            if (Memory.thieving_spots[key] && !Game.creeps[Memory.thieving_spots[key]] && !Memory.buildQueue.includes['Thief' + key]) {
                 Memory.thieving_spots[key] = 0;
+            }
+            if (Memory.thieving_spots[key] == 0) {
+                var newName = 'Thief' + key;
+                var target_room = Memory.roomMap[key];
+                Memory.buildQueue.push[newName];
+                brains.buildRequest(target_room, 1, {
+                    'role': 'thief',
+                    'sourceMap': key,
+                    'myTask': 'moveToObject',
+                    'moveToObject': key,
+                    'moveToObjectRange': 1,
+                    'name': newName,
+                });
+                Memory.thieving_spots[key] = newName;
+                console.log('Build req: '+ newName);
+            }
+        });
+        Object.keys(Memory.thieving_mules).forEach(key => {
+            if (Memory.thieving_mules[key] && !Game.creeps[Memory.thieving_mules[key]] && !Memory.buildQueue.includes['ThiefMule' + key]) {
+                Memory.thieving_mules[key] = 0;
+            }
+            if (Memory.thieving_mules[key] == 0) {
+                var newName = 'ThiefMule' + key;
+                var target_room = Memory.roomMap[key];
+                var home = Memory.homeMap[Memory.roomMap[key]];
+                Memory.buildQueue.push[newName];
+                brains.buildRequest(target_room, 1, {
+                    'role': 'thiefmule',
+                    'myTask': 'goToTarget',
+                    'goToTarget': target_room,
+                    'stealTarget': target_room,
+                    'home': home,
+                    'name': newName,
+                });
+                Memory.thieving_mules[key] = newName;
+                console.log('Build req '+ newName);
             }
         });
 
-        const myRooms = ['W43N53', 'W45N53', 'W41N51', 'W46N52'];
-        myRooms.concat(Memory.possibleTargets);
+        const myOwnedRooms = ['W43N53', 'W45N53', 'W41N51', 'W46N52'];
+        const myRooms = myOwnedRooms.concat(Memory.possibleTargets);
 
         myRooms.forEach(roomName => {
             let myRoom = Game.rooms[roomName]
             if (myRoom) {
                 var enemyCreeps: Creep = myRoom.find(FIND_HOSTILE_CREEPS);
                 myRoom.memory.defcon = enemyCreeps.length;
+                if (enemyCreeps.length > 0 && myOwnedRooms.includes(myRoom)) {
+                    myRoom.memory.defcon -= 1;
+                }
                 if (Memory.squads[roomName + 'defcon']) {
-                    if (Memory.squads[roomName + 'defcon'].size != enemyCreeps.length) {
-                        // brains.updateSquadSize(roomName + 'defcon', enemyCreeps.length);
+                    if (Memory.squads[roomName + 'defcon'].size != myRoom.memory.defcon) {
+                        // brains.updateSquadSize(roomName + 'defcon', myRoom.memory.defcon);
                     }
-                } else if (enemyCreeps.length > 0) {
-                    // brains.createSquad(roomName + 'defcon', roomName, enemyCreeps.length, 'defcon');
+                } else if (myRoom.memory.defcon > 0) {
+                    // brains.createSquad(roomName + 'defcon', roomName, myRoom.memory.defcon, 'defcon');
                 }
             }
         });
@@ -74,6 +113,36 @@ const cronJobs = {
     },
     init() {
         Memory.thieving_spots = {
+            // location: W46N53
+            '59bbc4262052a716c3ce7711': 0,
+            '59bbc4262052a716c3ce7712': 0,
+            // location: W45N52
+            '59bbc4282052a716c3ce7771': 0,
+            '59bbc4282052a716c3ce7772': 0,
+            // location: W45N51
+            '59bbc4282052a716c3ce7776': 0,
+            '59bbc4282052a716c3ce7777': 0,
+            // location: W44N53
+            '59bbc42a2052a716c3ce77ce': 0,
+            // location: W44N52
+            '59bbc42b2052a716c3ce77d0': 0,
+            // location: W44N51
+            '59bbc42b2052a716c3ce77d3': 0,
+            // location: W43N52
+            '59bbc42d2052a716c3ce7822': 0,
+            // location: W43N51
+            '59bbc42d2052a716c3ce7824': 0,
+            '59bbc42d2052a716c3ce7825': 0,
+            // location: W42N51
+            '59bbc4302052a716c3ce7862': 0,
+            // location: W46N51
+            '59bbc4262052a716c3ce7717': 0,
+            '59bbc4262052a716c3ce7718': 0,
+            // location: W47N52
+            '59bbc4242052a716c3ce76bf': 0,
+            '59bbc4242052a716c3ce76c1': 0,
+        }
+        Memory.thieving_mules = {
             // location: W46N53
             '59bbc4262052a716c3ce7711': 0,
             '59bbc4262052a716c3ce7712': 0,
@@ -133,6 +202,19 @@ const cronJobs = {
             // location: W47N52
             '59bbc4242052a716c3ce76bf': 'W47N52',
             '59bbc4242052a716c3ce76c1': 'W47N52',
+        }
+        Memory.homeMap = {
+            'W42N51': 'W41N51',
+            'W43N51': 'W41N51',
+            'W43N52': 'W43N53',
+            'W44N51': 'W41N51',
+            'W44N52': 'W43N53',
+            'W44N53': 'W43N53',
+            'W45N51': 'W46N52',
+            'W45N52': 'W45N53',
+            'W46N53': 'W45N53',
+            'W46N51': 'W46N52',
+            'W47N52': 'W46N52',
         }
     },
 }

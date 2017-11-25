@@ -5,9 +5,8 @@ var actOffensive = {
         var target = Game.getObjectById(creep.memory.healCreep);
         if (target) {
             var err = creep.heal(target);
-            if (err == ERR_NOT_IN_RANGE) {
-                creep.moveToCacheTarget(target.pos);
-            } else if (err == ERR_INVALID_TARGET) {
+            creep.moveToCacheTarget(target.pos);
+            if (err == ERR_INVALID_TARGET) {
                 delete creep.memory.healCreep;
                 return true;
             }
@@ -20,9 +19,8 @@ var actOffensive = {
         var target = Game.getObjectById(creep.memory.attackCreep);
         if (target) {
             var err = creep.attack(target);
-            if (err == ERR_NOT_IN_RANGE) {
-                creep.moveToCacheTarget(target.pos);
-            } else if (err == ERR_INVALID_TARGET) {
+            creep.moveToCacheTarget(target.pos);
+            if (err == ERR_INVALID_TARGET) {
                 delete creep.memory.attackCreep;
                 return true;
             }
@@ -114,57 +112,56 @@ var actOffensive = {
     },
     findTarget: function(creep: Creep) {
         if (creep.memory.role == 'healer') {
-            findHealingTarget(creep);
+            actOffensive.findHealingTarget(creep);
         } else if (creep.memory.role == 'blocker') {
             creep.memory.myTask = 'block';
         } else {
-            findAttackTarget(creep);
+            actOffensive.findAttackTarget(creep);
         }
-    }
+    },
+    findHealingTarget: function(creep: Creep) {
+        var target = creep.pos.findClosestByPath(FIND_MY_CREEPS, {
+            'filter': creep => creep.hits < creep.hitsMax,
+        });
+        if (target) {
+            creep.memory.healCreep = target.id;
+        } else {
+            delete creep.memory.healCreep;
+        }
+    },
+    findAttackTarget: function(creep: Creep) {
+        var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS,{
+            filter: creep => creep.body.filter(part => (part.type == ATTACK) || (part.type == RANGED_ATTACK))
+        });
+        if (!target) {
+            target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES,{
+                filter: structure => structure.structureType == STRUCTURE_TOWER,
+            });
+        }
+        if (!target) {
+            target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
+                filter: structure => structure.structureType == STRUCTURE_SPAWN,
+            });
+        }
+        if (!target) {
+            target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
+                filter: structure => structure.structureType == STRUCTURE_STORAGE,
+            });
+        }
+        if (!target) {
+            target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
+        }
+        if (!target) {
+            target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+                filter: structure => structure.structureType == STRUCTURE_WALL
+            });
+        }
+        if (target) {
+            creep.memory.attackCreep = target.id;
+        } else {
+            delete creep.memory.attackCreep;
+        }
+    },
 };
-function findHealingTarget(creep: Creep) {
-    var target = creep.pos.findClosestByPath(FIND_MY_CREEPS, {
-        'filter': creep => creep.hits < creep.hitsMax,
-    });
-    if (target) {
-        creep.memory.healCreep = target.id;
-    } else {
-        delete creep.memory.healCreep;
-    }
-}
-function findAttackTarget(creep: Creep) {
-    var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS,{
-        filter: creep => creep.body.filter(part => (part.type == ATTACK) || (part.type == RANGED_ATTACK))
-    });
-    if (!target) {
-        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES,{
-            filter: structure => structure.structureType == STRUCTURE_TOWER,
-        });
-    }
-    if (!target) {
-        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
-            filter: structure => structure.structureType == STRUCTURE_SPAWN,
-        });
-    }
-    if (!target) {
-        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
-            filter: structure => structure.structureType == STRUCTURE_STORAGE,
-        });
-    }
-    if (!target) {
-        target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
-    }
-    if (!target) {
-        target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-            filter: structure => structure.structureType == STRUCTURE_WALL
-        });
-    }
-    if (target) {
-        creep.memory.attackCreep = target.id;
-        creep.memory.myTask = target.id;
-    } else {
-        delete creep.memory.attackCreep;
-    }
-}
 
 export default actOffensive;

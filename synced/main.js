@@ -243,9 +243,8 @@ var actOffensive = {
         var target = Game.getObjectById(creep.memory.healCreep);
         if (target) {
             var err = creep.heal(target);
-            if (err == ERR_NOT_IN_RANGE) {
-                creep.moveToCacheTarget(target.pos);
-            } else if (err == ERR_INVALID_TARGET) {
+            creep.moveToCacheTarget(target.pos);
+            if (err == ERR_INVALID_TARGET) {
                 delete creep.memory.healCreep;
                 return true;
             }
@@ -258,9 +257,8 @@ var actOffensive = {
         var target = Game.getObjectById(creep.memory.attackCreep);
         if (target) {
             var err = creep.attack(target);
-            if (err == ERR_NOT_IN_RANGE) {
-                creep.moveToCacheTarget(target.pos);
-            } else if (err == ERR_INVALID_TARGET) {
+            creep.moveToCacheTarget(target.pos);
+            if (err == ERR_INVALID_TARGET) {
                 delete creep.memory.attackCreep;
                 return true;
             }
@@ -352,58 +350,57 @@ var actOffensive = {
     },
     findTarget: function (creep) {
         if (creep.memory.role == 'healer') {
-            findHealingTarget(creep);
+            actOffensive.findHealingTarget(creep);
         } else if (creep.memory.role == 'blocker') {
             creep.memory.myTask = 'block';
         } else {
-            findAttackTarget(creep);
+            actOffensive.findAttackTarget(creep);
+        }
+    },
+    findHealingTarget: function (creep) {
+        var target = creep.pos.findClosestByPath(FIND_MY_CREEPS, {
+            'filter': creep => creep.hits < creep.hitsMax
+        });
+        if (target) {
+            creep.memory.healCreep = target.id;
+        } else {
+            delete creep.memory.healCreep;
+        }
+    },
+    findAttackTarget: function (creep) {
+        var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS, {
+            filter: creep => creep.body.filter(part => part.type == ATTACK || part.type == RANGED_ATTACK)
+        });
+        if (!target) {
+            target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
+                filter: structure => structure.structureType == STRUCTURE_TOWER
+            });
+        }
+        if (!target) {
+            target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
+                filter: structure => structure.structureType == STRUCTURE_SPAWN
+            });
+        }
+        if (!target) {
+            target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
+                filter: structure => structure.structureType == STRUCTURE_STORAGE
+            });
+        }
+        if (!target) {
+            target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
+        }
+        if (!target) {
+            target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+                filter: structure => structure.structureType == STRUCTURE_WALL
+            });
+        }
+        if (target) {
+            creep.memory.attackCreep = target.id;
+        } else {
+            delete creep.memory.attackCreep;
         }
     }
 };
-function findHealingTarget(creep) {
-    var target = creep.pos.findClosestByPath(FIND_MY_CREEPS, {
-        'filter': creep => creep.hits < creep.hitsMax
-    });
-    if (target) {
-        creep.memory.healCreep = target.id;
-    } else {
-        delete creep.memory.healCreep;
-    }
-}
-function findAttackTarget(creep) {
-    var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS, {
-        filter: creep => creep.body.filter(part => part.type == ATTACK || part.type == RANGED_ATTACK)
-    });
-    if (!target) {
-        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
-            filter: structure => structure.structureType == STRUCTURE_TOWER
-        });
-    }
-    if (!target) {
-        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
-            filter: structure => structure.structureType == STRUCTURE_SPAWN
-        });
-    }
-    if (!target) {
-        target = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {
-            filter: structure => structure.structureType == STRUCTURE_STORAGE
-        });
-    }
-    if (!target) {
-        target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
-    }
-    if (!target) {
-        target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-            filter: structure => structure.structureType == STRUCTURE_WALL
-        });
-    }
-    if (target) {
-        creep.memory.attackCreep = target.id;
-        creep.memory.myTask = target.id;
-    } else {
-        delete creep.memory.attackCreep;
-    }
-}
 
 /* harmony default export */ __webpack_exports__["a"] = (actOffensive);
 
@@ -755,25 +752,64 @@ const cronJobs = {
     },
     run10() {
         Object.keys(Memory.thieving_spots).forEach(key => {
-            if (Memory.thieving_spots[key] && !Game.creeps[Memory.thieving_spots[key]]) {
+            if (Memory.thieving_spots[key] && !Game.creeps[Memory.thieving_spots[key]] && !Memory.buildQueue.includes['Thief' + key]) {
                 Memory.thieving_spots[key] = 0;
+            }
+            if (Memory.thieving_spots[key] == 0) {
+                var newName = 'Thief' + key;
+                var target_room = Memory.roomMap[key];
+                Memory.buildQueue.push[newName];
+                __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].buildRequest(target_room, 1, {
+                    'role': 'thief',
+                    'sourceMap': key,
+                    'myTask': 'moveToObject',
+                    'moveToObject': key,
+                    'moveToObjectRange': 1,
+                    'name': newName
+                });
+                Memory.thieving_spots[key] = newName;
+                console.log('Build req: ' + newName);
+            }
+        });
+        Object.keys(Memory.thieving_mules).forEach(key => {
+            if (Memory.thieving_mules[key] && !Game.creeps[Memory.thieving_mules[key]] && !Memory.buildQueue.includes['ThiefMule' + key]) {
+                Memory.thieving_mules[key] = 0;
+            }
+            if (Memory.thieving_mules[key] == 0) {
+                var newName = 'ThiefMule' + key;
+                var target_room = Memory.roomMap[key];
+                var home = Memory.homeMap[Memory.roomMap[key]];
+                Memory.buildQueue.push[newName];
+                __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].buildRequest(target_room, 1, {
+                    'role': 'thiefmule',
+                    'myTask': 'goToTarget',
+                    'goToTarget': target_room,
+                    'stealTarget': target_room,
+                    'home': home,
+                    'name': newName
+                });
+                Memory.thieving_mules[key] = newName;
+                console.log('Build req ' + newName);
             }
         });
 
-        const myRooms = ['W43N53', 'W45N53', 'W41N51', 'W46N52'];
-        myRooms.concat(Memory.possibleTargets);
+        const myOwnedRooms = ['W43N53', 'W45N53', 'W41N51', 'W46N52'];
+        const myRooms = myOwnedRooms.concat(Memory.possibleTargets);
 
         myRooms.forEach(roomName => {
             let myRoom = Game.rooms[roomName];
             if (myRoom) {
                 var enemyCreeps = myRoom.find(FIND_HOSTILE_CREEPS);
                 myRoom.memory.defcon = enemyCreeps.length;
+                if (enemyCreeps.length > 0 && myOwnedRooms.includes(myRoom)) {
+                    myRoom.memory.defcon -= 1;
+                }
                 if (Memory.squads[roomName + 'defcon']) {
-                    if (Memory.squads[roomName + 'defcon'].size != enemyCreeps.length) {
-                        // brains.updateSquadSize(roomName + 'defcon', enemyCreeps.length);
+                    if (Memory.squads[roomName + 'defcon'].size != myRoom.memory.defcon) {
+                        // brains.updateSquadSize(roomName + 'defcon', myRoom.memory.defcon);
                     }
-                } else if (enemyCreeps.length > 0) {
-                    // brains.createSquad(roomName + 'defcon', roomName, enemyCreeps.length, 'defcon');
+                } else if (myRoom.memory.defcon > 0) {
+                    // brains.createSquad(roomName + 'defcon', roomName, myRoom.memory.defcon, 'defcon');
                 }
             }
         });
@@ -796,6 +832,36 @@ const cronJobs = {
     },
     init() {
         Memory.thieving_spots = {
+            // location: W46N53
+            '59bbc4262052a716c3ce7711': 0,
+            '59bbc4262052a716c3ce7712': 0,
+            // location: W45N52
+            '59bbc4282052a716c3ce7771': 0,
+            '59bbc4282052a716c3ce7772': 0,
+            // location: W45N51
+            '59bbc4282052a716c3ce7776': 0,
+            '59bbc4282052a716c3ce7777': 0,
+            // location: W44N53
+            '59bbc42a2052a716c3ce77ce': 0,
+            // location: W44N52
+            '59bbc42b2052a716c3ce77d0': 0,
+            // location: W44N51
+            '59bbc42b2052a716c3ce77d3': 0,
+            // location: W43N52
+            '59bbc42d2052a716c3ce7822': 0,
+            // location: W43N51
+            '59bbc42d2052a716c3ce7824': 0,
+            '59bbc42d2052a716c3ce7825': 0,
+            // location: W42N51
+            '59bbc4302052a716c3ce7862': 0,
+            // location: W46N51
+            '59bbc4262052a716c3ce7717': 0,
+            '59bbc4262052a716c3ce7718': 0,
+            // location: W47N52
+            '59bbc4242052a716c3ce76bf': 0,
+            '59bbc4242052a716c3ce76c1': 0
+        };
+        Memory.thieving_mules = {
             // location: W46N53
             '59bbc4262052a716c3ce7711': 0,
             '59bbc4262052a716c3ce7712': 0,
@@ -855,6 +921,19 @@ const cronJobs = {
             // location: W47N52
             '59bbc4242052a716c3ce76bf': 'W47N52',
             '59bbc4242052a716c3ce76c1': 'W47N52'
+        };
+        Memory.homeMap = {
+            'W42N51': 'W41N51',
+            'W43N51': 'W41N51',
+            'W43N52': 'W43N53',
+            'W44N51': 'W41N51',
+            'W44N52': 'W43N53',
+            'W44N53': 'W43N53',
+            'W45N51': 'W46N52',
+            'W45N52': 'W45N53',
+            'W46N53': 'W45N53',
+            'W46N51': 'W46N52',
+            'W47N52': 'W46N52'
         };
     }
 };
@@ -966,6 +1045,31 @@ const brains = {
         //check for any reusable dead squads
         // if so, repurpose and resize them
         // else fire off builds
+        if (type == 'farm') {
+            const options1 = {
+                'role': type,
+                'myTask': type,
+                'squad': squadName
+            };
+            const options2 = {
+                'role': type,
+                'secondaryRole': 'heal',
+                'myTask': type,
+                'squad': squadName
+            };
+            Memory.squads[squadName] = {};
+            Memory.squads[squadName].roomTarget = roomTarget;
+            Memory.squads[squadName].size = size;
+            Memory.squads[squadName].type = type;
+            Memory.squads[squadName].creeps = [];
+            const stagingRoomname = brains.buildRequest(roomTarget, 1, options);
+            brains.buildRequest(roomTarget, 1, options);
+            Memory.squads[squadName].stagingTarget = {
+                roomName: stagingRoomname,
+                x: 25,
+                y: 25
+            };
+        }
         let requiredSize = size;
         Memory.retiredSquads.forEach((squad, index) => {
             // TODO join retired squads together
@@ -1037,7 +1141,7 @@ const roleOffensive = {
             var hostiles = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 5);
             if (hostiles.length > 0) {
                 creep.memory.myTask = 'attack';
-                creep.memory.attackTarget = hostiles[0].id;
+                creep.memory.attackCreep = hostiles[0].id;
             } else {
                 if (Game.flags[mySquad]) {
                     creep.memory.moveToTargetx = Game.flags[mySquad].pos.x;
@@ -1070,6 +1174,53 @@ const roleOffensive = {
                     if healer, heal me or buddy
                 
         */
+
+        const mySquad = creep.memory.squad;
+        let allSpawned = 0;
+        Memory.squads[mySquad].creeps.forEach(squadCreep => {
+            if (!Game.getObjectById(squadCreep).spawning) {
+                allSpawned += 1;
+            }
+        });
+        if (Memory.squads[mySquad].size > allSpawned) {
+            creep.memory.moveToTargetx = Memory.squads[mySquad].stagingTarget.x;
+            creep.memory.moveToTargety = Memory.squads[mySquad].stagingTarget.y;
+            creep.memory.moveToTargetrange = 0;
+            creep.memory.myTask = 'moveToTarget';
+        } else if (creep.room.name == Memory.squads[mySquad].roomTarget) {
+            if (!creep.memory.secondaryRole == 'heal') {
+                if (!creep.memory.attackCreep) {
+                    __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__["a" /* default */].findAttackTarget(creep);
+                }
+                if (!creep.memory.attackCreep) {
+                    const NPCSpawns = creep.room.find(FIND_HOSTILE_SPAWNS);
+                    let cooldown = 999;
+                    let target;
+                    NPCSpawns.forEach(spawner => {
+                        if (spawner.ticksToSpawn < cooldown) {
+                            cooldown = spawner.ticksToSpawn;
+                            target = spawner;
+                        }
+                    });
+                    if (target) {
+                        creep.memory.moveToTargetx = target.pos.x;
+                        creep.memory.moveToTargety = target.pos.y;
+                        creep.memory.moveToTargetrange = 0;
+                        creep.memory.myTask = 'moveToTarget';
+                    }
+                } else {
+                    creep.memory.myTask = 'attack';
+                }
+            } else {
+                if (!creep.healCreep) {
+                    __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__["a" /* default */].findHealingTarget(creep);
+                }
+                creep.memory.myTask = 'heal';
+            }
+        } else {
+            creep.memory.myTask = 'goToTarget';
+            creep.memory.goToTarget = Memory.squads[mySquad].stagingTarget.roomName;
+        }
     },
     retired(creep) {
         /*
@@ -1114,18 +1265,15 @@ const roleOffensive = {
                     target = creep.pos.findClosestByPath([hostiles, hostile_structures]);
                 }
                 creep.memory.myTask = 'attack';
-                creep.memory.attackTarget = target.id;
+                creep.memory.attackCreep = target.id;
             }
-        } else if (creep.room.name == Memory.squads[mySquad].stagingTarget.roomName) {
-            if (Game.flags[mySquad + creep.room.name]) {
-                creep.memory.moveToTargetx = Memory.squads[mySquad].stagingTarget.x;
-                creep.memory.moveToTargety = Memory.squads[mySquad].stagingTarget.y;
-                creep.memory.moveToTargetrange = 0;
-            }
-            creep.memory.myTask = 'moveToTarget';
         } else {
-            creep.memory.myTask = 'goToTarget';
-            creep.memory.goToTarget = Memory.squads[mySquad].stagingTarget.roomName;
+            if (creep.hits < creep.hitsMax) {
+                creep.heal(creep);
+            } else {
+                creep.memory.myTask = 'goToTarget';
+                creep.memory.goToTarget = Memory.squads[mySquad].roomTarget;
+            }
         }
     },
     defcon(creep) {
@@ -1138,6 +1286,22 @@ const roleOffensive = {
             else 
                 attack any hostiles in the room
         */
+
+        const mySquad = creep.memory.squad;
+        if (Memory.squads[mySquad].size > Memory.squads[mySquad].creeps.length) {
+            creep.memory.moveToTargetx = Memory.squads[mySquad].stagingTarget.x;
+            creep.memory.moveToTargety = Memory.squads[mySquad].stagingTarget.y;
+            creep.memory.moveToTargetrange = 0;
+            creep.memory.myTask = 'moveToTarget';
+        } else if (creep.room.name == Memory.squads[mySquad].roomTarget) {
+            if (!creep.memory.attackCreep) {
+                __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__["a" /* default */].findTarget(creep);
+            }
+            creep.memory.myTask = 'attack';
+        } else {
+            creep.memory.myTask = 'goToTarget';
+            creep.memory.goToTarget = Memory.squads[mySquad].stagingTarget.roomName;
+        }
     }
 };
 
@@ -2048,13 +2212,13 @@ const spawner = {
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         MaxMuleCount = myRoom.memory.hasExtractor ? 2 : MaxMuleCount;
         var MaxUpgraderCount = myRoom.memory.hasLinks ? 0 : 0;
-        var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 17; //17;
-        var MaxThiefMuleCount = 11; // 11;
-        var MaxMeleeCount = myRoom.memory.marshalForce ? Memory.attackers.forceSize - 3 : 0;
-        var MaxRangedCount = myRoom.memory.marshalForce ? 2 : 0;
-        var MaxHealerCount = myRoom.memory.marshalForce ? 1 : 0;
-        var MaxBlockerCount = myRoom.memory.marshalDisrupter ? 20 : 0;
-        var MaxToughCount = myRoom.memory.marshalForce ? 5 : 0;
+        // var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 17; //17;
+        // var MaxThiefMuleCount = 11; // 11;
+        // var MaxMeleeCount = myRoom.memory.marshalForce ? Memory.attackers.forceSize - 3 : 0;
+        // var MaxRangedCount = myRoom.memory.marshalForce ? 2 : 0;
+        // var MaxHealerCount = myRoom.memory.marshalForce ? 1 : 0;
+        // var MaxBlockerCount = myRoom.memory.marshalDisrupter ? 20 : 0;
+        // var MaxToughCount = myRoom.memory.marshalForce ? 5 : 0;
         var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
         var referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
 
@@ -2210,93 +2374,97 @@ const spawner = {
                 console.log('Spawning: ' + newName);
                 canSpawn = false;
             }
-            if (myCreepCount.thiefParts < MaxParts.thief * MaxThiefCount && Memory.misc.globalCreeps.thief < MaxThiefCount && Memory.misc.globalCreeps.thiefmule > Memory.misc.globalCreeps.thief / 2 && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
-                var newName = 'Thief' + Game.time;
-                var target = __WEBPACK_IMPORTED_MODULE_0__roles_role_thief__["a" /* default */].generateStealTarget();
-                Spawn.spawnCreep(getBody(myRoom, MaxParts.thief, { 'thief': true }), newName, {
-                    memory: {
-                        'role': 'thief',
-                        'sourceMap': target,
-                        'myTask': 'moveToObject',
-                        'moveToObject': target,
-                        'moveToObjectRange': 1
-                    }
-                });
-                Memory.misc.globalCreeps.thief += 1;
-                Memory.misc.globalCreepsTemp.thief += 1;
-                Memory.thieving_spots[target] = newName;
-                console.log('Spawning: ' + newName);
-                canSpawn = false;
-            }
-            if (Memory.misc.globalCreeps.thiefmule < MaxThiefMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
-                var newName = 'ThiefMule' + Game.time;
-                var targets = __WEBPACK_IMPORTED_MODULE_1__roles_role_thiefmule__["a" /* default */].generateHaulTargets();
-                var target_room = targets[0];
-                var home = targets[1];
-                Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, { 'carryOnly': true }), newName, {
-                    memory: {
-                        'role': 'thiefmule',
-                        'myTask': 'goToTarget',
-                        'goToTarget': target_room,
-                        'stealTarget': target_room,
-                        'home': home
-                    }
-                });
-                Memory.misc.globalCreeps.thiefmule += 1;
-                console.log('Spawning: ' + newName);
-                canSpawn = false;
-            }
-            if (myCreepCount.meleeParts < MaxParts.melee * MaxMeleeCount && Memory.misc.globalCreeps.melee < MaxMeleeCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
-                var newName = 'Melee' + Game.time;
-                Spawn.spawnCreep(getBody(myRoom, MaxParts.melee, { 'melee': true }), newName, {
-                    memory: {
-                        'role': 'melee',
-                        'myTask': 'gather'
-                    }
-                });
-                console.log('Spawning: ' + newName);
-                canSpawn = false;
-            }
-            if (myCreepCount.healerParts < MaxParts.healer * MaxHealerCount && Memory.misc.globalCreeps.healer < MaxHealerCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
-                var newName = 'Healer' + Game.time;
-                Spawn.spawnCreep(getBody(myRoom, MaxParts.healer, { 'healer': true }), newName, {
-                    memory: {
-                        'role': 'healer'
-                    }
-                });
-                console.log('Spawning: ' + newName);
-                canSpawn = false;
-            }
-            if (myCreepCount.rangedParts < MaxParts.ranged * MaxRangedCount && Memory.misc.globalCreeps.ranged < MaxRangedCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
-                var newName = 'Ranged' + Game.time;
-                Spawn.spawnCreep(getBody(myRoom, MaxParts.ranged, { 'ranged': true }), newName, {
-                    memory: {
-                        'role': 'ranged'
-                    }
-                });
-                console.log('Spawning: ' + newName);
-                canSpawn = false;
-            }
-            if (myCreepCount.blockerParts < MaxParts.blocker * MaxBlockerCount && Memory.misc.globalCreeps.blocker < MaxBlockerCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
-                var newName = 'Blocker' + Game.time;
-                Spawn.spawnCreep(getBody(myRoom, MaxParts.blocker, { 'blocker': true }), newName, {
-                    memory: {
-                        'role': 'blocker'
-                    }
-                });
-                console.log('Spawning: ' + newName);
-                canSpawn = false;
-            }
-            if (myCreepCount.toughParts < MaxParts.tough * MaxToughCount && Memory.misc.globalCreeps.tough < MaxToughCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
-                var newName = 'Tough' + Game.time;
-                Spawn.spawnCreep(getBody(myRoom, MaxParts.tough, { 'tough': true }), newName, {
-                    memory: {
-                        'role': 'tough'
-                    }
-                });
-                console.log('Spawning: ' + newName);
-                canSpawn = false;
-            }
+            // if (myCreepCount.thiefParts < MaxParts.thief * MaxThiefCount && Memory.misc.globalCreeps.thief < MaxThiefCount && (Memory.misc.globalCreeps.thiefmule > (Memory.misc.globalCreeps.thief / 2)) && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+            // {
+            //     var newName = 'Thief' + Game.time;
+            //     var target = roleThief.generateStealTarget();
+            //     Spawn.spawnCreep(getBody(myRoom, MaxParts.thief, {'thief': true}), newName, {
+            //         memory: {
+            //             'role': 'thief',
+            //             'sourceMap': target,
+            //             'myTask': 'moveToObject',
+            //             'moveToObject': target,
+            //             'moveToObjectRange': 1,
+            //         },
+            //     });
+            //     Memory.misc.globalCreeps.thief += 1;
+            //     Memory.misc.globalCreepsTemp.thief += 1;
+            //     Memory.thieving_spots[target] = newName;
+            //     console.log('Spawning: '+ newName);
+            //     canSpawn = false;
+            // }
+            // if (Memory.misc.globalCreeps.thiefmule < MaxThiefMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
+            //     var newName = 'ThiefMule' + Game.time;
+            //     var targets = roleThiefMule.generateHaulTargets();
+            //     var target_room = targets[0];
+            //     var home = targets[1];
+            //     Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, {'carryOnly': true}), newName, {
+            //         memory: {
+            //             'role': 'thiefmule',
+            //             'myTask': 'goToTarget',
+            //             'goToTarget': target_room,
+            //             'stealTarget': target_room,
+            //             'home': home,
+            //         },
+            //     });
+            //     Memory.misc.globalCreeps.thiefmule += 1;
+            //     console.log('Spawning: '+ newName);
+            //     canSpawn = false;
+            // }
+            // if(myCreepCount.meleeParts < (MaxParts.melee * MaxMeleeCount) && Memory.misc.globalCreeps.melee < MaxMeleeCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
+            //     var newName = 'Melee' + Game.time;
+            //     Spawn.spawnCreep(getBody(myRoom, MaxParts.melee, {'melee': true}), newName, {
+            //         memory: {
+            //             'role': 'melee',
+            //             'myTask': 'gather',
+            //         },
+            //     });
+            //     console.log('Spawning: '+ newName);
+            //     canSpawn = false;
+            // }
+            // if(myCreepCount.healerParts < (MaxParts.healer * MaxHealerCount) && Memory.misc.globalCreeps.healer < MaxHealerCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
+            //     var newName = 'Healer' + Game.time;
+            //     Spawn.spawnCreep(getBody(myRoom, MaxParts.healer, {'healer': true}), newName, {
+            //         memory: {
+            //             'role': 'healer',
+            //         },
+            //     });
+            //     console.log('Spawning: '+ newName);
+            //     canSpawn = false;
+            // }
+            // if(myCreepCount.rangedParts < (MaxParts.ranged * MaxRangedCount) && Memory.misc.globalCreeps.ranged < MaxRangedCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+            // {
+            //     var newName = 'Ranged' + Game.time;
+            //     Spawn.spawnCreep(getBody(myRoom, MaxParts.ranged, {'ranged': true}), newName, {
+            //         memory: {
+            //             'role': 'ranged',
+            //         },
+            //     });
+            //     console.log('Spawning: '+ newName);
+            //     canSpawn = false;
+            // }
+            // if(myCreepCount.blockerParts < (MaxParts.blocker * MaxBlockerCount) && Memory.misc.globalCreeps.blocker < MaxBlockerCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+            // {
+            //     var newName = 'Blocker' + Game.time;
+            //     Spawn.spawnCreep(getBody(myRoom, MaxParts.blocker, {'blocker': true}), newName, {
+            //         memory: {
+            //             'role': 'blocker',
+            //         },
+            //     });
+            //     console.log('Spawning: '+ newName);
+            //     canSpawn = false;
+            // }
+            // if(myCreepCount.toughParts < MaxParts.tough * MaxToughCount && Memory.misc.globalCreeps.tough < MaxToughCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+            // {
+            //     var newName = 'Tough' + Game.time;
+            //     Spawn.spawnCreep(getBody(myRoom, MaxParts.tough, {'tough': true}), newName, {
+            //         memory: {
+            //             'role': 'tough',
+            //         },
+            //     });
+            //     console.log('Spawning: '+ newName);
+            //     canSpawn = false;
+            // }
             if (myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                 completeOutstandingRequests(myRoom, Spawn);
             }
@@ -2306,7 +2474,7 @@ const spawner = {
 
 function completeOutstandingRequests(myRoom, Spawn) {
     if (myRoom.memory.requests && myRoom.memory.requests.length) {
-        var newName = myRoom.memory.requests[0].role + Game.time;
+        var newName = myRoom.memory.requests[0].name || myRoom.memory.requests[0].role + Game.time;
         const options = {};
         options[myRoom.memory.requests[0].role] = true;
         const suggestedBody = getBody(myRoom, 50, options);
@@ -2317,13 +2485,17 @@ function completeOutstandingRequests(myRoom, Spawn) {
             if (myRoom.memory.requests[0].squad) {
                 Memory.squads[myRoom.memory.requests[0].squad].creeps.push(newName);
             }
+            const buildno = Memory.buildQueue.indexOf(newName);
+            if (buildno != -1) {
+                Memory.buildQueue.splice(buildno, 1);
+            }
             myRoom.memory.requests.splice(0, 1);
             console.log('Spawning: ' + newName);
         } else {
             console.log(err);
             console.log(suggestedBody);
             console.log(newName);
-            console.log({ memory: myRoom.memory.requests[0] });
+            console.log(JSON.stringify({ memory: myRoom.memory.requests[0] }));
             console.log("brains failed to spawn");
         }
     }
@@ -2422,7 +2594,7 @@ function getBody(myRoom, MaxParts, options = {}) {
     if (options.thief) {
         partArray.push(CARRY);
         totalEnergy -= 1;
-        while (totalEnergy >= 3 && workCount < MaxParts) {
+        while (totalEnergy >= 3 && workCount < 3) {
             partArray.push(WORK);
             partArray.push(MOVE);
             totalEnergy -= 3;
@@ -2431,7 +2603,7 @@ function getBody(myRoom, MaxParts, options = {}) {
         return partArray;
     }
     if (options.harvester) {
-        while (totalEnergy >= 4 && workCount < MaxParts) {
+        while (totalEnergy >= 4 && workCount < 6) {
             partArray.push(WORK);
             partArray.push(MOVE);
             partArray.push(CARRY);
@@ -2441,7 +2613,7 @@ function getBody(myRoom, MaxParts, options = {}) {
         return partArray;
     }
     if (options.worker) {
-        while (totalEnergy >= 4 && workCount < MaxParts) {
+        while (totalEnergy >= 4 && workCount < 10) {
             partArray.push(WORK);
             partArray.push(MOVE);
             partArray.push(CARRY);
@@ -2455,8 +2627,8 @@ function getBody(myRoom, MaxParts, options = {}) {
         }
         return partArray;
     }
-    while (totalEnergy >= 4 && workCount < MaxParts) {
-        if (!options.carryOnly) {
+    while (totalEnergy >= 4 && workCount < 25) {
+        if (!options.carryOnly && !options.mule && !options.thiefmule) {
             partArray.push(WORK);
             partArray.push(CARRY);
             totalEnergy -= 3;
