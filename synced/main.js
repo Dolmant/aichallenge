@@ -2215,17 +2215,9 @@ const spawner = {
         var MaxHarvesterExtractorCount = myRoom.memory.hasContainers && myRoom.memory.hasExtractor ? 0 : 0; //1 : 0;
         // implement levels
         // var MinHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 5;
-        var MaxWorkerCount = 2; //2;
+        var MaxWorkerCount = 1; //2;
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         MaxMuleCount = myRoom.memory.hasExtractor ? 2 : MaxMuleCount;
-        var MaxUpgraderCount = myRoom.memory.hasLinks ? 0 : 0;
-        // var MaxThiefCount = myRoom.memory.marshalForce ? 0 : 17; //17;
-        // var MaxThiefMuleCount = 11; // 11;
-        // var MaxMeleeCount = myRoom.memory.marshalForce ? Memory.attackers.forceSize - 3 : 0;
-        // var MaxRangedCount = myRoom.memory.marshalForce ? 2 : 0;
-        // var MaxHealerCount = myRoom.memory.marshalForce ? 1 : 0;
-        // var MaxBlockerCount = myRoom.memory.marshalDisrupter ? 20 : 0;
-        // var MaxToughCount = myRoom.memory.marshalForce ? 5 : 0;
         var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
         var referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
 
@@ -2529,13 +2521,13 @@ function getBody(myRoom, MaxParts, options = {}) {
         return partArray;
     }
     if (options.worker) {
-        while (totalEnergy >= 4 && workCount < 10) {
+        while (totalEnergy >= 4 && workCount < 16 && workCount < Math.floor(referenceEnergy / 300)) {
             partArray.push(WORK);
             partArray.push(MOVE);
             partArray.push(CARRY);
             totalEnergy -= 4;
             workCount += 1;
-            if (totalEnergy >= 4 && workCount < MaxParts) {
+            if (totalEnergy >= 4 && workCount < 16 && workCount < Math.floor(referenceEnergy / 300)) {
                 partArray.push(WORK);
                 totalEnergy -= 2;
                 workCount += 1;
