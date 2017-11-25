@@ -2215,7 +2215,7 @@ const spawner = {
         var MaxHarvesterExtractorCount = myRoom.memory.hasContainers && myRoom.memory.hasExtractor ? 0 : 0; //1 : 0;
         // implement levels
         // var MinHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 5;
-        var MaxWorkerCount = myRoom.memory.marshalForce ? 1 : 1; //2;
+        var MaxWorkerCount = 2; //2;
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         MaxMuleCount = myRoom.memory.hasExtractor ? 2 : MaxMuleCount;
         var MaxUpgraderCount = myRoom.memory.hasLinks ? 0 : 0;
@@ -2381,97 +2381,6 @@ const spawner = {
                 console.log('Spawning: ' + newName);
                 canSpawn = false;
             }
-            // if (myCreepCount.thiefParts < MaxParts.thief * MaxThiefCount && Memory.misc.globalCreeps.thief < MaxThiefCount && (Memory.misc.globalCreeps.thiefmule > (Memory.misc.globalCreeps.thief / 2)) && myRoom.energyAvailable >= referenceEnergy && canSpawn)
-            // {
-            //     var newName = 'Thief' + Game.time;
-            //     var target = roleThief.generateStealTarget();
-            //     Spawn.spawnCreep(getBody(myRoom, MaxParts.thief, {'thief': true}), newName, {
-            //         memory: {
-            //             'role': 'thief',
-            //             'sourceMap': target,
-            //             'myTask': 'moveToObject',
-            //             'moveToObject': target,
-            //             'moveToObjectRange': 1,
-            //         },
-            //     });
-            //     Memory.misc.globalCreeps.thief += 1;
-            //     Memory.misc.globalCreepsTemp.thief += 1;
-            //     Memory.thieving_spots[target] = newName;
-            //     console.log('Spawning: '+ newName);
-            //     canSpawn = false;
-            // }
-            // if (Memory.misc.globalCreeps.thiefmule < MaxThiefMuleCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
-            //     var newName = 'ThiefMule' + Game.time;
-            //     var targets = roleThiefMule.generateHaulTargets();
-            //     var target_room = targets[0];
-            //     var home = targets[1];
-            //     Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, {'carryOnly': true}), newName, {
-            //         memory: {
-            //             'role': 'thiefmule',
-            //             'myTask': 'goToTarget',
-            //             'goToTarget': target_room,
-            //             'stealTarget': target_room,
-            //             'home': home,
-            //         },
-            //     });
-            //     Memory.misc.globalCreeps.thiefmule += 1;
-            //     console.log('Spawning: '+ newName);
-            //     canSpawn = false;
-            // }
-            // if(myCreepCount.meleeParts < (MaxParts.melee * MaxMeleeCount) && Memory.misc.globalCreeps.melee < MaxMeleeCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
-            //     var newName = 'Melee' + Game.time;
-            //     Spawn.spawnCreep(getBody(myRoom, MaxParts.melee, {'melee': true}), newName, {
-            //         memory: {
-            //             'role': 'melee',
-            //             'myTask': 'gather',
-            //         },
-            //     });
-            //     console.log('Spawning: '+ newName);
-            //     canSpawn = false;
-            // }
-            // if(myCreepCount.healerParts < (MaxParts.healer * MaxHealerCount) && Memory.misc.globalCreeps.healer < MaxHealerCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
-            //     var newName = 'Healer' + Game.time;
-            //     Spawn.spawnCreep(getBody(myRoom, MaxParts.healer, {'healer': true}), newName, {
-            //         memory: {
-            //             'role': 'healer',
-            //         },
-            //     });
-            //     console.log('Spawning: '+ newName);
-            //     canSpawn = false;
-            // }
-            // if(myCreepCount.rangedParts < (MaxParts.ranged * MaxRangedCount) && Memory.misc.globalCreeps.ranged < MaxRangedCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
-            // {
-            //     var newName = 'Ranged' + Game.time;
-            //     Spawn.spawnCreep(getBody(myRoom, MaxParts.ranged, {'ranged': true}), newName, {
-            //         memory: {
-            //             'role': 'ranged',
-            //         },
-            //     });
-            //     console.log('Spawning: '+ newName);
-            //     canSpawn = false;
-            // }
-            // if(myCreepCount.blockerParts < (MaxParts.blocker * MaxBlockerCount) && Memory.misc.globalCreeps.blocker < MaxBlockerCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
-            // {
-            //     var newName = 'Blocker' + Game.time;
-            //     Spawn.spawnCreep(getBody(myRoom, MaxParts.blocker, {'blocker': true}), newName, {
-            //         memory: {
-            //             'role': 'blocker',
-            //         },
-            //     });
-            //     console.log('Spawning: '+ newName);
-            //     canSpawn = false;
-            // }
-            // if(myCreepCount.toughParts < MaxParts.tough * MaxToughCount && Memory.misc.globalCreeps.tough < MaxToughCount  && myRoom.energyAvailable >= referenceEnergy && canSpawn)
-            // {
-            //     var newName = 'Tough' + Game.time;
-            //     Spawn.spawnCreep(getBody(myRoom, MaxParts.tough, {'tough': true}), newName, {
-            //         memory: {
-            //             'role': 'tough',
-            //         },
-            //     });
-            //     console.log('Spawning: '+ newName);
-            //     canSpawn = false;
-            // }
             if (myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                 completeOutstandingRequests(myRoom, Spawn);
             }
