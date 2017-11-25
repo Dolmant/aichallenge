@@ -1069,8 +1069,8 @@ const brains = {
             Memory.squads[squadName].size = size;
             Memory.squads[squadName].type = type;
             Memory.squads[squadName].creeps = [];
-            const stagingRoomname = brains.buildRequest(roomTarget, 1, options, 5600);
-            brains.buildRequest(roomTarget, 1, options, 5600);
+            const stagingRoomname = brains.buildRequest(roomTarget, 1, options1, 5600);
+            brains.buildRequest(roomTarget, 1, options2, 5600);
             Memory.squads[squadName].stagingTarget = {
                 roomName: stagingRoomname,
                 x: 25,
