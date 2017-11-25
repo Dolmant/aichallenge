@@ -2351,17 +2351,6 @@ const spawner = {
                 console.log('Spawning: ' + newName);
                 canSpawn = false;
             }
-            if (myCreepCount.upgraderParts < MaxUpgraderCount && myCreepCount.upgraderCount < MaxUpgraderCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
-                var newName = 'Upgrader' + Game.time;
-                Spawn.spawnCreep(getBody(myRoom, MaxParts.upgrader), newName, {
-                    memory: {
-                        'role': 'upgrader',
-                        'myTask': 'resupply'
-                    }
-                });
-                console.log('Spawning: ' + newName);
-                canSpawn = false;
-            }
             if (myCreepCount.harvesterExtractorParts < MaxParts.harvesterExtractor * MaxHarvesterExtractorCount && myCreepCount.harvesterExtractorCount < MaxHarvesterExtractorCount && myRoom.energyAvailable >= referenceEnergy && canSpawn) {
                 var newName = 'HarvesterExtractor' + Game.time;
                 Spawn.spawnCreep(getBody(myRoom, MaxParts.harvesterExtractor, { 'harvester': true }), newName, {
