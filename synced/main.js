@@ -2627,7 +2627,7 @@ function getBody(myRoom, MaxParts, options = {}) {
         }
         return partArray;
     }
-    while (totalEnergy >= 4 && workCount < 25) {
+    while (totalEnergy >= 4 && workCount < 12) {
         if (!options.carryOnly && !options.mule && !options.thiefmule) {
             partArray.push(WORK);
             partArray.push(CARRY);
