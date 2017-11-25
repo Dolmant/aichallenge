@@ -124,6 +124,7 @@ const brains = {
                 x: 25,
                 y: 25,
             };
+            return
         }
         let requiredSize = size;
         Memory.retiredSquads.forEach((squad, index) => {

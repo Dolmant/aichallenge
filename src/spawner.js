@@ -248,7 +248,7 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
         return partArray;
     }
     if (options.farm) {
-        for (var i = 0; (i < Math.floor((referenceEnergy - 1750)/50) && i < 50); i += 1) {
+        for (var i = 0; (i < Math.floor((referenceEnergy - 1750)/50) && i < 25); i += 1) {
             partArray.push(MOVE);
         }
         partArray.push(TOUGH);
@@ -287,7 +287,7 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
         return partArray;
     }
     if (options.heal) {
-        for (var i = 0; (i < Math.floor((referenceEnergy - 3750)/50) && i < 50); i += 1) {
+        for (var i = 0; (i < Math.floor((referenceEnergy - 3750)/50) && i < 35); i += 1) {
             partArray.push(MOVE);
         }
         partArray.push(HEAL);

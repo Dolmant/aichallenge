@@ -1076,6 +1076,7 @@ const brains = {
                 x: 25,
                 y: 25
             };
+            return;
         }
         let requiredSize = size;
         Memory.retiredSquads.forEach((squad, index) => {
@@ -2384,7 +2385,7 @@ function getBody(myRoom, MaxParts, options = {}) {
         return partArray;
     }
     if (options.farm) {
-        for (var i = 0; i < Math.floor((referenceEnergy - 1750) / 50) && i < 50; i += 1) {
+        for (var i = 0; i < Math.floor((referenceEnergy - 1750) / 50) && i < 25; i += 1) {
             partArray.push(MOVE);
         }
         partArray.push(TOUGH);
@@ -2423,7 +2424,7 @@ function getBody(myRoom, MaxParts, options = {}) {
         return partArray;
     }
     if (options.heal) {
-        for (var i = 0; i < Math.floor((referenceEnergy - 3750) / 50) && i < 50; i += 1) {
+        for (var i = 0; i < Math.floor((referenceEnergy - 3750) / 50) && i < 35; i += 1) {
             partArray.push(MOVE);
         }
         partArray.push(HEAL);
