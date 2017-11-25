@@ -662,6 +662,7 @@ function deposit_resource(creep, isMule) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__cron__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__cron___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__cron__);
 
 
 const roleThief = {
@@ -693,7 +694,7 @@ const roleThief = {
         // TODO fix !!!!
         let target;
         if (Memory.thieving_spots) {
-            __WEBPACK_IMPORTED_MODULE_0__cron__["a" /* default */].run10();
+            __WEBPACK_IMPORTED_MODULE_0__cron__["default"].run10();
             const targets = Object.keys(Memory.thieving_spots);
             for (var i = 0; i < targets.length; i += 1) {
                 if (Memory.thieving_spots[targets[i]] == 0) {
@@ -713,232 +714,10 @@ const roleThief = {
 
 /***/ }),
 /* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, __webpack_exports__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__brains__ = __webpack_require__(6);
-
-
-const cronJobs = {
-    run() {
-        if (!Memory.cronCount) {
-            Memory.cronCount = 0;
-        }
-        Memory.cronCount += 1;
-        if (Memory.thieving_spots) {
-            Memory.register_thieves = false;
-            if (Memory.cronCount % 10 === 0) {
-                cronJobs.run10();
-            }
-            if (Memory.cronCount > 2000) {
-                Memory.cronCount -= 2000;
-                cronJobs.run2000();
-            }
-        } else {
-            cronJobs.init();
-        }
-
-        if (Memory.squad_requests && Memory.squad_requests.length > 0) {
-            // requires
-            /*
-            name
-            roomName
-            size
-            type
-            */
-            __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].createSquad(Memory.squad_requests[0].squad, Memory.squad_requests[0].roomTarget, Memory.squad_requests[0].size, Memory.squad_requests[0].type);
-            Memory.squad_requests.splice(0, 1);
-        }
-    },
-    run10() {
-        Object.keys(Memory.thieving_spots).forEach(key => {
-            if (Memory.thieving_spots[key] && !Game.creeps[Memory.thieving_spots[key]] && !Memory.buildQueue.includes['Thief' + key]) {
-                Memory.thieving_spots[key] = 0;
-            }
-            if (Memory.thieving_spots[key] == 0) {
-                var newName = 'Thief' + key;
-                var target_room = Memory.roomMap[key];
-                Memory.buildQueue.push(newName);
-                __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].buildRequest(target_room, 1, {
-                    'role': 'thief',
-                    'sourceMap': key,
-                    'myTask': 'moveToObject',
-                    'moveToObject': key,
-                    'moveToObjectRange': 1,
-                    'name': newName
-                });
-                Memory.thieving_spots[key] = newName;
-                console.log('Build req: ' + newName);
-            }
-        });
-        Object.keys(Memory.thieving_mules).forEach(key => {
-            if (Memory.thieving_mules[key] && !Game.creeps[Memory.thieving_mules[key]] && !Memory.buildQueue.includes['ThiefMule' + key]) {
-                Memory.thieving_mules[key] = 0;
-            }
-            if (Memory.thieving_mules[key] == 0) {
-                var newName = 'ThiefMule' + key;
-                var target_room = Memory.roomMap[key];
-                var home = Memory.homeMap[Memory.roomMap[key]];
-                Memory.buildQueue.push(newName);
-                __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].buildRequest(target_room, 1, {
-                    'role': 'thiefmule',
-                    'myTask': 'goToTarget',
-                    'goToTarget': target_room,
-                    'stealTarget': target_room,
-                    'home': home,
-                    'name': newName
-                });
-                Memory.thieving_mules[key] = newName;
-                console.log('Build req ' + newName);
-            }
-        });
-
-        const myOwnedRooms = ['W43N53', 'W45N53', 'W41N51', 'W46N52'];
-        const myRooms = myOwnedRooms.concat(Memory.possibleTargets);
-
-        myRooms.forEach(roomName => {
-            let myRoom = Game.rooms[roomName];
-            if (myRoom) {
-                var enemyCreeps = myRoom.find(FIND_HOSTILE_CREEPS);
-                myRoom.memory.defcon = enemyCreeps.length;
-                if (enemyCreeps.length > 0 && myOwnedRooms.includes(myRoom)) {
-                    myRoom.memory.defcon -= 1;
-                }
-                if (Memory.squads[roomName + 'defcon']) {
-                    if (Memory.squads[roomName + 'defcon'].size != myRoom.memory.defcon) {
-                        // brains.updateSquadSize(roomName + 'defcon', myRoom.memory.defcon);
-                    }
-                } else if (myRoom.memory.defcon > 0) {
-                    // brains.createSquad(roomName + 'defcon', roomName, myRoom.memory.defcon, 'defcon');
-                }
-            }
-        });
-    },
-    run2000() {
-        Object.keys(Memory.pathCache).forEach(key => {
-            Object.keys(Memory.pathCache[key]).forEach(subkey => {
-                if (Memory.pathCache[key][subkey].called < 2) {
-                    delete Memory.pathCache[key][subkey];
-                } else if (Memory.pathCache[key][subkey].called) {
-                    Memory.pathCache[key][subkey].called = 0;
-                }
-            });
-        });
-        Object.keys(Memory.pathCache).forEach(key => {
-            if (Object.keys(Memory.pathCache[key]).length < 1) {
-                delete Memory.pathCache[key];
-            }
-        });
-    },
-    init() {
-        Memory.thieving_spots = {
-            // location: W46N53
-            '59bbc4262052a716c3ce7711': 0,
-            '59bbc4262052a716c3ce7712': 0,
-            // location: W45N52
-            '59bbc4282052a716c3ce7771': 0,
-            '59bbc4282052a716c3ce7772': 0,
-            // location: W45N51
-            '59bbc4282052a716c3ce7776': 0,
-            '59bbc4282052a716c3ce7777': 0,
-            // location: W44N53
-            '59bbc42a2052a716c3ce77ce': 0,
-            // location: W44N52
-            '59bbc42b2052a716c3ce77d0': 0,
-            // location: W44N51
-            '59bbc42b2052a716c3ce77d3': 0,
-            // location: W43N52
-            '59bbc42d2052a716c3ce7822': 0,
-            // location: W43N51
-            '59bbc42d2052a716c3ce7824': 0,
-            '59bbc42d2052a716c3ce7825': 0,
-            // location: W42N51
-            '59bbc4302052a716c3ce7862': 0,
-            // location: W46N51
-            '59bbc4262052a716c3ce7717': 0,
-            '59bbc4262052a716c3ce7718': 0,
-            // location: W47N52
-            '59bbc4242052a716c3ce76bf': 0,
-            '59bbc4242052a716c3ce76c1': 0
-        };
-        Memory.thieving_mules = {
-            // location: W46N53
-            '59bbc4262052a716c3ce7711': 0,
-            '59bbc4262052a716c3ce7712': 0,
-            // location: W45N52
-            '59bbc4282052a716c3ce7771': 0,
-            '59bbc4282052a716c3ce7772': 0,
-            // location: W45N51
-            '59bbc4282052a716c3ce7776': 0,
-            '59bbc4282052a716c3ce7777': 0,
-            // location: W44N53
-            '59bbc42a2052a716c3ce77ce': 0,
-            // location: W44N52
-            '59bbc42b2052a716c3ce77d0': 0,
-            // location: W44N51
-            '59bbc42b2052a716c3ce77d3': 0,
-            // location: W43N52
-            '59bbc42d2052a716c3ce7822': 0,
-            // location: W43N51
-            '59bbc42d2052a716c3ce7824': 0,
-            '59bbc42d2052a716c3ce7825': 0,
-            // location: W42N51
-            '59bbc4302052a716c3ce7862': 0,
-            // location: W46N51
-            '59bbc4262052a716c3ce7717': 0,
-            '59bbc4262052a716c3ce7718': 0,
-            // location: W47N52
-            '59bbc4242052a716c3ce76bf': 0,
-            '59bbc4242052a716c3ce76c1': 0
-        };
-        Memory.register_thieves = true;
-        Memory.roomMap = {
-            // location: W46N53
-            '59bbc4262052a716c3ce7711': 'W46N53',
-            '59bbc4262052a716c3ce7712': 'W46N53',
-            // location: W45N52
-            '59bbc4282052a716c3ce7771': 'W45N52',
-            '59bbc4282052a716c3ce7772': 'W45N52',
-            // location: W45N51
-            '59bbc4282052a716c3ce7776': 'W45N51',
-            '59bbc4282052a716c3ce7777': 'W45N51',
-            // location: W44N53
-            '59bbc42a2052a716c3ce77ce': 'W44N53',
-            // location: W44N52
-            '59bbc42b2052a716c3ce77d0': 'W44N52',
-            // location: W44N51
-            '59bbc42b2052a716c3ce77d3': 'W44N51',
-            // location: W43N52
-            '59bbc42d2052a716c3ce7822': 'W43N52',
-            // location: W43N51
-            '59bbc42d2052a716c3ce7824': 'W43N51',
-            '59bbc42d2052a716c3ce7825': 'W43N51',
-            // location: W42N51
-            '59bbc4302052a716c3ce7862': 'W42N51',
-            // location: W46N51
-            '59bbc4262052a716c3ce7717': 'W46N51',
-            '59bbc4262052a716c3ce7718': 'W46N51',
-            // location: W47N52
-            '59bbc4242052a716c3ce76bf': 'W47N52',
-            '59bbc4242052a716c3ce76c1': 'W47N52'
-        };
-        Memory.homeMap = {
-            'W42N51': 'W41N51',
-            'W43N51': 'W41N51',
-            'W43N52': 'W43N53',
-            'W44N51': 'W41N51',
-            'W44N52': 'W43N53',
-            'W44N53': 'W43N53',
-            'W45N51': 'W46N52',
-            'W45N52': 'W45N53',
-            'W46N53': 'W45N53',
-            'W46N51': 'W46N52',
-            'W47N52': 'W46N52'
-        };
-    }
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (cronJobs);
+throw new Error("Module build failed: SyntaxError: E:/DOS/aichallenge/src/cron.js: Unexpected token, expected ) (36:133)\n\n\u001b[0m \u001b[90m 34 | \u001b[39m    run10() {\n \u001b[90m 35 | \u001b[39m        \u001b[33mObject\u001b[39m\u001b[33m.\u001b[39mkeys(\u001b[33mMemory\u001b[39m\u001b[33m.\u001b[39mthieving_spots)\u001b[33m.\u001b[39mforEach(key \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 36 | \u001b[39m            \u001b[36mif\u001b[39m (\u001b[33mMemory\u001b[39m\u001b[33m.\u001b[39mthieving_spots[key] \u001b[33m&&\u001b[39m \u001b[33m!\u001b[39m\u001b[33mGame\u001b[39m\u001b[33m.\u001b[39mcreeps[\u001b[33mMemory\u001b[39m\u001b[33m.\u001b[39mthieving_spots[key]] \u001b[33m&&\u001b[39m \u001b[33m!\u001b[39m\u001b[33mMemory\u001b[39m\u001b[33m.\u001b[39mbuildQueue\u001b[33m.\u001b[39mincludes(\u001b[32m'Thief'\u001b[39m \u001b[33m+\u001b[39m key) {\n \u001b[90m    | \u001b[39m                                                                                                                                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 37 | \u001b[39m                \u001b[33mMemory\u001b[39m\u001b[33m.\u001b[39mthieving_spots[key] \u001b[33m=\u001b[39m \u001b[35m0\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 38 | \u001b[39m            }\n \u001b[90m 39 | \u001b[39m            \u001b[36mif\u001b[39m (\u001b[33mMemory\u001b[39m\u001b[33m.\u001b[39mthieving_spots[key] \u001b[33m==\u001b[39m \u001b[35m0\u001b[39m) {\u001b[0m\n");
 
 /***/ }),
 /* 6 */
@@ -1459,6 +1238,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["loop"] = loop;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__room__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cron__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cron___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__cron__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__brains__ = __webpack_require__(6);
 
 
@@ -1557,7 +1337,7 @@ function loop() {
     Memory.stats['cpu.roomInit_temp'] = 0;
 
     Memory.stats['cpu.cron_temp'] = Game.cpu.getUsed();
-    __WEBPACK_IMPORTED_MODULE_1__cron__["a" /* default */].run();
+    __WEBPACK_IMPORTED_MODULE_1__cron__["default"].run();
     Memory.stats['cpu.cron'] = Game.cpu.getUsed() - Memory.stats['cpu.cron_temp'];
     Memory.misc.globalCreepsTemp = {
         'healer': 0,

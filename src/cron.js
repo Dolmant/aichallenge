@@ -33,7 +33,7 @@ const cronJobs = {
     },
     run10() {
         Object.keys(Memory.thieving_spots).forEach(key => {
-            if (Memory.thieving_spots[key] && !Game.creeps[Memory.thieving_spots[key]] && !Memory.buildQueue.includes['Thief' + key]) {
+            if (Memory.thieving_spots[key] && !Game.creeps[Memory.thieving_spots[key]] && !Memory.buildQueue.includes('Thief' + key) {
                 Memory.thieving_spots[key] = 0;
             }
             if (Memory.thieving_spots[key] == 0) {
@@ -53,7 +53,7 @@ const cronJobs = {
             }
         });
         Object.keys(Memory.thieving_mules).forEach(key => {
-            if (Memory.thieving_mules[key] && !Game.creeps[Memory.thieving_mules[key]] && !Memory.buildQueue.includes['ThiefMule' + key]) {
+            if (Memory.thieving_mules[key] && !Game.creeps[Memory.thieving_mules[key]] && !Memory.buildQueue.includes('ThiefMule' + key) {
                 Memory.thieving_mules[key] = 0;
             }
             if (Memory.thieving_mules[key] == 0) {
