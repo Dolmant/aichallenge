@@ -1186,7 +1186,7 @@ const roleOffensive = {
         const mySquad = creep.memory.squad;
         let allSpawned = 0;
         Memory.squads[mySquad].creeps.forEach(squadCreep => {
-            if (!Game.getObjectById(squadCreep).spawning) {
+            if (Game.getObjectById(squadCreep) && !Game.getObjectById(squadCreep).spawning) {
                 allSpawned += 1;
             }
         });
