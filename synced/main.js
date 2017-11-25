@@ -1015,7 +1015,7 @@ const brains = {
             let x = Number(spawn.room.name.slice(1, 3));
             let y = Number(spawn.room.name.slice(4, 6));
             const distance = Math.abs(x - origx) + Math.abs(y - origy);
-            if (currentDistance > distance && spawn.room.energyCapacityAvailable > 1500) {
+            if (currentDistance > distance && spawn.room.energyCapacityAvailable >= 1300) {
                 currentDistance = distance;
                 target = spawn;
             }
