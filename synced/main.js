@@ -1349,7 +1349,7 @@ const actBuild = {
                 var err = creep.build(target);
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.moveToCacheTarget(target.pos);
-                } else if (err == ERR_NOT_ENOUGH_RESOURCES) {
+                } else if (err == ERR_NOT_ENOUGH_RESOURCES || err == ERR_RCL_NOT_ENOUGH || err == ERR_INVALID_TARGET) {
                     // expect state change to resupply
                     return true;
                 }
@@ -2185,7 +2185,7 @@ const spawner = {
         var MaxHarvesterExtractorCount = myRoom.memory.hasContainers && myRoom.memory.hasExtractor ? 0 : 0; //1 : 0;
         // implement levels
         // var MinHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 5;
-        var MaxWorkerCount = 1; //2;
+        var MaxWorkerCount = 2;
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         MaxMuleCount = myRoom.memory.hasExtractor ? 2 : MaxMuleCount;
         var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
@@ -2676,7 +2676,9 @@ const actResupply = {
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.moveToCacheTarget(target.pos);
                 } else if (err == OK) {
-                    delete creep.memory.fetchTarget;
+                    if (target.structureType != STRUCTURE_LINK) {
+                        delete creep.memory.fetchTarget;
+                    }
                 } else {
                     getTargets(creep);
                 }

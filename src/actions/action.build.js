@@ -21,7 +21,7 @@ const actBuild = {
                 var err = creep.build(target);
                 if(err == ERR_NOT_IN_RANGE) {
                     creep.moveToCacheTarget(target.pos);
-                } else if (err == ERR_NOT_ENOUGH_RESOURCES) {
+                } else if (err == ERR_NOT_ENOUGH_RESOURCES || err == ERR_RCL_NOT_ENOUGH || err == ERR_INVALID_TARGET) {
                     // expect state change to resupply
                     return true;
                 }

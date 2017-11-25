@@ -61,7 +61,9 @@ const actResupply = {
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.moveToCacheTarget(target.pos);
                 } else if (err == OK) {
-                    delete creep.memory.fetchTarget;
+                    if (target.structureType != STRUCTURE_LINK) {
+                        delete creep.memory.fetchTarget;
+                    }
                 } else {
                     getTargets(creep);
                 }

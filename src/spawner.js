@@ -22,7 +22,7 @@ const spawner = {
         var MaxHarvesterExtractorCount = (myRoom.memory.hasContainers && myRoom.memory.hasExtractor) ? 0 : 0 ; //1 : 0;
         // implement levels
         // var MinHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 5;
-        var MaxWorkerCount = 1; //2;
+        var MaxWorkerCount = 2;
         var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         MaxMuleCount = myRoom.memory.hasExtractor ? 2 : MaxMuleCount;
         var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
