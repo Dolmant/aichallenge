@@ -100,46 +100,6 @@ const RoomController = {
                     myCreepCount.claimParts += creep.body.filter(part => part.type == CLAIM).length;
                     Memory.misc.globalCreepsTemp.claimer += 1;
                     break;
-                case 'thief':
-                    myCreepCount.thiefParts += creep_size;
-                    Memory.misc.globalCreepsTemp.thief += 1;
-                    if (Memory.register_thieves && (creep.memory.sourceMap || creep.memory.tempSourceMap)) {
-                        Memory.thieving_spots[creep.memory.sourceMap || creep.memory.tempSourceMap] = creep.name;
-                    }
-                    break;
-                case 'thiefmule':
-                    Memory.misc.globalCreepsTemp.thiefmule += 1;
-                    break;
-                case 'melee':
-                    myCreepCount.meleeParts += creep.body.filter(part => part.type == ATTACK).length;
-                    if (creep.hits == creep.hitsMax) {
-                        Memory.misc.globalCreepsTemp.melee += 1;
-                    }
-                    break;
-                case 'ranged':
-                    myCreepCount.rangedParts += creep.body.filter(part => part.type == RANGED_ATTACK).length;
-                    if (creep.hits == creep.hitsMax) {
-                        Memory.misc.globalCreepsTemp.ranged += 1;
-                    }
-                    break;
-                case 'healer':
-                    myCreepCount.healerParts += creep.body.filter(part => part.type == HEAL).length;
-                    if (creep.hits == creep.hitsMax) {
-                        Memory.misc.globalCreepsTemp.healer += 1;
-                    }
-                    break;
-                case 'blocker':
-                    myCreepCount.blockerParts += creep.body.filter(part => part.type == TOUGH).length;
-                    if (creep.hits == creep.hitsMax) {
-                        Memory.misc.globalCreepsTemp.blocker += 1;
-                    }
-                    break;
-                case 'tough':
-                    myCreepCount.toughParts += creep.body.filter(part => part.type == TOUGH).length;
-                    if (creep.hits == creep.hitsMax) {
-                        Memory.misc.globalCreepsTemp.tough += 1;
-                    }
-                    break;
             }
         });
 

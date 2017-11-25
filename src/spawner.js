@@ -44,141 +44,117 @@ const spawner = {
             }
         });
 
-        // mySpawns.forEach(Spawn => {
-        const Spawn = mySpawns && mySpawns[0];
-        if (Spawn && Spawn.spawning) {
-            switch(Game.creeps[Spawn.spawning.name].memory.role) {
-                case 'claimer':
-                    Memory.misc.globalCreepsTemp.claimer += 1;
-                    break;
-                case 'thief':
-                    Memory.misc.globalCreepsTemp.thief += 1;
-                    if (Memory.register_thieves && (creep.memory.sourceMap || creep.memory.tempSourceMap)) {
-                        Memory.thieving_spots[creep.memory.sourceMap || creep.memory.tempSourceMap] = creep.name;
-                    }
-                    break;
-                case 'thiefmule':
-                    Memory.misc.globalCreepsTemp.thiefmule += 1;
-                    break;
-                case 'melee':
-                    Memory.misc.globalCreepsTemp.melee += 1;
-                    break;
-                case 'ranged':
-                    Memory.misc.globalCreepsTemp.ranged += 1;
-                    break;
-                case 'healer':
-                    Memory.misc.globalCreepsTemp.healer += 1;
-                    break;
-                case 'blocker':
-                    Memory.misc.globalCreepsTemp.blocker += 1;
-                    break;
-                case 'tough':
-                    Memory.misc.globalCreepsTemp.tough += 1;
-                    break;
-            }
-        }
-        if (Spawn && !Spawn.spawning && canSpawn) {
-            if (Spawn.memory.renewTarget) {
-                canSpawn = false;
-                var target = Game.getObjectById(Spawn.memory.renewTarget);
-                if (target) {
-                    var err = Spawn.renewCreep(target);
-                    if (err == ERR_FULL || err == ERR_INVALID_TARGET) {
-                        delete Spawn.memory.renewTarget;
-                    } else if (err == ERR_NOT_IN_RANGE) {
-                        // Do something else while we wait for him to get close
-                        canSpawn = true;
-                        delete Spawn.memory.renewTarget;
-                    }
-                } else {
-                    delete Spawn.memory.renewTarget;
+        mySpawns.forEach(Spawn => {
+            if (Spawn && Spawn.spawning) {
+                switch(Game.creeps[Spawn.spawning.name].memory.role) {
+                    case 'claimer':
+                        Memory.misc.globalCreepsTemp.claimer += 1;
+                        break;
                 }
             }
-            if(myCreepCount.harvesterParts < MaxParts.harvester * MaxHarvesterCount && myCreepCount.harvesterCount < MaxHarvesterCount && (myRoom.energyAvailable >= referenceEnergy || myRoom.energyAvailable >= 1200)  && canSpawn)
-            {
-                var newName = 'Harvester' + Game.time;
-                Spawn.spawnCreep(getBody(myRoom, MaxParts.harvester, {'harvester': true}), newName, {
-                    memory: {
-                        'role': 'harvester',
-                        'myTask': 'harvest',
-                        'sourceMap': sourceMap,
-                    },
-                });
-                console.log('Spawning: '+ newName);
-                canSpawn = false;
+            if (Spawn && !Spawn.spawning && canSpawn) {
+                if (Spawn.memory.renewTarget) {
+                    canSpawn = false;
+                    var target = Game.getObjectById(Spawn.memory.renewTarget);
+                    if (target) {
+                        var err = Spawn.renewCreep(target);
+                        if (err == ERR_FULL || err == ERR_INVALID_TARGET) {
+                            delete Spawn.memory.renewTarget;
+                        } else if (err == ERR_NOT_IN_RANGE) {
+                            // Do something else while we wait for him to get close
+                            canSpawn = true;
+                            delete Spawn.memory.renewTarget;
+                        }
+                    } else {
+                        delete Spawn.memory.renewTarget;
+                    }
+                }
+                if(myCreepCount.harvesterParts < MaxParts.harvester * MaxHarvesterCount && myCreepCount.harvesterCount < MaxHarvesterCount && (myRoom.energyAvailable >= referenceEnergy || myRoom.energyAvailable >= 1200)  && canSpawn)
+                {
+                    var newName = 'Harvester' + Game.time;
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.harvester, {'harvester': true}), newName, {
+                        memory: {
+                            'role': 'harvester',
+                            'myTask': 'harvest',
+                            'sourceMap': sourceMap,
+                        },
+                    });
+                    console.log('Spawning: '+ newName);
+                    canSpawn = false;
+                }
+                if(myCreepCount.harvesterCount < 1 && myCreepCount.harvesterLowCount < 1 && canSpawn && myRoom.energyAvailable >= 200)//just in case, if there are no harvesters spawn a harvester
+                {
+                    var newName = 'HarvesterLow' + Game.time;
+                    Spawn.spawnCreep(myRoom, Math.floor(myRoom.energyAvailable / 200), {'harvester': true}, newName, {
+                        memory: {
+                            'role': 'harvesterLow',
+                            'myTask': 'harvest',
+                            'tempSourceMap': sourceMap,
+                        },
+                    });
+                    console.log('Spawning: '+ newName);
+                    canSpawn = false;
+                }
+                // to kickstart a claimer, set room.memory.spawnClaimer and the target ID as room.memory.claimTarget
+                if(myRoom.memory.spawnClaimer > 0 && myRoom.energyAvailable >= 700 && canSpawn)
+                {
+                    var newName = 'Claimer' + Game.time;
+                    Spawn.spawnCreep([CLAIM, MOVE, MOVE], newName, {
+                        memory: {
+                            'role': 'claimer',
+                            'myTask': null, //generate a target from the claimer role
+                        },
+                    });
+                    console.log('Spawning: '+ newName);
+                    myRoom.memory.spawnClaimer -= 1;
+                    canSpawn = false;
+                }
+                if(myCreepCount.workerParts < MaxParts.worker * MaxWorkerCount && myCreepCount.workerCount < MaxWorkerCount && myCreepCount.muleCount >= MaxMuleCount/2 && (myRoom.energyAvailable >= referenceEnergy || myRoom.energyAvailable >= 2000) && canSpawn)
+                {
+                    var newName = 'Worker' + Game.time;
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.worker, {'worker': true}), newName, {
+                        memory: {
+                            'role': 'worker',
+                            'myTask': 'resupply',
+                        },
+                    });
+                    console.log('Spawning: '+ newName);
+                    canSpawn = false;
+                }
+                if (convert && myCreepCount.harvesterCount < 2 && canSpawn && myRoom.energyAvailable <= referenceEnergy * 0.75) {
+                    convert.memory.role = 'harvester';
+                    convert.memory.sourceMap = sourceMap;
+                    canSpawn = false;
+                }
+                if (myCreepCount.muleParts < MaxParts.mule * MaxMuleCount && myCreepCount.muleCount < MaxMuleCount && (myRoom.energyAvailable >= referenceEnergy || myRoom.energyAvailable >= 1500)  && canSpawn)
+                {
+                    var newName = 'Mule' + Game.time;
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, {'carryOnly': true}), newName, {
+                        memory: {
+                            'role': 'mule',
+                            'myTask': 'fetch',
+                        },
+                    });
+                    console.log('Spawning: '+ newName);
+                    canSpawn = false;
+                }
+                if (myCreepCount.harvesterExtractorParts < MaxParts.harvesterExtractor * MaxHarvesterExtractorCount && myCreepCount.harvesterExtractorCount < MaxHarvesterExtractorCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
+                {
+                    var newName = 'HarvesterExtractor' + Game.time;
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.harvesterExtractor, {'harvester': true}), newName, {
+                        memory: {
+                            'role': 'harvesterExtractor',
+                            'myTask': 'harvestMinerals',
+                        },
+                    });
+                    console.log('Spawning: '+ newName);
+                    canSpawn = false;
+                }
+                if(myRoom.energyAvailable >= referenceEnergy && canSpawn) {
+                    completeOutstandingRequests(myRoom, Spawn);
+                }
             }
-            if(myCreepCount.harvesterCount < 1 && myCreepCount.harvesterLowCount < 1 && canSpawn && myRoom.energyAvailable >= 200)//just in case, if there are no harvesters spawn a harvester
-            {
-                var newName = 'HarvesterLow' + Game.time;
-                Spawn.spawnCreep(myRoom, Math.floor(myRoom.energyAvailable / 200), {'harvester': true}, newName, {
-                    memory: {
-                        'role': 'harvesterLow',
-                        'myTask': 'harvest',
-                        'tempSourceMap': sourceMap,
-                    },
-                });
-                console.log('Spawning: '+ newName);
-                canSpawn = false;
-            }
-            // to kickstart a claimer, set room.memory.spawnClaimer and the target ID as room.memory.claimTarget
-            if(myRoom.memory.spawnClaimer > 0 && myRoom.energyAvailable >= 700 && canSpawn)
-            {
-                var newName = 'Claimer' + Game.time;
-                Spawn.spawnCreep([CLAIM, MOVE, MOVE], newName, {
-                    memory: {
-                        'role': 'claimer',
-                        'myTask': null, //generate a target from the claimer role
-                    },
-                });
-                console.log('Spawning: '+ newName);
-                myRoom.memory.spawnClaimer -= 1;
-                canSpawn = false;
-            }
-            if(myCreepCount.workerParts < MaxParts.worker * MaxWorkerCount && myCreepCount.workerCount < MaxWorkerCount && myCreepCount.muleCount >= MaxMuleCount/2 && (myRoom.energyAvailable >= referenceEnergy || myRoom.energyAvailable >= 2000) && canSpawn)
-            {
-                var newName = 'Worker' + Game.time;
-                Spawn.spawnCreep(getBody(myRoom, MaxParts.worker, {'worker': true}), newName, {
-                    memory: {
-                        'role': 'worker',
-                        'myTask': 'resupply',
-                    },
-                });
-                console.log('Spawning: '+ newName);
-                canSpawn = false;
-            }
-            if (convert && myCreepCount.harvesterCount < 2 && canSpawn && myRoom.energyAvailable <= referenceEnergy * 0.75) {
-                convert.memory.role = 'harvester';
-                convert.memory.sourceMap = sourceMap;
-                canSpawn = false;
-            }
-            if (myCreepCount.muleParts < MaxParts.mule * MaxMuleCount && myCreepCount.muleCount < MaxMuleCount && (myRoom.energyAvailable >= referenceEnergy || myRoom.energyAvailable >= 1500)  && canSpawn)
-            {
-                var newName = 'Mule' + Game.time;
-                Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, {'carryOnly': true}), newName, {
-                    memory: {
-                        'role': 'mule',
-                        'myTask': 'fetch',
-                    },
-                });
-                console.log('Spawning: '+ newName);
-                canSpawn = false;
-            }
-            if (myCreepCount.harvesterExtractorParts < MaxParts.harvesterExtractor * MaxHarvesterExtractorCount && myCreepCount.harvesterExtractorCount < MaxHarvesterExtractorCount && myRoom.energyAvailable >= referenceEnergy && canSpawn)
-            {
-                var newName = 'HarvesterExtractor' + Game.time;
-                Spawn.spawnCreep(getBody(myRoom, MaxParts.harvesterExtractor, {'harvester': true}), newName, {
-                    memory: {
-                        'role': 'harvesterExtractor',
-                        'myTask': 'harvestMinerals',
-                    },
-                });
-                console.log('Spawning: '+ newName);
-                canSpawn = false;
-            }
-            if(myRoom.energyAvailable >= referenceEnergy && canSpawn) {
-                completeOutstandingRequests(myRoom, Spawn);
-            }
-        }
+        });
     },
 }
 
@@ -186,7 +162,7 @@ function completeOutstandingRequests(myRoom, Spawn) {
     if (myRoom.memory.requests && myRoom.memory.requests.length) {
         var newName = myRoom.memory.requests[0].name || myRoom.memory.requests[0].role + Game.time;
         const options = {};
-        options[myRoom.memory.requests[0].role] = true;
+        options[myRoom.memory.requests[0].secondaryRole || myRoom.memory.requests[0].role] = true;
         const suggestedBody = getBody(myRoom, 50, options);
         const err = Spawn.spawnCreep(suggestedBody, newName, {
             memory: myRoom.memory.requests[0],
@@ -271,6 +247,37 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
         partArray.push(ATTACK);
         return partArray;
     }
+    if (options.farm) {
+        for (var i = 0; (i < Math.floor((referenceEnergy - 1750)/50) && i < 50); i += 1) {
+            partArray.push(MOVE);
+        }
+        partArray.push(TOUGH);
+        partArray.push(TOUGH);
+        partArray.push(TOUGH);
+        partArray.push(TOUGH);
+        partArray.push(TOUGH);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        return partArray;
+    }
     if (options.melee) {
         for (var i = 0; (totalEnergy >= 3 && i < MaxParts); i += 1) {
             partArray.push(ATTACK);
@@ -279,12 +286,25 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
         }
         return partArray;
     }
-    if (options.healer) {
-        for (var i = 0; (totalEnergy >= 6 && i < MaxParts); i += 1) {
-            partArray.push(HEAL);
+    if (options.heal) {
+        for (var i = 0; (i < Math.floor((referenceEnergy - 3750)/50) && i < 50); i += 1) {
             partArray.push(MOVE);
-            totalEnergy -= 6;
         }
+        partArray.push(HEAL);
+        partArray.push(HEAL);
+        partArray.push(HEAL);
+        partArray.push(HEAL);
+        partArray.push(HEAL);
+        partArray.push(HEAL);
+        partArray.push(HEAL);
+        partArray.push(HEAL);
+        partArray.push(HEAL);
+        partArray.push(HEAL);
+        partArray.push(HEAL);
+        partArray.push(HEAL);
+        partArray.push(HEAL);
+        partArray.push(HEAL);
+        partArray.push(HEAL);
         return partArray;
     }
     if (options.ranged) {
