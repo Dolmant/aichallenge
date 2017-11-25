@@ -806,10 +806,10 @@ const cronJobs = {
                 }
                 if (Memory.squads[roomName + 'defcon']) {
                     if (Memory.squads[roomName + 'defcon'].size != myRoom.memory.defcon) {
-                        // brains.updateSquadSize(roomName + 'defcon', myRoom.memory.defcon);
+                        __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].updateSquadSize(roomName + 'defcon', myRoom.memory.defcon);
                     }
                 } else if (myRoom.memory.defcon > 0) {
-                    // brains.createSquad(roomName + 'defcon', roomName, myRoom.memory.defcon, 'defcon');
+                    __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].createSquad(roomName + 'defcon', roomName, myRoom.memory.defcon, 'defcon');
                 }
             }
         });
@@ -1045,6 +1045,13 @@ const brains = {
         //check for any reusable dead squads
         // if so, repurpose and resize them
         // else fire off builds
+        if (Memory.squads[squadName]) {
+            if (Memory.squads[squadName].size < size) {
+                brains.updateSquadSize(squadName, size - Memory.squads[squadName].size);
+            }
+            Memory.squads[squadName].size = size;
+            return;
+        }
         if (type == 'farm') {
             const options1 = {
                 'role': type,

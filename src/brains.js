@@ -93,6 +93,13 @@ const brains = {
         //check for any reusable dead squads
         // if so, repurpose and resize them
         // else fire off builds
+        if (Memory.squads[squadName]) {
+            if (Memory.squads[squadName].size < size) {
+                brains.updateSquadSize(squadName, size - Memory.squads[squadName].size);
+            }
+            Memory.squads[squadName].size = size;
+            return
+        }
         if (type == 'farm') {
             const options1 = {
                 'role': type,
