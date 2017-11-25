@@ -39,7 +39,7 @@ const cronJobs = {
             if (Memory.thieving_spots[key] == 0) {
                 var newName = 'Thief' + key;
                 var target_room = Memory.roomMap[key];
-                Memory.buildQueue.push[newName];
+                Memory.buildQueue.push(newName);
                 brains.buildRequest(target_room, 1, {
                     'role': 'thief',
                     'sourceMap': key,
@@ -60,7 +60,7 @@ const cronJobs = {
                 var newName = 'ThiefMule' + key;
                 var target_room = Memory.roomMap[key];
                 var home = Memory.homeMap[Memory.roomMap[key]];
-                Memory.buildQueue.push[newName];
+                Memory.buildQueue.push(newName);
                 brains.buildRequest(target_room, 1, {
                     'role': 'thiefmule',
                     'myTask': 'goToTarget',
