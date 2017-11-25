@@ -2326,7 +2326,7 @@ function completeOutstandingRequests(myRoom, Spawn) {
             console.log('Spawning: ' + newName);
         } else {
             console.log(err);
-            console.log(suggestedBody);
+            console.log(suggestedBody.length);
             console.log(newName);
             console.log(JSON.stringify({ memory: myRoom.memory.requests[0] }));
             console.log("brains failed to spawn");
