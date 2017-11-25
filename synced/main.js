@@ -1221,7 +1221,13 @@ const roleOffensive = {
                 }
             } else {
                 if (!creep.healCreep) {
-                    __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__["a" /* default */].findHealingTarget(creep);
+                    let healCreep;
+                    Memory.squads[mySquad].creeps.forEach(squadCreep => {
+                        if (squadCreep != creep.name) {
+                            healCreep = Game.creeps[squadCreep].id;
+                        }
+                    });
+                    creep.memory.healCreep = healCreep;
                 }
                 creep.memory.myTask = 'heal';
             }

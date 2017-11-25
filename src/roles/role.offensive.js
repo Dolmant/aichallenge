@@ -92,7 +92,13 @@ const roleOffensive = {
                 }
             } else {
                 if (!creep.healCreep) {
-                    actOffensive.findHealingTarget(creep);
+                    let healCreep;
+                    Memory.squads[mySquad].creeps.forEach(squadCreep => {
+                        if (squadCreep != creep.name) {
+                            healCreep = Game.creeps[squadCreep].id;
+                        }
+                    });
+                    creep.memory.healCreep = healCreep;
                 }
                 creep.memory.myTask = 'heal';
             }
