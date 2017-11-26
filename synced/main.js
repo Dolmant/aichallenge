@@ -1346,15 +1346,16 @@ const actBuild = {
         } else {
             if (creep.memory.myBuildTarget) {
                 var target = Game.getObjectById(creep.memory.myBuildTarget);
-                var err = creep.build(target);
-                if (err == ERR_NOT_IN_RANGE) {
-                    creep.moveToCacheTarget(target.pos);
-                } else if (err == ERR_NOT_ENOUGH_RESOURCES || err == ERR_RCL_NOT_ENOUGH || err == ERR_INVALID_TARGET) {
-                    // expect state change to resupply
-                    return true;
-                }
                 if (!target) {
                     findBuildTarget(creep);
+                } else {
+                    var err = creep.build(target);
+                    if (err == ERR_NOT_IN_RANGE) {
+                        creep.moveToCacheTarget(target.pos);
+                    } else if (err == ERR_NOT_ENOUGH_RESOURCES || err == ERR_RCL_NOT_ENOUGH || err == ERR_INVALID_TARGET) {
+                        // expect state change to resupply
+                        return true;
+                    }
                 }
             } else if (creep.memory.myRepairTarget) {
                 target: Structure = Game.getObjectById(creep.memory.myRepairTarget);
