@@ -111,6 +111,7 @@ const roleOffensive = {
         /*
         goto staging
         */
+        const mySquad = creep.memory.squad;
         if (creep.room.name == Memory.squads[mySquad].stagingTarget) {
             creep.memory.moveToTargetx = Memory.squads[mySquad].stagingTarget.x;
             creep.memory.moveToTargety = Memory.squads[mySquad].stagingTarget.y;
