@@ -146,6 +146,12 @@ const brains = {
                 Memory.squads[squadName].type = type;
                 Memory.retiredSquads.splice(index, index + 1) // always removing elements
                 requiredSize = 0;
+                Memory.squads[squadName].creeps.forEach(creepName => {
+                    const creep = Game.creeps[creepName]
+                    creep.memory.squad = squadName;
+                    creep.memory.role = type;
+                    creep.memory.roomTarget = roomTarget;
+                })
             }
         });
         if (requiredSize > 0) {
