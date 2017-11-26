@@ -182,7 +182,7 @@ const roleOffensive = {
             creep.memory.myTask = 'moveToTarget';
         } else if (creep.room.name == Memory.squads[mySquad].roomTarget) {
             if (!creep.memory.attackCreep) {
-                actOffensive.findTarget(creep);
+                actOffensive.findDefenceTarget(creep);
             }
             creep.memory.myTask = 'attack';
         } else {

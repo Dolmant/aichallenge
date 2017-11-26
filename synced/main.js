@@ -370,6 +370,19 @@ var actOffensive = {
             delete creep.memory.healCreep;
         }
     },
+    findDefenceTarget: function (creep) {
+        var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS, {
+            filter: creep => creep.body.filter(part => part.type == ATTACK || part.type == RANGED_ATTACK)
+        });
+        if (!target) {
+            target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
+        }
+        if (target) {
+            creep.memory.attackCreep = target.id;
+        } else {
+            delete creep.memory.attackCreep;
+        }
+    },
     findAttackTarget: function (creep) {
         var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS, {
             filter: creep => creep.body.filter(part => part.type == ATTACK || part.type == RANGED_ATTACK)
@@ -807,7 +820,11 @@ const cronJobs = {
                 if (enemyCreeps.length > 0 && myOwnedRooms.includes(myRoom)) {
                     myRoom.memory.defcon -= 1;
                 }
-                if (myRoom.memory.defcon > 0) {
+                if (Memory.squads[roomName + 'defcon']) {
+                    if (Memory.squads[roomName + 'defcon'].size != myRoom.memory.defcon) {
+                        __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].updateSquadSize(roomName + 'defcon', myRoom.memory.defcon);
+                    }
+                } else if (myRoom.memory.defcon > 0) {
                     __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].createSquad(roomName + 'defcon', roomName, myRoom.memory.defcon, 'defcon');
                 }
             }
@@ -1321,7 +1338,7 @@ const roleOffensive = {
             creep.memory.myTask = 'moveToTarget';
         } else if (creep.room.name == Memory.squads[mySquad].roomTarget) {
             if (!creep.memory.attackCreep) {
-                __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__["a" /* default */].findTarget(creep);
+                __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__["a" /* default */].findDefenceTarget(creep);
             }
             creep.memory.myTask = 'attack';
         } else {
@@ -1895,7 +1912,7 @@ function runTowers(myTowers) {
             tower.attack(closestHostile);
         } else if (tower.energy > tower.energyCapacity / 2) {
             var repairTarget = 0;
-            var creepToRepair = tower.pos.findClosestByRange(FIND_MY_CREEPS, { filter: c => c.hits < c.hitsMax });
+            var creepToRepair = tower.pos.findClosestByRange(FIND_MY_CREEPS, { filter: c => c.hits < c.hitsMax * 0.9 });
             if (creepToRepair != undefined) {
                 tower.heal(creepToRepair);
                 repairTarget = creepToRepair;
@@ -1904,7 +1921,7 @@ function runTowers(myTowers) {
                 var structureList = tower.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_ROAD || s.structureType == STRUCTURE_CONTAINER
                 });
                 for (let structure of structureList) {
-                    if (structure.hits < structure.hitsMax) {
+                    if (structure.hits < structure.hitsMax * 0.9) {
                         tower.repair(structure);
                         repairTarget = structure.id;
                         break;

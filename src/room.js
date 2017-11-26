@@ -209,7 +209,7 @@ function runTowers(myTowers)
         }
         else if (tower.energy > tower.energyCapacity / 2) {
             var repairTarget = 0;
-            var creepToRepair = tower.pos.findClosestByRange(FIND_MY_CREEPS, {filter: c=> c.hits < c.hitsMax});
+            var creepToRepair = tower.pos.findClosestByRange(FIND_MY_CREEPS, {filter: c=> c.hits < c.hitsMax * 0.9});
             if (creepToRepair != undefined) {
                 tower.heal(creepToRepair);
                 repairTarget = creepToRepair;
@@ -220,7 +220,7 @@ function runTowers(myTowers)
                     s.structureType == STRUCTURE_CONTAINER
                 });
                 for (let structure of structureList) {
-                    if (structure.hits < structure.hitsMax) {
+                    if (structure.hits < structure.hitsMax * 0.9) {
                         tower.repair(structure);
                         repairTarget = structure.id;
                         break;

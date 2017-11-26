@@ -132,6 +132,19 @@ var actOffensive = {
             delete creep.memory.healCreep;
         }
     },
+    findDefenceTarget: function(creep: Creep) {
+        var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS,{
+            filter: creep => creep.body.filter(part => (part.type == ATTACK) || (part.type == RANGED_ATTACK))
+        });
+        if (!target) {
+            target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
+        }
+        if (target) {
+            creep.memory.attackCreep = target.id;
+        } else {
+            delete creep.memory.attackCreep;
+        }
+    },
     findAttackTarget: function(creep: Creep) {
         var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS,{
             filter: creep => creep.body.filter(part => (part.type == ATTACK) || (part.type == RANGED_ATTACK))
