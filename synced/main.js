@@ -970,10 +970,14 @@ const brains = {
 
             if (Memory.squads[squadName].size == 0) {
                 if (creepArray.length == 0) {
+                    const indexer = Memory.retiredSquads.indexOf(squad);
+                    if (indexer != -1) {
+                        Memory.retiredSquads.splice(indexer, indexer + 1);
+                    }
                     delete Memory.squads[squadName];
                     continue;
                 }
-                Memory.squads[squadName].type = 'retired';
+                brains.retireSquad(squadName);
             }
 
             // Always run role to make sure we can control if we need to attack or not
@@ -997,12 +1001,8 @@ const brains = {
                             __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__["a" /* default */].grinder(creep);
                             break;
                     }
-                    if (creep.memory.secondaryTask == 'healer') {
-                        if (creep.hits < creep.hitsMax) {
-                            creep.heal(creep);
-                        }
-                    }
                 } else {
+                    Memory.squads[squadName].creeps.splice(index, index + 1);
                     if (Memory.squads[squadName].type != 'retired') {
                         const options = {
                             'role': Memory.squads[squadName].type,
@@ -1011,7 +1011,6 @@ const brains = {
                         };
                         brains.buildRequest(Memory.squads[squadName].roomTarget, 1, options);
                     }
-                    Memory.squads[squadName].creeps.splice(index, index + 1);
                 }
             });
         }
@@ -1252,7 +1251,7 @@ const roleOffensive = {
         goto staging
         */
         const mySquad = creep.memory.squad;
-        if (creep.room.name == Memory.squads[mySquad].stagingTarget) {
+        if (creep.room.name == Memory.squads[mySquad].stagingTarget.roomName) {
             creep.memory.moveToTargetx = Memory.squads[mySquad].stagingTarget.x;
             creep.memory.moveToTargety = Memory.squads[mySquad].stagingTarget.y;
             creep.memory.moveToTargetrange = 0;
