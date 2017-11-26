@@ -2213,7 +2213,29 @@ const spawner = {
                         Memory.misc.globalCreepsTemp.claimer += 1;
                         break;
                 }
+                switch (Game.creeps[Spawn.spawning.name].memory.role) {
+                    case 'harvester':
+                        myCreepCount.harvesterCount += 1;
+                        break;
+                }
+                switch (Game.creeps[Spawn.spawning.name].memory.role) {
+                    case 'worker':
+                        myCreepCount.workerCount += 1;
+                        break;
+                }
+                switch (Game.creeps[Spawn.spawning.name].memory.role) {
+                    case 'harvesterExtractor':
+                        myCreepCount.harvesterExtractorCount += 1;
+                        break;
+                }
+                switch (Game.creeps[Spawn.spawning.name].memory.role) {
+                    case 'mule':
+                        myCreepCount.muleCount += 1;
+                        break;
+                }
             }
+        });
+        mySpawns.forEach(Spawn => {
             if (Spawn && !Spawn.spawning && canSpawn) {
                 if (Spawn.memory.renewTarget) {
                     canSpawn = false;
