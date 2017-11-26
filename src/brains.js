@@ -50,7 +50,7 @@ const brains = {
                     }
                 } else {
                     Memory.squads[squadName].creeps.splice(index, index + 1);
-                    if (Memory.squads[squadName].type != 'retired') {
+                    if (Memory.squads[squadName].role != 'retired') {
                         const options = {
                             'role': Memory.squads[squadName].type,
                             'myTask': Memory.squads[squadName].type,
