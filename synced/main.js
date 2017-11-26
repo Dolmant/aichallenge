@@ -807,13 +807,9 @@ const cronJobs = {
                 if (enemyCreeps.length > 0 && myOwnedRooms.includes(myRoom)) {
                     myRoom.memory.defcon -= 1;
                 }
-                if (Memory.squads[roomName + 'defcon']) {
-                    if (Memory.squads[roomName + 'defcon'].size != myRoom.memory.defcon) {
-                        __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].updateSquadSize(roomName + 'defcon', myRoom.memory.defcon);
-                    }
-                } else if (myRoom.memory.defcon > 0) {
+                if (myRoom.memory.defcon > 0) {
                     __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].createSquad(roomName + 'defcon', roomName, myRoom.memory.defcon, 'defcon');
-                }
+                }s;
             }
         });
     },
