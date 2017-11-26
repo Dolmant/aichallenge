@@ -2654,13 +2654,13 @@ const actResupply = {
             var resupplyTarget = Game.getObjectById(creep.memory.resupplyTarget);
             var err = resupplyTarget && creep.withdraw(resupplyTarget, RESOURCE_ENERGY);
             if (err == OK || err == ERR_NOT_ENOUGH_RESOURCES) {
-                delete creep.memory.resupplyTarget;
+                if (resupplyTarget.structureType != STRUCTURE_LINK) {
+                    delete creep.memory.resupplyTarget;
+                }
             } else if (err == ERR_NOT_IN_RANGE) {
                 creep.moveToCacheTarget(resupplyTarget.pos);
             } else {
-                if (resupplyTarget.structureType != STRUCTURE_LINK) {
-                    getResupplyTarget(creep);
-                }
+                getResupplyTarget(creep);
             }
         } else {
             return __WEBPACK_IMPORTED_MODULE_0__action_harvest__["a" /* default */].run(creep);
