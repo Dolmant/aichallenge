@@ -136,10 +136,12 @@ const brains = {
         let requiredSize = size;
         Memory.retiredSquads.forEach((squad, index) => {
             // TODO join retired squads together
-            if (Memory.squads[squad].size >= requiredSize) {
-                Memory.squads[squadName] = Memory.squads[squad];
+            if (Memory.squads[squad].creeps.length >= requiredSize) {
+                Memory.squads[squadName] = Object.assign({}, Memory.squads[squad]);
                 delete Memory.squads[squad];
-
+                Memory.squads[squadName].roomTarget = roomTarget;
+                Memory.squads[squadName].size = size;
+                Memory.squads[squadName].type = type;
                 Memory.retiredSquads.splice(index, index + 1) // always removing elements
                 requiredSize = 0;
             }
