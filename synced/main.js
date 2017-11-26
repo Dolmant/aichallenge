@@ -977,7 +977,9 @@ const brains = {
                     delete Memory.squads[squadName];
                     continue;
                 }
-                brains.retireSquad(squadName);
+                if (Memory.squads[squadName].role != 'retired') {
+                    brains.retireSquad(squadName);
+                }
             }
 
             // Always run role to make sure we can control if we need to attack or not
