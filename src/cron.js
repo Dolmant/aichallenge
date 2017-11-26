@@ -87,7 +87,7 @@ const cronJobs = {
                 }
                 if (myRoom.memory.defcon > 0) {
                     brains.createSquad(roomName + 'defcon', roomName, myRoom.memory.defcon, 'defcon');
-                }s
+                }
             }
         });
     },

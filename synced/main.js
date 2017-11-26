@@ -809,7 +809,7 @@ const cronJobs = {
                 }
                 if (myRoom.memory.defcon > 0) {
                     __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].createSquad(roomName + 'defcon', roomName, myRoom.memory.defcon, 'defcon');
-                }s;
+                }
             }
         });
     },
