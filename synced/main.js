@@ -809,10 +809,10 @@ const cronJobs = {
                 }
                 if (Memory.squads[roomName + 'defcon']) {
                     if (Memory.squads[roomName + 'defcon'].size != myRoom.memory.defcon) {
-                        // brains.updateSquadSize(roomName + 'defcon', myRoom.memory.defcon);
+                        __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].updateSquadSize(roomName + 'defcon', myRoom.memory.defcon);
                     }
                 } else if (myRoom.memory.defcon > 0) {
-                    // brains.createSquad(roomName + 'defcon', roomName, myRoom.memory.defcon, 'defcon');
+                    __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].createSquad(roomName + 'defcon', roomName, myRoom.memory.defcon, 'defcon');
                 }
             }
         });
