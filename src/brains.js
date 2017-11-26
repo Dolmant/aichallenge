@@ -15,7 +15,7 @@ const brains = {
 
             if (Memory.squads[squadName].size == 0) {
                 if (creepArray.length == 0) {
-                    const indexer = Memory.retiredSquads.indexOf(squad);
+                    const indexer = Memory.retiredSquads.indexOf(squadName);
                     if (indexer != -1) {
                         Memory.retiredSquads.splice(indexer, indexer + 1);
                     }
