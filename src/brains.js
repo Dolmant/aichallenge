@@ -87,6 +87,7 @@ const brains = {
             'role': Memory.squads[squad].type,
             'squad': squad,
         };
+        Memory.squads[squad].size = size;
         brains.buildRequest(Memory.squads[squad].roomTarget, size, options);
     },
     createSquad(squadName: string, roomTarget: string, size: number, type: string) {
@@ -97,7 +98,6 @@ const brains = {
             if (Memory.squads[squadName].size < size) {
                 brains.updateSquadSize(squadName, size - Memory.squads[squadName].size);
             }
-            Memory.squads[squadName].size = size;
             return
         }
         if (type == 'farm') {
