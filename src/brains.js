@@ -31,7 +31,7 @@ const brains = {
             creepArray && creepArray.forEach((creepID, index) => {
                 const creep = Game.creeps[creepID];
                 if (creep) {
-                    switch(Memory.squads[squadName].type){
+                    switch(Memory.squads[squadName].role){
                         case 'retired':
                             roleOffensive.retired(creep);
                             break;
@@ -52,8 +52,8 @@ const brains = {
                     Memory.squads[squadName].creeps.splice(index, index + 1);
                     if (Memory.squads[squadName].role != 'retired') {
                         const options = {
-                            'role': Memory.squads[squadName].type,
-                            'myTask': Memory.squads[squadName].type,
+                            'role': Memory.squads[squadName].role,
+                            'myTask': Memory.squads[squadName].role,
                             'squad': squadName,
                         };
                         brains.buildRequest(Memory.squads[squadName].roomTarget, 1, options);
@@ -93,13 +93,13 @@ const brains = {
         // update creeparray to be big enough
         // update comp to be big enough
         const options = {
-            'role': Memory.squads[squad].type,
+            'role': Memory.squads[squad].role,
             'squad': squad,
         };
         Memory.squads[squad].size = size;
         brains.buildRequest(Memory.squads[squad].roomTarget, size, options);
     },
-    createSquad(squadName: string, roomTarget: string, size: number, type: string) {
+    createSquad(squadName: string, roomTarget: string, size: number, role: string) {
         //check for any reusable dead squads
         // if so, repurpose and resize them
         // else fire off builds
@@ -109,22 +109,22 @@ const brains = {
             }
             return
         }
-        if (type == 'farm') {
+        if (role == 'farm') {
             const options1 = {
-                'role': type,
-                'myTask': type,
+                'role': role,
+                'myTask': role,
                 'squad': squadName,
             };
             const options2 = {
-                'role': type,
+                'role': role,
                 'secondaryRole': 'heal',
-                'myTask': type,
+                'myTask': role,
                 'squad': squadName,
             };
             Memory.squads[squadName] = {};
             Memory.squads[squadName].roomTarget = roomTarget;
             Memory.squads[squadName].size = size;
-            Memory.squads[squadName].type = type;
+            Memory.squads[squadName].role = role;
             Memory.squads[squadName].creeps = [];
             const stagingRoomname = brains.buildRequest(roomTarget, 1, options1, 5600);
             brains.buildRequest(roomTarget, 1, options2, 5600);
@@ -143,27 +143,27 @@ const brains = {
                 delete Memory.squads[squad];
                 Memory.squads[squadName].roomTarget = roomTarget;
                 Memory.squads[squadName].size = size;
-                Memory.squads[squadName].type = type;
+                Memory.squads[squadName].role = role;
                 Memory.retiredSquads.splice(index, index + 1) // always removing elements
                 requiredSize = 0;
                 Memory.squads[squadName].creeps.forEach(creepName => {
                     const creep = Game.creeps[creepName]
                     creep.memory.squad = squadName;
-                    creep.memory.role = type;
+                    creep.memory.role = role;
                     creep.memory.roomTarget = roomTarget;
                 })
             }
         });
         if (requiredSize > 0) {
             const options = {
-                'role': type,
-                'myTask': type,
+                'role': role,
+                'myTask': role,
                 'squad': squadName,
             };
             Memory.squads[squadName] = {};
             Memory.squads[squadName].roomTarget = roomTarget;
             Memory.squads[squadName].size = size;
-            Memory.squads[squadName].type = type;
+            Memory.squads[squadName].role = role;
             Memory.squads[squadName].creeps = [];
             const stagingRoomname = brains.buildRequest(roomTarget, size, options);
             Memory.squads[squadName].stagingTarget = {
