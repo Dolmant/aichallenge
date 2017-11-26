@@ -1231,7 +1231,7 @@ const roleOffensive = {
         } else if (creep.room.name == Memory.squads[mySquad].roomTarget) {
             if (!(creep.memory.secondaryRole == 'heal')) {
                 if (!creep.memory.attackCreep) {
-                    __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__["a" /* default */].findAttackTarget(creep);
+                    __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__["a" /* default */].findDefenceTarget(creep);
                 }
                 if (!creep.memory.attackCreep) {
                     const NPCSpawns = creep.room.find(FIND_HOSTILE_SPAWNS);
