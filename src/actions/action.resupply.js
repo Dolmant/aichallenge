@@ -21,7 +21,9 @@ const actResupply = {
             } else if(err == ERR_NOT_IN_RANGE) {
                 creep.moveToCacheTarget(resupplyTarget.pos);
             } else {
-                getResupplyTarget(creep);
+                if (resupplyTarget.structureType != STRUCTURE_LINK) {
+                    getResupplyTarget(creep);
+                }
             }
         } else {
             return actHarvest.run(creep);
@@ -61,9 +63,7 @@ const actResupply = {
                 if (err == ERR_NOT_IN_RANGE) {
                     creep.moveToCacheTarget(target.pos);
                 } else if (err == OK) {
-                    if (target.structureType != STRUCTURE_LINK) {
-                        delete creep.memory.fetchTarget;
-                    }
+                    delete creep.memory.fetchTarget;
                 } else {
                     getTargets(creep);
                 }
