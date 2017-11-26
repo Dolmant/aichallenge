@@ -82,7 +82,7 @@ const cronJobs = {
             if (myRoom) {
                 var enemyCreeps: Creep = myRoom.find(FIND_HOSTILE_CREEPS);
                 myRoom.memory.defcon = enemyCreeps.length;
-                if (enemyCreeps.length > 0 && myOwnedRooms.includes(myRoom)) {
+                if (enemyCreeps.length > 0 && myOwnedRooms.includes(roomName)) {
                     myRoom.memory.defcon -= 1;
                 }
                 if (Memory.squads[roomName + 'defcon']) {
