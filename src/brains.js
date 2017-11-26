@@ -13,6 +13,14 @@ const brains = {
         for (let squadName in Memory.squads) {
             const creepArray = Memory.squads[squadName].creeps;
 
+            if (Memory.squads[squadName].size == 0) {
+                if (creepArray.length == 0) {
+                    delete Memory.squads[squadName];
+                    continue;
+                }
+                Memory.squads[squadName].type = 'retired';
+            }
+
             // Always run role to make sure we can control if we need to attack or not
             creepArray && creepArray.forEach((creepID, index) => {
                 const creep = Game.creeps[creepID];
