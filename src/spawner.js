@@ -190,7 +190,8 @@ function completeOutstandingRequests(myRoom, Spawn) {
             memory: myRoom.memory.requests[0],
         });
         if (err == OK) {
-            if (myRoom.memory.requests[0].squad) {
+            // TODO if we have a squad but cant find the id, create a retired squad
+            if (myRoom.memory.requests[0].squad && Memory.squads[myRoom.memory.requests[0].squad]) {
                 Memory.squads[myRoom.memory.requests[0].squad].creeps.push(newName);
             }
             const buildno = Memory.buildQueue.indexOf(newName);
