@@ -85,7 +85,7 @@ function getTargets(creep: Creep) {
     } else {
         target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: structure => {
-                return structure.structureType == STRUCTURE_CONTAINER && _.sum(structure.store) >= creep.carryCapacity/2;
+                return structure.structureType == STRUCTURE_CONTAINER && structure.store.energy >= creep.carryCapacity/2;
             }
         });
         if (target) {
@@ -94,7 +94,7 @@ function getTargets(creep: Creep) {
         } else {
             target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                 filter: structure => {
-                    return structure.structureType == STRUCTURE_STORAGE && _.sum(structure.store) >= creep.carryCapacity/2;
+                    return structure.structureType == STRUCTURE_STORAGE && structure.store.energy >= creep.carryCapacity/2;
                 }
             });
             if (target) {
@@ -103,7 +103,7 @@ function getTargets(creep: Creep) {
             } else {
                 target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                     filter: structure => {
-                        return (structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_TERMINAL) && _.sum(structure.store) > 0;
+                        return (structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_TERMINAL) && structure.store.energy > 0;
                     }
                 });
                 if (target) {
