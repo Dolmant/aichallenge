@@ -603,7 +603,7 @@ function deposit_target(creep, isMule) {
     // Otherwise, hand it to the storage for other use.
     var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
         'filter': structure => {
-            return structure.structureType == STRUCTURE_STORAGE && structure.store.energy < structure.storeCapacity;
+            return structure.structureType == STRUCTURE_STORAGE && structure.store.energy < structure.storeCapacity * 0.9 || structure.structureType == STRUCTURE_LINK && structure.energy < structure.energyCapacity || structure.structureType == STRUCTURE_TERMINAL && structure.store.energy < structure.storeCapacity;
         }
     });
     if (target) {
@@ -2789,7 +2789,7 @@ function getTargets(creep) {
             } else {
                 target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                     filter: structure => {
-                        return (structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER) && _.sum(structure.store) > 0;
+                        return (structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_TERMINAL) && _.sum(structure.store) > 0;
                     }
                 });
                 if (target) {
