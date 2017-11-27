@@ -34,16 +34,6 @@ const spawner = {
         var sourceMapNumber = 99;
         var sourceMap = 0;
 
-        // TODO kill this as this is just a safetycheck
-        // if (!myRoom.memory.sources) {myRoom.memory.sources = myRoom.find(FIND_SOURCES).map(source => source.id);}
-
-        myRoom.memory.sources.forEach(source => {
-            if ((myCreepCount.sourceMap[source] || 0) < sourceMapNumber) {
-                sourceMapNumber = myCreepCount.sourceMap[source] || 0;
-                sourceMap = source;
-            }
-        });
-
         mySpawns.forEach(Spawn => {
             if (Spawn && Spawn.spawning) {
                 switch(Game.creeps[Spawn.spawning.name].memory.role) {
@@ -54,6 +44,7 @@ const spawner = {
                 switch(Game.creeps[Spawn.spawning.name].memory.role) {
                     case 'harvester':
                         myCreepCount.harvesterCount += 1;
+                        myCreepCount.sourceMap[Game.creeps[Spawn.spawning.name].memory.sourceMap] += 1;
                         break;
                 }
                 switch(Game.creeps[Spawn.spawning.name].memory.role) {
@@ -73,6 +64,14 @@ const spawner = {
                 }
             }
         });
+
+        myRoom.memory.sources.forEach(source => {
+            if ((myCreepCount.sourceMap[source] || 0) < sourceMapNumber) {
+                sourceMapNumber = myCreepCount.sourceMap[source] || 0;
+                sourceMap = source;
+            }
+        });
+
         mySpawns.forEach(Spawn => {
             if (Spawn && !Spawn.spawning && canSpawn) {
                 if (Spawn.memory.renewTarget) {
