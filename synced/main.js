@@ -2218,20 +2218,28 @@ const spawner = {
             'blocker': 2, //not used current
             'tough': 1
         };
-        var MaxHarvesterCount = myRoom.memory.hasLinks || myRoom.memory.hasContainers ? 2 : 4;
-        var MaxHarvesterExtractorCount = myRoom.memory.hasContainers && myRoom.memory.hasExtractor ? 0 : 0; //1 : 0;
+        const MaxHarvesterCount = myRoom.memory.hasLinks || myRoom.memory.hasContainers ? 2 : 4;
+        const MaxHarvesterExtractorCount = myRoom.memory.hasContainers && myRoom.memory.hasExtractor ? 0 : 0; //1 : 0;
         // implement levels
         // var MinHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 5;
-        var MaxWorkerCount = 2;
-        var MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
+        let MaxWorkerCount = 2;
+        if (myRoom.storage && myRoom.storage.store[RESOURCE_ENERGY] > 800000) {
+            let MaxWorkerCount = 4;
+        } else if (myRoom.storage && myRoom.storage.store[RESOURCE_ENERGY] > 500000) {
+            let MaxWorkerCount = 3;
+        } else if (myRoom.storage && myRoom.storage.store[RESOURCE_ENERGY] < 100000) {
+            let MaxWorkerCount = 1;
+        }
+
+        let MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         MaxMuleCount = myRoom.memory.hasExtractor ? 2 : MaxMuleCount;
-        var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
-        var referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
+        const totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
+        const referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
 
         let canSpawn = true;
 
-        var sourceMapNumber = 99;
-        var sourceMap = 0;
+        let sourceMapNumber = 99;
+        let sourceMap = 0;
 
         mySpawns.forEach(Spawn => {
             if (Spawn && Spawn.spawning) {
