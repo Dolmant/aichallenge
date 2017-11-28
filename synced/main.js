@@ -1976,11 +1976,14 @@ function transferLinks(myLinks) {
         var receive = [];
         var give = [];
         myLinksMapped.forEach(link => {
-            if (link.energy > link.energyCapacity - 100) {
-                give.push(link);
-            } else if (link.energy == 0) {
-                receive.push(link);
+            if (link) {
+                if (link.energy > link.energyCapacity - 100) {
+                    give.push(link);
+                } else if (link.energy == 0) {
+                    receive.push(link);
+                }
             }
+            // TODO DELETE DEAD LINKS
         });
         var condition = give.length > receive.length ? receive.length : give.length;
         for (var index = 0; index < condition; index += 1) {
