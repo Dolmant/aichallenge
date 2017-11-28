@@ -118,7 +118,7 @@ function getTargets(creep: Creep) {
 function getResupplyTarget(creep) {
     var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
         filter: (structure) => {
-            return ((structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_LINK) && (structure.energy > 0 || (structure.storeCapacity && structure.store.energy >= creep.carryCapacity)));
+            return ((structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_LINK || structure.structureType == STRUCTURE_TERMINAL) && (structure.energy > 0 || (structure.storeCapacity && structure.store.energy >= creep.carryCapacity)));
         }
     });
     if (target) {

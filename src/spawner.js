@@ -24,11 +24,11 @@ const spawner = {
         // var MinHarvesterCount = (myRoom.memory.hasLinks || myRoom.memory.hasContainers) ? 4 : 5;
         let MaxWorkerCount = 2;
         if (myRoom.storage && myRoom.storage.store[RESOURCE_ENERGY] > 800000) {
-            let MaxWorkerCount = 4;
+            MaxWorkerCount = 4;
         } else if (myRoom.storage && myRoom.storage.store[RESOURCE_ENERGY] > 500000) {
-            let MaxWorkerCount = 3;
+            MaxWorkerCount = 3;
         } else if (myRoom.storage && myRoom.storage.store[RESOURCE_ENERGY] < 100000) {
-            let MaxWorkerCount = 1;
+            MaxWorkerCount = 1;
         }
         
         let MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
