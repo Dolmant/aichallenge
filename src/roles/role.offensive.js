@@ -141,18 +141,20 @@ const roleOffensive = {
                 creep.memory.myTask = 'goToTarget';
                 creep.memory.goToTarget = Memory.squads[mySquad].stagingTarget.roomName;
             } else {
-                let hostiles = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
-                let hostile_structures = creep.pos.findClosestByPath(FIND_STRUCTURES);
-                let target;
-                if (!hostiles && hostile_structures) {
-                    target = hostile_structures;
-                } else if (!hostile_structures && hostiles) {
-                    target = hostiles;
-                } else {
-                    target = creep.pos.findClosestByPath([hostiles, hostile_structures]);
+                if (!creep.memory.attackCreep) {
+                    let hostiles = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
+                    let hostile_structures = creep.pos.findClosestByPath(FIND_STRUCTURES);
+                    let target;
+                    if (!hostiles && hostile_structures) {
+                        target = hostile_structures;
+                    } else if (!hostile_structures && hostiles) {
+                        target = hostiles;
+                    } else {
+                        target = creep.pos.findClosestByPath([hostiles, hostile_structures]);
+                    }
+                    creep.memory.attackCreep = target.id;
                 }
                 creep.memory.myTask = 'attack';
-                creep.memory.attackCreep = target.id;
             }
         } else {
             if (creep.hits < creep.hitsMax) {
