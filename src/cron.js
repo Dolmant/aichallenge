@@ -141,6 +141,10 @@ const cronJobs = {
             // location: W47N52
             '59bbc4242052a716c3ce76bf': 0,
             '59bbc4242052a716c3ce76c1': 0,
+            // location W45N54
+            // '59bbc4282052a716c3ce7768': 0,
+            // '59bbc4282052a716c3ce7766': 0,
+            // '59bbc4282052a716c3ce7767': 0,
         }
         Memory.thieving_mules = {
             // location: W46N53
@@ -171,6 +175,10 @@ const cronJobs = {
             // location: W47N52
             '59bbc4242052a716c3ce76bf': 0,
             '59bbc4242052a716c3ce76c1': 0,
+            // location W45N54
+            // '59bbc4282052a716c3ce7768': 0,
+            // '59bbc4282052a716c3ce7766': 0,
+            // '59bbc4282052a716c3ce7767': 0,
         }
         Memory.register_thieves = true;
         Memory.roomMap = {
@@ -202,6 +210,11 @@ const cronJobs = {
             // location: W47N52
             '59bbc4242052a716c3ce76bf': 'W47N52',
             '59bbc4242052a716c3ce76c1': 'W47N52',
+            // location W45N54
+            // '59bbc4282052a716c3ce7768': 'W45N54',
+            // '59bbc4282052a716c3ce7766': 'W45N54',
+            // '59bbc4282052a716c3ce7767': 'W45N54',
+
         }
         Memory.homeMap = {
             'W42N51': 'W41N51',
@@ -212,6 +225,7 @@ const cronJobs = {
             'W44N53': 'W43N53',
             'W45N51': 'W46N52',
             'W45N52': 'W45N53',
+            'W45N54': 'W45N53',
             'W46N53': 'W45N53',
             'W46N51': 'W46N52',
             'W47N52': 'W46N52',
