@@ -143,7 +143,7 @@ const roleOffensive = {
             } else {
                 if (!creep.memory.attackCreep) {
                     let hostiles = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
-                    let hostile_structures = creep.pos.findClosestByPath(FIND_STRUCTURES);
+                    let hostile_structures = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES);
                     let target;
                     if (!hostiles && hostile_structures) {
                         target = hostile_structures;

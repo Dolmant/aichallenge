@@ -260,16 +260,16 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
         return partArray;
     }
     if (options.grinder) {
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
+        partArray.push(ATTACK);
         for (var i = 0; (i < Math.floor((referenceEnergy - 1150)/50) && i < 42); i += 1) {
             partArray.push(MOVE);
         }
         partArray.push(HEAL);
         partArray.push(HEAL);
         partArray.push(HEAL);
-        partArray.push(ATTACK);
-        partArray.push(ATTACK);
-        partArray.push(ATTACK);
-        partArray.push(ATTACK);
         partArray.push(ATTACK);
         return partArray;
     }
