@@ -193,7 +193,7 @@ function completeOutstandingRequests(myRoom, Spawn) {
         const options = {};
         options[myRoom.memory.requests[0].secondaryRole || myRoom.memory.requests[0].role] = true;
         if (myRoom.memory.requests[0].sourceMap) {
-            options[myRoom.memory.requests[0].sourceMap] = myRoom.memory.requests[0].sourceMap;
+            options['sourceMap'] = myRoom.memory.requests[0].sourceMap;
         }
         const suggestedBody = getBody(myRoom, 50, options);
         const err = Spawn.spawnCreep(suggestedBody, newName, {
