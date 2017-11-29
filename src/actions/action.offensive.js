@@ -11,6 +11,11 @@ var actOffensive = {
                 if (err == ERR_INVALID_TARGET) {
                     delete creep.memory.healCreep;
                 }
+            } else {
+                const array = creep.pos.findInRange(FIND_MY_CREEPS, 3)
+                if (array.length > 0 && array[0].hits < array[0].hitsMax) {
+                    creep.rangedHeal(array[0]);
+                }
             }
             creep.moveToCacheTarget(target.pos);
         } else {

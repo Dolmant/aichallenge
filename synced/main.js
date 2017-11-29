@@ -249,6 +249,11 @@ var actOffensive = {
                 if (err == ERR_INVALID_TARGET) {
                     delete creep.memory.healCreep;
                 }
+            } else {
+                const array = creep.pos.findInRange(FIND_MY_CREEPS, 3);
+                if (array.length > 0 && array[0].hits < array[0].hitsMax) {
+                    creep.rangedHeal(array[0]);
+                }
             }
             creep.moveToCacheTarget(target.pos);
         } else {
@@ -1093,6 +1098,7 @@ const brains = {
                 } else {
                     if (Memory.squads[squadName].role === 'farm') {
                         delete Memory.squads[squadName];
+                        creepArray = []; // stop looping
                     } else {
                         Memory.squads[squadName].creeps.splice(index, index + 1);
                         if (Memory.squads[squadName].role != 'retired') {

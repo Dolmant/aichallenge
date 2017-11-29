@@ -60,6 +60,7 @@ const brains = {
                 } else {
                     if (Memory.squads[squadName].role === 'farm') {
                         delete Memory.squads[squadName];
+                        creepArray = []; // stop looping
                     } else {
                         Memory.squads[squadName].creeps.splice(index, index + 1);
                         if (Memory.squads[squadName].role != 'retired') {
