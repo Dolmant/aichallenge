@@ -1073,7 +1073,7 @@ const brains = {
         run offensive actions plus the 'task' role for the squad
         */
         for (let squadName in Memory.squads) {
-            const creepArray = Memory.squads[squadName].creeps;
+            let creepArray = Memory.squads[squadName].creeps;
 
             if (Memory.squads[squadName].size == 0) {
                 if (creepArray.length == 0) {
@@ -1112,6 +1112,7 @@ const brains = {
                     }
                     if (creep.ticksToLive < 100 && creep.memory.secondaryRole === 'heal' && Memory.squads[squadName].role === 'farm' && !creep.memory.revived) {
                         creep.memory.revived = true;
+                        console.log('pushing new squad now');
                         Memory.squad_requests.push({
                             'squad': Memory.squads[squadName].roomTarget + 'farm' + Game.time,
                             'role': 'farm',
@@ -1121,6 +1122,7 @@ const brains = {
                     }
                 } else {
                     if (Memory.squads[squadName].role === 'farm') {
+                        console.log('deleting: ' + squadName);
                         delete Memory.squads[squadName];
                         creepArray = []; // stop looping
                     } else {
