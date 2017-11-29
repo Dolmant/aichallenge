@@ -3,6 +3,7 @@
 var actOffensive = {
     heal: function(creep: Creep) {
         var target = Game.getObjectById(creep.memory.healCreep);
+        let alternativeTarget = false;
         if (target) {
             if (creep.hits < creep.hitsMax * 0.9) {
                 creep.heal(creep);
@@ -14,12 +15,15 @@ var actOffensive = {
             } else {
                 const array = creep.pos.findInRange(FIND_MY_CREEPS, 3)
                 array.forEach((luckyCreep) => {
-                    if(luckyCreep.hits < luckyCreep.hitsMax) {
+                    if(!alternativeTarget && luckyCreep.hits < luckyCreep.hitsMax) {
                         creep.rangedHeal(luckyCreep);
+                        alternativeTarget = true;
                     }
                 });
             }
-            creep.moveToCacheTarget(target.pos);
+            if (!alternativeTarget) {
+                creep.moveToCacheTarget(target.pos);
+            }
         } else {
             delete creep.memory.healCreep;
             return true;
