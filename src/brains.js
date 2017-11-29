@@ -49,14 +49,19 @@ const brains = {
                             break;
                     }
                 } else {
-                    Memory.squads[squadName].creeps.splice(index, index + 1);
-                    if (Memory.squads[squadName].role != 'retired') {
-                        const options = {
-                            'role': Memory.squads[squadName].role,
-                            'myTask': Memory.squads[squadName].role,
-                            'squad': squadName,
-                        };
-                        brains.buildRequest(Memory.squads[squadName].roomTarget, 1, options);
+                    if (Memory.squads[squadName].role === 'farm') {
+                        emory.squads[squadName].creeps.splice(index, index + 1);
+                        brains.retireSquad(squadName);
+                    } else {
+                        Memory.squads[squadName].creeps.splice(index, index + 1);
+                        if (Memory.squads[squadName].role != 'retired') {
+                            const options = {
+                                'role': Memory.squads[squadName].role,
+                                'myTask': Memory.squads[squadName].role,
+                                'squad': squadName,
+                            };
+                            brains.buildRequest(Memory.squads[squadName].roomTarget, 1, options);
+                        }
                     }
                 }
             });
@@ -126,8 +131,8 @@ const brains = {
             Memory.squads[squadName].size = size;
             Memory.squads[squadName].role = role;
             Memory.squads[squadName].creeps = [];
-            const stagingRoomname = brains.buildRequest(roomTarget, 1, options1, 5600);
-            brains.buildRequest(roomTarget, 1, options2, 5600);
+            const stagingRoomname = brains.buildRequest(roomTarget, 1, options2, 5600);
+            brains.buildRequest(roomTarget, 1, options1, 5600);
             Memory.squads[squadName].stagingTarget = {
                 roomName: stagingRoomname,
                 x: 25,
@@ -136,24 +141,26 @@ const brains = {
             return
         }
         let requiredSize = size;
-        Memory.retiredSquads.forEach((squad, index) => {
-            // TODO join retired squads together
-            if (Memory.squads[squad].creeps.length >= requiredSize) {
-                Memory.squads[squadName] = Object.assign({}, Memory.squads[squad]);
-                delete Memory.squads[squad];
-                Memory.squads[squadName].roomTarget = roomTarget;
-                Memory.squads[squadName].size = size;
-                Memory.squads[squadName].role = role;
-                Memory.retiredSquads.splice(index, index + 1) // always removing elements
-                requiredSize = 0;
-                Memory.squads[squadName].creeps.forEach(creepName => {
-                    const creep = Game.creeps[creepName]
-                    creep.memory.squad = squadName;
-                    creep.memory.role = role;
-                    creep.memory.roomTarget = roomTarget;
-                })
-            }
-        });
+        if (role === 'defcon') {
+            Memory.retiredSquads.forEach((squad, index) => {
+                // TODO join retired squads together
+                if (Memory.squads[squad].creeps.length >= requiredSize) {
+                    Memory.squads[squadName] = Object.assign({}, Memory.squads[squad]);
+                    delete Memory.squads[squad];
+                    Memory.squads[squadName].roomTarget = roomTarget;
+                    Memory.squads[squadName].size = size;
+                    Memory.squads[squadName].role = role;
+                    Memory.retiredSquads.splice(index, index + 1) // always removing elements
+                    requiredSize = 0;
+                    Memory.squads[squadName].creeps.forEach(creepName => {
+                        const creep = Game.creeps[creepName]
+                        creep.memory.squad = squadName;
+                        creep.memory.role = role;
+                        creep.memory.roomTarget = roomTarget;
+                    })
+                }
+            });
+        }
         if (requiredSize > 0) {
             const options = {
                 'role': role,

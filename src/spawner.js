@@ -189,9 +189,12 @@ const spawner = {
 
 function completeOutstandingRequests(myRoom, Spawn) {
     if (myRoom.memory.requests && myRoom.memory.requests.length) {
-        var newName = myRoom.memory.requests[0].name || myRoom.memory.requests[0].role + Game.time;
+        var newName = myRoom.memory.requests[0].name || myRoom.memory.requests[0].role + Game.time + Spawn.name;
         const options = {};
         options[myRoom.memory.requests[0].secondaryRole || myRoom.memory.requests[0].role] = true;
+        if (myRoom.memory.requests[0].sourceMap) {
+            options[myRoom.memory.requests[0].sourceMap] = true;
+        }
         const suggestedBody = getBody(myRoom, 50, options);
         const err = Spawn.spawnCreep(suggestedBody, newName, {
             memory: myRoom.memory.requests[0],
@@ -374,9 +377,16 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
         return partArray;
     }
     if (options.thief) {
+        let amount = 3;
+        if (options.sourceMap && Memory.energyMap && Memory.energyMap[options.sourceMap] && Memory.energyMap[options.sourceMap] > 1500) {
+            amount = 6;
+            if (Memory.energyMap[options.sourceMap] > 3000) {
+                amount = 8;
+            }
+        }
         partArray.push(CARRY);
         totalEnergy -= 1;
-        while (totalEnergy >= 3 && workCount < 3) {
+        while (totalEnergy >= 3 && workCount < amount) {
             partArray.push(WORK)
             partArray.push(MOVE);
             totalEnergy -= 3;
