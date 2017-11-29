@@ -7,21 +7,22 @@ var actOffensive = {
         if (target) {
             if (creep.hits < creep.hitsMax * 0.9) {
                 creep.heal(creep);
-            } else if (target.hits < target.hitsMax) {
-                var err = creep.heal(target);
-                if (err == ERR_INVALID_TARGET) {
-                    delete creep.memory.healCreep;
-                }
             } else {
                 const array = creep.pos.findInRange(FIND_MY_CREEPS, 3)
                 array.forEach((luckyCreep) => {
-                    if(!alternativeTarget && luckyCreep.hits < luckyCreep.hitsMax) {
+                    if(!alternativeTarget && luckyCreep.id != target.id && luckyCreep.id != creep.id && luckyCreep.hits < luckyCreep.hitsMax) {
                         creep.rangedHeal(luckyCreep);
                         alternativeTarget = true;
                     }
                 });
             }
             if (!alternativeTarget) {
+                if (target.hits < target.hitsMax) {
+                    var err = creep.heal(target);
+                    if (err == ERR_INVALID_TARGET) {
+                        delete creep.memory.healCreep;
+                    }
+                }
                 creep.moveToCacheTarget(target.pos);
             }
         } else {

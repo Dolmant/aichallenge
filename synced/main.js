@@ -245,21 +245,22 @@ var actOffensive = {
         if (target) {
             if (creep.hits < creep.hitsMax * 0.9) {
                 creep.heal(creep);
-            } else if (target.hits < target.hitsMax) {
-                var err = creep.heal(target);
-                if (err == ERR_INVALID_TARGET) {
-                    delete creep.memory.healCreep;
-                }
             } else {
                 const array = creep.pos.findInRange(FIND_MY_CREEPS, 3);
                 array.forEach(luckyCreep => {
-                    if (!alternativeTarget && luckyCreep.hits < luckyCreep.hitsMax) {
+                    if (!alternativeTarget && luckyCreep.id != target.id && luckyCreep.id != creep.id && luckyCreep.hits < luckyCreep.hitsMax) {
                         creep.rangedHeal(luckyCreep);
                         alternativeTarget = true;
                     }
                 });
             }
             if (!alternativeTarget) {
+                if (target.hits < target.hitsMax) {
+                    var err = creep.heal(target);
+                    if (err == ERR_INVALID_TARGET) {
+                        delete creep.memory.healCreep;
+                    }
+                }
                 creep.moveToCacheTarget(target.pos);
             }
         } else {
@@ -894,7 +895,11 @@ const cronJobs = {
             // location W44N54
             '59bbc42a2052a716c3ce77ca': 0,
             '59bbc42a2052a716c3ce77c8': 0,
-            '59bbc42a2052a716c3ce77c7': 0
+            '59bbc42a2052a716c3ce77c7': 0,
+            // location W45N55
+            '59bbc4282052a716c3ce7762': 0,
+            '59bbc4282052a716c3ce7761': 0,
+            '59bbc4282052a716c3ce7760': 0
         };
         Memory.thieving_mules = {
             // location: W46N53
@@ -932,7 +937,11 @@ const cronJobs = {
             // location W44N54
             '59bbc42a2052a716c3ce77ca': 0,
             '59bbc42a2052a716c3ce77c8': 0,
-            '59bbc42a2052a716c3ce77c7': 0
+            '59bbc42a2052a716c3ce77c7': 0,
+            // location W45N55
+            '59bbc4282052a716c3ce7762': 0,
+            '59bbc4282052a716c3ce7761': 0,
+            '59bbc4282052a716c3ce7760': 0
         };
         Memory.register_thieves = true;
         Memory.roomMap = {
@@ -971,7 +980,11 @@ const cronJobs = {
             // location W44N54
             '59bbc42a2052a716c3ce77ca': 'W44N54',
             '59bbc42a2052a716c3ce77c8': 'W44N54',
-            '59bbc42a2052a716c3ce77c7': 'W44N54'
+            '59bbc42a2052a716c3ce77c7': 'W44N54',
+            // location W45N55
+            '59bbc4282052a716c3ce7762': 'W45N55',
+            '59bbc4282052a716c3ce7761': 'W45N55',
+            '59bbc4282052a716c3ce7760': 'W45N55'
         };
         Memory.energyMap = {
             // location: W46N53
@@ -1009,7 +1022,11 @@ const cronJobs = {
             // location W44N54
             '59bbc42a2052a716c3ce77ca': 4000,
             '59bbc42a2052a716c3ce77c8': 4000,
-            '59bbc42a2052a716c3ce77c7': 4000
+            '59bbc42a2052a716c3ce77c7': 4000,
+            // location W45N55
+            '59bbc4282052a716c3ce7762': 4000,
+            '59bbc4282052a716c3ce7761': 4000,
+            '59bbc4282052a716c3ce7760': 4000
         };
         Memory.homeMap = {
             'W42N51': 'W41N51',
@@ -1025,7 +1042,8 @@ const cronJobs = {
             'W46N51': 'W46N52',
             'W47N52': 'W46N52',
             'W45N54': 'W45N53',
-            'W44N54': 'W43N53'
+            'W44N54': 'W43N53',
+            'W45N55': 'W45N53'
         };
     }
 };
