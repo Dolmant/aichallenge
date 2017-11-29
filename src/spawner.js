@@ -182,7 +182,7 @@ const spawner = {
 
 function completeOutstandingRequests(myRoom, Spawn) {
     if (myRoom.memory.requests && myRoom.memory.requests.length) {
-        var newName = myRoom.memory.requests[0].name || myRoom.memory.requests[0].role + Game.time + Spawn.name;
+        var newName = myRoom.memory.requests[0].name || (myRoom.memory.requests[0].role + Game.time + Spawn.name);
         const options = {};
         options[myRoom.memory.requests[0].secondaryRole || myRoom.memory.requests[0].role] = true;
         if (myRoom.memory.requests[0].sourceMap) {
@@ -192,6 +192,7 @@ function completeOutstandingRequests(myRoom, Spawn) {
         const err = Spawn.spawnCreep(suggestedBody, newName, {
             memory: myRoom.memory.requests[0],
         });
+        // TODO SOMEHOW WE ARE CREATING SHIT AT THE SAME TIME WITH THE SAME ATTRIBUTES. I THINK THEY ARE BEING COPIED IN
         if (err == OK) {
             // TODO if we have a squad but cant find the id, create a retired squad
             if (myRoom.memory.requests[0].squad && Memory.squads[myRoom.memory.requests[0].squad]) {
