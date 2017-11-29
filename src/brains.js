@@ -48,16 +48,18 @@ const brains = {
                             roleOffensive.grinder(creep);
                             break;
                     }
-                } else {
-                    if (Memory.squads[squadName].role === 'farm') {
-                        Memory.squads[squadName].creeps = [];
-                        Memory.squads[squadName].size = 0
+                    if (creep.ticksToLive < 100 && creep.memory.secondaryRole === 'heal' && Memory.squads[squadName].role === 'farm' && !creep.memory.revived) {
+                        creep.memory.revived = true;
                         Memory.squad_requests.push({
-                            'squad':squadName,
+                            'squad': Memory.squads[squadName].roomTarget + 'farm' + Game.time,
                             'role':'farm',
                             'roomTarget': Memory.squads[squadName].roomTarget,
-                            'size':2,
+                            'size': 2,
                         });
+                    }
+                } else {
+                    if (Memory.squads[squadName].role === 'farm') {
+                        delete Memory.squads[squadName];
                     } else {
                         Memory.squads[squadName].creeps.splice(index, index + 1);
                         if (Memory.squads[squadName].role != 'retired') {
