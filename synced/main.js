@@ -1123,6 +1123,7 @@ const brains = {
                 } else {
                     if (Memory.squads[squadName].role === 'farm') {
                         console.log('deleting: ' + squadName);
+                        console.log('creep: ' + creepID);
                         delete Memory.squads[squadName];
                         creepArray = []; // stop looping
                     } else {
