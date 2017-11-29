@@ -72,7 +72,7 @@ const roleOffensive = {
                     actOffensive.findDefenceTarget(creep);
                 }
                 if (!creep.memory.attackCreep) {
-                    const NPCSpawns = creep.room.find(FIND_HOSTILE_SPAWNS);
+                    const NPCSpawns = creep.room.find(FIND_HOSTILE_STRUCTURES);
                     let cooldown = 999;
                     let target;
                     NPCSpawns.forEach(spawner => {
