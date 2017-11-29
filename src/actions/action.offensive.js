@@ -6,7 +6,7 @@ var actOffensive = {
         if (target) {
             if (creep.hits < creep.hitsMax * 0.9) {
                 creep.heal(creep);
-            } else {
+            } else if (target.hits < target.hitsMax) {
                 var err = creep.heal(target);
                 if (err == ERR_INVALID_TARGET) {
                     delete creep.memory.healCreep;
