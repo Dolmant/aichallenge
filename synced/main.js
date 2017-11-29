@@ -1083,8 +1083,14 @@ const brains = {
                     }
                 } else {
                     if (Memory.squads[squadName].role === 'farm') {
-                        emory.squads[squadName].creeps.splice(index, index + 1);
-                        brains.retireSquad(squadName);
+                        Memory.squads[squadName].creeps = [];
+                        Memory.squads[squadName].size = 0;
+                        Memory.squad_requests.push({
+                            'squad': squadName,
+                            'role': 'farm',
+                            'roomTarget': Memory.squads[squadName].roomTarget,
+                            'size': 2
+                        });
                     } else {
                         Memory.squads[squadName].creeps.splice(index, index + 1);
                         if (Memory.squads[squadName].role != 'retired') {
