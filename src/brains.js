@@ -48,7 +48,7 @@ const brains = {
                             roleOffensive.grinder(creep);
                             break;
                     }
-                    if ((creep.ticksToLive < 200 || creep.memory.forceRevive) && creep.memory.secondaryRole === 'heal' && Memory.squads[squadName].role === 'farm' && !creep.memory.revived) {
+                    if ((creep.ticksToLive < 350 || creep.memory.forceRevive) && creep.memory.secondaryRole === 'heal' && Memory.squads[squadName].role === 'farm' && !creep.memory.revived) {
                         creep.memory.revived = true;
                         console.log('pushing new squad now');
                         Memory.squad_requests.push({
