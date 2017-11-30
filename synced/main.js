@@ -2900,7 +2900,7 @@ const actResupply = {
 
 function getTargets(creep) {
     var target = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
-    if (target) {
+    if (target && target.amount > creep.carryCapacity / 2) {
         creep.memory.dropTarget = target.id;
         delete creep.memory.fetchTarget;
     } else {
