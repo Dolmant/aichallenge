@@ -272,7 +272,7 @@ var actOffensive = {
         var target = Game.getObjectById(creep.memory.attackCreep);
         if (target) {
             var err = creep.attack(target);
-            if (target.pos.x != 1 && target.pos.y != 49 && target.pos.x != 49 && target.pos.y != 1) {
+            if (target.pos.x != 0 && target.pos.y != 49 && target.pos.x != 49 && target.pos.y != 0) {
                 creep.moveToCacheTarget(target.pos);
             }
             if (err == ERR_INVALID_TARGET) {
