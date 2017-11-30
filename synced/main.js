@@ -1382,7 +1382,7 @@ const roleOffensive = {
                         creep.memory.myTask = 'moveToTarget';
                     }
                 } else {
-                    creep.memory.myTask = 'dualAttack';
+                    creep.memory.myTask = 'attack'; // dualAttack
                 }
             } else {
                 if (!creep.healCreep) {
@@ -2919,8 +2919,12 @@ const actResupply = {
 };
 
 function getTargets(creep) {
-    var target = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
-    if (target && target.amount > creep.carryCapacity / 2) {
+    var target = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES, {
+        filter: resources => {
+            return creep.carryCapacity / 2 < resources.amount;
+        }
+    });
+    if (target) {
         creep.memory.dropTarget = target.id;
         delete creep.memory.fetchTarget;
     } else {
