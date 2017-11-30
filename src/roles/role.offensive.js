@@ -88,7 +88,7 @@ const roleOffensive = {
                         creep.memory.myTask = 'moveToTarget';
                     }
                 } else {
-                    creep.memory.myTask = 'attack'; // dualAttack
+                    creep.memory.myTask = 'dualAttack';
                 }
             } else {
                 if (!creep.healCreep) {
