@@ -417,6 +417,10 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
         }
         return partArray;
     }
+    let amount = 12;
+    if (options.thiefmule && options.sourceMap && Memory.energyMap[options.sourceMap] && Memory.energyMap[options.sourceMap] > 3000) {
+        amount = 25;
+    }
     while (totalEnergy >= 4  && workCount < 12) {
         if (!options.carryOnly && !options.mule && !options.thiefmule) {
             partArray.push(WORK);

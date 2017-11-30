@@ -830,6 +830,7 @@ const cronJobs = {
                 __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].buildRequest(target_room, 1, {
                     'role': 'thiefmule',
                     'myTask': 'goToTarget',
+                    'sourceMap': key,
                     'goToTarget': target_room,
                     'stealTarget': target_room,
                     'home': home,
@@ -2737,6 +2738,10 @@ function getBody(myRoom, MaxParts, options = {}) {
             }
         }
         return partArray;
+    }
+    let amount = 12;
+    if (options.thiefmule && options.sourceMap && Memory.energyMap[options.sourceMap] && Memory.energyMap[options.sourceMap] > 3000) {
+        amount = 25;
     }
     while (totalEnergy >= 4 && workCount < 12) {
         if (!options.carryOnly && !options.mule && !options.thiefmule) {

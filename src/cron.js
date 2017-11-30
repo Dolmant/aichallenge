@@ -64,6 +64,7 @@ const cronJobs = {
                 brains.buildRequest(target_room, 1, {
                     'role': 'thiefmule',
                     'myTask': 'goToTarget',
+                    'sourceMap': key,
                     'goToTarget': target_room,
                     'stealTarget': target_room,
                     'home': home,
