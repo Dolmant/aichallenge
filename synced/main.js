@@ -261,7 +261,7 @@ var actOffensive = {
                         delete creep.memory.healCreep;
                     }
                 }
-                creep.moveToCacheTarget(target.pos);
+                creep.moveToCacheTarget(target.pos, { 'maxRooms': 1 });
             }
         } else {
             delete creep.memory.healCreep;
@@ -274,7 +274,7 @@ var actOffensive = {
             var err = creep.attack(target);
             // removing as enemies on that spot will otherwise be left alone
             // if (target.pos.x != 0 && target.pos.y != 49 && target.pos.x != 49 && target.pos.y != 0) {
-            creep.moveToCacheTarget(target.pos);
+            creep.moveToCacheTarget(target.pos, { 'maxRooms': 1 });
             // }
             if (err == ERR_INVALID_TARGET) {
                 delete creep.memory.attackCreep;
@@ -291,7 +291,7 @@ var actOffensive = {
         var target = Game.getObjectById(creep.memory.attackCreep);
         if (target) {
             var err = creep.attack(target);
-            creep.moveToCacheTarget(target.pos);
+            creep.moveToCacheTarget(target.pos, { 'maxRooms': 1 });
             if (err == ERR_INVALID_TARGET) {
                 delete creep.memory.attackCreep;
                 return true;
@@ -306,7 +306,7 @@ var actOffensive = {
         if (target) {
             var err = creep.rangedAttack(target);
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveToCacheTarget(target.pos);
+                creep.moveToCacheTarget(target.pos, { 'maxRooms': 1 });
             } else if (err == ERR_INVALID_TARGET) {
                 delete creep.memory.attackCreep;
                 return true;
@@ -323,13 +323,13 @@ var actOffensive = {
         var err = 0;
         if (!creep.memory.blockTarget && !creep.memory.done) {
             if (block1Flag) {
-                err = creep.moveToCacheTarget(block1Flag.pos);
+                err = creep.moveToCacheTarget(block1Flag.pos, { 'maxRooms': 1 });
                 if (err == ERR_NO_PATH) {
                     if (block2Flag) {
-                        var err = creep.moveToCacheTarget(block2Flag.pos);
+                        var err = creep.moveToCacheTarget(block2Flag.pos, { 'maxRooms': 1 });
                         if (err == ERR_NO_PATH) {
                             if (block3Flag) {
-                                var err = creep.moveToCacheTarget(block3Flag.pos);
+                                var err = creep.moveToCacheTarget(block3Flag.pos, { 'maxRooms': 1 });
                                 if (err == ERR_NO_PATH) {
                                     return;
                                 } else {
@@ -350,7 +350,7 @@ var actOffensive = {
             if (creep.pos.getRangeTo(blockTarget.pos) <= 1) {
                 creep.memory.done = true;
             } else {
-                err = creep.moveToCacheTarget(blockTarget.pos);
+                err = creep.moveToCacheTarget(blockTarget.pos, { 'maxRooms': 1 });
                 if (err = ERR_NO_PATH) {
                     delete creep.memory.blockTarget;
                 }
@@ -359,13 +359,13 @@ var actOffensive = {
     },
     gather: function (creep) {
         if (Memory.attackers.attacking) {
-            creep.moveToCacheTarget(Game.flags['Attack'].pos);
+            creep.moveToCacheTarget(Game.flags['Attack'].pos, { 'maxRooms': 1 });
             return true;
         } else {
             if (creep.pos.getRangeTo(Game.flags['Marshal'].pos) <= 2) {
                 return true;
             } else {
-                creep.moveToCacheTarget(Game.flags['Marshal'].pos);
+                creep.moveToCacheTarget(Game.flags['Marshal'].pos, { 'maxRooms': 1 });
             }
         }
     },
@@ -378,7 +378,7 @@ var actOffensive = {
             if (!mySpawns[0].memory.renewTarget && inRange) {
                 mySpawns[0].memory.renewTarget = creep.id;
             } else if (!inRange) {
-                creep.moveToCacheTarget(mySpawns[0].pos);
+                creep.moveToCacheTarget(mySpawns[0].pos, { 'maxRooms': 1 });
             }
         }
     },
@@ -1382,7 +1382,7 @@ const roleOffensive = {
                         creep.memory.myTask = 'moveToTarget';
                     }
                 } else {
-                    creep.memory.myTask = 'dualAttack';
+                    creep.memory.myTask = 'attack';
                 }
             } else {
                 if (!creep.healCreep) {
