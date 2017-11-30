@@ -2351,8 +2351,6 @@ const spawner = {
 
         let MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
         MaxMuleCount = myRoom.memory.hasExtractor ? 2 : MaxMuleCount;
-        const totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
-        const referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
 
         let canSpawn = true;
 
@@ -2390,6 +2388,8 @@ const spawner = {
         });
 
         mySpawns.forEach(Spawn => {
+            const totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
+            const referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
             if (Spawn && !Spawn.spawning && canSpawn) {
                 if (Spawn.memory.renewTarget) {
                     canSpawn = false;
@@ -2485,7 +2485,7 @@ const spawner = {
                     canSpawn = false;
                 }
                 if (myRoom.energyAvailable >= referenceEnergy && canSpawn) {
-                    completeOutstandingRequests(myRoom, Spawn);
+                    canSpawn = !completeOutstandingRequests(myRoom, Spawn);
                 }
             }
         });
@@ -2504,7 +2504,11 @@ function completeOutstandingRequests(myRoom, Spawn) {
         const err = Spawn.spawnCreep(suggestedBody, newName, {
             memory: myRoom.memory.requests[0]
         });
-        // TODO SOMEHOW WE ARE CREATING SHIT AT THE SAME TIME WITH THE SAME ATTRIBUTES. I THINK THEY ARE BEING COPIED IN
+        // TODO SOMEHOW WE ARE CREATING SHIT AT THE SAME TIME WITH THE SAME ATTRIBUTES. I THINK THEY ARE BEING COPIED IN. THIS MEANS THE DUPLICATE IS EXTRA AND IS DELETED. SOMETIMES IT DOESNT EVEN SPAWN!!!!
+        // [11:46:04 PM][shard1]Spawning: farm4079663Spawn1
+        // [11:46:04 PM][shard1]Spawning: farm4079663Spawn6
+        // [11:46:06 PM][shard1]deleting: W44N54farm
+        // [11:46:06 PM][shard1]creep: farm4079663Spawn6
         if (err == OK) {
             // TODO if we have a squad but cant find the id, create a retired squad
             if (myRoom.memory.requests[0].squad && Memory.squads[myRoom.memory.requests[0].squad]) {
@@ -2516,12 +2520,14 @@ function completeOutstandingRequests(myRoom, Spawn) {
             }
             myRoom.memory.requests.splice(0, 1);
             console.log('Spawning: ' + newName);
+            return true;
         } else {
             console.log(err);
             console.log(suggestedBody.length);
             console.log(newName);
             console.log(JSON.stringify({ memory: myRoom.memory.requests[0] }));
             console.log("brains failed to spawn");
+            return false;
         }
     }
 }
