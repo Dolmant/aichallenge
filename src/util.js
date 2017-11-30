@@ -56,7 +56,7 @@ const util = {
             delete creep.memory.moveToTargetrange;
             return true;
         } else {
-            var err = creep.moveToCacheTarget(new RoomPosition(creep.memory.moveToTargetx, creep.memory.moveToTargety, creep.room.name));
+            var err = creep.moveToCacheTarget(new RoomPosition(creep.memory.moveToTargetx, creep.memory.moveToTargety, creep.room.name), {'maxRooms': 1});
             if (err == ERR_NO_PATH || err == ERR_INVALID_TARGET) {
                 delete creep.memory.moveToTargetx;
                 delete creep.memory.moveToTargety;
