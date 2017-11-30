@@ -22,6 +22,11 @@ Creep.prototype.moveToCacheTarget = function(target, options) {
     const checkCpu = Game.cpu.getUsed();
     const dest = target.roomName + target.x + target.y;
     const from = this.pos.roomName + this.pos.x + this.pos.y
+    let moveopts = {
+        'maxRooms': 1,
+        'ignoreCreeps': true,
+        'serialize': true,
+    };
     if (this.fatigue > 0) {
         return -11;
     }
@@ -35,7 +40,7 @@ Creep.prototype.moveToCacheTarget = function(target, options) {
                 delete Memory.pathCache[dest][from];
             }
             Memory.stats['cpu.cache_miss_temp'] += 1;
-            return this.moveToCacheTarget(target, {'ignoreCreeps': false})
+            return this.moveToCacheTarget(target, Object.assign(moveopts, options, {'ignoreCreeps': false}))
         }
         this.memory.currentCache = from;
     } else if (Memory.pathCache[dest] && Memory.pathCache[dest][from]) {
@@ -44,11 +49,6 @@ Creep.prototype.moveToCacheTarget = function(target, options) {
         this.memory.targetCache = dest;
     } else {
         Memory.stats['cpu.cache_miss_temp'] += 1;
-        let moveopts = {
-            'maxRooms': 1,
-            'ignoreCreeps': true,
-            'serialize': true,
-        };
         if (options) {
             moveopts = Object.assign(moveopts, options);
         }
