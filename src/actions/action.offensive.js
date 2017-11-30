@@ -30,6 +30,25 @@ var actOffensive = {
             return true;
         }
     },
+    dualAttack: function(creep: Creep) {
+        var target = Game.getObjectById(creep.memory.attackCreep);
+        if (target) {
+            var err = creep.attack(target);
+            // removing as enemies on that spot will otherwise be left alone
+            // if (target.pos.x != 0 && target.pos.y != 49 && target.pos.x != 49 && target.pos.y != 0) {
+            creep.moveToCacheTarget(target.pos);
+            // }
+            if (err == ERR_INVALID_TARGET) {
+                delete creep.memory.attackCreep;
+                return true;
+            } else if (err == ERR_NOT_IN_RANGE) {
+                creep.rangedAttack(target)
+            }
+        } else {
+            delete creep.memory.attackCreep;
+            return true;
+        }
+    },
     attack: function(creep: Creep) {
         var target = Game.getObjectById(creep.memory.attackCreep);
         if (target) {

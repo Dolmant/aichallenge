@@ -265,8 +265,7 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
         partArray.push(ATTACK);
         partArray.push(ATTACK);
         partArray.push(ATTACK);
-        partArray.push(ATTACK);
-        for (var i = 0; (i < Math.floor((referenceEnergy - 1150)/50) && i < 42); i += 1) {
+        for (var i = 0; (i < Math.floor((referenceEnergy - 1070)/50) && i < 42); i += 1) {
             partArray.push(MOVE);
         }
         partArray.push(HEAL);
@@ -291,14 +290,14 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
         return partArray;
     }
     if (options.farm) {
-        for (var i = 0; (i < Math.floor((referenceEnergy - 1750)/50) && i < 25); i += 1) {
+        for (var i = 0; (i < Math.floor((referenceEnergy - 2170)/50) && i < 25); i += 1) {
             partArray.push(MOVE);
         }
         partArray.push(TOUGH);
         partArray.push(TOUGH);
-        partArray.push(TOUGH);
-        partArray.push(TOUGH);
-        partArray.push(TOUGH);
+        partArray.push(RANGED_ATTACK);
+        partArray.push(RANGED_ATTACK);
+        partArray.push(RANGED_ATTACK);
         partArray.push(ATTACK);
         partArray.push(ATTACK);
         partArray.push(ATTACK);

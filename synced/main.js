@@ -268,6 +268,25 @@ var actOffensive = {
             return true;
         }
     },
+    dualAttack: function (creep) {
+        var target = Game.getObjectById(creep.memory.attackCreep);
+        if (target) {
+            var err = creep.attack(target);
+            // removing as enemies on that spot will otherwise be left alone
+            // if (target.pos.x != 0 && target.pos.y != 49 && target.pos.x != 49 && target.pos.y != 0) {
+            creep.moveToCacheTarget(target.pos);
+            // }
+            if (err == ERR_INVALID_TARGET) {
+                delete creep.memory.attackCreep;
+                return true;
+            } else if (err == ERR_NOT_IN_RANGE) {
+                creep.rangedAttack(target);
+            }
+        } else {
+            delete creep.memory.attackCreep;
+            return true;
+        }
+    },
     attack: function (creep) {
         var target = Game.getObjectById(creep.memory.attackCreep);
         if (target) {
@@ -1365,7 +1384,7 @@ const roleOffensive = {
                         creep.memory.myTask = 'moveToTarget';
                     }
                 } else {
-                    creep.memory.myTask = 'attack';
+                    creep.memory.myTask = 'dualAttack';
                 }
             } else {
                 if (!creep.healCreep) {
@@ -2569,8 +2588,7 @@ function getBody(myRoom, MaxParts, options = {}) {
         partArray.push(ATTACK);
         partArray.push(ATTACK);
         partArray.push(ATTACK);
-        partArray.push(ATTACK);
-        for (var i = 0; i < Math.floor((referenceEnergy - 1150) / 50) && i < 42; i += 1) {
+        for (var i = 0; i < Math.floor((referenceEnergy - 1070) / 50) && i < 42; i += 1) {
             partArray.push(MOVE);
         }
         partArray.push(HEAL);
@@ -2595,14 +2613,14 @@ function getBody(myRoom, MaxParts, options = {}) {
         return partArray;
     }
     if (options.farm) {
-        for (var i = 0; i < Math.floor((referenceEnergy - 1750) / 50) && i < 25; i += 1) {
+        for (var i = 0; i < Math.floor((referenceEnergy - 2170) / 50) && i < 25; i += 1) {
             partArray.push(MOVE);
         }
         partArray.push(TOUGH);
         partArray.push(TOUGH);
-        partArray.push(TOUGH);
-        partArray.push(TOUGH);
-        partArray.push(TOUGH);
+        partArray.push(RANGED_ATTACK);
+        partArray.push(RANGED_ATTACK);
+        partArray.push(RANGED_ATTACK);
         partArray.push(ATTACK);
         partArray.push(ATTACK);
         partArray.push(ATTACK);
@@ -2795,6 +2813,8 @@ const taskManager = {
                 return __WEBPACK_IMPORTED_MODULE_5__actions_action_build__["a" /* default */].run(creep);
             case 'heal':
                 return __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__["a" /* default */].heal(creep);
+            case 'dualAttack':
+                return __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__["a" /* default */].dualAttack(creep);
             case 'attack':
                 return __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__["a" /* default */].attack(creep);
             case 'rangedAttack':

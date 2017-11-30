@@ -43,6 +43,8 @@ const taskManager = {
                 return actBuild.run(creep);
             case 'heal':
                 return actOffensive.heal(creep);
+            case 'dualAttack':
+                return actOffensive.dualAttack(creep);
             case 'attack':
                 return actOffensive.attack(creep);
             case 'rangedAttack':
