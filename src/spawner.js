@@ -47,10 +47,7 @@ const spawner = {
                         break;
                     case 'harvester':
                         myCreepCount.harvesterCount += 1;
-                        console.log(Spawn.spawning.name)
-                        console.log(Game.creeps[Spawn.spawning.name].memory.sourceMap)
-                        console.log(JSON.stringify(myCreepCount.sourceMap))
-                        myCreepCount.sourceMap[Game.creeps[Spawn.spawning.name].memory.sourceMap] += 1;
+                        myCreepCount.sourceMap[Game.creeps[Spawn.spawning.name].memory.sourceMap] = 1 + (myCreepCount.sourceMap[Game.creeps[Spawn.spawning.name].memory.sourceMap] || 0);
                         console.log('at ' + myCreepCount.sourceMap[Game.creeps[Spawn.spawning.name].memory.sourceMap] + ' harvesters')
                         break;
                     case 'worker':
