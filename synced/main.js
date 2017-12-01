@@ -954,14 +954,18 @@ const cronJobs = {
             '59bbc4282052a716c3ce7768': 0,
             '59bbc4282052a716c3ce7766': 0,
             '59bbc4282052a716c3ce7767': 0,
-            // location W44N54
+            // location W44N54 plus extras
             '59bbc42a2052a716c3ce77ca': 0,
             '59bbc42a2052a716c3ce77c8': 0,
             '59bbc42a2052a716c3ce77c7': 0,
-            // location W45N55
+            'W44N541': 0,
+            'W44N542': 0,
+            // location W45N55 plus extras
             '59bbc4282052a716c3ce7762': 0,
             '59bbc4282052a716c3ce7761': 0,
-            '59bbc4282052a716c3ce7760': 0
+            '59bbc4282052a716c3ce7760': 0,
+            'W45N551': 0,
+            'W45N552': 0
         };
         Memory.register_thieves = true;
         Memory.roomMap = {
@@ -1001,10 +1005,14 @@ const cronJobs = {
             '59bbc42a2052a716c3ce77ca': 'W44N54',
             '59bbc42a2052a716c3ce77c8': 'W44N54',
             '59bbc42a2052a716c3ce77c7': 'W44N54',
+            'W44N541': 'W44N54',
+            'W44N542': 'W44N54',
             // location W45N55
             '59bbc4282052a716c3ce7762': 'W45N55',
             '59bbc4282052a716c3ce7761': 'W45N55',
-            '59bbc4282052a716c3ce7760': 'W45N55'
+            '59bbc4282052a716c3ce7760': 'W45N55',
+            'W45N551': 'W45N55',
+            'W45N552': 'W45N55'
         };
         Memory.energyMap = {
             // location: W46N53
@@ -1043,10 +1051,14 @@ const cronJobs = {
             '59bbc42a2052a716c3ce77ca': 4000,
             '59bbc42a2052a716c3ce77c8': 4000,
             '59bbc42a2052a716c3ce77c7': 4000,
+            'W44N541': 4000,
+            'W44N542': 4000,
             // location W45N55
             '59bbc4282052a716c3ce7762': 4000,
             '59bbc4282052a716c3ce7761': 4000,
-            '59bbc4282052a716c3ce7760': 4000
+            '59bbc4282052a716c3ce7760': 4000,
+            'W45N551': 4000,
+            'W45N552': 4000
         };
         Memory.homeMap = {
             'W42N51': 'W41N51',
@@ -1063,7 +1075,11 @@ const cronJobs = {
             'W47N52': 'W46N52',
             'W45N54': 'W45N53',
             'W44N54': 'W43N53',
-            'W45N55': 'W45N53'
+            'W45N55': 'W45N53',
+            'W44N541': 'W43N53',
+            'W44N542': 'W43N53',
+            'W45N551': 'W45N53',
+            'W45N552': 'W45N53'
         };
     }
 };
@@ -2387,6 +2403,7 @@ const spawner = {
                     case 'harvester':
                         myCreepCount.harvesterCount += 1;
                         myCreepCount.sourceMap[Game.creeps[Spawn.spawning.name].memory.sourceMap] += 1;
+                        console.log('at ' + myCreepCount.sourceMap[Game.creeps[Spawn.spawning.name].memory.sourceMap] + ' harvesters');
                         break;
                     case 'worker':
                         myCreepCount.workerCount += 1;
@@ -2525,11 +2542,6 @@ function completeOutstandingRequests(myRoom, Spawn) {
         const err = Spawn.spawnCreep(suggestedBody, newName, {
             memory: myRoom.memory.requests[0]
         });
-        // TODO SOMEHOW WE ARE CREATING SHIT AT THE SAME TIME WITH THE SAME ATTRIBUTES. I THINK THEY ARE BEING COPIED IN. THIS MEANS THE DUPLICATE IS EXTRA AND IS DELETED. SOMETIMES IT DOESNT EVEN SPAWN!!!!
-        // [11:46:04 PM][shard1]Spawning: farm4079663Spawn1
-        // [11:46:04 PM][shard1]Spawning: farm4079663Spawn6
-        // [11:46:06 PM][shard1]deleting: W44N54farm
-        // [11:46:06 PM][shard1]creep: farm4079663Spawn6
         if (err == OK) {
             // TODO if we have a squad but cant find the id, create a retired squad
             if (myRoom.memory.requests[0].squad && Memory.squads[myRoom.memory.requests[0].squad]) {
@@ -2744,7 +2756,7 @@ function getBody(myRoom, MaxParts, options = {}) {
     if (options.thiefmule && options.sourceMap && Memory.energyMap[options.sourceMap] && Memory.energyMap[options.sourceMap] > 3000) {
         amount = 25;
     }
-    while (totalEnergy >= 4 && workCount < 12) {
+    while (totalEnergy >= 4 && workCount < amount) {
         if (!options.carryOnly && !options.mule && !options.thiefmule) {
             partArray.push(WORK);
             partArray.push(CARRY);

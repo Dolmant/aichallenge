@@ -48,6 +48,7 @@ const spawner = {
                     case 'harvester':
                         myCreepCount.harvesterCount += 1;
                         myCreepCount.sourceMap[Game.creeps[Spawn.spawning.name].memory.sourceMap] += 1;
+                        console.log('at ' + myCreepCount.sourceMap[Game.creeps[Spawn.spawning.name].memory.sourceMap] + ' harvesters')
                         break;
                     case 'worker':
                         myCreepCount.workerCount += 1;
@@ -191,11 +192,6 @@ function completeOutstandingRequests(myRoom, Spawn) {
         const err = Spawn.spawnCreep(suggestedBody, newName, {
             memory: myRoom.memory.requests[0],
         });
-        // TODO SOMEHOW WE ARE CREATING SHIT AT THE SAME TIME WITH THE SAME ATTRIBUTES. I THINK THEY ARE BEING COPIED IN. THIS MEANS THE DUPLICATE IS EXTRA AND IS DELETED. SOMETIMES IT DOESNT EVEN SPAWN!!!!
-        // [11:46:04 PM][shard1]Spawning: farm4079663Spawn1
-        // [11:46:04 PM][shard1]Spawning: farm4079663Spawn6
-        // [11:46:06 PM][shard1]deleting: W44N54farm
-        // [11:46:06 PM][shard1]creep: farm4079663Spawn6
         if (err == OK) {
             // TODO if we have a squad but cant find the id, create a retired squad
             if (myRoom.memory.requests[0].squad && Memory.squads[myRoom.memory.requests[0].squad]) {
@@ -421,7 +417,7 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
     if (options.thiefmule && options.sourceMap && Memory.energyMap[options.sourceMap] && Memory.energyMap[options.sourceMap] > 3000) {
         amount = 25;
     }
-    while (totalEnergy >= 4  && workCount < 12) {
+    while (totalEnergy >= 4  && workCount < amount) {
         if (!options.carryOnly && !options.mule && !options.thiefmule) {
             partArray.push(WORK);
             partArray.push(CARRY);
