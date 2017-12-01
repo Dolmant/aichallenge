@@ -1489,6 +1489,7 @@ const roleOffensive = {
         if (creep.room.name == Memory.squads[mySquad].roomTarget) {
             if (creep.hits < creep.hitsMax * 0.85 || creep.hits < creep.hitsMax * 0.9 && 5 < creep.pos.x && creep.pos.x < 45 && 5 < creep.pos.y && creep.pos.y < 45) {
                 creep.memory.myTask = 'goToTarget';
+                creep.heal(creep);
                 creep.memory.goToTarget = Memory.squads[mySquad].stagingTarget.roomName;
             } else {
                 if (!creep.memory.attackCreep) {
