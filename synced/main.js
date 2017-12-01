@@ -1707,7 +1707,7 @@ Creep.prototype.moveToCacheTarget = function (target, options) {
                 delete Memory.pathCache[dest][from];
             }
             Memory.stats['cpu.cache_miss_temp'] += 1;
-            return this.moveToCacheTarget(target, Object.assign(moveopts, options, { 'ignoreCreeps': false }));
+            return this.moveToCacheTarget(target, Object.assign({ 'ignoreCreeps': false }, options));
         }
         this.memory.currentCache = from;
     } else if (Memory.pathCache[dest] && Memory.pathCache[dest][from]) {
@@ -2404,7 +2404,7 @@ const spawner = {
                         myCreepCount.harvesterCount += 1;
                         console.log(Spawn.spawning.name);
                         console.log(Game.creeps[Spawn.spawning.name].memory.sourceMap);
-                        console.log(JSON.stringify(Game.creeps[Spawn.spawning.name].memory));
+                        console.log(JSON.stringify(myCreepCount.sourceMap));
                         myCreepCount.sourceMap[Game.creeps[Spawn.spawning.name].memory.sourceMap] += 1;
                         console.log('at ' + myCreepCount.sourceMap[Game.creeps[Spawn.spawning.name].memory.sourceMap] + ' harvesters');
                         break;
