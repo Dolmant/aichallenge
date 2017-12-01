@@ -1600,6 +1600,29 @@ const actBuild = {
                 }
             }
         }
+    },
+    roadWorks: function (creep) {
+        if (creep.carry.energy > creep.carryCapacity * 0.5) {
+            const constSites = creep.pos.lookFor(LOOK_CONSTRUCTION_SITES);
+            const structs = creep.pos.lookFor(LOOK_STRUCTURES);
+            let target;
+            let err = 1;
+            if (constSites.length > 0) {
+                target = constSites[0];
+                err = creep.build(target);
+            } else if (structs.length > 0) {
+                structs.forEach(struct => {
+                    if (!target && struct.hits < struct.hitsMax * 0.8) {
+                        target = struct;
+                        err = creep.repair(struct);
+                    }
+                });
+            }
+            if (target && err == OK) {
+                return true;
+            }
+        }
+        return false;
     }
 };
 
@@ -2844,6 +2867,13 @@ function getBody(myRoom, MaxParts, options = {}) {
 
 const taskManager = {
     run: function (creep, mySpawns) {
+        switch (creep.memory.preTask) {
+            case 'roadWorker':
+                if (__WEBPACK_IMPORTED_MODULE_5__actions_action_build__["a" /* default */].roadWorks(creep)) {
+                    return false;
+                }
+                break;
+        }
         switch (creep.memory.myTask) {
             case 'claim':
                 return __WEBPACK_IMPORTED_MODULE_2__actions_action_claim__["a" /* default */].run(creep);

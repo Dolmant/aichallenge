@@ -15,7 +15,14 @@ import util from './util';
 
 const taskManager = {
     run: function(creep: Creep, mySpawns: Array<StructureSpawn>) {
-        switch(creep.memory.myTask){
+        switch(creep.memory.preTask) {
+            case 'roadWorker':
+                if (actBuild.roadWorks(creep)) {
+                    return false;
+                }
+                break;
+        }
+        switch(creep.memory.myTask) {
             case 'claim':
                 return actClaim.run(creep);
             case 'fetch':
