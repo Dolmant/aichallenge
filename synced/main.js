@@ -872,7 +872,8 @@ const cronJobs = {
                     'goToTarget': target_room,
                     'stealTarget': target_room,
                     'home': home,
-                    'name': newName
+                    'name': newName,
+                    'preTask': 'roadWorker'
                 });
                 Memory.thieving_mules[key] = newName;
                 console.log('Build req ' + newName);
@@ -1617,6 +1618,9 @@ const actBuild = {
                         err = creep.repair(struct);
                     }
                 });
+            } else {
+                target = 1;
+                err = creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
             }
             if (target && err == OK) {
                 return true;

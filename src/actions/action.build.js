@@ -61,6 +61,9 @@ const actBuild = {
                         err = creep.repair(struct);
                     }
                 })
+            } else {
+                target = 1;
+                err = creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
             }
             if (target && err == OK) {
                 return true;

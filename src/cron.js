@@ -69,6 +69,7 @@ const cronJobs = {
                     'stealTarget': target_room,
                     'home': home,
                     'name': newName,
+                    'preTask': 'roadWorker',
                 });
                 Memory.thieving_mules[key] = newName;
                 console.log('Build req '+ newName);
