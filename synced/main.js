@@ -1473,6 +1473,7 @@ const roleOffensive = {
         } else {
             if (creep.hits < creep.hitsMax) {
                 creep.heal(creep);
+                creep.memory.myTask = '';
             } else {
                 creep.memory.myTask = 'goToTarget';
                 creep.memory.goToTarget = Memory.squads[mySquad].roomTarget;

@@ -1,7 +1,7 @@
 Need to do:
 add eslint rules I am dying
 
-graphana
+to build roads add work component to mules, mules are going to check as they walk and build it.
 
 tomorrow:
 defend from neutral creeps
