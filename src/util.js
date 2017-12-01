@@ -49,6 +49,42 @@ const util = {
             creep.moveToCacheTarget(new RoomPosition(creep.memory.exitCache.x, creep.memory.exitCache.y, creep.memory.exitCache.roomName), {'maxRooms': 1});
         }
     },
+    loiter(creep: Creep) {
+        var err = 0;
+        if (creep.pos.x == 0) {
+            err = creep.move(RIGHT);
+            if (err != OK) {
+                err = creep.move(TOP_RIGHT);
+            }
+            if (err != OK) {
+                err = creep.move(BOTTOM_RIGHT);
+            }
+        } else if (creep.pos.x == 49) {
+            err = creep.move(LEFT);
+            if (err != OK) {
+                err = creep.move(TOP_LEFT);
+            }
+            if (err != OK) {
+                err = creep.move(BOTTOM_LEFT);
+            }
+        } else if (creep.pos.y == 0) {
+            err = creep.move(BOTTOM);
+            if (err != OK) {
+                err = creep.move(BOTTOM_LEFT);
+            }
+            if (err != OK) {
+                err = creep.move(BOTTOM_RIGHT);
+            }
+        } else if (creep.pos.y == 49) {
+            err = creep.move(TOP);
+            if (err != OK) {
+                err = creep.move(TOP_RIGHT);
+            }
+            if (err != OK) {
+                err = creep.move(TOP_LEFT);
+            }
+        }
+    },
     moveToTarget(creep: Creep) {
         if (creep.pos.getRangeTo(creep.memory.moveToTargetx, creep.memory.moveToTargety) <= creep.memory.moveToTargetrange || !creep.memory.moveToTargetx) {
             delete creep.memory.moveToTargetx;

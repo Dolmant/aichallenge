@@ -34,6 +34,8 @@ const taskManager = {
                 return util.moveToObject(creep);
             case 'goToTarget':
                 return util.goToTarget(creep);
+            case 'loiter':
+                return util.loiter(creep);
             case 'upgrade':
                 return actUpgrade.run(creep);
             case 'resupply':

@@ -119,6 +119,42 @@ const util = {
             creep.moveToCacheTarget(new RoomPosition(creep.memory.exitCache.x, creep.memory.exitCache.y, creep.memory.exitCache.roomName), { 'maxRooms': 1 });
         }
     },
+    loiter(creep) {
+        var err = 0;
+        if (creep.pos.x == 0) {
+            err = creep.move(RIGHT);
+            if (err != OK) {
+                err = creep.move(TOP_RIGHT);
+            }
+            if (err != OK) {
+                err = creep.move(BOTTOM_RIGHT);
+            }
+        } else if (creep.pos.x == 49) {
+            err = creep.move(LEFT);
+            if (err != OK) {
+                err = creep.move(TOP_LEFT);
+            }
+            if (err != OK) {
+                err = creep.move(BOTTOM_LEFT);
+            }
+        } else if (creep.pos.y == 0) {
+            err = creep.move(BOTTOM);
+            if (err != OK) {
+                err = creep.move(BOTTOM_LEFT);
+            }
+            if (err != OK) {
+                err = creep.move(BOTTOM_RIGHT);
+            }
+        } else if (creep.pos.y == 49) {
+            err = creep.move(TOP);
+            if (err != OK) {
+                err = creep.move(TOP_RIGHT);
+            }
+            if (err != OK) {
+                err = creep.move(TOP_LEFT);
+            }
+        }
+    },
     moveToTarget(creep) {
         if (creep.pos.getRangeTo(creep.memory.moveToTargetx, creep.memory.moveToTargety) <= creep.memory.moveToTargetrange || !creep.memory.moveToTargetx) {
             delete creep.memory.moveToTargetx;
@@ -1473,7 +1509,7 @@ const roleOffensive = {
         } else {
             if (creep.hits < creep.hitsMax) {
                 creep.heal(creep);
-                creep.memory.myTask = '';
+                creep.memory.myTask = 'loiter';
             } else {
                 creep.memory.myTask = 'goToTarget';
                 creep.memory.goToTarget = Memory.squads[mySquad].roomTarget;
@@ -2822,6 +2858,8 @@ const taskManager = {
                 return __WEBPACK_IMPORTED_MODULE_7__util__["a" /* default */].moveToObject(creep);
             case 'goToTarget':
                 return __WEBPACK_IMPORTED_MODULE_7__util__["a" /* default */].goToTarget(creep);
+            case 'loiter':
+                return __WEBPACK_IMPORTED_MODULE_7__util__["a" /* default */].loiter(creep);
             case 'upgrade':
                 return __WEBPACK_IMPORTED_MODULE_4__actions_action_upgrade__["a" /* default */].run(creep);
             case 'resupply':
