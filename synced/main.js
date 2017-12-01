@@ -2147,25 +2147,21 @@ function runTowers(myTowers) {
                 repairTarget = creepToRepair;
             }
             if (!repairTarget) {
-                var structureList = tower.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_ROAD || s.structureType == STRUCTURE_CONTAINER
+                var structureList = tower.room.find(FIND_STRUCTURES, { filter: s => (s.structureType == STRUCTURE_ROAD || s.structureType == STRUCTURE_CONTAINER) && s.hits < s.hitsMax * 0.5
                 });
                 for (let structure of structureList) {
-                    if (structure.hits < structure.hitsMax * 0.9) {
-                        tower.repair(structure);
-                        repairTarget = structure.id;
-                        break;
-                    }
+                    tower.repair(structure);
+                    repairTarget = structure.id;
+                    break;
                 }
             }
             if (!repairTarget) {
-                var structureList = tower.room.find(FIND_STRUCTURES, { filter: s => s.structureType == STRUCTURE_RAMPART || s.structureType == STRUCTURE_WALL
+                var structureList = tower.room.find(FIND_STRUCTURES, { filter: s => (s.structureType == STRUCTURE_RAMPART || s.structureType == STRUCTURE_WALL) && s.hits < minRepair
                 });
                 for (let structure of structureList) {
-                    if (structure.hits < structure.hitsMax && structure.hits < minRepair) {
-                        tower.repair(structure);
-                        repairTarget = structure.id;
-                        break;
-                    }
+                    tower.repair(structure);
+                    repairTarget = structure.id;
+                    break;
                 }
             }
         }
