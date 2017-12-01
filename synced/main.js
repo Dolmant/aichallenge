@@ -259,6 +259,8 @@ var actOffensive = {
                     var err = creep.heal(target);
                     if (err == ERR_INVALID_TARGET) {
                         delete creep.memory.healCreep;
+                    } else if (err == ERR_NOT_IN_RANGE) {
+                        creep.rangedHeal(target);
                     }
                 }
                 creep.moveToCacheTarget(target.pos, { 'maxRooms': 1 });
@@ -2403,7 +2405,6 @@ const spawner = {
                     case 'harvester':
                         myCreepCount.harvesterCount += 1;
                         myCreepCount.sourceMap[Game.creeps[Spawn.spawning.name].memory.sourceMap] = 1 + (myCreepCount.sourceMap[Game.creeps[Spawn.spawning.name].memory.sourceMap] || 0);
-                        console.log('at ' + myCreepCount.sourceMap[Game.creeps[Spawn.spawning.name].memory.sourceMap] + ' harvesters');
                         break;
                     case 'worker':
                         myCreepCount.workerCount += 1;

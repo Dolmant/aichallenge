@@ -21,6 +21,8 @@ var actOffensive = {
                     var err = creep.heal(target);
                     if (err == ERR_INVALID_TARGET) {
                         delete creep.memory.healCreep;
+                    } else if (err == ERR_NOT_IN_RANGE) {
+                        creep.rangedHeal(target);
                     }
                 }
                 creep.moveToCacheTarget(target.pos, {'maxRooms': 1});
