@@ -412,14 +412,20 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
         }
         return partArray;
     }
-    let amount = 11;
+    let amount = 12;
     if (options.thiefmule && options.sourceMap && Memory.energyMap[options.sourceMap] && Memory.energyMap[options.sourceMap] > 3000) {
-        amount = 22;
+        amount = 23;
+        partArray.push(WORK);
+        partArray.push(MOVE);
+        partArray.push(CARRY);
+        totalEnergy -= 4;
+    } else if (options.thiefmule) {
+        amount = 11;
+        partArray.push(WORK);
+        partArray.push(MOVE);
+        partArray.push(CARRY);
+        totalEnergy -= 4;
     }
-    partArray.push(WORK);
-    partArray.push(MOVE);
-    partArray.push(CARRY);
-    totalEnergy -= 4;
     while (totalEnergy >= 4  && workCount < amount) {
         if (!options.carryOnly && !options.mule && !options.thiefmule) {
             partArray.push(WORK);

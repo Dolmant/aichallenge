@@ -15,13 +15,13 @@ const roleThiefMule = {
             creep.memory.moveToTargetrange = 1;
         } else if (_.sum(creep.carry) < creep.carryCapacity && creep.room.name == creep.memory.stealTarget) {
             creep.memory.myTask = 'fetch';
-        } else if (creep.carryCapacity == _.sum(creep.carry) && creep.room.name != creep.memory.home) {
+        } else if (_.sum(creep.carry) == creep.carryCapacity && creep.room.name != creep.memory.home) {
             creep.memory.myTask = 'goToTarget';
             creep.memory.goToTarget = creep.memory.home;
-        } else  if (_.sum(creep.carry) < creep.carryCapacity && creep.room.name != creep.memory.stealTarget) {
+        } else if (_.sum(creep.carry) < creep.carryCapacity * 0.5 && creep.room.name != creep.memory.stealTarget) {
             creep.memory.myTask = 'goToTarget';
             creep.memory.goToTarget = creep.memory.stealTarget;
-        } else  if (creep.carryCapacity == _.sum(creep.carry) && creep.room.name == creep.memory.home) {
+        } else if (_.sum(creep.carry) >= creep.carryCapacity * 0.5 && creep.room.name == creep.memory.home) {
             creep.memory.myTask = 'deposit';
         }
     },
