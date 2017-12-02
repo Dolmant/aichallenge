@@ -2814,22 +2814,29 @@ function getBody(myRoom, MaxParts, options = {}) {
         }
         return partArray;
     }
-    let amount = 12;
-    if (options.thiefmule && options.sourceMap && Memory.energyMap[options.sourceMap] && Memory.energyMap[options.sourceMap] > 3000) {
-        amount = 23;
-        partArray.push(WORK);
-        partArray.push(MOVE);
-        partArray.push(CARRY);
-        totalEnergy -= 4;
-    } else if (options.thiefmule) {
-        amount = 11;
-        partArray.push(WORK);
-        partArray.push(MOVE);
-        partArray.push(CARRY);
-        totalEnergy -= 4;
+    if (options.mule || options.thiefmule) {
+        let amount = 6;
+        if (options.thiefmule) {
+            amount = 6;
+            partArray.push(WORK);
+            partArray.push(MOVE);
+            partArray.push(CARRY);
+            totalEnergy -= 4;
+            if (options.sourceMap && Memory.energyMap[options.sourceMap] && Memory.energyMap[options.sourceMap] > 3000) {
+                amount = 15;
+            }
+        }
+        while (totalEnergy >= 4 && workCount < amount) {
+            partArray.push(MOVE);
+            partArray.push(CARRY);
+            partArray.push(CARRY);
+            totalEnergy -= 3;
+            workCount += 1;
+        }
+        return partArray;
     }
-    while (totalEnergy >= 4 && workCount < amount) {
-        if (!options.carryOnly && !options.mule && !options.thiefmule) {
+    while (totalEnergy >= 4 && workCount < 12) {
+        if (!options.carryOnly) {
             partArray.push(WORK);
             partArray.push(CARRY);
             totalEnergy -= 3;
