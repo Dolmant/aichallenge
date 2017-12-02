@@ -154,6 +154,39 @@ const util = {
                 err = creep.move(TOP_LEFT);
             }
         }
+        if (creep.pos.x == 1) {
+            err = creep.move(RIGHT);
+            if (err != OK) {
+                err = creep.move(TOP_RIGHT);
+            }
+            if (err != OK) {
+                err = creep.move(BOTTOM_RIGHT);
+            }
+        } else if (creep.pos.x == 48) {
+            err = creep.move(LEFT);
+            if (err != OK) {
+                err = creep.move(TOP_LEFT);
+            }
+            if (err != OK) {
+                err = creep.move(BOTTOM_LEFT);
+            }
+        } else if (creep.pos.y == 1) {
+            err = creep.move(BOTTOM);
+            if (err != OK) {
+                err = creep.move(BOTTOM_LEFT);
+            }
+            if (err != OK) {
+                err = creep.move(BOTTOM_RIGHT);
+            }
+        } else if (creep.pos.y == 48) {
+            err = creep.move(TOP);
+            if (err != OK) {
+                err = creep.move(TOP_RIGHT);
+            }
+            if (err != OK) {
+                err = creep.move(TOP_LEFT);
+            }
+        }
     },
     moveToTarget(creep) {
         if (creep.pos.getRangeTo(creep.memory.moveToTargetx, creep.memory.moveToTargety) <= creep.memory.moveToTargetrange || !creep.memory.moveToTargetx) {
@@ -2670,13 +2703,13 @@ function getBody(myRoom, MaxParts, options = {}) {
         partArray.push(ATTACK);
         partArray.push(ATTACK);
         partArray.push(ATTACK);
-        for (var i = 0; i < Math.floor((referenceEnergy - 1070) / 50) && i < 42; i += 1) {
+        for (var i = 0; i < Math.floor((referenceEnergy - 1040) / 50) && i < 42; i += 1) {
             partArray.push(MOVE);
         }
         partArray.push(HEAL);
         partArray.push(HEAL);
         partArray.push(HEAL);
-        partArray.push(ATTACK);
+        partArray.push(MOVE);
         return partArray;
     }
     if (options.guard) {
