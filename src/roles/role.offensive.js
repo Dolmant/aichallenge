@@ -154,14 +154,22 @@ const roleOffensive = {
                         target = creep.pos.findClosestByPath([hostiles, hostile_structures]);
                     }
                     creep.memory.attackCreep = target.id;
+                    creep.memory.myTask = 'attack';
+                    creep.memory.counter = 1 + creep.memory.counter;
+                } else if (creep.memory.counter < 10 && creep.memory.counter < 2) {
+                    creep.memory.counter = 1 + creep.memory.counter;
+                    creep.memory.myTask = 'loiter';
+                } else {
+                    creep.memory.myTask = 'attack';
+                    creep.memory.counter = 1 + creep.memory.counter;
                 }
-                creep.memory.myTask = 'attack';
             }
         } else {
             if (creep.hits < creep.hitsMax) {
-                creep.heal(creep)
+                creep.heal(creep);
                 creep.memory.myTask = 'loiter';
             } else {
+                creep.memory.counter = 0;
                 creep.memory.myTask = 'goToTarget';
                 creep.memory.goToTarget = Memory.squads[mySquad].roomTarget;
             }
