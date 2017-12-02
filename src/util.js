@@ -36,6 +36,7 @@ const util = {
             }
         } else if (creep.room.name == creep.memory.goToTarget || !creep.memory.goToTarget) {
             delete creep.memory.goToTarget;
+            delete creep.memory.exitCache;
             return true;
         } else {
             if (!creep.memory.exitCache || creep.memory.exitCache.roomName != creep.pos.roomName) {
