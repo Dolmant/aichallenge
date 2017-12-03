@@ -1237,15 +1237,20 @@ const brains = {
                         }
                     } else {
                         if (Memory.squads[squadName].role === 'farm') {
-                            if (!creep.memory.revived) {
-                                console.log('reviving squad before deleting');
-                                Memory.squad_requests.push({
-                                    'squad': Memory.squads[squadName].roomTarget + 'farm' + Game.time,
-                                    'role': 'farm',
-                                    'roomTarget': Memory.squads[squadName].roomTarget,
-                                    'size': 2
-                                });
-                            }
+                            let revived = false;
+                            creepArray.forEach(squadCreepID => {
+                                const squadCreep = Game.creeps[squadCreepID];
+                                if (squadCreep && !squadCreep.memory.revived && !revived) {
+                                    console.log('reviving squad before deleting');
+                                    revived = true;
+                                    Memory.squad_requests.push({
+                                        'squad': Memory.squads[squadName].roomTarget + 'farm' + Game.time,
+                                        'role': 'farm',
+                                        'roomTarget': Memory.squads[squadName].roomTarget,
+                                        'size': 2
+                                    });
+                                }
+                            });
                             console.log('deleting: ' + squadName);
                             console.log('creep: ' + creepID);
                             delete Memory.squads[squadName];
