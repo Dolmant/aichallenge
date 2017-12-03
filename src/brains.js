@@ -50,7 +50,9 @@ const brains = {
                                 break;
                         }
                         if ((creep.ticksToLive < 350 || creep.memory.forceRevive) && creep.memory.secondaryRole === 'heal' && Memory.squads[squadName].role === 'farm' && !creep.memory.revived) {
-                            creep.memory.revived = true;
+                            creepArray.forEach(creep => {
+                                creep.memory.revived = true;
+                            });
                             console.log('pushing new squad now');
                             Memory.squad_requests.push({
                                 'squad': Memory.squads[squadName].roomTarget + 'farm' + Game.time,
@@ -61,6 +63,15 @@ const brains = {
                         }
                     } else {
                         if (Memory.squads[squadName].role === 'farm') {
+                            if (!creep.memory.revived) {
+                                console.log('reviving squad before deleting');
+                                Memory.squad_requests.push({
+                                    'squad': Memory.squads[squadName].roomTarget + 'farm' + Game.time,
+                                    'role':'farm',
+                                    'roomTarget': Memory.squads[squadName].roomTarget,
+                                    'size': 2,
+                                });
+                            }
                             console.log('deleting: ' + squadName);
                             console.log('creep: ' + creepID)
                             delete Memory.squads[squadName];

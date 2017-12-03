@@ -1,6 +1,5 @@
 Need to do:
 add eslint rules I am dying
-add in a 'maintence' flag so roadworkers only maintain when they took energy from a container (not from a derpy pile on the ground)
 
 to build roads add work component to mules, mules are going to check as they walk and build it.
 road repair should be a schmidt trigger
