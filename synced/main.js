@@ -1660,9 +1660,6 @@ const actBuild = {
                         err = creep.repair(struct);
                     }
                 });
-            } else {
-                target = 1;
-                err = creep.room.createConstructionSite(creep.pos, STRUCTURE_ROAD);
             }
             if (target && err == OK) {
                 return true;
@@ -2606,7 +2603,7 @@ const spawner = {
                 }
                 if (myCreepCount.muleParts < MaxParts.mule * MaxMuleCount && myCreepCount.muleCount < MaxMuleCount && (myRoom.energyAvailable >= referenceEnergy || myRoom.energyAvailable >= 1500) && canSpawn) {
                     var newName = 'Mule' + Game.time;
-                    Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, { 'carryOnly': true }), newName, {
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, { 'mule': true }), newName, {
                         memory: {
                             'role': 'mule',
                             'myTask': 'fetch'
@@ -2878,14 +2875,11 @@ function getBody(myRoom, MaxParts, options = {}) {
         return partArray;
     }
     while (totalEnergy >= 4 && workCount < 12) {
-        if (!options.carryOnly) {
-            partArray.push(WORK);
-            partArray.push(CARRY);
-            totalEnergy -= 3;
-        }
+        partArray.push(WORK);
         partArray.push(MOVE);
         partArray.push(CARRY);
-        totalEnergy -= 2;
+        partArray.push(CARRY);
+        totalEnergy -= 5;
         workCount += 1;
     }
     return partArray;

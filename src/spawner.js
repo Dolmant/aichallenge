@@ -150,7 +150,7 @@ const spawner = {
                 if (myCreepCount.muleParts < MaxParts.mule * MaxMuleCount && myCreepCount.muleCount < MaxMuleCount && (myRoom.energyAvailable >= referenceEnergy || myRoom.energyAvailable >= 1500)  && canSpawn)
                 {
                     var newName = 'Mule' + Game.time;
-                    Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, {'carryOnly': true}), newName, {
+                    Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, {'mule': true}), newName, {
                         memory: {
                             'role': 'mule',
                             'myTask': 'fetch',
@@ -216,7 +216,6 @@ function completeOutstandingRequests(myRoom, Spawn) {
 
 type getBodyoptions = {
     harvester?: boolean,
-    carryOnly?: boolean,
     tough?: boolean,
     blocker?: boolean,
     melee?: boolean,
@@ -434,14 +433,11 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
         return partArray;
     }
     while (totalEnergy >= 4  && workCount < 12) {
-        if (!options.carryOnly) {
-            partArray.push(WORK);
-            partArray.push(CARRY);
-            totalEnergy -= 3;
-        }
+        partArray.push(WORK);
         partArray.push(MOVE);
         partArray.push(CARRY);
-        totalEnergy -= 2;
+        partArray.push(CARRY);
+        totalEnergy -= 5;
         workCount += 1;
     }
     return partArray;
