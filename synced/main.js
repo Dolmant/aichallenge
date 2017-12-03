@@ -2674,6 +2674,14 @@ function completeOutstandingRequests(myRoom, Spawn) {
             myRoom.memory.requests.splice(0, 1);
             console.log('Spawning: ' + newName);
             return true;
+        } else if (err == ERR_NAME_EXISTS) {
+            const buildno = Memory.buildQueue.indexOf(newName);
+            if (buildno != -1) {
+                Memory.buildQueue.splice(buildno, 1);
+            }
+            myRoom.memory.requests.splice(0, 1);
+            console.log('Same name, removing queue: ' + newName);
+            return false;
         } else {
             console.log(err);
             console.log(suggestedBody.length);
