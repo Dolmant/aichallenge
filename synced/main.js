@@ -1781,7 +1781,7 @@ const roleThiefMule = {
             creep.memory.moveToTargetrange = 1;
         } else if (_.sum(creep.carry) < creep.carryCapacity * 0.75 && creep.room.name == creep.memory.stealTarget) {
             creep.memory.myTask = 'fetch';
-        } else if (_.sum(creep.carry) == creep.carryCapacity && creep.room.name != creep.memory.home) {
+        } else if (_.sum(creep.carry) >= creep.carryCapacity * 0.75 && creep.room.name != creep.memory.home) {
             creep.memory.myTask = 'goToTarget';
             creep.memory.goToTarget = creep.memory.home;
         } else if (_.sum(creep.carry) < creep.carryCapacity * 0.5 && creep.room.name != creep.memory.stealTarget) {
@@ -2224,7 +2224,7 @@ function runTowers(myTowers) {
             tower.attack(closestHostile);
         } else if (tower.energy > tower.energyCapacity / 2) {
             var repairTarget = 0;
-            var creepToRepair = tower.pos.findClosestByRange(FIND_MY_CREEPS, { filter: c => c.hits < c.hitsMax * 0.9 });
+            var creepToRepair = tower.pos.findClosestByRange(FIND_MY_CREEPS, { filter: c => c.hits < c.hitsMax });
             if (creepToRepair != undefined) {
                 tower.heal(creepToRepair);
                 repairTarget = creepToRepair;

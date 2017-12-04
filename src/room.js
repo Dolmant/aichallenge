@@ -209,7 +209,7 @@ function runTowers(myTowers)
         }
         else if (tower.energy > tower.energyCapacity / 2) {
             var repairTarget = 0;
-            var creepToRepair = tower.pos.findClosestByRange(FIND_MY_CREEPS, {filter: c=> c.hits < c.hitsMax * 0.9});
+            var creepToRepair = tower.pos.findClosestByRange(FIND_MY_CREEPS, {filter: c=> c.hits < c.hitsMax});
             if (creepToRepair != undefined) {
                 tower.heal(creepToRepair);
                 repairTarget = creepToRepair;
