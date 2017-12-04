@@ -1,5 +1,7 @@
 Need to do:
 add eslint rules I am dying
+priority channels
+auto eval of how many mules I need
 
 to build roads add work component to mules, mules are going to check as they walk and build it.
 road repair should be a schmidt trigger
