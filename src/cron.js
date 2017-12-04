@@ -16,7 +16,7 @@ const cronJobs = {
                 cronJobs.run2000();
             }
         } else {
-            cronJobs.init();
+            cronJobs.update();
         }
 
         if (Memory.squad_requests && Memory.squad_requests.length > 0) {
@@ -113,8 +113,8 @@ const cronJobs = {
             }
         });
     },
-    init() {
-        Memory.thieving_spots = {
+    update() {
+        const thief_spots = {
             // location: W46N53
             '59bbc4262052a716c3ce7711': 0,
             '59bbc4262052a716c3ce7712': 0,
@@ -156,7 +156,16 @@ const cronJobs = {
             '59bbc4282052a716c3ce7761': 0,
             '59bbc4282052a716c3ce7760': 0,
         }
-        Memory.thieving_mules = {
+        // if (!Memory.thieving_spots) {
+        //     Memory.thieving_spots = {};
+        // }
+        Object.keys(thief_spots).forEach((key) => {
+            if (!Memory.thieving_spots[key]) {
+                Memory.thieving_spots[key] = 0;
+            }
+        })
+
+        const thieving_mules = {
             // location: W46N53
             '59bbc4262052a716c3ce7711': 0,
             '59bbc4262052a716c3ce7712': 0,
@@ -189,6 +198,8 @@ const cronJobs = {
             '59bbc4282052a716c3ce7768': 0,
             '59bbc4282052a716c3ce7766': 0,
             '59bbc4282052a716c3ce7767': 0,
+            'W45N541': 0,
+            'W45N542': 0,
             // location W44N54 plus extras
             '59bbc42a2052a716c3ce77ca': 0,
             '59bbc42a2052a716c3ce77c8': 0,
@@ -201,9 +212,19 @@ const cronJobs = {
             '59bbc4282052a716c3ce7760': 0,
             'W45N551': 0,
             'W45N552': 0,
+            'W45N553': 0,
+            'W45N554': 0,
         }
-        Memory.register_thieves = true;
-        Memory.roomMap = {
+        // if (!Memory.thieving_mules) {
+        //     Memory.thieving_mules = {};
+        // }
+        Object.keys(thieving_mules).forEach((key) => {
+            if (!Memory.thieving_mules[key]) {
+                Memory.thieving_mules[key] = 0;
+            }
+        })
+
+        const roomMap = {
             // location: W46N53
             '59bbc4262052a716c3ce7711': 'W46N53',
             '59bbc4262052a716c3ce7712': 'W46N53',
@@ -236,6 +257,8 @@ const cronJobs = {
             '59bbc4282052a716c3ce7768': 'W45N54',
             '59bbc4282052a716c3ce7766': 'W45N54',
             '59bbc4282052a716c3ce7767': 'W45N54',
+            'W45N541': 'W45N54',
+            'W45N542': 'W45N54',
             // location W44N54
             '59bbc42a2052a716c3ce77ca': 'W44N54',
             '59bbc42a2052a716c3ce77c8': 'W44N54',
@@ -248,7 +271,10 @@ const cronJobs = {
             '59bbc4282052a716c3ce7760': 'W45N55',
             'W45N551': 'W45N55',
             'W45N552': 'W45N55',
+            'W45N553': 'W45N55',
+            'W45N554': 'W45N55',
         }
+
         Memory.energyMap = {
             // location: W46N53
             '59bbc4262052a716c3ce7711': 1500,
@@ -282,6 +308,8 @@ const cronJobs = {
             '59bbc4282052a716c3ce7768': 4000,
             '59bbc4282052a716c3ce7766': 4000,
             '59bbc4282052a716c3ce7767': 4000,
+            'W45N541': 4000,
+            'W45N542': 4000,
             // location W44N54
             '59bbc42a2052a716c3ce77ca': 4000,
             '59bbc42a2052a716c3ce77c8': 4000,
@@ -294,7 +322,10 @@ const cronJobs = {
             '59bbc4282052a716c3ce7760': 4000,
             'W45N551': 4000,
             'W45N552': 4000,
+            'W45N553': 4000,
+            'W45N554': 4000,
         }
+
         Memory.homeMap = {
             'W42N51': 'W41N51',
             'W43N51': 'W41N51',
@@ -311,10 +342,6 @@ const cronJobs = {
             'W45N54': 'W45N53',
             'W44N54': 'W43N53',
             'W45N55': 'W45N53',
-            'W44N541': 'W43N53',
-            'W44N542': 'W43N53',
-            'W45N551': 'W45N53',
-            'W45N552': 'W45N53',
         }
     },
 }

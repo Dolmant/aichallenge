@@ -33,7 +33,7 @@ const actResupply = {
         if (!creep.memory.fetchTarget && !creep.memory.dropTarget) {
             getTargets(creep);
         }
-        if (_.sum(creep.carry) == creep.carryCapacity) {
+        if (_.sum(creep.carry) >= creep.carryCapacity * 0.75) {
             delete creep.memory.dropTarget;
             delete creep.memory.fetchTarget;
             return true;
