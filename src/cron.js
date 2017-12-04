@@ -224,7 +224,7 @@ const cronJobs = {
             }
         })
 
-        const roomMap = {
+        Memory.roomMap = {
             // location: W46N53
             '59bbc4262052a716c3ce7711': 'W46N53',
             '59bbc4262052a716c3ce7712': 'W46N53',
