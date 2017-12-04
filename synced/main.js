@@ -992,7 +992,10 @@ const cronJobs = {
             // location W45N55
             '59bbc4282052a716c3ce7762': 0,
             '59bbc4282052a716c3ce7761': 0,
-            '59bbc4282052a716c3ce7760': 0
+            '59bbc4282052a716c3ce7760': 0,
+            // location W43N54
+            '59bbc42d2052a716c3ce781b': 0,
+            '59bbc42d2052a716c3ce7819': 0
             // if (!Memory.thieving_spots) {
             //     Memory.thieving_spots = {};
             // }
@@ -1050,7 +1053,10 @@ const cronJobs = {
             'W45N551': 0,
             'W45N552': 0,
             'W45N553': 0,
-            'W45N554': 0
+            'W45N554': 0,
+            // location W43N54
+            '59bbc42d2052a716c3ce781b': 0,
+            '59bbc42d2052a716c3ce7819': 0
             // if (!Memory.thieving_mules) {
             //     Memory.thieving_mules = {};
             // }
@@ -1108,7 +1114,10 @@ const cronJobs = {
             'W45N551': 'W45N55',
             'W45N552': 'W45N55',
             'W45N553': 'W45N55',
-            'W45N554': 'W45N55'
+            'W45N554': 'W45N55',
+            // location W43N54
+            '59bbc42d2052a716c3ce781b': 'W43N54',
+            '59bbc42d2052a716c3ce7819': 'W43N54'
         };
 
         Memory.energyMap = {
@@ -1159,7 +1168,10 @@ const cronJobs = {
             'W45N551': 4000,
             'W45N552': 4000,
             'W45N553': 4000,
-            'W45N554': 4000
+            'W45N554': 4000,
+            // location W43N54
+            '59bbc42d2052a716c3ce781b': 1500,
+            '59bbc42d2052a716c3ce7819': 1500
         };
 
         Memory.homeMap = {
@@ -1177,7 +1189,8 @@ const cronJobs = {
             'W47N52': 'W46N52',
             'W45N54': 'W45N53',
             'W44N54': 'W43N53',
-            'W45N55': 'W45N53'
+            'W45N55': 'W45N53',
+            'W43N54': 'W43N53'
         };
     }
 };
@@ -1792,7 +1805,8 @@ const roleThiefMule = {
         }
     },
     generateHaulTargets() {
-        Memory.possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51', 'W46N53', 'W47N52', 'W46N51'];
+
+        Memory.possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51', 'W46N53', 'W47N52', 'W46N51', 'W45N55', 'W43N54'];
         const homeArray = ['W43N53', 'W41N51', 'W46N52', 'W43N53', 'W43N53', 'W41N51', 'W45N53', 'W46N52', 'W45N53', 'W46N52', 'W46N52'];
 
         if (Memory.possibleTargets.length <= Memory.muleFlag) {

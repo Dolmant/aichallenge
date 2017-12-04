@@ -155,6 +155,9 @@ const cronJobs = {
             '59bbc4282052a716c3ce7762': 0,
             '59bbc4282052a716c3ce7761': 0,
             '59bbc4282052a716c3ce7760': 0,
+            // location W43N54
+            '59bbc42d2052a716c3ce781b': 0,
+            '59bbc42d2052a716c3ce7819': 0,
         }
         // if (!Memory.thieving_spots) {
         //     Memory.thieving_spots = {};
@@ -214,6 +217,9 @@ const cronJobs = {
             'W45N552': 0,
             'W45N553': 0,
             'W45N554': 0,
+            // location W43N54
+            '59bbc42d2052a716c3ce781b': 0,
+            '59bbc42d2052a716c3ce7819': 0,
         }
         // if (!Memory.thieving_mules) {
         //     Memory.thieving_mules = {};
@@ -273,6 +279,9 @@ const cronJobs = {
             'W45N552': 'W45N55',
             'W45N553': 'W45N55',
             'W45N554': 'W45N55',
+            // location W43N54
+            '59bbc42d2052a716c3ce781b': 'W43N54',
+            '59bbc42d2052a716c3ce7819': 'W43N54',
         }
 
         Memory.energyMap = {
@@ -324,6 +333,9 @@ const cronJobs = {
             'W45N552': 4000,
             'W45N553': 4000,
             'W45N554': 4000,
+            // location W43N54
+            '59bbc42d2052a716c3ce781b': 1500,
+            '59bbc42d2052a716c3ce7819': 1500,
         }
 
         Memory.homeMap = {
@@ -342,6 +354,7 @@ const cronJobs = {
             'W45N54': 'W45N53',
             'W44N54': 'W43N53',
             'W45N55': 'W45N53',
+            'W43N54': 'W43N53',
         }
     },
 }
