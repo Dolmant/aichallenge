@@ -1343,8 +1343,11 @@ const brains = {
             'role': Memory.squads[squad].role,
             'squad': squad
         };
+        const diff = size - Memory.squads[squad].size;
         Memory.squads[squad].size = size;
-        brains.buildRequest(Memory.squads[squad].roomTarget, size, options);
+        if (diff > 0) {
+            brains.buildRequest(Memory.squads[squad].roomTarget, diff, options);
+        }
     },
     createSquad(squadName, roomTarget, size, role) {
         //check for any reusable dead squads

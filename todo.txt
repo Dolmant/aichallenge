@@ -1,5 +1,4 @@
 Need to do:
-add eslint rules I am dying
 priority channels
 auto eval of how many mules I need
 
@@ -7,7 +6,9 @@ to build roads add work component to mules, mules are going to check as they wal
 road repair should be a schmidt trigger
 tomorrow:
 defend from neutral creeps
-implement automatic creep production vs enemies
+implement automatic creep production vs enemies - defcon isnt really that good
+
+
 
 create global controller that can dispatch actions - run regular ones, then process controller
 Rather than spawning based on each room, create a spawn dispatcher to more easily figure out where things should spawn.
