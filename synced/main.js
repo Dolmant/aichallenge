@@ -926,7 +926,7 @@ const cronJobs = {
                     myRoom.memory.defcon -= 1;
                 }
                 if (Memory.squads[roomName + 'defcon']) {
-                    if (Memory.squads[roomName + 'defcon'].size != myRoom.memory.defcon) {
+                    if (Memory.squads[roomName + 'defcon'].size != myRoom.memory.defcon && Memory.squads[roomName + 'defcon'].role != 'retired') {
                         __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].updateSquadSize(roomName + 'defcon', myRoom.memory.defcon);
                     }
                 } else if (myRoom.memory.defcon > 0) {
@@ -952,6 +952,7 @@ const cronJobs = {
         });
     },
     update() {
+        Memory.possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51', 'W46N53', 'W47N52', 'W46N51', 'W45N55', 'W43N54'];
         const thief_spots = {
             // location: W46N53
             '59bbc4262052a716c3ce7711': 0,
@@ -1153,22 +1154,22 @@ const cronJobs = {
             '59bbc4282052a716c3ce7768': 4000,
             '59bbc4282052a716c3ce7766': 4000,
             '59bbc4282052a716c3ce7767': 4000,
-            'W45N541': 4000,
-            'W45N542': 4000,
+            'W45N541': 1500,
+            'W45N542': 1500,
             // location W44N54
             '59bbc42a2052a716c3ce77ca': 4000,
             '59bbc42a2052a716c3ce77c8': 4000,
             '59bbc42a2052a716c3ce77c7': 4000,
-            'W44N541': 4000,
-            'W44N542': 4000,
+            'W44N541': 1500,
+            'W44N542': 1500,
             // location W45N55
             '59bbc4282052a716c3ce7762': 4000,
             '59bbc4282052a716c3ce7761': 4000,
             '59bbc4282052a716c3ce7760': 4000,
-            'W45N551': 4000,
-            'W45N552': 4000,
-            'W45N553': 4000,
-            'W45N554': 4000,
+            'W45N551': 1500,
+            'W45N552': 1500,
+            'W45N553': 1500,
+            'W45N554': 1500,
             // location W43N54
             '59bbc42d2052a716c3ce781b': 1500,
             '59bbc42d2052a716c3ce7819': 1500
@@ -1712,7 +1713,7 @@ const actBuild = {
                 err = creep.build(target);
             } else if (structs.length > 0) {
                 structs.forEach(struct => {
-                    if (!target && struct.hits < struct.hitsMax * 0.8) {
+                    if (!target && struct.structureType == STRUCTURE_ROAD && struct.hits < struct.hitsMax * 0.8) {
                         target = struct;
                         err = creep.repair(struct);
                     }
@@ -1803,18 +1804,6 @@ const roleThiefMule = {
         } else if (_.sum(creep.carry) >= creep.carryCapacity * 0.5 && creep.room.name == creep.memory.home) {
             creep.memory.myTask = 'deposit';
         }
-    },
-    generateHaulTargets() {
-
-        Memory.possibleTargets = ['W43N52', 'W42N51', 'W44N51', 'W44N52', 'W44N53', 'W43N51', 'W45N52', 'W45N51', 'W46N53', 'W47N52', 'W46N51', 'W45N55', 'W43N54'];
-        const homeArray = ['W43N53', 'W41N51', 'W46N52', 'W43N53', 'W43N53', 'W41N51', 'W45N53', 'W46N52', 'W45N53', 'W46N52', 'W46N52', 'W45N53', 'W43N53'];
-
-        if (Memory.possibleTargets.length <= Memory.muleFlag) {
-            Memory.muleFlag = 1;
-        } else {
-            Memory.muleFlag += 1;
-        }
-        return [Memory.possibleTargets[Memory.muleFlag - 1], homeArray[Memory.muleFlag - 1]];
     }
 };
 

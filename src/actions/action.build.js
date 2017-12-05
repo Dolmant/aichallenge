@@ -56,7 +56,7 @@ const actBuild = {
                 err =creep.build(target);
             } else if (structs.length > 0) {
                 structs.forEach(struct => {
-                    if (!target && struct.hits < struct.hitsMax * 0.8) {
+                    if (!target && struct.structureType == STRUCTURE_ROAD && struct.hits < struct.hitsMax * 0.8) {
                         target = struct;
                         err = creep.repair(struct);
                     }
