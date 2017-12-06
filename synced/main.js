@@ -1634,12 +1634,12 @@ const roleOffensive = {
 
         const mySquad = creep.memory.squad;
         if (Memory.squads[mySquad]) {
-            if (Memory.squads[mySquad].size > Memory.squads[mySquad].creeps.length) {
-                creep.memory.moveToTargetx = Memory.squads[mySquad].stagingTarget.x;
-                creep.memory.moveToTargety = Memory.squads[mySquad].stagingTarget.y;
-                creep.memory.moveToTargetrange = 0;
-                creep.memory.myTask = 'moveToTarget';
-            } else if (creep.room.name == Memory.squads[mySquad].roomTarget) {
+            // if (Memory.squads[mySquad].size > Memory.squads[mySquad].creeps.length) {
+            //     creep.memory.moveToTargetx = Memory.squads[mySquad].stagingTarget.x;
+            //     creep.memory.moveToTargety = Memory.squads[mySquad].stagingTarget.y;
+            //     creep.memory.moveToTargetrange = 0;
+            //     creep.memory.myTask = 'moveToTarget';
+            if (creep.room.name == Memory.squads[mySquad].roomTarget) {
                 if (!creep.memory.attackCreep) {
                     __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__["a" /* default */].findDefenceTarget(creep);
                 }
