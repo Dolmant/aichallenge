@@ -1460,9 +1460,9 @@ const roleOffensive = {
                 head to roomnameguard flag
         */
         const mySquad = creep.memory.squad;
-        if (creep.ticksToLive < 300 || creep.memory.myTask == 'renew') {
-            creep.memory.myTask = 'renew';
-        } else if (creep.room.name == Memory.squads[mySquad].roomTarget) {
+        // if (creep.ticksToLive < 300 || creep.memory.myTask == 'renew') {
+        //     creep.memory.myTask = 'renew';
+        if (creep.room.name == Memory.squads[mySquad].roomTarget) {
             var hostiles = creep.pos.findInRange(FIND_HOSTILE_CREEPS, 5);
             if (hostiles.length > 0) {
                 creep.memory.myTask = 'attack';
