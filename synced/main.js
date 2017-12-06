@@ -1389,7 +1389,7 @@ const brains = {
         if (role === 'defcon') {
             Memory.retiredSquads.forEach((squad, index) => {
                 // TODO join retired squads together
-                if (Memory.squads[squad].creeps.length >= requiredSize) {
+                if (Memory.squads[squad] && Memory.squads[squad].creeps.length >= requiredSize) {
                     Memory.squads[squadName] = Object.assign({}, Memory.squads[squad]);
                     delete Memory.squads[squad];
                     Memory.squads[squadName].roomTarget = roomTarget;
