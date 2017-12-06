@@ -1355,7 +1355,7 @@ const brains = {
         // else fire off builds
         if (Memory.squads[squadName]) {
             if (Memory.squads[squadName].size < size) {
-                brains.updateSquadSize(squadName, size - Memory.squads[squadName].size);
+                brains.updateSquadSize(squadName, size);
             }
             return;
         }
