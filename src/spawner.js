@@ -233,7 +233,7 @@ type getBodyoptions = {
 }
 
 function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
-    var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
+    var totalEnergy = Math.floor((myRoom.energyCapacityAvailable) / 50);
     var referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
     var partArray = [];
 
@@ -405,6 +405,11 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
         return partArray;
     }
     if (options.worker) {
+        partArray.push(WORK)
+        partArray.push(MOVE);
+        partArray.push(CARRY);
+        totalEnergy -= 4;
+        workCount += 1;
         while (totalEnergy >= 4 && workCount < 16 && workCount < Math.floor(referenceEnergy/300)) {
             partArray.push(WORK)
             partArray.push(MOVE);

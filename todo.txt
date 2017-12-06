@@ -1,7 +1,12 @@
 Need to do:
 priority channels
 auto eval of how many mules I need
-
+towers should lock onto and kill a targets
+Need to make fully ranged grinders
+Need to make entire grinder squad heal itself
+Need to identify nearby enemies and respond appropriately - build hunters to destroy big attack creeps. 
+make a priority queue for building
+find other build targets if queue is full
 to build roads add work component to mules, mules are going to check as they walk and build it.
 road repair should be a schmidt trigger
 tomorrow:

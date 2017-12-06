@@ -2209,7 +2209,7 @@ const RoomController = {
         Memory.stats['cpu.roomUpdateConsts_temp'] += Game.cpu.getUsed() - SroomUpdateConsts;
 
         const SrunTowers = Game.cpu.getUsed();
-        runTowers(myTowers);
+        runTowers(myTowers, myRoom);
         Memory.stats['cpu.runTowers_temp'] += Game.cpu.getUsed() - SrunTowers;
 
         const Slinks = Game.cpu.getUsed();
@@ -2222,11 +2222,28 @@ const RoomController = {
     }
 };
 
-function runTowers(myTowers) {
+function runTowers(myTowers, myRoom) {
     myTowers.forEach(tower => {
         var minRepair = 100000;
+        if (!myRoom.memory.towers) {
+            myRoom.memory.towers = {};
+        }
+        if (!myRoom.memory.towers[tower.id]) {
+            myRoom.memory.towers[tower.id] = {};
+        }
+        if (myRoom.memory.towers[tower.id].attackCreep) {
+            var target = Game.getObjectById(myRoom.memory.towers[tower.id].attackCreep);
+            if (target) {
+                var err = tower.attack(target);
+                if (err == OK) {
+                    return;
+                }
+            }
+            myRoom.memory.towers[tower.id].attackCreep = 0;
+        }
         var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if (closestHostile && tower.pos.getRangeTo(closestHostile) <= 30) {
+            myRoom.memory.towers[tower.id].attackCreep = closestHostile.id;
             tower.attack(closestHostile);
         } else if (tower.energy > tower.energyCapacity / 2) {
             var repairTarget = 0;
@@ -2725,7 +2742,7 @@ function completeOutstandingRequests(myRoom, Spawn) {
 }
 
 function getBody(myRoom, MaxParts, options = {}) {
-    var totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
+    var totalEnergy = Math.floor(myRoom.energyCapacityAvailable / 50);
     var referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
     var partArray = [];
 
@@ -2897,6 +2914,11 @@ function getBody(myRoom, MaxParts, options = {}) {
         return partArray;
     }
     if (options.worker) {
+        partArray.push(WORK);
+        partArray.push(MOVE);
+        partArray.push(CARRY);
+        totalEnergy -= 4;
+        workCount += 1;
         while (totalEnergy >= 4 && workCount < 16 && workCount < Math.floor(referenceEnergy / 300)) {
             partArray.push(WORK);
             partArray.push(MOVE);
