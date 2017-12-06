@@ -927,10 +927,10 @@ const cronJobs = {
                 }
                 if (Memory.squads[roomName + 'defcon']) {
                     if (Memory.squads[roomName + 'defcon'].size != myRoom.memory.defcon && Memory.squads[roomName + 'defcon'].role != 'retired') {
-                        __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].updateSquadSize(roomName + 'defcon', myRoom.memory.defcon);
+                        // brains.updateSquadSize(roomName + 'defcon', myRoom.memory.defcon);
                     }
                 } else if (myRoom.memory.defcon > 0) {
-                    __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].createSquad(roomName + 'defcon', roomName, myRoom.memory.defcon, 'defcon');
+                    // brains.createSquad(roomName + 'defcon', roomName, myRoom.memory.defcon, 'defcon');
                 }
             }
         });
