@@ -2781,9 +2781,11 @@ function getBody(myRoom, MaxParts, options = {}) {
         partArray.push(ATTACK);
         partArray.push(ATTACK);
         partArray.push(ATTACK);
-        for (var i = 0; i < Math.floor((referenceEnergy - 1040) / 50) && i < 42; i += 1) {
+        for (var i = 0; i < Math.floor((referenceEnergy - 1040) / 50) && i < 41; i += 1) {
             partArray.push(MOVE);
         }
+        partArray.push(HEAL);
+        partArray.push(HEAL);
         partArray.push(HEAL);
         partArray.push(HEAL);
         partArray.push(HEAL);
