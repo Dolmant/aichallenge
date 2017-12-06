@@ -166,8 +166,13 @@ const roleOffensive = {
             }
         } else {
             if (creep.hits < creep.hitsMax) {
+                if (!creep.memory.attackCreep) {
+                    actOffensive.findDefenceTarget(creep);
+                }
                 creep.heal(creep);
                 creep.memory.myTask = 'loiter';
+            } else if (creep.memory.attackCreep) {
+                creep.memory.myTask = 'attack';
             } else {
                 creep.memory.counter = 0;
                 creep.memory.myTask = 'goToTarget';
