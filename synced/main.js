@@ -2567,7 +2567,7 @@ const spawner = {
         } else if (myRoom.storage && myRoom.storage.store[RESOURCE_ENERGY] < 100000) {
             MaxWorkerCount = 1;
         } else if (!myRoom.storage) {
-            MaxWorkerCount = 8; // while getting started
+            MaxWorkerCount = 10; // while getting started
         }
 
         let MaxMuleCount = myRoom.memory.hasContainers ? 2 : 0;
