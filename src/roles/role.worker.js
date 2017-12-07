@@ -15,7 +15,11 @@ const roleWorker = {
             }
         } else {
             if (creep.carry.energy == creep.carryCapacity) {
-                creep.memory.myTask = 'build';
+                if (creep.room.controller.ticksToDowngrade < 2200) {
+                    creep.memory.myTask = 'upgrade';
+                } else {
+                    creep.memory.myTask = 'build';
+                }
             } else {
                 creep.memory.myTask = 'moveToTarget';
             }

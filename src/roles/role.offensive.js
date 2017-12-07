@@ -143,6 +143,7 @@ const roleOffensive = {
                 creep.memory.attackCreep = 0;
                 creep.memory.goToTarget = Memory.squads[mySquad].stagingTarget.roomName;
             } else {
+                creep.heal(creep);
                 if (!creep.memory.attackCreep) {
                     let hostiles = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
                     let hostile_structures = creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES);

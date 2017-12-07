@@ -210,7 +210,7 @@ function runTowers(myTowers, myRoom) {
         }
         if (myRoom.memory.towers[tower.id].attackCreep) {
             var target = Game.getObjectById(myRoom.memory.towers[tower.id].attackCreep)
-            if (target) {
+            if (target && target.pos.roomName === myRoom.name) {
                 var err = tower.attack(target);
                 if (err == OK) {
                     return;
