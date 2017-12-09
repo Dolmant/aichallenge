@@ -236,7 +236,7 @@ type getBodyoptions = {
 }
 
 function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
-    var totalEnergy = Math.floor((myRoom.energyCapacityAvailable) / 50);
+    var totalEnergy = Math.floor((myRoom.energyAvailable) / 50);
     var referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
     var partArray = [];
 

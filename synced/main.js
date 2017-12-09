@@ -2598,7 +2598,7 @@ function completeOutstandingRequests(myRoom, Spawn) {
 }
 
 function getBody(myRoom, MaxParts, options = {}) {
-    var totalEnergy = Math.floor(myRoom.energyCapacityAvailable / 50);
+    var totalEnergy = Math.floor(myRoom.energyAvailable / 50);
     var referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
     var partArray = [];
 
