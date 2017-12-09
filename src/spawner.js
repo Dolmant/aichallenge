@@ -364,15 +364,15 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
         return partArray;
     }
     let workCount = 0;
-    if ((options.harvester && myRoom.memory.hasMules && myRoom.memory.hasLinks && myRoom.memory.hasContainers)) {
+    if ((options.harvester && myRoom.memory.hasMules && myRoom.memory.hasContainers)) {
         totalEnergy -= 1;
         partArray.push(CARRY)
-        while (totalEnergy >= 3 && workCount < MaxParts) {
+        while (totalEnergy >= 3 && workCount < MaxParts && workCount < Math.floor(referenceEnergy/200)) {
             partArray.push(WORK)
             partArray.push(MOVE);
             totalEnergy -= 3;
             workCount += 1;
-            if (totalEnergy >= 4 && workCount < MaxParts) {
+            if (totalEnergy >= 4 && workCount < MaxParts && workCount < Math.floor(referenceEnergy/200)) {
                 partArray.push(WORK)
                 partArray.push(WORK)
                 workCount += 2;
@@ -400,7 +400,7 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
         return partArray;
     }
     if (options.harvester) {
-        while (totalEnergy >= 4 && workCount < 6) {
+        while (totalEnergy >= 4 && workCount < 6 && workCount < Math.floor(referenceEnergy/200)) {
             partArray.push(WORK)
             partArray.push(MOVE);
             partArray.push(CARRY);
