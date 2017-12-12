@@ -1,5 +1,7 @@
 Need to do:
 priority channels
+move all building to a managed (sorted) queue
+cache all the filtered room searches
 auto eval of how many mules I need
 towers should lock onto and kill a targets
 Need to make fully ranged grinders

@@ -2013,7 +2013,8 @@ const RoomController = {
                     case 'upgrader':
                         __WEBPACK_IMPORTED_MODULE_0__roles_role_upgrader__["a" /* default */].run(creep);
                         break;
-                    case 'worker' || 'remoteWorker':
+                    case 'remoteWorker':
+                    case 'worker':
                         if (myCreepCount.harvesterCount < 2) {
                             convert = creep;
                         }
