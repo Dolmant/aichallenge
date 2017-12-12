@@ -75,6 +75,13 @@ const spawnType = {
             [[WORK], 'M', 0.75, 15],
         );
     },
+    remoteWorker(myRoom: Room) {
+        return processBody(myRoom,
+            [[CARRY], 'M', 0.25, 15],
+            [[MOVE], 'M', 0.5, 30],
+            [[WORK], 'M', 0.25, 15],
+        );
+    },
     mule(myRoom: Room) {
         return processBody(myRoom,
             [[CARRY, MOVE, CARRY], 'M', 1, 6]

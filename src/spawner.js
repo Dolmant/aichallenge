@@ -429,6 +429,23 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
         }
         return partArray;
     }
+    if (options.remoteWorker) {
+        partArray.push(WORK)
+        partArray.push(MOVE);
+        partArray.push(MOVE);
+        partArray.push(CARRY);
+        totalEnergy -= 5;
+        workCount += 1;
+        while (totalEnergy >= 5 && workCount < 16 && workCount < Math.floor(referenceEnergy/250)) {
+            partArray.push(WORK)
+            partArray.push(MOVE);
+            partArray.push(MOVE);
+            partArray.push(CARRY);
+            totalEnergy -= 5;
+            workCount += 1;
+        }
+        return partArray;
+    }
     if (options.mule || options.thiefmule) {
         let amount = 6;
         if (options.thiefmule) {

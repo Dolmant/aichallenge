@@ -140,7 +140,7 @@ const RoomController = {
                     case 'upgrader': 
                         roleUpgrader.run(creep);
                         break;
-                    case 'worker':
+                    case 'worker' || 'remoteWorker':
                         if (myCreepCount.harvesterCount < 2) {
                             convert = creep;
                         }

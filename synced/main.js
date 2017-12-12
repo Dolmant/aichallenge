@@ -2013,7 +2013,7 @@ const RoomController = {
                     case 'upgrader':
                         __WEBPACK_IMPORTED_MODULE_0__roles_role_upgrader__["a" /* default */].run(creep);
                         break;
-                    case 'worker':
+                    case 'worker' || 'remoteWorker':
                         if (myCreepCount.harvesterCount < 2) {
                             convert = creep;
                         }
@@ -2788,6 +2788,23 @@ function getBody(myRoom, MaxParts, options = {}) {
                 totalEnergy -= 2;
                 workCount += 1;
             }
+        }
+        return partArray;
+    }
+    if (options.remoteWorker) {
+        partArray.push(WORK);
+        partArray.push(MOVE);
+        partArray.push(MOVE);
+        partArray.push(CARRY);
+        totalEnergy -= 5;
+        workCount += 1;
+        while (totalEnergy >= 5 && workCount < 16 && workCount < Math.floor(referenceEnergy / 250)) {
+            partArray.push(WORK);
+            partArray.push(MOVE);
+            partArray.push(MOVE);
+            partArray.push(CARRY);
+            totalEnergy -= 5;
+            workCount += 1;
         }
         return partArray;
     }
