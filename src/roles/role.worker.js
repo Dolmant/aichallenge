@@ -5,7 +5,10 @@ const roleWorker = {
             return;
         }
 
-        if (creep.memory.myTask != 'resupply') {
+        if (creep.memory.home && creep.memory.home != creep.room.name) {
+            creep.memory.myTask =  "goToTarget";
+            creep.memory.goToTarget = creep.memory.home;
+        } else if (creep.memory.myTask != 'resupply') {
             if (creep.carry.energy == 0) {
                 creep.memory.myTask = 'resupply';
             } else if (creep.memory.myBuildTarget) {

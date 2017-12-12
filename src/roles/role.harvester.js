@@ -6,7 +6,10 @@ import actDeposit from './../actions/action.deposit';
 const roleHarvester = {
     run: function(creep: Creep) {      
         // TODO FIX THIS BS OR ASSUME YOU WILL ALWAYS BE CALLED AFTER
-        if (creep.memory.moveToTargetx) {
+        if (creep.memory.home && creep.memory.home != creep.room.name) { // This fixes harvester who path out of the room
+            creep.memory.myTask =  "goToTarget";
+            creep.memory.goToTarget = creep.memory.home;
+        } else if (creep.memory.moveToTargetx) {
             creep.memory.myTask =  "moveToTarget";
         } else if (!creep.carryCapacity || creep.carry.energy < creep.carryCapacity) {
             creep.memory.myTask = 'harvest';
@@ -17,7 +20,10 @@ const roleHarvester = {
 		}
 	},
     runExtractor: function(creep: Creep) {
-        if (creep.memory.moveToTargetx) {
+        if (creep.memory.home && creep.memory.home != creep.room.name) { // This fixes harvester who path out of the room
+            creep.memory.myTask =  "goToTarget";
+            creep.memory.goToTarget = creep.memory.home;
+        } else if (creep.memory.moveToTargetx) {
             creep.memory.myTask =  "moveToTarget";
         } else if (!creep.carryCapacity || _.sum(creep.carry) < creep.carryCapacity) {
 			creep.memory.myTask = 'harvestMinerals';

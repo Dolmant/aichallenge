@@ -2263,7 +2263,11 @@ const roleUpgrader = {
 const roleHarvester = {
     run: function (creep) {
         // TODO FIX THIS BS OR ASSUME YOU WILL ALWAYS BE CALLED AFTER
-        if (creep.memory.moveToTargetx) {
+        if (creep.memory.home && creep.memory.home != creep.room.name) {
+            // This fixes harvester who path out of the room
+            creep.memory.myTask = "goToTarget";
+            creep.memory.goToTarget = creep.memory.home;
+        } else if (creep.memory.moveToTargetx) {
             creep.memory.myTask = "moveToTarget";
         } else if (!creep.carryCapacity || creep.carry.energy < creep.carryCapacity) {
             creep.memory.myTask = 'harvest';
@@ -2274,7 +2278,11 @@ const roleHarvester = {
         }
     },
     runExtractor: function (creep) {
-        if (creep.memory.moveToTargetx) {
+        if (creep.memory.home && creep.memory.home != creep.room.name) {
+            // This fixes harvester who path out of the room
+            creep.memory.myTask = "goToTarget";
+            creep.memory.goToTarget = creep.memory.home;
+        } else if (creep.memory.moveToTargetx) {
             creep.memory.myTask = "moveToTarget";
         } else if (!creep.carryCapacity || _.sum(creep.carry) < creep.carryCapacity) {
             creep.memory.myTask = 'harvestMinerals';
@@ -2296,7 +2304,10 @@ const roleMule = {
         if (creep.fatigue != 0) {
             return;
         }
-        if (_.sum(creep.carry) < creep.carryCapacity * 0.75) {
+        if (creep.memory.home && creep.memory.home != creep.room.name) {
+            creep.memory.myTask = "goToTarget";
+            creep.memory.goToTarget = creep.memory.home;
+        } else if (_.sum(creep.carry) < creep.carryCapacity * 0.75) {
             creep.memory.myTask = 'fetch';
             creep.memory.depositTarget = 0;
         } else if (_.sum(creep.carry) >= creep.carryCapacity * 0.75) {
@@ -2320,7 +2331,10 @@ const roleWorker = {
             return;
         }
 
-        if (creep.memory.myTask != 'resupply') {
+        if (creep.memory.home && creep.memory.home != creep.room.name) {
+            creep.memory.myTask = "goToTarget";
+            creep.memory.goToTarget = creep.memory.home;
+        } else if (creep.memory.myTask != 'resupply') {
             if (creep.carry.energy == 0) {
                 creep.memory.myTask = 'resupply';
             } else if (creep.memory.myBuildTarget) {
@@ -2476,6 +2490,7 @@ const spawner = {
                         memory: {
                             'role': 'harvester',
                             'myTask': 'harvest',
+                            'home': myRoom.name,
                             'sourceMap': sourceMap
                         }
                     });
@@ -2490,6 +2505,7 @@ const spawner = {
                             memory: {
                                 'role': 'harvesterLow',
                                 'myTask': 'harvest',
+                                'home': myRoom.name,
                                 'tempSourceMap': sourceMap
                             }
                         });
@@ -2514,6 +2530,7 @@ const spawner = {
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.worker, { 'worker': true }), newName, {
                         memory: {
                             'role': 'worker',
+                            'home': myRoom.name,
                             'myTask': 'resupply'
                         }
                     });
@@ -2530,6 +2547,7 @@ const spawner = {
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, { 'mule': true }), newName, {
                         memory: {
                             'role': 'mule',
+                            'home': myRoom.name,
                             'myTask': 'fetch'
                         }
                     });
@@ -2541,6 +2559,7 @@ const spawner = {
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.harvesterExtractor, { 'harvester': true }), newName, {
                         memory: {
                             'role': 'harvesterExtractor',
+                            'home': myRoom.name,
                             'myTask': 'harvestMinerals'
                         }
                     });

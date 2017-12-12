@@ -99,6 +99,7 @@ const spawner = {
                         memory: {
                             'role': 'harvester',
                             'myTask': 'harvest',
+                            'home': myRoom.name,
                             'sourceMap': sourceMap,
                         },
                     });
@@ -113,6 +114,7 @@ const spawner = {
                         memory: {
                             'role': 'harvesterLow',
                             'myTask': 'harvest',
+                            'home': myRoom.name,
                             'tempSourceMap': sourceMap,
                         },
                     });
@@ -139,6 +141,7 @@ const spawner = {
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.worker, {'worker': true}), newName, {
                         memory: {
                             'role': 'worker',
+                            'home': myRoom.name,
                             'myTask': 'resupply',
                         },
                     });
@@ -156,6 +159,7 @@ const spawner = {
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.mule, {'mule': true}), newName, {
                         memory: {
                             'role': 'mule',
+                            'home': myRoom.name,
                             'myTask': 'fetch',
                         },
                     });
@@ -168,6 +172,7 @@ const spawner = {
                     Spawn.spawnCreep(getBody(myRoom, MaxParts.harvesterExtractor, {'harvester': true}), newName, {
                         memory: {
                             'role': 'harvesterExtractor',
+                            'home': myRoom.name,
                             'myTask': 'harvestMinerals',
                         },
                     });
