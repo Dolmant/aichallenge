@@ -3078,12 +3078,14 @@ function getTargets(creep) {
 }
 
 function getResupplyTarget(creep) {
-    var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+    var target = creep.pos.findInRange(FIND_STRUCTURES, 5, {
         filter: structure => {
             return structure.structureType == STRUCTURE_LINK && structure.energy > 0;
         }
     });
-    if (!target) {
+    if (target.length > 0) {
+        target = target[0];
+    } else {
         target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: structure => {
                 return (structure.structureType == STRUCTURE_STORAGE || structure.structureType == STRUCTURE_CONTAINER || structure.structureType == STRUCTURE_TERMINAL) && structure.storeCapacity && structure.store.energy >= creep.carryCapacity;
