@@ -2218,9 +2218,6 @@ const RoomController = {
                     case 'mule':
                         __WEBPACK_IMPORTED_MODULE_2__roles_role_mule__["a" /* default */].run(creep);
                         break;
-                    case 'reserve':
-                        __WEBPACK_IMPORTED_MODULE_4__roles_role_claimer__["a" /* default */].reserve(creep);
-                        break;
                     case 'claimer':
                         __WEBPACK_IMPORTED_MODULE_4__roles_role_claimer__["a" /* default */].run(creep);
                         break;
