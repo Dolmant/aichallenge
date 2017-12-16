@@ -72,7 +72,7 @@ const spawnType = {
         return processBody(myRoom,
             [[CARRY], 'M', 0.25, 5],
             [[MOVE], 'M', 0.25, 10],
-            [[WORK], 'M', 0.75, 15],
+            [[WORK], 'M', 0.5, 15],
         );
     },
     claim(myRoom: Room) {

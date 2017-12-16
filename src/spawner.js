@@ -139,7 +139,7 @@ const spawner = {
                 if(myCreepCount.workerParts < MaxParts.worker * MaxWorkerCount && myCreepCount.workerCount < MaxWorkerCount && myCreepCount.muleCount >= MaxMuleCount/2 && (myRoom.energyAvailable >= referenceEnergy || myRoom.energyAvailable >= 2000) && canSpawn)
                 {
                     var newName = 'Worker' + Game.time;
-                    const err = Spawn.spawnCreep(getBody(myRoom, MaxParts.worker, {'worker': true}), newName, {
+                    const err = Spawn.spawnCreep(spawnType.worker(myRoom), newName, {
                         memory: {
                             'role': 'worker',
                             'home': myRoom.name,
