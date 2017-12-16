@@ -471,7 +471,7 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
             partArray.push(MOVE);
             partArray.push(CARRY);
             totalEnergy -= 4;
-            if (options.sourceMap && Memory.energyMap[options.sourceMap] && Memory.energyMap[options.sourceMap] > 3000) {
+            if (options.sourceMap && Memory.energyMap[options.sourceMap] && (Memory.energyMap[options.sourceMap] > 3000 || Memory.reservers[Memory.roomMap[options.sourceMap]])) {
                 amount = 15;
             }
         }

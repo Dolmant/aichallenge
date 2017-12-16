@@ -250,21 +250,26 @@ const cronJobs = {
         })
 
         const resevers = {
+            // FOR W37N34
             'W37N35': 0,
             'W37N33': 0,
             'W38N34': 0,
-            'W38N35': 0,
-            'W38N33': 0,
-            'W39N35': 0,
-            'W39N37': 0,
-            'W38N36': 0,
-            'W39N34': 0,
-            'W38N37': 0,
-            'W38N32': 0,
-            'W38N31': 0,
-            'W37N32': 0,
-            'W36N31': 0,
-            'W36N32': 0,
+            // 'W38N35': 0, This guy is too far
+            // 'W38N33': 0, This guy is too far
+            // FOR W39N36
+            // Next three just arent ready to support this yet
+            // 'W39N35': 0,
+            // 'W39N37': 0,
+            // 'W38N36': 0,
+            //'W39N34': 0, This guy is too far
+            // 'W38N37': 0, This guy is too far
+            // FOR W37N31
+            // 'W38N32': 0, This guy is too far
+            // Next three just arent ready to support this yet
+            // 'W38N31': 0,
+            // 'W37N32': 0,
+            // 'W36N31': 0,
+            // 'W36N32': 0, This guy is too far
         }
 
         if (!Memory.reservers) {
