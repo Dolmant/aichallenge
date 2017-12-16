@@ -2856,6 +2856,7 @@ function getBody(myRoom, MaxParts, options = {}) {
         partArray.push(MOVE);
         partArray.push(MOVE);
         partArray.push(CLAIM);
+        partArray.push(CLAIM);
         return partArray;
     }
     if (options.defcon) {
@@ -3396,7 +3397,7 @@ const spawnType = {
         return processBody(myRoom, [[CLAIM, MOVE, MOVE], 'S']);
     },
     reserve(myRoom) {
-        return processBody(myRoom, [[CLAIM, MOVE, MOVE], 'S']);
+        return processBody(myRoom, [[CLAIM, CLAIM, MOVE, MOVE], 'S']);
     },
     remoteWorker(myRoom) {
         return processBody(myRoom, [[CARRY], 'M', 0.25, 15], [[MOVE], 'M', 0.5, 30], [[WORK], 'M', 0.25, 15]);

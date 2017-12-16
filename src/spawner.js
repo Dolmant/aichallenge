@@ -269,6 +269,7 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
         partArray.push(MOVE);
         partArray.push(MOVE);
         partArray.push(CLAIM);
+        partArray.push(CLAIM);
         return partArray;
     }
     if (options.defcon) {
