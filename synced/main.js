@@ -2987,7 +2987,7 @@ function getBody(myRoom, MaxParts, options = {}) {
     }
     if (options.thief) {
         let amount = 3;
-        if (options.sourceMap && Memory.energyMap[options.sourceMap] && Memory.energyMap[options.sourceMap] > 1500) {
+        if (options.sourceMap && Memory.energyMap[options.sourceMap] && (Memory.energyMap[options.sourceMap] > 1500 || Memory.reservers[Memory.roomMap[options.sourceMap]])) {
             amount = 6;
             if (Memory.energyMap[options.sourceMap] > 3000) {
                 amount = 8;
@@ -3375,7 +3375,7 @@ const spawnType = {
     },
     thief(myRoom, options) {
         let amount = 3;
-        if (options.sourceMap && Memory.energyMap[options.sourceMap] && Memory.energyMap[options.sourceMap] > 1500) {
+        if (options.sourceMap && Memory.energyMap[options.sourceMap] && (Memory.energyMap[options.sourceMap] > 1500 || Memory.reservers[Memory.roomMap[options.sourceMap]])) {
             amount = 6;
             if (Memory.energyMap[options.sourceMap] > 3000) {
                 amount = 8;
