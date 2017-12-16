@@ -261,7 +261,7 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
         partArray.push(ATTACK);
         return partArray;
     }
-    if (options.reserver) {
+    if (options.reserve) {
         partArray.push(MOVE);
         partArray.push(MOVE);
         partArray.push(CLAIM);

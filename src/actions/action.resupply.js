@@ -16,9 +16,10 @@ const actResupply = {
         if(creep.memory.resupplyTarget) {
             var resupplyTarget = Game.getObjectById(creep.memory.resupplyTarget);
             var err = resupplyTarget && creep.withdraw(resupplyTarget, RESOURCE_ENERGY)
-            if (err == OK || err == ERR_NOT_ENOUGH_RESOURCES) {
-                if (resupplyTarget.structureType != STRUCTURE_LINK) {
-                    delete creep.memory.resupplyTarget;
+            if (err == OK) {
+                delete creep.memory.resupplyTarget;
+                if (_.sum(creep.carry) == creep.carryCapacity) {
+                    return true;
                 }
             } else if(err == ERR_NOT_IN_RANGE) {
                 creep.moveToCacheTarget(resupplyTarget.pos);
