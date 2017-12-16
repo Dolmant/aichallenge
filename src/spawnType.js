@@ -187,6 +187,10 @@ function processBody(myRoom, ...commands) {
     finalBuild.forEach((buildOrder) => {
         result = result.concat(buildOrder.parts);
     });
+    if (result.length < 3) {
+        console.log("Less than 3 parts returned from build constructor. Build when you have more energy");
+        return [];
+    }
     return result;
 }
 
