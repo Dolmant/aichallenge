@@ -2642,8 +2642,6 @@ const spawner = {
         let sourceMapNumber = 99;
         let sourceMap = 0;
 
-        console.log(__WEBPACK_IMPORTED_MODULE_2__spawnType__["a" /* default */].worker(myRoom));
-
         mySpawns.forEach(Spawn => {
             if (Spawn && Spawn.spawning) {
                 switch (Game.creeps[Spawn.spawning.name].memory.role) {
@@ -2675,6 +2673,7 @@ const spawner = {
         });
 
         mySpawns.forEach(Spawn => {
+            console.log(__WEBPACK_IMPORTED_MODULE_2__spawnType__["a" /* default */].worker(myRoom));
             const totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
             const referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
             if (Spawn && !Spawn.spawning && canSpawn) {
