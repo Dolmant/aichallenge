@@ -74,7 +74,6 @@ const spawner = {
         });
 
         mySpawns.forEach(Spawn => {
-            console.log(spawnType.worker(myRoom));
             const totalEnergy = Math.floor((myRoom.energyCapacityAvailable - 100) / 50);
             const referenceEnergy = Math.floor(totalEnergy / 4) * 4 * 50;
             if (Spawn && !Spawn.spawning && canSpawn) {
@@ -140,7 +139,7 @@ const spawner = {
                 if(myCreepCount.workerParts < MaxParts.worker * MaxWorkerCount && myCreepCount.workerCount < MaxWorkerCount && myCreepCount.muleCount >= MaxMuleCount/2 && (myRoom.energyAvailable >= referenceEnergy || myRoom.energyAvailable >= 2000) && canSpawn)
                 {
                     var newName = 'Worker' + Game.time;
-                    Spawn.spawnCreep(getBody(myRoom, MaxParts.worker, {'worker': true}), newName, {
+                    Spawn.spawnCreep(spawnType.worker(myRoom), newName, {
                         memory: {
                             'role': 'worker',
                             'home': myRoom.name,
