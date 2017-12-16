@@ -3430,16 +3430,16 @@ function processBody(myRoom, ...commands) {
     let totalCost = 0;
     let multiplier = 0;
     commands.forEach((command, index) => {
-        if (command[0] === 'S') {
+        if (command[1] === 'S') {
             let cost = 0;
-            command[1].forEach(part => {
+            command[0].forEach(part => {
                 cost += BODYPART_COST[part];
             });
             // if cost over 300, truncate
             totalCost += cost;
             finalBuild[index].cost = cost;
             finalBuild[index].parts = command[1];
-        } else if (command[0] === 'M') {
+        } else if (command[1] === 'M') {
             multiplier += command[2];
         }
     });
@@ -3449,9 +3449,9 @@ function processBody(myRoom, ...commands) {
     // MM
     let proportionBonus = 0;
     commands.forEach((command, index) => {
-        if (command[0] === 'M') {
+        if (command[1] === 'M') {
             let commandCost = 0;
-            command[1].forEach(part => {
+            command[0].forEach(part => {
                 commandCost += BODYPART_COST[part];
             });
             const proportion = command[2];
@@ -3463,7 +3463,7 @@ function processBody(myRoom, ...commands) {
             finalBuild[index].cost = commandFinalCost;
             const finalArray = [];
             for (var i = 0; i < numberOfCommands; i += 1) {
-                finalArray.concat(command[1]);
+                finalArray.concat(command[0]);
             }
             finalBuild[index].parts = finalArray;
         }
