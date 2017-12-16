@@ -150,6 +150,9 @@ const RoomController = {
                     case 'mule':
                         roleMule.run(creep);
                         break;
+                    case 'reserve':
+                        roleClaimer.reserve(creep);
+                        break;
                     case 'claimer':
                         roleClaimer.run(creep);
                         break;

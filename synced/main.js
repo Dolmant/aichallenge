@@ -1811,7 +1811,7 @@ const actClaim = {
                 return true;
             }
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveToCacheTarget(Game.flags['Claim'].pos);
+                creep.moveToCacheTarget(creep.room.controller.pos);
             }
         } else {
             creep.memory.goToTarget = creep.memory.reserveTarget;
@@ -2217,6 +2217,9 @@ const RoomController = {
                         break;
                     case 'mule':
                         __WEBPACK_IMPORTED_MODULE_2__roles_role_mule__["a" /* default */].run(creep);
+                        break;
+                    case 'reserve':
+                        __WEBPACK_IMPORTED_MODULE_4__roles_role_claimer__["a" /* default */].reserve(creep);
                         break;
                     case 'claimer':
                         __WEBPACK_IMPORTED_MODULE_4__roles_role_claimer__["a" /* default */].run(creep);

@@ -33,7 +33,7 @@ const actClaim = {
                 return true;
             }
             if (err == ERR_NOT_IN_RANGE) {
-                creep.moveToCacheTarget(Game.flags['Claim'].pos);
+                creep.moveToCacheTarget(creep.room.controller.pos);
             }
         } else {
             creep.memory.goToTarget = creep.memory.reserveTarget;
