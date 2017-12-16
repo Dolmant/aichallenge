@@ -2,6 +2,7 @@
 
 import roleThief from './roles/role.thief';
 import roleThiefMule from './roles/role.thiefmule';
+import spawnType from './spawnType';
 
 const spawner = {
     run: function(myRoom: Room, mySpawns: Array<StructureSpawn>, myCreepCount: myCreepCountType, totalCreeps: number, convert: Creep) {
@@ -41,6 +42,8 @@ const spawner = {
 
         let sourceMapNumber = 99;
         let sourceMap = 0;
+
+        console.log(spawnType.worker(myRoom));
 
         mySpawns.forEach(Spawn => {
             if (Spawn && Spawn.spawning) {
