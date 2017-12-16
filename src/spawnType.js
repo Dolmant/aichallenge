@@ -159,7 +159,17 @@ function processBody(myRoom, ...commands) {
             });
             const proportion = command[2];
             const commandMaxCost = totalAvailable * proportion + proportionBonus;
-            const numberOfCommands = command[3] || Math.floor(commandMaxCost / commandCost);
+            let numberOfCommands;
+            if (command[3]) {
+                const maxParts = Math.floor(commandMaxCost / commandCost);
+                if (maxParts > command[3]) {
+                    numberOfCommands = command[3];
+                } else {
+                    numberOfCommands = maxParts;
+                }
+            } else {
+                numberOfCommands = Math.floor(commandMaxCost / commandCost);
+            }
             const commandFinalCost =  numberOfCommands * commandCost;
             totalCost += commandFinalCost;
             proportionBonus = commandMaxCost - commandFinalCost;
