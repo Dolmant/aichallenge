@@ -3461,18 +3461,18 @@ function processBody(myRoom, ...commands) {
             totalCost += commandFinalCost;
             proportionBonus = commandMaxCost - commandFinalCost;
             finalBuild[index].cost = commandFinalCost;
-            const finalArray = [];
+            let finalArray = [];
             for (var i = 0; i < numberOfCommands; i += 1) {
-                finalArray.concat(command[0]);
+                finalArray = finalArray.concat(command[0]);
             }
             finalBuild[index].parts = finalArray;
         }
     });
 
     // Build final return
-    const result = [];
+    let result = [];
     finalBuild.forEach(buildOrder => {
-        result.concat(buildOrder.parts);
+        result = result.concat(buildOrder.parts);
     });
     return result;
 }
