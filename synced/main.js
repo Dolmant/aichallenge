@@ -870,6 +870,9 @@ const cronJobs = {
         }
     },
     run10() {
+        if (!Memory.thieving_spots) {
+            Memory.thieving_spots = {};
+        }
         Object.keys(Memory.thieving_spots).forEach(key => {
             if (Memory.thieving_spots[key] && !Game.creeps[Memory.thieving_spots[key]] && !Memory.buildQueue.includes('Thief' + key)) {
                 Memory.thieving_spots[key] = 0;
@@ -890,6 +893,9 @@ const cronJobs = {
                 console.log('Build req: ' + newName);
             }
         });
+        if (!Memory.thieving_mules) {
+            Memory.thieving_mules = {};
+        }
         Object.keys(Memory.thieving_mules).forEach(key => {
             if (Memory.thieving_mules[key] && !Game.creeps[Memory.thieving_mules[key]] && !Memory.buildQueue.includes('ThiefMule' + key)) {
                 Memory.thieving_mules[key] = 0;
@@ -913,6 +919,31 @@ const cronJobs = {
                 console.log('Build req ' + newName);
             }
         });
+
+        // Reserve thieving rooms
+        if (!Memory.reservers) {
+            Memory.reservers = {};
+        }
+        Object.keys(Memory.reservers).forEach(key => {
+            if (Memory.reservers[key] && !Game.creeps[Memory.reservers[key]] && !Memory.buildQueue.includes('Reserve' + key)) {
+                Memory.reservers[key] = 0;
+            }
+            if (Memory.reservers[key] == 0) {
+                var newName = 'Reserve' + key;
+                Memory.buildQueue.push(newName);
+                __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].buildRequest(key, 1, {
+                    'role': 'reserve',
+                    'myTask': 'goToTarget',
+                    'reserveTarget': key,
+                    'goToTarget': key,
+                    'name': newName
+                });
+                Memory.reservers[key] = newName;
+                console.log('Build req ' + newName);
+            }
+        });
+
+        // Defcon
 
         const myOwnedRooms = ['W43N53', 'W45N53', 'W41N51', 'W46N52'];
         const myRooms = myOwnedRooms.concat(Memory.possibleTargets);
@@ -952,20 +983,48 @@ const cronJobs = {
         });
     },
     update() {
-        Memory.possibleTargets = ['W37N35', 'W37N33', 'W38N34', 'W38N35', 'W38N33'];
+        Memory.possibleTargets = ['W37N35', 'W37N33', 'W38N34', 'W38N35', 'W38N33', // W37N34
+        'W39N35', 'W39N37', 'W38N36', 'W39N34', 'W38N37', // W39N36
+        'W38N32', 'W38N31', 'W37N32', 'W36N31', 'W36N32'];
         const thieving_spots = {
-            // // location: W37N35
+            // FOR W37N34
+            // location: W37N35
             '5982fc5db097071b4adbd444': 0,
             '5982fc5db097071b4adbd443': 0,
-            // // location: W37N33
+            // location: W37N33
             '5982fc5db097071b4adbd44b': 0,
-            // // location: W38N34
+            // location: W38N34
             '5982fc51b097071b4adbd2f9': 0,
-            // // location: W38N35
+            // location: W38N35
             '5982fc51b097071b4adbd2f7': 0,
-            // // location: W38N33
+            // location: W38N33
             '5982fc51b097071b4adbd2fc': 0,
-            '5982fc51b097071b4adbd2fd': 0
+            '5982fc51b097071b4adbd2fd': 0,
+            // FOR W39N36
+            // location: W39N37
+            '5982fc45b097071b4adbd1a4': 0,
+            // location: W38N37
+            '5982fc51b097071b4adbd2ef': 0,
+            // location: W38N36
+            '5982fc51b097071b4adbd2f3': 0,
+            // location: W39N35
+            '5982fc46b097071b4adbd1ab': 0,
+            // location: W39N34
+            '5982fc46b097071b4adbd1ad': 0,
+            '5982fc46b097071b4adbd1af': 0,
+            // FOR W37N31
+            // location: W38N32
+            '5982fc52b097071b4adbd301': 0,
+            // location: W38N31
+            '5982fc52b097071b4adbd305': 0,
+            '5982fc52b097071b4adbd303': 0,
+            // location: W37N32
+            '5982fc5db097071b4adbd44e': 0,
+            '5982fc5db097071b4adbd450': 0,
+            // location: W36N31
+            '5982fc6ab097071b4adbd5bc': 0,
+            // location: W36N32
+            '5982fc69b097071b4adbd5b8': 0
         };
         if (!Memory.thieving_spots) {
             Memory.thieving_spots = {};
@@ -977,18 +1036,45 @@ const cronJobs = {
         });
 
         const thieving_mules = {
-            // // location: W37N35
+            // FOR W37N34
+            // location: W37N35
             '5982fc5db097071b4adbd444': 0,
             '5982fc5db097071b4adbd443': 0,
-            // // location: W37N33
+            // location: W37N33
             '5982fc5db097071b4adbd44b': 0,
-            // // location: W38N34
+            // location: W38N34
             '5982fc51b097071b4adbd2f9': 0,
-            // // location: W38N35
+            // location: W38N35
             '5982fc51b097071b4adbd2f7': 0,
-            // // location: W38N33
+            // location: W38N33
             '5982fc51b097071b4adbd2fc': 0,
-            '5982fc51b097071b4adbd2fd': 0
+            '5982fc51b097071b4adbd2fd': 0,
+            // FOR W39N36
+            // location: W39N37
+            '5982fc45b097071b4adbd1a4': 0,
+            // location: W38N37
+            '5982fc51b097071b4adbd2ef': 0,
+            // location: W38N36
+            '5982fc51b097071b4adbd2f2': 0,
+            '5982fc51b097071b4adbd2f3': 0,
+            // location: W39N35
+            '5982fc46b097071b4adbd1ab': 0,
+            // location: W39N34
+            '5982fc46b097071b4adbd1ad': 0,
+            '5982fc46b097071b4adbd1af': 0,
+            // FOR W37N31
+            // location: W38N32
+            '5982fc52b097071b4adbd301': 0,
+            // location: W38N31
+            '5982fc52b097071b4adbd305': 0,
+            '5982fc52b097071b4adbd303': 0,
+            // location: W37N32
+            '5982fc5db097071b4adbd44e': 0,
+            '5982fc5db097071b4adbd450': 0,
+            // location: W36N31
+            '5982fc6ab097071b4adbd5bc': 0,
+            // location: W36N32
+            '5982fc69b097071b4adbd5b8': 0
         };
         if (!Memory.thieving_mules) {
             Memory.thieving_mules = {};
@@ -999,34 +1085,115 @@ const cronJobs = {
             }
         });
 
+        const resevers = {
+            'W37N35': 0,
+            'W37N33': 0,
+            'W38N34': 0,
+            'W38N35': 0,
+            'W38N33': 0,
+            'W39N35': 0,
+            'W39N37': 0,
+            'W38N36': 0,
+            'W39N34': 0,
+            'W38N37': 0,
+            'W38N32': 0,
+            'W38N31': 0,
+            'W37N32': 0,
+            'W36N31': 0,
+            'W36N32': 0
+        };
+
+        if (!Memory.reservers) {
+            Memory.reservers = {};
+        }
+        Object.keys(resevers).forEach(key => {
+            if (!Memory.reservers[key]) {
+                Memory.reservers[key] = 0;
+            }
+        });
+
         Memory.roomMap = {
-            // // location: W37N35
+            // FOR W37N34
+            // location: W37N35
             '5982fc5db097071b4adbd444': 'W37N35',
             '5982fc5db097071b4adbd443': 'W37N35',
-            // // location: W37N33
+            // location: W37N33
             '5982fc5db097071b4adbd44b': 'W37N33',
-            // // location: W38N34
+            // location: W38N34
             '5982fc51b097071b4adbd2f9': 'W38N34',
-            // // location: W38N35
+            // location: W38N35
             '5982fc51b097071b4adbd2f7': 'W38N35',
-            // // location: W38N33
+            // location: W38N33
             '5982fc51b097071b4adbd2fc': 'W38N33',
-            '5982fc51b097071b4adbd2fd': 'W38N33'
+            '5982fc51b097071b4adbd2fd': 'W38N33',
+            // FOR W39N36
+            // location: W39N37
+            '5982fc45b097071b4adbd1a4': 'W39N37',
+            // location: W38N37
+            '5982fc51b097071b4adbd2ef': 'W38N37',
+            // location: W38N36
+            '5982fc51b097071b4adbd2f2': 'W38N36',
+            '5982fc51b097071b4adbd2f3': 'W38N36',
+            // location: W39N35
+            '5982fc46b097071b4adbd1ab': 'W39N35',
+            // location: W39N34
+            '5982fc46b097071b4adbd1ad': 'W39N34',
+            '5982fc46b097071b4adbd1af': 'W39N34',
+            // FOR W37N31
+            // location: W38N32
+            '5982fc52b097071b4adbd301': 'W38N32',
+            // location: W38N31
+            '5982fc52b097071b4adbd305': 'W38N31',
+            '5982fc52b097071b4adbd303': 'W38N31',
+            // location: W37N32
+            '5982fc5db097071b4adbd44e': 'W37N32',
+            '5982fc5db097071b4adbd450': 'W37N32',
+            // location: W36N31
+            '5982fc6ab097071b4adbd5bc': 'W36N31',
+            // location: W36N32
+            '5982fc69b097071b4adbd5b8': 'W36N32'
         };
 
         Memory.energyMap = {
-            // // location: W37N35
+            // FOR W37N34
+            // location: W37N35
             '5982fc5db097071b4adbd444': 1500,
             '5982fc5db097071b4adbd443': 1500,
-            // // location: W37N33
+            // location: W37N33
             '5982fc5db097071b4adbd44b': 1500,
-            // // location: W38N34
+            // location: W38N34
             '5982fc51b097071b4adbd2f9': 1500,
-            // // location: W38N35
+            // location: W38N35
             '5982fc51b097071b4adbd2f7': 1500,
-            // // location: W38N33
+            // location: W38N33
             '5982fc51b097071b4adbd2fc': 1500,
-            '5982fc51b097071b4adbd2fd': 1500
+            '5982fc51b097071b4adbd2fd': 1500,
+            // FOR W39N36
+            // location: W39N37
+            '5982fc45b097071b4adbd1a4': 1500,
+            // location: W38N37
+            '5982fc51b097071b4adbd2ef': 1500,
+            // location: W38N36
+            '5982fc51b097071b4adbd2f2': 1500,
+            '5982fc51b097071b4adbd2f3': 1500,
+            // location: W39N35
+            '5982fc46b097071b4adbd1ab': 1500,
+            // location: W39N34
+            '5982fc46b097071b4adbd1ad': 1500,
+            '5982fc46b097071b4adbd1af': 1500,
+            // FOR W37N31
+            // location: W38N32
+            '5982fc52b097071b4adbd301': 1500,
+            // location: W38N31
+            '5982fc52b097071b4adbd305': 1500,
+            '5982fc52b097071b4adbd303': 1500,
+            // location: W37N32
+            '5982fc5db097071b4adbd44e': 1500,
+            '5982fc5db097071b4adbd450': 1500,
+            // location: W36N31
+            '5982fc6ab097071b4adbd5bc': 1500,
+            // location: W36N32
+            '5982fc69b097071b4adbd5b8': 1500
         };
 
         Memory.homeMap = {
@@ -1034,7 +1201,17 @@ const cronJobs = {
             'W37N33': 'W37N34',
             'W38N34': 'W37N34',
             'W38N35': 'W37N34',
-            'W38N33': 'W37N34'
+            'W38N33': 'W37N34',
+            'W39N35': 'W39N36',
+            'W39N37': 'W39N36',
+            'W38N36': 'W39N36',
+            'W39N34': 'W39N36',
+            'W38N37': 'W39N36',
+            'W38N32': 'W37N31',
+            'W38N31': 'W37N31',
+            'W37N32': 'W37N31',
+            'W36N31': 'W37N31',
+            'W36N32': 'W37N31'
         };
     }
 };
@@ -1620,6 +1797,24 @@ const actClaim = {
             }
         } else {
             creep.memory.goToTarget = Game.flags['Claim'].pos.roomName;
+            return true;
+        }
+    },
+    reserve: function (creep) {
+        if (creep.room.name == creep.memory.reserveTarget) {
+            let err = creep.reserveController(creep.room.controller);
+            if (err == ERR_INVALID_TARGET) {
+                err = creep.attackController(creep.room.controller);
+            }
+            if (err == ERR_INVALID_TARGET) {
+                // If the claimers actions are both invalid, might have to reserve here as well? Need logic for reserve on weak rooms anyway
+                return true;
+            }
+            if (err == ERR_NOT_IN_RANGE) {
+                creep.moveToCacheTarget(Game.flags['Claim'].pos);
+            }
+        } else {
+            creep.memory.goToTarget = creep.memory.reserveTarget;
             return true;
         }
     }
@@ -2381,6 +2576,17 @@ const roleClaimer = {
         } else {
             creep.memory.myTask = 'claim';
         }
+    },
+    reserve: function (creep) {
+        if (creep.fatigue != 0) {
+            return;
+        }
+        if (creep.room.name != creep.memory.reserveTarget) {
+            creep.memory.goToTarget = creep.memory.reserveTarget;
+            creep.memory.myTask = 'goToTarget';
+        } else {
+            creep.memory.myTask = 'reserve';
+        }
     }
 };
 
@@ -2501,7 +2707,7 @@ const spawner = {
                 if (myCreepCount.harvesterCount < 1 && myCreepCount.harvesterLowCount < 1 && canSpawn && myRoom.energyAvailable >= 200) //just in case, if there are no harvesters spawn a harvester
                     {
                         var newName = 'HarvesterLow' + Game.time;
-                        Spawn.spawnCreep(myRoom, Math.floor(myRoom.energyAvailable / 200), { 'harvester': true }, newName, {
+                        Spawn.spawnCreep(getBody(myRoom, Math.floor(myRoom.energyAvailable / 200), { 'harvester': true }), newName, {
                             memory: {
                                 'role': 'harvesterLow',
                                 'myTask': 'harvest',
@@ -2635,6 +2841,12 @@ function getBody(myRoom, MaxParts, options = {}) {
         }
         partArray.push(MOVE);
         partArray.push(ATTACK);
+        return partArray;
+    }
+    if (options.reserver) {
+        partArray.push(MOVE);
+        partArray.push(MOVE);
+        partArray.push(CLAIM);
         return partArray;
     }
     if (options.defcon) {
@@ -2901,6 +3113,8 @@ const taskManager = {
         switch (creep.memory.myTask) {
             case 'claim':
                 return __WEBPACK_IMPORTED_MODULE_2__actions_action_claim__["a" /* default */].run(creep);
+            case 'reserve':
+                return __WEBPACK_IMPORTED_MODULE_2__actions_action_claim__["a" /* default */].reserve(creep);
             case 'fetch':
                 return __WEBPACK_IMPORTED_MODULE_1__actions_action_resupply__["a" /* default */].getEnergy(creep);
             case 'deposit':

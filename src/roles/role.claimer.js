@@ -16,7 +16,18 @@ const roleClaimer = {
         } else {
             creep.memory.myTask = 'claim';
         }
-	}
+	},
+    reserve: function(creep: Creep) {
+		if (creep.fatigue != 0){
+			return;
+        }
+        if (creep.room.name != creep.memory.reserveTarget) {
+            creep.memory.goToTarget = creep.memory.reserveTarget;
+            creep.memory.myTask = 'goToTarget';
+        } else {
+            creep.memory.myTask = 'reserve';
+        }
+	},
 };
 
 export default roleClaimer;

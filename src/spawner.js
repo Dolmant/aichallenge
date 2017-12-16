@@ -110,7 +110,7 @@ const spawner = {
                 if(myCreepCount.harvesterCount < 1 && myCreepCount.harvesterLowCount < 1 && canSpawn && myRoom.energyAvailable >= 200)//just in case, if there are no harvesters spawn a harvester
                 {
                     var newName = 'HarvesterLow' + Game.time;
-                    Spawn.spawnCreep(myRoom, Math.floor(myRoom.energyAvailable / 200), {'harvester': true}, newName, {
+                    Spawn.spawnCreep(getBody(myRoom, Math.floor(myRoom.energyAvailable / 200), {'harvester': true}), newName, {
                         memory: {
                             'role': 'harvesterLow',
                             'myTask': 'harvest',
@@ -258,6 +258,12 @@ function getBody(myRoom, MaxParts: number, options?: getBodyoptions = {}) {
         }
         partArray.push(MOVE);
         partArray.push(ATTACK);
+        return partArray;
+    }
+    if (options.reserver) {
+        partArray.push(MOVE);
+        partArray.push(MOVE);
+        partArray.push(CLAIM);
         return partArray;
     }
     if (options.defcon) {

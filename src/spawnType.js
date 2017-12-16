@@ -75,6 +75,16 @@ const spawnType = {
             [[WORK], 'M', 0.75, 15],
         );
     },
+    claim(myRoom: Room) {
+        return processBody(myRoom,
+            [[CLAIM, MOVE, MOVE], 'S'],
+        );
+    },
+    reserve(myRoom: Room) {
+        return processBody(myRoom,
+            [[CLAIM, MOVE, MOVE], 'S'],
+        );
+    },
     remoteWorker(myRoom: Room) {
         return processBody(myRoom,
             [[CARRY], 'M', 0.25, 15],

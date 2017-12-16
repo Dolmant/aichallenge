@@ -25,6 +25,8 @@ const taskManager = {
         switch(creep.memory.myTask) {
             case 'claim':
                 return actClaim.run(creep);
+            case 'reserve':
+                return actClaim.reserve(creep);
             case 'fetch':
                 return actResupply.getEnergy(creep);
             case 'deposit':
