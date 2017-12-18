@@ -307,6 +307,61 @@ function getSource(creep) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__cron__ = __webpack_require__(6);
+
+
+const roleThief = {
+    run(creep) {
+        if (!creep.memory.sourceMap) {
+            console.log('thief genned without map');
+        }
+        if (creep.memory.myTask == 'lazydeposit' && creep.memory.myBuildTarget) {
+            creep.memory.myTask = 'build';
+        } else if (!creep.carryCapacity || creep.carry.energy < creep.carryCapacity) {
+            if (creep.memory.myTask == 'moveToObject' && creep.memory.moveToObject) {
+                if (Memory.roomMap && Memory.roomMap[creep.memory.moveToObject]) {
+                    creep.memory.goToTarget = Memory.roomMap[creep.memory.moveToObject];
+                    creep.memory.myTask = 'goToTarget';
+                } else {
+                    creep.memory.myTask = 'moveToObject';
+                }
+            } else if (creep.memory.myTask == 'harvest') {
+                //harvest appends these details
+                creep.memory.myTask = 'moveToTarget';
+            } else {
+                creep.memory.myTask = 'harvest';
+            }
+        } else if (creep.carry.energy == creep.carryCapacity) {
+            creep.memory.myTask = 'lazydeposit';
+        }
+    },
+    generateStealTarget() {
+        // TODO fix !!!!
+        let target;
+        if (Memory.thieving_spots) {
+            __WEBPACK_IMPORTED_MODULE_0__cron__["a" /* default */].run10();
+            const targets = Object.keys(Memory.thieving_spots);
+            for (var i = 0; i < targets.length; i += 1) {
+                if (Memory.thieving_spots[targets[i]] == 0) {
+                    return targets[i];
+                }
+            }
+            console.log('no spare thief found, queried: ' + targets.length + ' times');
+            return '59bbc4262052a716c3ce7711';
+        } else {
+            console.log('no thief object, failed');
+            return '59bbc4262052a716c3ce7711';
+        }
+    }
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (roleThief);
+
+/***/ }),
+/* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 
 var actOffensive = {
     heal: function (creep) {
@@ -524,7 +579,42 @@ var actOffensive = {
 /* harmony default export */ __webpack_exports__["a"] = (actOffensive);
 
 /***/ }),
-/* 3 */
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const roleThiefMule = {
+    run(creep) {
+        if (creep.fatigue != 0) {
+            return;
+        }
+
+        if (creep.memory.myTask == 'fetch' && _.sum(creep.carry) == 0) {
+            creep.memory.myTask = 'moveToTarget';
+            var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+                filter: structure => structure.structureType == STRUCTURE_CONTAINER && structure.store.energy > 200
+            }) || { pos: { x: 25, y: 25 } };
+            creep.memory.moveToTargetx = target.pos.x;
+            creep.memory.moveToTargety = target.pos.y;
+            creep.memory.moveToTargetrange = 1;
+        } else if (_.sum(creep.carry) < creep.carryCapacity * 0.75 && creep.room.name == creep.memory.stealTarget) {
+            creep.memory.myTask = 'fetch';
+        } else if (_.sum(creep.carry) >= creep.carryCapacity * 0.75 && creep.room.name != creep.memory.home) {
+            creep.memory.myTask = 'goToTarget';
+            creep.memory.goToTarget = creep.memory.home;
+        } else if (_.sum(creep.carry) < creep.carryCapacity * 0.5 && creep.room.name != creep.memory.stealTarget) {
+            creep.memory.myTask = 'goToTarget';
+            creep.memory.goToTarget = creep.memory.stealTarget;
+        } else if (_.sum(creep.carry) >= creep.carryCapacity * 0.5 && creep.room.name == creep.memory.home) {
+            creep.memory.myTask = 'deposit';
+        }
+    }
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (roleThiefMule);
+
+/***/ }),
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -776,66 +866,11 @@ function deposit_resource(creep, isMule) {
 /* harmony default export */ __webpack_exports__["a"] = (actDeposit);
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__cron__ = __webpack_require__(5);
-
-
-const roleThief = {
-    run(creep) {
-        if (!creep.memory.sourceMap) {
-            console.log('thief genned without map');
-        }
-        if (creep.memory.myTask == 'lazydeposit' && creep.memory.myBuildTarget) {
-            creep.memory.myTask = 'build';
-        } else if (!creep.carryCapacity || creep.carry.energy < creep.carryCapacity) {
-            if (creep.memory.myTask == 'moveToObject' && creep.memory.moveToObject) {
-                if (Memory.roomMap && Memory.roomMap[creep.memory.moveToObject]) {
-                    creep.memory.goToTarget = Memory.roomMap[creep.memory.moveToObject];
-                    creep.memory.myTask = 'goToTarget';
-                } else {
-                    creep.memory.myTask = 'moveToObject';
-                }
-            } else if (creep.memory.myTask == 'harvest') {
-                //harvest appends these details
-                creep.memory.myTask = 'moveToTarget';
-            } else {
-                creep.memory.myTask = 'harvest';
-            }
-        } else if (creep.carry.energy == creep.carryCapacity) {
-            creep.memory.myTask = 'lazydeposit';
-        }
-    },
-    generateStealTarget() {
-        // TODO fix !!!!
-        let target;
-        if (Memory.thieving_spots) {
-            __WEBPACK_IMPORTED_MODULE_0__cron__["a" /* default */].run10();
-            const targets = Object.keys(Memory.thieving_spots);
-            for (var i = 0; i < targets.length; i += 1) {
-                if (Memory.thieving_spots[targets[i]] == 0) {
-                    return targets[i];
-                }
-            }
-            console.log('no spare thief found, queried: ' + targets.length + ' times');
-            return '59bbc4262052a716c3ce7711';
-        } else {
-            console.log('no thief object, failed');
-            return '59bbc4262052a716c3ce7711';
-        }
-    }
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (roleThief);
-
-/***/ }),
-/* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__brains__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__brains__ = __webpack_require__(7);
 
 
 const cronJobs = {
@@ -958,10 +993,10 @@ const cronJobs = {
                 }
                 if (Memory.squads[roomName + 'defcon']) {
                     if (Memory.squads[roomName + 'defcon'].size != myRoom.memory.defcon && Memory.squads[roomName + 'defcon'].role != 'retired') {
-                        // brains.updateSquadSize(roomName + 'defcon', myRoom.memory.defcon);
+                        __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].updateSquadSize(roomName + 'defcon', myRoom.memory.defcon);
                     }
                 } else if (myRoom.memory.defcon > 0) {
-                    // brains.createSquad(roomName + 'defcon', roomName, myRoom.memory.defcon, 'defcon');
+                    __WEBPACK_IMPORTED_MODULE_0__brains__["a" /* default */].createSquad(roomName + 'defcon', roomName, myRoom.memory.defcon, 'defcon');
                 }
             }
         });
@@ -1024,7 +1059,22 @@ const cronJobs = {
             // location: W36N31
             '5982fc6ab097071b4adbd5bc': 0,
             // location: W36N32
-            '5982fc69b097071b4adbd5b8': 0
+            '5982fc69b097071b4adbd5b8': 0,
+            // FOR W36N37
+            // location: W37N37
+            '5982fc5db097071b4adbd43e': 0,
+            '5982fc5db097071b4adbd43c': 0,
+            // location: W36N38
+            '5982fc68b097071b4adbd592': 0,
+            '5982fc68b097071b4adbd593': 0,
+            // location: W35N38
+            '5982fc74b097071b4adbd779': 0,
+            '5982fc74b097071b4adbd77a': 0,
+            // FOR W35N33
+            // location: W36N33
+            '5982fc69b097071b4adbd5b6': 0,
+            // location: W35N32
+            '5982fc75b097071b4adbd79a': 0
         };
         if (!Memory.thieving_spots) {
             Memory.thieving_spots = {};
@@ -1074,7 +1124,22 @@ const cronJobs = {
             // location: W36N31
             '5982fc6ab097071b4adbd5bc': 0,
             // location: W36N32
-            '5982fc69b097071b4adbd5b8': 0
+            '5982fc69b097071b4adbd5b8': 0,
+            // FOR W36N37
+            // location: W37N37
+            '5982fc5db097071b4adbd43e': 0,
+            '5982fc5db097071b4adbd43c': 0,
+            // location: W36N38
+            '5982fc68b097071b4adbd592': 0,
+            '5982fc68b097071b4adbd593': 0,
+            // location: W35N38
+            '5982fc74b097071b4adbd779': 0,
+            '5982fc74b097071b4adbd77a': 0,
+            // FOR W35N33
+            // location: W36N33
+            '5982fc69b097071b4adbd5b6': 0,
+            // location: W35N32
+            '5982fc75b097071b4adbd79a': 0
         };
         if (!Memory.thieving_mules) {
             Memory.thieving_mules = {};
@@ -1088,23 +1153,23 @@ const cronJobs = {
         const resevers = {
             // FOR W37N34
             'W37N35': 0,
-            'W37N33': 0,
-            'W38N34': 0
+            //'W37N33': 0, This has only one energy. Not worth the build time
+            //'W38N34': 0, This has only one energy. Not worth the build time
             // 'W38N35': 0, This guy is too far
             // 'W38N33': 0, This guy is too far
+
             // FOR W39N36
-            // Next three just arent ready to support this yet
-            // 'W39N35': 0,
-            // 'W39N37': 0,
-            // 'W38N36': 0,
+            // 'W39N35': 0, This has only one energy. Not worth the build time
+            // 'W39N37': 0, This has only one energy. Not worth the build time
+            'W38N36': 0,
             //'W39N34': 0, This guy is too far
             // 'W38N37': 0, This guy is too far
+
             // FOR W37N31
             // 'W38N32': 0, This guy is too far
-            // Next three just arent ready to support this yet
-            // 'W38N31': 0,
-            // 'W37N32': 0,
-            // 'W36N31': 0,
+            'W38N31': 0,
+            'W37N32': 0
+            // 'W36N31': 0, This has only one energy. Not worth the build time
             // 'W36N32': 0, This guy is too far
         };
 
@@ -1156,7 +1221,22 @@ const cronJobs = {
             // location: W36N31
             '5982fc6ab097071b4adbd5bc': 'W36N31',
             // location: W36N32
-            '5982fc69b097071b4adbd5b8': 'W36N32'
+            '5982fc69b097071b4adbd5b8': 'W36N32',
+            // FOR W36N37
+            // location: W37N37
+            '5982fc5db097071b4adbd43e': 'W36N37',
+            '5982fc5db097071b4adbd43c': 'W36N37',
+            // location: W36N38
+            '5982fc68b097071b4adbd592': 'W36N37',
+            '5982fc68b097071b4adbd593': 'W36N37',
+            // location: W35N38
+            '5982fc74b097071b4adbd779': 'W36N37',
+            '5982fc74b097071b4adbd77a': 'W36N37',
+            // FOR W35N33
+            // location: W36N33
+            '5982fc69b097071b4adbd5b6': 'W35N33',
+            // location: W35N32
+            '5982fc75b097071b4adbd79a': 'W35N33'
         };
 
         Memory.energyMap = {
@@ -1198,7 +1278,22 @@ const cronJobs = {
             // location: W36N31
             '5982fc6ab097071b4adbd5bc': 1500,
             // location: W36N32
-            '5982fc69b097071b4adbd5b8': 1500
+            '5982fc69b097071b4adbd5b8': 1500,
+            // FOR W36N37
+            // location: W37N37
+            '5982fc5db097071b4adbd43e': 1500,
+            '5982fc5db097071b4adbd43c': 1500,
+            // location: W36N38
+            '5982fc68b097071b4adbd592': 1500,
+            '5982fc68b097071b4adbd593': 1500,
+            // location: W35N38
+            '5982fc74b097071b4adbd779': 1500,
+            '5982fc74b097071b4adbd77a': 1500,
+            // FOR W35N33
+            // location: W36N33
+            '5982fc69b097071b4adbd5b6': 1500,
+            // location: W35N32
+            '5982fc75b097071b4adbd79a': 1500
         };
 
         Memory.homeMap = {
@@ -1216,7 +1311,12 @@ const cronJobs = {
             'W38N31': 'W37N31',
             'W37N32': 'W37N31',
             'W36N31': 'W37N31',
-            'W36N32': 'W37N31'
+            'W36N32': 'W37N31',
+            'W37N37': 'W36N37',
+            'W36N38': 'W36N37',
+            'W35N38': 'W36N37',
+            'W36N33': 'W35N33',
+            'W35N32': 'W35N33'
         };
     }
 };
@@ -1224,14 +1324,14 @@ const cronJobs = {
 /* harmony default export */ __webpack_exports__["a"] = (cronJobs);
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_build__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__actions_action_claim__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__actions_action_offensive__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__roles_role_offensive__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_build__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__actions_action_claim__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__actions_action_offensive__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__util__ = __webpack_require__(0);
 
 
@@ -1464,12 +1564,12 @@ const brains = {
 /* harmony default export */ __webpack_exports__["a"] = (brains);
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_offensive__ = __webpack_require__(3);
 
 
 
@@ -1689,7 +1789,7 @@ const roleOffensive = {
 /* harmony default export */ __webpack_exports__["a"] = (roleOffensive);
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1778,7 +1878,7 @@ function findRepairTarget(creep) {
 /* harmony default export */ __webpack_exports__["a"] = (actBuild);
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1828,41 +1928,6 @@ const actClaim = {
 /* harmony default export */ __webpack_exports__["a"] = (actClaim);
 
 /***/ }),
-/* 10 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-const roleThiefMule = {
-    run(creep) {
-        if (creep.fatigue != 0) {
-            return;
-        }
-
-        if (creep.memory.myTask == 'fetch' && _.sum(creep.carry) == 0) {
-            creep.memory.myTask = 'moveToTarget';
-            var target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                filter: structure => structure.structureType == STRUCTURE_CONTAINER && structure.store.energy > 200
-            }) || { pos: { x: 25, y: 25 } };
-            creep.memory.moveToTargetx = target.pos.x;
-            creep.memory.moveToTargety = target.pos.y;
-            creep.memory.moveToTargetrange = 1;
-        } else if (_.sum(creep.carry) < creep.carryCapacity * 0.75 && creep.room.name == creep.memory.stealTarget) {
-            creep.memory.myTask = 'fetch';
-        } else if (_.sum(creep.carry) >= creep.carryCapacity * 0.75 && creep.room.name != creep.memory.home) {
-            creep.memory.myTask = 'goToTarget';
-            creep.memory.goToTarget = creep.memory.home;
-        } else if (_.sum(creep.carry) < creep.carryCapacity * 0.5 && creep.room.name != creep.memory.stealTarget) {
-            creep.memory.myTask = 'goToTarget';
-            creep.memory.goToTarget = creep.memory.stealTarget;
-        } else if (_.sum(creep.carry) >= creep.carryCapacity * 0.5 && creep.room.name == creep.memory.home) {
-            creep.memory.myTask = 'deposit';
-        }
-    }
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (roleThiefMule);
-
-/***/ }),
 /* 11 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1870,8 +1935,8 @@ const roleThiefMule = {
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["loop"] = loop;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__room__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cron__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__brains__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cron__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__brains__ = __webpack_require__(7);
 
 
 
@@ -2067,11 +2132,11 @@ function loop() {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__roles_role_mule__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__roles_role_worker__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__roles_role_claimer__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__roles_role_thief__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__roles_role_thiefmule__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__roles_role_offensive__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__roles_role_thief__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__roles_role_thiefmule__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__roles_role_offensive__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__spawner__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__task_manager__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__task_manager__ = __webpack_require__(20);
 
 // import * as profiler from './screeps-profiler';
 
@@ -2459,7 +2524,7 @@ const roleUpgrader = {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__actions_action_harvest__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_deposit__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_deposit__ = __webpack_require__(5);
 
 
 
@@ -2605,9 +2670,9 @@ const roleClaimer = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__roles_role_thief__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__roles_role_thiefmule__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__spawnType__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__roles_role_thief__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__roles_role_thiefmule__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__spawnType__ = __webpack_require__(19);
 
 
 
@@ -3094,13 +3159,167 @@ function getBody(myRoom, MaxParts, options = {}) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__actions_action_deposit__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_resupply__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__actions_action_claim__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__roles_role_thief__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__roles_role_thiefmule__ = __webpack_require__(4);
+
+
+
+const spawnType = {
+    defcon(myRoom) {
+        return processBody(myRoom, [[MOVE], 'M', 1, 25], [[ATTACK, ATTACK, ATTACK, ATTACK, ATTACK], 'S']);
+    },
+    grinder(myRoom) {
+        return processBody(myRoom, [[ATTACK, ATTACK, ATTACK], 'S'][([MOVE], 'M', 0.6, 0)], [[HEAL], 'M', 0.4, 0], [[MOVE], 'S']);
+    },
+    guard(myRoom) {
+        return processBody(myRoom, [[MOVE], 'M', 0.4, 17], [[RANGED_ATTACK], 'M', 0.2, 3], [[ATTACK], 'M', 0.4, 10]);
+    },
+    farm(myRoom) {
+        return processBody(myRoom, [[MOVE], 'M', 1, 25], [[TOUGH, TOUGH], 'S'], [[RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK], 'S'], [[ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK], 'S']);
+    },
+    heal(myRoom) {
+        return processBody(myRoom, [[MOVE], 'M', 1, 20], [[HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL], 'S']);
+    },
+    thief(myRoom, options) {
+        let amount = 3;
+        if (options.sourceMap && Memory.energyMap[options.sourceMap] && (Memory.energyMap[options.sourceMap] > 1500 || Memory.reservers[Memory.roomMap[options.sourceMap]])) {
+            amount = 6;
+            if (Memory.energyMap[options.sourceMap] > 3000) {
+                amount = 8;
+            }
+        }
+        return processBody(myRoom, [[CARRY], 'S'], [[MOVE], 'M', 1, 5], [[WORK], 'M', 1, amount]);
+    },
+    harvester(myRoom) {
+        if (myRoom.memory.hasMules && myRoom.memory.hasContainers) {
+            return processBody(myRoom, [[CARRY], 'S'], [[MOVE], 'M', 0.25, 4], [[WORK], 'M', 0.75, 6]);
+        } else {
+            return processBody(myRoom, [[CARRY], 'M', 0.25, 4], [[MOVE], 'M', 0.25, 8], [[WORK], 'M', 0.5, 6]);
+        }
+    },
+    worker(myRoom) {
+        return processBody(myRoom, [[CARRY], 'M', 0.25, 5], [[MOVE], 'M', 0.25, 10], [[WORK], 'M', 0.5, 15]);
+    },
+    claim(myRoom) {
+        return processBody(myRoom, [[CLAIM, MOVE, MOVE], 'S']);
+    },
+    reserve(myRoom) {
+        return processBody(myRoom, [[CLAIM, CLAIM, MOVE, MOVE], 'S']);
+    },
+    remoteWorker(myRoom) {
+        return processBody(myRoom, [[CARRY], 'M', 0.25, 15], [[MOVE], 'M', 0.5, 30], [[WORK], 'M', 0.25, 15]);
+    },
+    mule(myRoom) {
+        return processBody(myRoom, [[CARRY, MOVE, CARRY], 'M', 1, 6]);
+    },
+    thiefmule(myRoom, options) {
+        let amount = 6;
+        if (options.sourceMap && Memory.energyMap[options.sourceMap] && (Memory.energyMap[options.sourceMap] > 3000 || Memory.reservers[Memory.roomMap[options.sourceMap]])) {
+            amount = 15;
+        }
+        return processBody(myRoom, [[WORK, MOVE, CARRY], 'S'], [[CARRY, MOVE, CARRY], 'M', 1, amount]);
+    }
+};
+
+/*
+takes all args
+each one is an array
+[command, parts(array), command arg1, command arg2]
+
+commands: 
+S: single mandatory (no more than 300)
+M: multiple, implied optional
+(arg1 is a PERCENTAGE between 0 and 1 of the ENERGY leftover after single options)
+(arg2 is the MAXIMUM number of iterations)
+
+
+if over 300, returns first 300 worth of commands.
+*/
+
+function processBody(myRoom, ...commands) {
+    let finalBuild = commands.map(() => ({
+        cost: 0,
+        parts: []
+    }));
+    // SM
+    let totalCost = 0;
+    let multiplier = 0;
+    commands.forEach((command, index) => {
+        if (command[1] === 'S') {
+            let cost = 0;
+            command[0].forEach(part => {
+                cost += BODYPART_COST[part];
+            });
+            // if cost over 300, truncate
+            totalCost += cost;
+            finalBuild[index].cost = cost;
+            finalBuild[index].parts = command[1];
+        } else if (command[1] === 'M') {
+            multiplier += command[2];
+        }
+    });
+
+    const totalAvailable = myRoom.energyAvailable - totalCost;
+
+    // MM
+    let proportionBonus = 0;
+    commands.forEach((command, index) => {
+        if (command[1] === 'M') {
+            let commandCost = 0;
+            command[0].forEach(part => {
+                commandCost += BODYPART_COST[part];
+            });
+            const proportion = command[2];
+            const commandMaxCost = totalAvailable * proportion + proportionBonus;
+            let numberOfCommands;
+            if (command[3]) {
+                const maxParts = Math.floor(commandMaxCost / commandCost);
+                if (maxParts > command[3]) {
+                    numberOfCommands = command[3];
+                } else {
+                    numberOfCommands = maxParts;
+                }
+            } else {
+                numberOfCommands = Math.floor(commandMaxCost / commandCost);
+            }
+            const commandFinalCost = numberOfCommands * commandCost;
+            totalCost += commandFinalCost;
+            proportionBonus = commandMaxCost - commandFinalCost;
+            finalBuild[index].cost = commandFinalCost;
+            let finalArray = [];
+            for (var i = 0; i < numberOfCommands; i += 1) {
+                finalArray = finalArray.concat(command[0]);
+            }
+            finalBuild[index].parts = finalArray;
+        }
+    });
+
+    // Build final return
+    let result = [];
+    finalBuild.forEach(buildOrder => {
+        result = result.concat(buildOrder.parts);
+    });
+    if (result.length < 3) {
+        console.log("Less than 3 parts returned from build constructor. Build when you have more energy");
+        return [];
+    }
+    return result;
+}
+
+/* harmony default export */ __webpack_exports__["a"] = (spawnType);
+
+/***/ }),
+/* 20 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__actions_action_deposit__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actions_action_resupply__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__actions_action_claim__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__actions_action_harvest__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__actions_action_upgrade__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__actions_action_build__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__actions_action_upgrade__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__actions_action_build__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__actions_action_offensive__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__util__ = __webpack_require__(0);
 
 
@@ -3181,7 +3400,7 @@ const taskManager = {
 /* harmony default export */ __webpack_exports__["a"] = (taskManager);
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3330,7 +3549,7 @@ function getResupplyTarget(creep) {
 /* harmony default export */ __webpack_exports__["a"] = (actResupply);
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3351,160 +3570,6 @@ var actUpgrade = {
 };
 
 /* harmony default export */ __webpack_exports__["a"] = (actUpgrade);
-
-/***/ }),
-/* 22 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__roles_role_thief__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__roles_role_thiefmule__ = __webpack_require__(10);
-
-
-
-const spawnType = {
-    defcon(myRoom) {
-        return processBody(myRoom, [[MOVE], 'M', 1, 25], [[ATTACK, ATTACK, ATTACK, ATTACK, ATTACK], 'S']);
-    },
-    grinder(myRoom) {
-        return processBody(myRoom, [[ATTACK, ATTACK, ATTACK], 'S'][([MOVE], 'M', 0.6, 0)], [[HEAL], 'M', 0.4, 0], [[MOVE], 'S']);
-    },
-    guard(myRoom) {
-        return processBody(myRoom, [[MOVE], 'M', 0.4, 17], [[RANGED_ATTACK], 'M', 0.2, 3], [[ATTACK], 'M', 0.4, 10]);
-    },
-    farm(myRoom) {
-        return processBody(myRoom, [[MOVE], 'M', 1, 25], [[TOUGH, TOUGH], 'S'], [[RANGED_ATTACK, RANGED_ATTACK, RANGED_ATTACK], 'S'], [[ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK], 'S']);
-    },
-    heal(myRoom) {
-        return processBody(myRoom, [[MOVE], 'M', 1, 20], [[HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL, HEAL], 'S']);
-    },
-    thief(myRoom, options) {
-        let amount = 3;
-        if (options.sourceMap && Memory.energyMap[options.sourceMap] && (Memory.energyMap[options.sourceMap] > 1500 || Memory.reservers[Memory.roomMap[options.sourceMap]])) {
-            amount = 6;
-            if (Memory.energyMap[options.sourceMap] > 3000) {
-                amount = 8;
-            }
-        }
-        return processBody(myRoom, [[CARRY], 'S'], [[MOVE], 'M', 1, 5], [[WORK], 'M', 1, amount]);
-    },
-    harvester(myRoom) {
-        if (myRoom.memory.hasMules && myRoom.memory.hasContainers) {
-            return processBody(myRoom, [[CARRY], 'S'], [[MOVE], 'M', 0.25, 4], [[WORK], 'M', 0.75, 6]);
-        } else {
-            return processBody(myRoom, [[CARRY], 'M', 0.25, 4], [[MOVE], 'M', 0.25, 8], [[WORK], 'M', 0.5, 6]);
-        }
-    },
-    worker(myRoom) {
-        return processBody(myRoom, [[CARRY], 'M', 0.25, 5], [[MOVE], 'M', 0.25, 10], [[WORK], 'M', 0.5, 15]);
-    },
-    claim(myRoom) {
-        return processBody(myRoom, [[CLAIM, MOVE, MOVE], 'S']);
-    },
-    reserve(myRoom) {
-        return processBody(myRoom, [[CLAIM, CLAIM, MOVE, MOVE], 'S']);
-    },
-    remoteWorker(myRoom) {
-        return processBody(myRoom, [[CARRY], 'M', 0.25, 15], [[MOVE], 'M', 0.5, 30], [[WORK], 'M', 0.25, 15]);
-    },
-    mule(myRoom) {
-        return processBody(myRoom, [[CARRY, MOVE, CARRY], 'M', 1, 6]);
-    },
-    thiefmule(myRoom, options) {
-        let amount = 6;
-        if (options.sourceMap && Memory.energyMap[options.sourceMap] && Memory.energyMap[options.sourceMap] > 3000) {
-            amount = 16;
-        }
-        return processBody(myRoom, [[WORK, MOVE, CARRY], 'S'], [[CARRY, MOVE, CARRY], 'M', 1, amount]);
-    }
-};
-
-/*
-takes all args
-each one is an array
-[command, parts(array), command arg1, command arg2]
-
-commands: 
-S: single mandatory (no more than 300)
-M: multiple, implied optional
-(arg1 is a PERCENTAGE between 0 and 1 of the ENERGY leftover after single options)
-(arg2 is the MAXIMUM number of iterations)
-
-
-if over 300, returns first 300 worth of commands.
-*/
-
-function processBody(myRoom, ...commands) {
-    let finalBuild = commands.map(() => ({
-        cost: 0,
-        parts: []
-    }));
-    // SM
-    let totalCost = 0;
-    let multiplier = 0;
-    commands.forEach((command, index) => {
-        if (command[1] === 'S') {
-            let cost = 0;
-            command[0].forEach(part => {
-                cost += BODYPART_COST[part];
-            });
-            // if cost over 300, truncate
-            totalCost += cost;
-            finalBuild[index].cost = cost;
-            finalBuild[index].parts = command[1];
-        } else if (command[1] === 'M') {
-            multiplier += command[2];
-        }
-    });
-
-    const totalAvailable = myRoom.energyAvailable - totalCost;
-
-    // MM
-    let proportionBonus = 0;
-    commands.forEach((command, index) => {
-        if (command[1] === 'M') {
-            let commandCost = 0;
-            command[0].forEach(part => {
-                commandCost += BODYPART_COST[part];
-            });
-            const proportion = command[2];
-            const commandMaxCost = totalAvailable * proportion + proportionBonus;
-            let numberOfCommands;
-            if (command[3]) {
-                const maxParts = Math.floor(commandMaxCost / commandCost);
-                if (maxParts > command[3]) {
-                    numberOfCommands = command[3];
-                } else {
-                    numberOfCommands = maxParts;
-                }
-            } else {
-                numberOfCommands = Math.floor(commandMaxCost / commandCost);
-            }
-            const commandFinalCost = numberOfCommands * commandCost;
-            totalCost += commandFinalCost;
-            proportionBonus = commandMaxCost - commandFinalCost;
-            finalBuild[index].cost = commandFinalCost;
-            let finalArray = [];
-            for (var i = 0; i < numberOfCommands; i += 1) {
-                finalArray = finalArray.concat(command[0]);
-            }
-            finalBuild[index].parts = finalArray;
-        }
-    });
-
-    // Build final return
-    let result = [];
-    finalBuild.forEach(buildOrder => {
-        result = result.concat(buildOrder.parts);
-    });
-    if (result.length < 3) {
-        console.log("Less than 3 parts returned from build constructor. Build when you have more energy");
-        return [];
-    }
-    return result;
-}
-
-/* harmony default export */ __webpack_exports__["a"] = (spawnType);
 
 /***/ })
 /******/ ]);

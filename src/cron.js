@@ -120,10 +120,10 @@ const cronJobs = {
                 }
                 if (Memory.squads[roomName + 'defcon']) {
                     if (Memory.squads[roomName + 'defcon'].size != myRoom.memory.defcon && Memory.squads[roomName + 'defcon'].role != 'retired') {
-                        // brains.updateSquadSize(roomName + 'defcon', myRoom.memory.defcon);
+                        brains.updateSquadSize(roomName + 'defcon', myRoom.memory.defcon);
                     }
                 } else if (myRoom.memory.defcon > 0) {
-                    // brains.createSquad(roomName + 'defcon', roomName, myRoom.memory.defcon, 'defcon');
+                    brains.createSquad(roomName + 'defcon', roomName, myRoom.memory.defcon, 'defcon');
                 }
             }
         });
@@ -189,6 +189,21 @@ const cronJobs = {
             '5982fc6ab097071b4adbd5bc': 0,
             // location: W36N32
             '5982fc69b097071b4adbd5b8': 0,
+            // FOR W36N37
+            // location: W37N37
+            '5982fc5db097071b4adbd43e': 0,
+            '5982fc5db097071b4adbd43c': 0,
+            // location: W36N38
+            '5982fc68b097071b4adbd592': 0,
+            '5982fc68b097071b4adbd593': 0,
+            // location: W35N38
+            '5982fc74b097071b4adbd779': 0,
+            '5982fc74b097071b4adbd77a': 0,
+            // FOR W35N33
+            // location: W36N33
+            '5982fc69b097071b4adbd5b6': 0,
+            // location: W35N32
+            '5982fc75b097071b4adbd79a': 0,
         }
         if (!Memory.thieving_spots) {
             Memory.thieving_spots = {};
@@ -239,6 +254,21 @@ const cronJobs = {
             '5982fc6ab097071b4adbd5bc': 0,
             // location: W36N32
             '5982fc69b097071b4adbd5b8': 0,
+            // FOR W36N37
+            // location: W37N37
+            '5982fc5db097071b4adbd43e': 0,
+            '5982fc5db097071b4adbd43c': 0,
+            // location: W36N38
+            '5982fc68b097071b4adbd592': 0,
+            '5982fc68b097071b4adbd593': 0,
+            // location: W35N38
+            '5982fc74b097071b4adbd779': 0,
+            '5982fc74b097071b4adbd77a': 0,
+            // FOR W35N33
+            // location: W36N33
+            '5982fc69b097071b4adbd5b6': 0,
+            // location: W35N32
+            '5982fc75b097071b4adbd79a': 0,
         }
         if (!Memory.thieving_mules) {
             Memory.thieving_mules = {};
@@ -252,23 +282,23 @@ const cronJobs = {
         const resevers = {
             // FOR W37N34
             'W37N35': 0,
-            'W37N33': 0,
-            'W38N34': 0,
+            //'W37N33': 0, This has only one energy. Not worth the build time
+            //'W38N34': 0, This has only one energy. Not worth the build time
             // 'W38N35': 0, This guy is too far
             // 'W38N33': 0, This guy is too far
+
             // FOR W39N36
-            // Next three just arent ready to support this yet
-            // 'W39N35': 0,
-            // 'W39N37': 0,
-            // 'W38N36': 0,
+            // 'W39N35': 0, This has only one energy. Not worth the build time
+            // 'W39N37': 0, This has only one energy. Not worth the build time
+            'W38N36': 0,
             //'W39N34': 0, This guy is too far
             // 'W38N37': 0, This guy is too far
+
             // FOR W37N31
             // 'W38N32': 0, This guy is too far
-            // Next three just arent ready to support this yet
-            // 'W38N31': 0,
-            // 'W37N32': 0,
-            // 'W36N31': 0,
+            'W38N31': 0,
+            'W37N32': 0,
+            // 'W36N31': 0, This has only one energy. Not worth the build time
             // 'W36N32': 0, This guy is too far
         }
 
@@ -321,6 +351,21 @@ const cronJobs = {
             '5982fc6ab097071b4adbd5bc': 'W36N31',
             // location: W36N32
             '5982fc69b097071b4adbd5b8': 'W36N32',
+            // FOR W36N37
+            // location: W37N37
+            '5982fc5db097071b4adbd43e': 'W36N37',
+            '5982fc5db097071b4adbd43c': 'W36N37',
+            // location: W36N38
+            '5982fc68b097071b4adbd592': 'W36N37',
+            '5982fc68b097071b4adbd593': 'W36N37',
+            // location: W35N38
+            '5982fc74b097071b4adbd779': 'W36N37',
+            '5982fc74b097071b4adbd77a': 'W36N37',
+            // FOR W35N33
+            // location: W36N33
+            '5982fc69b097071b4adbd5b6': 'W35N33',
+            // location: W35N32
+            '5982fc75b097071b4adbd79a': 'W35N33',
         }
 
         Memory.energyMap = {
@@ -363,6 +408,21 @@ const cronJobs = {
             '5982fc6ab097071b4adbd5bc': 1500,
             // location: W36N32
             '5982fc69b097071b4adbd5b8': 1500,
+            // FOR W36N37
+            // location: W37N37
+            '5982fc5db097071b4adbd43e': 1500,
+            '5982fc5db097071b4adbd43c': 1500,
+            // location: W36N38
+            '5982fc68b097071b4adbd592': 1500,
+            '5982fc68b097071b4adbd593': 1500,
+            // location: W35N38
+            '5982fc74b097071b4adbd779': 1500,
+            '5982fc74b097071b4adbd77a': 1500,
+            // FOR W35N33
+            // location: W36N33
+            '5982fc69b097071b4adbd5b6': 1500,
+            // location: W35N32
+            '5982fc75b097071b4adbd79a': 1500,
         }
 
         Memory.homeMap = {
@@ -381,6 +441,11 @@ const cronJobs = {
             'W37N32': 'W37N31',
             'W36N31': 'W37N31',
             'W36N32': 'W37N31',
+            'W37N37': 'W36N37',
+            'W36N38': 'W36N37',
+            'W35N38': 'W36N37',
+            'W36N33': 'W35N33',
+            'W35N32': 'W35N33',
         }
     },
 }

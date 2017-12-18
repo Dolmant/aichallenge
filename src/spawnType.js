@@ -99,8 +99,8 @@ const spawnType = {
     },
     thiefmule(myRoom: Room, options: any) {
         let amount = 6;
-        if (options.sourceMap && Memory.energyMap[options.sourceMap] && Memory.energyMap[options.sourceMap] > 3000) {
-            amount = 16;
+        if (options.sourceMap && Memory.energyMap[options.sourceMap] && (Memory.energyMap[options.sourceMap] > 3000 || Memory.reservers[Memory.roomMap[options.sourceMap]])) {
+            amount = 15;
         }
         return processBody(myRoom,
             [[WORK, MOVE, CARRY], 'S'],
