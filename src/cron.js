@@ -115,7 +115,7 @@ const cronJobs = {
             if (myRoom) {
                 var enemyCreeps: Creep = myRoom.find(FIND_HOSTILE_CREEPS, {
                     filter: (object) => {
-                        return object.getActiveBodyparts(ATTACK) == 0;
+                        return object.getActiveBodyparts(ATTACK) > 0 || object.getActiveBodyparts(HEAL) > 0;
                     },
                 });
                 myRoom.memory.defcon = enemyCreeps.length;
