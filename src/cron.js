@@ -113,7 +113,11 @@ const cronJobs = {
         myRooms.forEach(roomName => {
             let myRoom = Game.rooms[roomName]
             if (myRoom) {
-                var enemyCreeps: Creep = myRoom.find(FIND_HOSTILE_CREEPS);
+                var enemyCreeps: Creep = myRoom.find(FIND_HOSTILE_CREEPS, {
+                    filter: (object) => {
+                        return object.getActiveBodyparts(ATTACK) == 0;
+                    },
+                });
                 myRoom.memory.defcon = enemyCreeps.length;
                 if (enemyCreeps.length > 0 && myOwnedRooms.includes(roomName)) {
                     myRoom.memory.defcon -= 1;
@@ -170,6 +174,7 @@ const cronJobs = {
             // location: W38N37
             '5982fc51b097071b4adbd2ef': 0,
             // location: W38N36
+            '5982fc51b097071b4adbd2f2': 0,
             '5982fc51b097071b4adbd2f3': 0,
             // location: W39N35
             '5982fc46b097071b4adbd1ab': 0,
@@ -353,19 +358,19 @@ const cronJobs = {
             '5982fc69b097071b4adbd5b8': 'W36N32',
             // FOR W36N37
             // location: W37N37
-            '5982fc5db097071b4adbd43e': 'W36N37',
-            '5982fc5db097071b4adbd43c': 'W36N37',
+            '5982fc5db097071b4adbd43e': 'W37N37',
+            '5982fc5db097071b4adbd43c': 'W37N37',
             // location: W36N38
-            '5982fc68b097071b4adbd592': 'W36N37',
-            '5982fc68b097071b4adbd593': 'W36N37',
+            '5982fc68b097071b4adbd592': 'W36N38',
+            '5982fc68b097071b4adbd593': 'W36N38',
             // location: W35N38
-            '5982fc74b097071b4adbd779': 'W36N37',
-            '5982fc74b097071b4adbd77a': 'W36N37',
+            '5982fc74b097071b4adbd779': 'W35N38',
+            '5982fc74b097071b4adbd77a': 'W35N38',
             // FOR W35N33
             // location: W36N33
-            '5982fc69b097071b4adbd5b6': 'W35N33',
+            '5982fc69b097071b4adbd5b6': 'W36N33',
             // location: W35N32
-            '5982fc75b097071b4adbd79a': 'W35N33',
+            '5982fc75b097071b4adbd79a': 'W35N32',
         }
 
         Memory.energyMap = {
@@ -440,10 +445,10 @@ const cronJobs = {
             'W38N31': 'W37N31',
             'W37N32': 'W37N31',
             'W36N31': 'W37N31',
-            'W36N32': 'W37N31',
             'W37N37': 'W36N37',
             'W36N38': 'W36N37',
             'W35N38': 'W36N37',
+            'W36N32': 'W35N33',
             'W36N33': 'W35N33',
             'W35N32': 'W35N33',
         }
